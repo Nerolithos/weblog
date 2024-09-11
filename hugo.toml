@@ -1,0 +1,13 @@
+baseURL = 'https://blog.nero-lithos.com/'
+defaultContentLanguage = "zh-cn"
+defaultContentLanguageInSubdir = true
+languageCode = 'zh-cn'
+title = "Lithos' Blog" # Blog title 
+theme = ["github.com/theNewDynamic/gohugo-theme-ananke"]
+hasCJKLanguage = true
+canonifyurls = true
+pagination.pagerSize = 6
+
+[module]
+[[module.imports]]
+  path = "github.com/theNewDynamic/gohugo-theme-ananke"
