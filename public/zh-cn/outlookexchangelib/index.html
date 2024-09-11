@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title> Outlook 邮件 exchangelib 访问的议题 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="前言
+注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。
+本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh-cn/outlookexchangelib/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/zh-cn/outlookexchangelib/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content=" Outlook 邮件 exchangelib 访问的议题">
+  <meta property="og:description" content="前言 注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。
+本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2024-09-11T09:26:58+08:00">
+    <meta property="article:modified_time" content="2024-09-11T09:26:58+08:00">
+
+  <meta itemprop="name" content=" Outlook 邮件 exchangelib 访问的议题">
+  <meta itemprop="description" content="前言 注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。
+本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。">
+  <meta itemprop="datePublished" content="2024-09-11T09:26:58+08:00">
+  <meta itemprop="dateModified" content="2024-09-11T09:26:58+08:00">
+  <meta itemprop="wordCount" content="1683">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content=" Outlook 邮件 exchangelib 访问的议题">
+  <meta name="twitter:description" content="前言 注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。
+本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。">
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/zh-cn/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+  <div class="flex-l mt2 mw8 center">
+    <article class="center cf pv5 ph3 ph4-ns mw7">
+      <header>
+        <h1 class="f1">
+           Outlook 邮件 exchangelib 访问的议题
+        </h1>
+      </header>
+      <div class="nested-copy-line-height lh-copy f4 nested-links mid-gray">
+        <h2 id="前言">前言</h2>
+<p><strong>注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。</strong></p>
+<p>本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。</p>
+<p>无论如何，我发现我无法用任何一种认证方法完成以 exchangelib 与 outlook 邮箱进行交互。</p>
+<p>注释：方案命名的格式为“认证方案-python包”</p>
+<h2 id="方案一basic-auth-exchangelib非常不稳定">方案一：Basic Auth-exchangelib(非常不稳定)</h2>
+<p><strong>虽然我成功过，但该方案被普遍认为不再可行(而且我也没办法把具体实现效果的命令行写完)</strong>，这些是网络上的说法：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/74058525/python-exchangelib-invalid-credentials">stackoverflow discussion</a></li>
+<li><a href="https://github.com/ecederstrand/exchangelib/issues">github issues</a></li>
+<li>“Microsoft 正在逐步淘汰基本身份验证（用户名和密码）的支持，因此仅使用用户名和密码访问 EWS API 通常是无效的。”
+——GPT4</li>
+</ul>
+<p>虽然网上声称 Office 365 关闭了传统的“用户名密码” EWS 认证模式，但似乎不是所有人都无法按照这个方法操作，我就成功访问过(两三次)，并将部分邮件拉下来了。</p>
+<p>**对于中国大陆的用户，这被验证似乎与VPN有关。只有个别代理服务器的个别节点在个别时间可以不报错。我使用 12vpn 的 Osaka 节点有时可以访问成功。**但基本上隔三差五就会给 UnauthorizedError: Invalid credentials 的报错。(见下文)</p>
+<p><strong>但事实上，这实际上是由微软服务器某些不为人知的保护机制导致的。微软对网络安全的要求似乎比较高。某些IP地址可能会被微软认定为“不安全”，并触发风控，拒绝访问。这个问题尚未被解决(截止至2024.8.17)</strong></p>
+<p><strong>以上猜想的证据，参见微软官方的声明：</strong>
+<a href="https://support.microsoft.com/zh-cn/office/outlook-com-%E7%9A%84-pop-imap-%E5%92%8C-smtp-%E8%AE%BE%E7%BD%AE-d088b986-291d-42b8-9564-9c414e2aa040">此链接页面最下方的“Outlook.com IMAP 连接错误”一栏</a></p>
+<h3 id="虽然不建议尝试以下仍给出具体方法">虽然不建议尝试，以下仍给出具体方法：</h3>
+<p>1、保证您的电脑上有3.11.9及以上的 python 以及 miniconda或anaconda等。在终端中运行 pip install exchangelib。</p>
+<p>2、在本地合理位置，合理编辑器(如sublime text, PyCharm等)中写入以下代码并保存为test.py。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>from exchangelib import Credentials, Account
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>credentials <span style="color:#f92672">=</span> Credentials<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#你的邮箱地址&#34;</span>, <span style="color:#e6db74">&#34;#你的邮箱密码&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>account <span style="color:#f92672">=</span> Account<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#你的邮箱地址&#34;</span>, credentials<span style="color:#f92672">=</span>credentials, autodiscover<span style="color:#f92672">=</span>True<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> item in account.inbox.all<span style="color:#f92672">()</span>.order_by<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;-datetime_received&#34;</span><span style="color:#f92672">)[</span>:100<span style="color:#f92672">]</span>:
+</span></span><span style="display:flex;"><span>    print<span style="color:#f92672">(</span>item.subject, item.sender, item.datetime_received<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>（代码来自 exchangelib 的 GitHub 首页，见 reference)</p>
+<p>3、在终端中运行 python test.py。</p>
+<p>4、如果报错，且报错内容中最后一行有类似于以下内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>UnauthorizedError: Invalid credentials <span style="color:#66d9ef">for</span> https://autodiscover.hotmail.com/autodiscover/autodiscover.svc
+</span></span></code></pre></div><p>那么可以尝试关闭服务器自动寻找功能，将 test.py 中的内容全部修改为以下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>from exchangelib import Credentials, Account, DELEGATE, Configuration
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>credentials <span style="color:#f92672">=</span> Credentials<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;#你的邮箱地址&#39;</span>, <span style="color:#e6db74">&#39;#你的邮箱密码&#39;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>config <span style="color:#f92672">=</span> Configuration<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>    server<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;#你的邮箱的服务器地址&#39;</span>,  
+</span></span><span style="display:flex;"><span>    credentials<span style="color:#f92672">=</span>credentials
+</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>account <span style="color:#f92672">=</span> Account<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>    primary_smtp_address<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;#你的邮箱地址&#39;</span>,
+</span></span><span style="display:flex;"><span>    config<span style="color:#f92672">=</span>config,
+</span></span><span style="display:flex;"><span>    autodiscover<span style="color:#f92672">=</span>False,
+</span></span><span style="display:flex;"><span>    access_type<span style="color:#f92672">=</span>DELEGATE
+</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> item in account.inbox.all<span style="color:#f92672">()</span>.order_by<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;-datetime_received&#39;</span><span style="color:#f92672">)[</span>:100<span style="color:#f92672">]</span>:
+</span></span><span style="display:flex;"><span>    print<span style="color:#f92672">(</span>item.subject, item.sender, item.datetime_received<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>如果没有报错，跳过第4步。如果报其他错误，请检查您是否按要求操作或者您的网络是否正常。</p>
+<p>5、再次运行，如果依旧报错，且报错内容中最后一行有类似于以下内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>UnauthorizedError: Invalid credentials <span style="color:#66d9ef">for</span> https://outlook.office365.com/EWS/Exchange.asmx
+</span></span></code></pre></div><p>那么，在任意浏览器中访问上述网址(<a href="https://outlook.office365.com/EWS/Exchange.asmx)">https://outlook.office365.com/EWS/Exchange.asmx)</a>, 并按要求输入账号、密码，开启EWS，之后刷新终端并重新运行 test.py。</p>
+<p>6、如果终端再次报错或者上述网页无法访问、白屏、无法通过验证等，那就是“正常反应”。对于发现自己可以<strong>长期、稳定</strong>使用 basic authentication 的人来说，还请分享经验，造福大家。</p>
+<h2 id="方案二oauth20-exchangelib">方案二：OAuth2.0-exchangelib</h2>
+<p>请登录到微软云门户：<a href="https://portal.azure.com">Microsoft Azure</a>，若初次注册，建议<strong>不要用</strong>学校或单位账号，然后进行应用注册。之后参见<a href="https://www.whuanle.cn/archives/21385">Microsoft Graph、outlook 授权 Auth2.0 指北</a>。(链接中的范例为 Web 应用程序，但我希望申请桌面应用，方便使用我一开始说的那些功能，所以，又行不通。)</p>
+<h2 id="其他思路">其他思路</h2>
+<p>可以使用 <strong>IFTTT</strong> 的功能，从outlook邮箱批量向其邮箱转发邮件，IFTTT 可以进而在 Google Sheets 上生成邮件日志，但由于龙大特别喜欢发图片或者非文本信件，而非文本信息很难以表格形式储存，所以我最终也没法用这种方案做下去。</p>
+<h2 id="reference">Reference</h2>
+<p><a href="https://www.whuanle.cn/archives/21385">https://www.whuanle.cn/archives/21385</a></p>
+<p><a href="https://github.com/ecederstrand/exchangelib/issues">https://github.com/ecederstrand/exchangelib/issues</a></p>
+<p><a href="https://github.com/ecederstrand/exchangelib/discussions/954">https://github.com/ecederstrand/exchangelib/discussions/954</a></p>
+<p><a href="https://stackoverflow.com/questions/74058525/python-exchangelib-invalid-credentials">https://stackoverflow.com/questions/74058525/python-exchangelib-invalid-credentials</a></p>
+
+      </div>
+    </article>
+  </div>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/zh-cn/" >
+    &copy;  Lithos' Blog 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

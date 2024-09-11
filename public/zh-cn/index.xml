@@ -6,14 +6,28 @@
     <description>Recent content on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 10 Sep 2024 09:08:58 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 11 Sep 2024 09:26:58 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Test_release</title>
-      <link>http://localhost:1313/zh-cn/test_release/</link>
+      <title> IP地址与子网掩码</title>
+      <link>http://localhost:1313/zh-cn/web/</link>
+      <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/zh-cn/web/</guid>
+      <description>&lt;p&gt;240822，有几位同学在龙大的选课培训直播间提出&lt;a href=&#34;https://postimg.cc/7bqTcdMd&#34;&gt;几个网络问题&lt;/a&gt;。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title> Outlook 邮件 exchangelib 访问的议题</title>
+      <link>http://localhost:1313/zh-cn/outlookexchangelib/</link>
+      <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/zh-cn/outlookexchangelib/</guid>
+      <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;&#xA;&lt;p&gt;&lt;strong&gt;注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title> Grassroot HongKong</title>
+      <link>http://localhost:1313/zh-cn/grassroot_hongkong/</link>
       <pubDate>Tue, 10 Sep 2024 09:08:58 +0800</pubDate>
-      <guid>http://localhost:1313/zh-cn/test_release/</guid>
-      <description>&lt;p&gt;Grassroot HongKong&lt;/p&gt;&#xA;&lt;p&gt;What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.&#xA;I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&amp;rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.&#xA;When I wandered randomly in YauMaTei, the sole deafening word that echoed in my mind is &amp;lsquo;beauty&amp;rsquo;. Though the aesthetic value may be nebulous to many,  it was very certain in my eyes. Take a step into the grand fruit fair in town, and a sense of vitality surrounds you. Countless fruit stands on both sides forms a double-layered rainbow better than any others. People, sweating, yelling, talking, arguing, walking, picking, doing anything and everything weaves order in disorder, chaotic yet organized. This reminds me of how Peter Hessler perceived and presented Chinese civilian in his book River Town. They were in their many, but still living their own. Anchoring oneself in a pool of people is what Chinese people must nurture and get used to as they grow. Man and manpower is the least valuable thing in the country, yet they still managed to live with fortitude and pride.&#xA;If we neglect the people, and only amaze the alley views, you would find countless AC outdoor units, topping stories over stories, and wires climbing celling by celling, they are the blossoms and vines of a city. Cars squeezing the streets, and buildings crowding the space, they are the streams and trees of a city. Put together, that&amp;rsquo;s perhaps why we call this city a concrete forest. Yet unlike other cities, YauMaTei is high-rise-free, everything is earthly and down-right worldly.&lt;/p&gt;</description>
+      <guid>http://localhost:1313/zh-cn/grassroot_hongkong/</guid>
+      <description>&lt;p&gt;What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.&lt;/p&gt;&#xA;&lt;p&gt;I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&amp;rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
