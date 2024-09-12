@@ -3,6 +3,8 @@ title = '# 咖啡与OOP'
 date = 2024-09-12T11:28:58+08:00
 draft = false
 
+featured_image = '/images/coffee.jpg'
+
 +++
 
 
