@@ -1,6 +1,6 @@
 baseURL = 'https://blog.nero-lithos.com/'
 defaultContentLanguage = "zh-cn"
-defaultContentLanguageInSubdir = true
+defaultContentLanguageInSubdir = false
 languageCode = 'zh-cn'
 title = "Lithos' Blog" # Blog title 
 theme = ["github.com/theNewDynamic/gohugo-theme-ananke"]
