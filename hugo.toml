@@ -13,6 +13,8 @@ pagination.pagerSize = 6
   path = "github.com/theNewDynamic/gohugo-theme-ananke"
 
 [params]
-disqusEnable = true
-disqusShortname = "nero-lithos"
+  disqusEnable = true
 
+[services]
+  [services.disqus]
+    shortname = 'nero-lithos'
