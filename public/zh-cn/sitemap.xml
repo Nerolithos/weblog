@@ -2,16 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/zh-cn/oop/</loc>
+    <lastmod>2024-09-12T11:28:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/zh-cn/</loc>
+    <lastmod>2024-09-12T11:28:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/zh-cn/1003.2/</loc>
+    <lastmod>2024-09-11T16:10:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/zh-cn/1003.1/</loc>
+    <lastmod>2024-09-11T11:27:58+08:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/zh-cn/web/</loc>
     <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/zh-cn/outlookexchangelib/</loc>
+    <loc>http://localhost:1313/zh-cn/outlook/</loc>
     <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/zh-cn/</loc>
-    <lastmod>2024-09-11T09:26:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/zh-cn/grassroot_hongkong/</loc>
+    <loc>http://localhost:1313/zh-cn/yaumatei/</loc>
     <lastmod>2024-09-10T09:08:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/zh-cn/categories/</loc>

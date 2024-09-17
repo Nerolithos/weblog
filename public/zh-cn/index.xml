@@ -6,27 +6,48 @@
     <description>Recent content on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 11 Sep 2024 09:26:58 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Sep 2024 11:28:58 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title> IP地址与子网掩码</title>
+      <title># 咖啡与OOP</title>
+      <link>http://localhost:1313/zh-cn/oop/</link>
+      <pubDate>Thu, 12 Sep 2024 11:28:58 +0800</pubDate>
+      <guid>http://localhost:1313/zh-cn/oop/</guid>
+      <description>&lt;p&gt;OOP(Object-Oriented Programming) 即面向对象编程。我们来了解 Java (不是指咖啡) 中的 OOP。它包括以下内容：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;类(Class)&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;对象(Object) ≈ 实例(Instance)&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title># CSC1003 Besides LEC</title>
+      <link>http://localhost:1313/zh-cn/1003.2/</link>
+      <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
+      <guid>http://localhost:1313/zh-cn/1003.2/</guid>
+      <description>&lt;h2 id=&#34;网络与计算机的历史&#34;&gt;网络与计算机的历史&lt;/h2&gt;&#xA;&lt;p&gt;20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title> # CSC1003 LEC1~3</title>
+      <link>http://localhost:1313/zh-cn/1003.1/</link>
+      <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
+      <guid>http://localhost:1313/zh-cn/1003.1/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;一切归功于李文烨教授，他是24年这门科目的主讲人。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;java-第一个程序&#34;&gt;JAVA 第一个程序&lt;/h2&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Hello&lt;/span&gt; {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args) {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        System.&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello, world!&amp;#34;&lt;/span&gt;);&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pr</description>
+    </item>
+    <item>
+      <title> # IP地址与子网掩码</title>
       <link>http://localhost:1313/zh-cn/web/</link>
       <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
       <guid>http://localhost:1313/zh-cn/web/</guid>
       <description>&lt;p&gt;240822，有几位同学在龙大的选课培训直播间提出&lt;a href=&#34;https://postimg.cc/7bqTcdMd&#34;&gt;几个网络问题&lt;/a&gt;。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。&lt;/p&gt;</description>
     </item>
     <item>
-      <title> Outlook 邮件 exchangelib 访问的议题</title>
-      <link>http://localhost:1313/zh-cn/outlookexchangelib/</link>
+      <title> # 龙大邮箱抓取尝试</title>
+      <link>http://localhost:1313/zh-cn/outlook/</link>
       <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
-      <guid>http://localhost:1313/zh-cn/outlookexchangelib/</guid>
+      <guid>http://localhost:1313/zh-cn/outlook/</guid>
       <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;&#xA;&lt;p&gt;&lt;strong&gt;注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。&lt;/p&gt;</description>
     </item>
     <item>
-      <title> Grassroot HongKong</title>
-      <link>http://localhost:1313/zh-cn/grassroot_hongkong/</link>
+      <title> # Grassroot HongKong</title>
+      <link>http://localhost:1313/zh-cn/yaumatei/</link>
       <pubDate>Tue, 10 Sep 2024 09:08:58 +0800</pubDate>
-      <guid>http://localhost:1313/zh-cn/grassroot_hongkong/</guid>
+      <guid>http://localhost:1313/zh-cn/yaumatei/</guid>
       <description>&lt;p&gt;What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.&lt;/p&gt;&#xA;&lt;p&gt;I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&amp;rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.&lt;/p&gt;</description>
     </item>
   </channel>
