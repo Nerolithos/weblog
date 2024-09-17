@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on My New Hugo Site</title>
+    <title>Tags on Lithos&#39; Blog</title>
     <link>http://localhost:1313/tags/</link>
-    <description>Recent content in Tags on My New Hugo Site</description>
+    <description>Recent content in Tags on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
-    <language>en-us</language>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 10 Sep 2024 23:34:08 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>技术</title>
+      <link>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Tue, 10 Sep 2024 23:34:08 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

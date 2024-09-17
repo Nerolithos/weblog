@@ -3,17 +3,21 @@ defaultContentLanguage = "zh-cn"
 defaultContentLanguageInSubdir = false
 languageCode = 'zh-cn'
 title = "Lithos' Blog" # Blog title 
-theme = ["github.com/theNewDynamic/gohugo-theme-ananke"]
+theme = 'ananke1'
 hasCJKLanguage = true
 canonifyurls = true
 pagination.pagerSize = 6
 
-[module]
-[[module.imports]]
-  path = "github.com/theNewDynamic/gohugo-theme-ananke"
+googleAnalytics = ""
+enableRobotsTXT = true
 
 [params]
-  disqusEnable = true
+  text_color = ""
+  author = ""
+  favicon = ""
+  site_logo = ""
+  background_color_class = "bg-black"
+  recent_posts_number = 100
 
 [services]
   [services.disqus]

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>技术 on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</link>
+    <description>Recent content in 技术 on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 10 Sep 2024 23:34:08 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何在 cloudflare 上部署 Hugo 构架的博客</title>
+      <link>http://localhost:1313/posts/how-to-deploy-blog-on-cloudflare/</link>
+      <pubDate>Tue, 10 Sep 2024 23:34:08 +0800</pubDate>
+      <guid>http://localhost:1313/posts/how-to-deploy-blog-on-cloudflare/</guid>
+      <description>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。</description>
+    </item>
+  </channel>
+</rss>

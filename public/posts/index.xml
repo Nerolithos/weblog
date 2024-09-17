@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Lithos&#39; Blog</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content on Lithos&#39; Blog</description>
+    <title>Posts on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Thu, 12 Sep 2024 11:28:58 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title># 咖啡与OOP</title>
       <link>http://localhost:1313/posts/oop/</link>
