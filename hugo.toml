@@ -11,3 +11,6 @@ pagination.pagerSize = 6
 [module]
 [[module.imports]]
   path = "github.com/theNewDynamic/gohugo-theme-ananke"
+
+[params]
+disqusShortname = "nero-lithos"
