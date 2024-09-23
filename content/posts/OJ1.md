@@ -189,6 +189,7 @@ public class Main {
 
 - 数组的长度必须要定义的。
 - **`n++` 表示将 n+1 的值赋给 n 并调用 n；`++n` 表示先调用 n 再将 n+1 的值赋给 n**。所以在`for (;; n++)` 循环中 break(强制退出循环) 时 n 的值为 nums 数组长度+2，也就是最大序号+1。所以后面倒序将数组输出时需要从 n-1 项(也就是数组的最后一项)开始。
+- `int[] arr = new int[x]` 代表 arr 数组的长度是 x，最大序号为 x-1，所以倒序遍历数组时从 x-1 开始。
 
 
 
@@ -244,22 +245,18 @@ public class Main {
 ```java
 import java.util.*;
 
-public class Main {
+public class Prime {
     public static boolean isPrime(int num) {
-        if (num < 2) {
-            return false;
-        }
+        if (num < 2) return false;
         for (int div = 2; div <= Math.sqrt(num); div++) {
-            if (num % div == 0) {
-                return false;
-            }
+            if (num % div == 0) return false;
         }
         return true;
     }
     public static void main(String[] args) {
-        int[] prime = new int[1e7];
+        int[] prime = new int[1000000];
         int count = 0;
-        for (int x = 2; x < 1e7; x++) {
+        for (int x = 2; x < 1000000; x++) {
             if (isPrime(x)) {
                 prime[count] = x;
                 ++count;
@@ -273,12 +270,41 @@ public class Main {
                 break;
             }
             if (roof == 1) {
-            	  System.out.println(0);
-            	  break;
+            	System.out.println(0);
+            	break;
             }
         }
     }
 }
 ```
 
+- 如果牺牲速度，节省内存和行数，不制作素数表，实时动态计算：
+
+```java
+import java.util.*;
+public class PriCount {
+    public static boolean isPrime(int num) {
+        if (num < 2) return false;
+        for (int div = 2; div * div <= num; div++) {
+            if (num % div == 0) return false;
+        }
+        return true;
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int roof = sc.nextInt();
+        if (roof < 2) {
+            System.out.println(0);
+            return;
+        }
+        int count = 0;
+        for (int i = 2; i <= roof; i++) {
+            if (isPrime(i)) count++;
+        }
+        System.out.println(count);
+    }
+}
+```
+
 - 当方法的**返回值是布尔值类型**时，**这个方法本身可以作为判断/循环语句的条件部分**。
+- 在`int[] prime = new int[1e7]` 中使用科学计数法会导致报错：`错误: 不兼容的类型: 从double转换到int可能会有损失`。
