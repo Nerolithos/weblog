@@ -2,13 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/oop/</loc>
-    <lastmod>2024-09-12T11:28:58+08:00</lastmod>
+    <loc>http://localhost:1313/posts/oj1/</loc>
+    <lastmod>2024-09-22T15:49:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2024-09-12T11:28:58+08:00</lastmod>
+    <lastmod>2024-09-22T15:49:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2024-09-22T15:49:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/1003.3/</loc>
+    <lastmod>2024-09-18T16:23:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/csc1003/</loc>
+    <lastmod>2024-09-18T16:23:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2024-09-18T16:23:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/oop/</loc>
     <lastmod>2024-09-12T11:28:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/1003.2/</loc>
@@ -23,18 +35,19 @@
     <loc>http://localhost:1313/posts/outlook/</loc>
     <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2024-09-10T23:34:08+08:00</lastmod>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2024-09-11T09:26:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</loc>
+    <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</loc>
-    <lastmod>2024-09-10T23:34:08+08:00</lastmod>
+    <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/how-to-deploy-blog-on-cloudflare/</loc>
+    <loc>http://localhost:1313/posts/weblog_deploy/</loc>
     <lastmod>2024-09-10T23:34:08+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/yaumatei/</loc>
     <lastmod>2024-09-10T09:08:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/</loc>
   </url>
 </urlset>

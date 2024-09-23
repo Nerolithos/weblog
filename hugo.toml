@@ -22,3 +22,7 @@ enableRobotsTXT = true
 [services]
   [services.disqus]
     shortname = 'nero-lithos'
+
+[taxonomies]
+   category = "categories"
+   tag = "tags"

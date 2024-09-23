@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title> # CSC1003 LEC1~3 | Lithos&#39; Blog</title>
+    <title> # CSC1003 LEC1~3 函数、数据类型与计算 | Lithos&#39; Blog</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.
 一切归功于李文烨教授，他是24年这门科目的主讲人。
@@ -44,7 +44,7 @@ public class Hello {
 
     <meta property="og:url" content="http://localhost:1313/posts/1003.1/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
-  <meta property="og:title" content=" # CSC1003 LEC1~3">
+  <meta property="og:title" content=" # CSC1003 LEC1~3 函数、数据类型与计算">
   <meta property="og:description" content="All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.
 一切归功于李文烨教授，他是24年这门科目的主讲人。
 JAVA 第一个程序 public class Hello { public static void main(String[] args) { System.out.println(&#34;Hello, world!&#34;); } } ">
@@ -54,15 +54,15 @@ JAVA 第一个程序 public class Hello { public static void main(String[] args)
     <meta property="article:published_time" content="2024-09-11T11:27:58+08:00">
     <meta property="article:modified_time" content="2024-09-11T11:27:58+08:00">
 
-  <meta itemprop="name" content=" # CSC1003 LEC1~3">
+  <meta itemprop="name" content=" # CSC1003 LEC1~3 函数、数据类型与计算">
   <meta itemprop="description" content="All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.
 一切归功于李文烨教授，他是24年这门科目的主讲人。
 JAVA 第一个程序 public class Hello { public static void main(String[] args) { System.out.println(&#34;Hello, world!&#34;); } } ">
   <meta itemprop="datePublished" content="2024-09-11T11:27:58+08:00">
   <meta itemprop="dateModified" content="2024-09-11T11:27:58+08:00">
-  <meta itemprop="wordCount" content="2850">
+  <meta itemprop="wordCount" content="2891">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content=" # CSC1003 LEC1~3">
+  <meta name="twitter:title" content=" # CSC1003 LEC1~3 函数、数据类型与计算">
   <meta name="twitter:description" content="All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.
 一切归功于李文烨教授，他是24年这门科目的主讲人。
 JAVA 第一个程序 public class Hello { public static void main(String[] args) { System.out.println(&#34;Hello, world!&#34;); } } ">
@@ -128,7 +128,7 @@ JAVA 第一个程序 public class Hello { public static void main(String[] args)
   </div>
 
 
-      <h1 class="f1 athelas mt3 mb1"> # CSC1003 LEC1~3</h1>
+      <h1 class="f1 athelas mt3 mb1"> # CSC1003 LEC1~3 函数、数据类型与计算</h1>
       
       
       
@@ -205,7 +205,7 @@ JAVA 第一个程序 public class Hello { public static void main(String[] args)
 <li>为什么不是[-2^n, 2^n-1]？</li>
 </ul>
 <p>计算机系统用<strong>二补法</strong>表示正负，比如：+6<!-- raw HTML omitted -->DEC<!-- raw HTML omitted --> = 00000110<!-- raw HTML omitted -->BIN<!-- raw HTML omitted -->，而负数要先对其绝对值的二进制数取反再加一：-6<!-- raw HTML omitted -->DEC<!-- raw HTML omitted --> = 11111010<!-- raw HTML omitted -->BIN<!-- raw HTML omitted -->。其中第一位的1与0表示了这个二进制数的正负，形式与上文所述的浮点数一样。这也与下文即将要说的溢出有关。</p>
-<p>强制转换类型：</p>
+<p><strong>强制转换类型：</strong></p>
 <ul>
 <li>byte b = 42, <del>b = (int) b</del>:：一个变量只能有一个数据类型，不能自己给自己转换类型。</li>
 <li>byte b = 42, <del>long c  = (int) b</del>：前后不一，到底要 long 还是 int 类？</li>
@@ -269,8 +269,10 @@ JAVA 第一个程序 public class Hello { public static void main(String[] args)
 </span></span></code></pre></div><p>3、如果用 Java 语言模拟子网掩码的功能要用到什么运算符？</p>
 <p>4、args 是保留名吗？</p>
 <p>5、<code>double x = 1.00 + 2</code> 计算结果是什么？</p>
+<p>6、如何用强制转换类型随机抽取一个 0 到 100 之间的整数并赋给 a ？</p>
 <h4 id="answer">answer</h4>
 <p>1、不一定      2、-5536      3、&amp;      4、否      5、3.0</p>
+<p>6、int a = (int) (Math.random() * 101)</p>
 <ul class="pa0">
   
 </ul>
@@ -305,6 +307,150 @@ JAVA 第一个程序 public class Hello { public static void main(String[] args)
 
 
 </aside>
+    
+        <h1> # CSC1003 LEC1~3 函数、数据类型与计算</h1>
+    <p>Categories: 
+        
+    </p>
+    <p>Tags: 
+        
+    </p>
+    <div><p><strong>All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.</strong></p>
+<p><strong>一切归功于李文烨教授，他是24年这门科目的主讲人。</strong></p>
+<h2 id="java-第一个程序">JAVA 第一个程序</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hello</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Hello, world!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>println() 表示打印后自动换行, print() 则不换行。</p>
+<p><strong>一个Java源码(一个程序)只能定义一个<code>public</code>类型的class，并且class名称和文件名要完全一致</strong>，某个类定义的<code>public static void main(String[] args)</code>是Java程序的固定入口方法，因此，Java程序总是从<code>main</code>方法开始执行。void 是方法类型，表示“无返回值”；static 是变量类型，表示“静态变量”。</p>
+<p>使用<code>javac</code>可以将<code>.java</code>源码编译成<code>.class</code>字节码；使用<code>java</code>可以运行一个已编译的Java程序，参数是类名。</p>
+<p>args 不是保留字，你叫它 lgu 也无所谓，但是调用时要保持一致：lgu[0], lgu[1]&hellip;&hellip; [0] 代表从命令行输入的第一个变量。以如下代码为例，如果运行时在终端输入<code>java Hello lgu xys</code>，那么  Java 就会输出<code>Hello! xys</code>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hello</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> lgu) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Hello! &#34;</span> <span style="color:#f92672">+</span> lgu<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>全过程：
+1、定义 public 类，名称为 Name，保存为 Name.java
+2、<code>javac Name.java</code>，编译并生成 Name.class 文件
+3、<code>java Name</code>，运行这个类</p>
+<h2 id="数据类型">数据类型</h2>
+<p>Java定义了以下几种基本数据类型：</p>
+<ul>
+<li>整数类型：byte，short，int，long</li>
+<li>浮点数类型：float，double</li>
+<li>字符类型：char，string(引用类 borrowed)</li>
+<li>布尔类型：boolean</li>
+</ul>
+<p>计算机内存的最小存储单元是字节（byte），一个字节就是一个8位二进制数，即8个bit。它的二进制表示范围从<code>00000000</code><del><code>11111111</code>，换算成十进制是0</del>255，换算成十六进制是<code>00</code>~<code>ff</code>。
+在集中数据类型中，byte 占一字节(apparently)，short 占2字节，int 占4字节，long 占8字节，float 占4字节，double 占8字节，char 占2字节。</p>
+<p>对于布尔值，情况比较复杂：
+<strong>在Java虚拟机规范中</strong>，布尔值在编译之后通常使用Java虚拟机中的<code>int</code>数据类型来代替，而<code>int</code>数据类型占用<strong>4个字节</strong>。因此，在这种情况下，布尔值被视为占用4个字节。<strong>内存对齐</strong>：JVM通常会将变量对齐到自然边界（如4字节），这在某些硬件架构上可以提高访问速度和效率。因此，即使从存储效率的角度看，把boolean用1位来表示似乎更合理，但考虑到性能和实现的简洁性，JVM使用了4字节来表示boolean。
+<strong>在数组中</strong>，每个布尔元素使用1位，即1bit来表示。这是因为Java虚拟机使用1表示真（true），0表示假（false），来对布尔值进行编码。因此，当布尔值作为数组元素时，它们各自占用<strong>1bit</strong>。
+综上所述，虽然无论在什么地方存储的布尔值都是0和1表示的，<strong>有效使用空间只有1 bit</strong>，但实际占用字节随情况改变。</p>
+<ul>
+<li>
+<p><strong>IEEE 754</strong> 标准表示 float类型数据 (4byte，32bits)
+• 先将浮点数表示为：(-1)^a x b x 2^c 的形式
+• <strong>符号位（1位, a）</strong>: 表示数的符号（正或负）。
+0 表示正数，1 表示负数
+• <strong>指数部分（8位, c）</strong>: 用于表示浮点数的指数部分，并采用偏移量（偏置数）表示法。
+偏移量是 127，即实际的指数值 = 存储的指数 - 127
+• <strong>尾数部分（23位, b）</strong>: 用于表示浮点数的尾数部分（小数部分），也称为有效数字（Mantissa 或    Significand）。
+隐式的 1 位最左边的“1”不存储，只存储小数部分。
+• 对于 double，各部分占 bit 数为1，11，52。</p>
+</li>
+<li>
+<p>对于 float，实际情况例如：
+6.5 = (-1)^0 x 1.625 x 2^2 = 0 10000001 10100000000000000000000
+• <strong>符号位 = 0</strong>（表示正数）
+• <strong>指数部分 = 10000001（129）</strong>，实际的指数值 = 129 - 127 = 2
+• <strong>尾数部分 = 1.101<!-- raw HTML omitted -->BIN<!-- raw HTML omitted --></strong>（隐含的最左边的“1”，尾数为 1 + 0.5 + 0.125 = 1.625<!-- raw HTML omitted -->DEC<!-- raw HTML omitted -->）</p>
+</li>
+</ul>
+<p>在 Java 中，整数是绝对精确的，整数计算也是完全精确的(向下取整)。而浮点数无法在二进制下被精确表示，所以可能产生误差:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">//...</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">float</span> a <span style="color:#f92672">=</span> 0.<span style="color:#a6e22e">1</span> <span style="color:#f92672">/</span> 3 <span style="color:#f92672">*</span> 3
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">float</span> b <span style="color:#f92672">=</span> 0.<span style="color:#a6e22e">1</span>
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(a <span style="color:#f92672">==</span> b)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//...</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">(</span>terminal output<span style="color:#f92672">)</span> &gt; False
+</span></span></code></pre></div><p><strong>对于一个占 n byte 的整型数据类型，能表示的数的区间为[-2^(n-1), 2^(n-1)-1]。</strong></p>
+<ul>
+<li>为什么不是[-2^n, 2^n-1]？</li>
+</ul>
+<p>计算机系统用<strong>二补法</strong>表示正负，比如：+6<!-- raw HTML omitted -->DEC<!-- raw HTML omitted --> = 00000110<!-- raw HTML omitted -->BIN<!-- raw HTML omitted -->，而负数要先对其绝对值的二进制数取反再加一：-6<!-- raw HTML omitted -->DEC<!-- raw HTML omitted --> = 11111010<!-- raw HTML omitted -->BIN<!-- raw HTML omitted -->。其中第一位的1与0表示了这个二进制数的正负，形式与上文所述的浮点数一样。这也与下文即将要说的溢出有关。</p>
+<p><strong>强制转换类型：</strong></p>
+<ul>
+<li>byte b = 42, <del>b = (int) b</del>:：一个变量只能有一个数据类型，不能自己给自己转换类型。</li>
+<li>byte b = 42, <del>long c  = (int) b</del>：前后不一，到底要 long 还是 int 类？</li>
+<li>byte b = 42, int c = (int) b：合理。</li>
+<li>强制转换类型也会产生溢出错误。</li>
+</ul>
+<h2 id="计算法则">计算法则</h2>
+<p>我们借用(24年) TUT session1 的例子</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">rules</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> 7 <span style="color:#f92672">/</span> 5;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> b <span style="color:#f92672">=</span> 7 <span style="color:#f92672">/</span> 5
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> c <span style="color:#f92672">=</span> 7.<span style="color:#a6e22e">0</span> <span style="color:#f92672">/</span> 5
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> d <span style="color:#f92672">=</span> 4.<span style="color:#a6e22e">00</span> <span style="color:#f92672">+</span> 5.<span style="color:#a6e22e">00</span>
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(a <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span> b <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span> c <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span> d);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">(</span>terminal output<span style="color:#f92672">)</span> &gt; 1, 1.0, 1.4, 9.0
+</span></span></code></pre></div><ul>
+<li>
+<p>Java 中，JVM 无法直接像 PVM 一样将所有数字同样处理，<strong>在向变量赋值时需要声明数据类型</strong>，比如 <code>int x = 42</code> 将整型的 42 赋给了x。同时，数字本身也是自带默认类型的，比如 42 一定是一个 int 类型的数据，42.0 一定是一个 double 类型的数据(<strong>所有小数直接默认是 double</strong>)。所以对于上方程序中的 &ldquo;b&rdquo;: 7<!-- raw HTML omitted -->int<!-- raw HTML omitted --> / 5<!-- raw HTML omitted -->int<!-- raw HTML omitted --> = 1<!-- raw HTML omitted -->int<!-- raw HTML omitted -->，1<!-- raw HTML omitted -->int<!-- raw HTML omitted --> = 1.0<!-- raw HTML omitted -->double<!-- raw HTML omitted --> = b<!-- raw HTML omitted -->double<!-- raw HTML omitted -->。(7 / 5 是两个整型的计算，输出值必然为整型)。对于&quot;c&quot;也同理，7.0 是 double，所以输出值也是 1.4<!-- raw HTML omitted -->double<!-- raw HTML omitted -->。<strong>参与运算的两个数其中一个是整型，一个是浮点型，那么整型可以自动提升到浮点型。</strong></p>
+</li>
+<li>
+<p>未经特殊指定的浮点数常量（如 42.0）在 Java 中默认是 double 类型。如果需要指定为 float 类型，则必须添加 f 或 F 后缀，如 float a = 42.0f。同理 long a = 42L。</p>
+</li>
+<li>
+<p>在 Java 中，7.00 / 5 的结果是 1.4 而不是 1.40，这是因为在默认情况下，Java 输出浮点数时，<strong>只显示必要的小数位</strong>。也就是说，Java 会自动去掉没有意义的零，只显示结果的最小精度。比如对于&quot;d&quot;，表达式 <strong>4.00 + 5.00 的结果就是 9.0（double 类型）</strong>。</p>
+</li>
+<li>
+<p>关于整型计算的<strong>溢出</strong>：</p>
+<p>**整数运算溢出（integer overflow）**是 Java 语言特有的计算缺陷，当计算结果超出了该数据类型的表示范围就会发生计算错误。</p>
+<p>此处引用李文烨教授讲座中的例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">//......</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">byte</span> m <span style="color:#f92672">=</span> 100;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">byte</span> n <span style="color:#f92672">=</span> 70;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">byte</span> p <span style="color:#f92672">=</span> m <span style="color:#f92672">+</span> n
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(p)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//......</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">(</span>terminal output<span style="color:#f92672">)</span> &gt; -86
+</span></span></code></pre></div><p>将 170 赋值给 byte 类型的变量 p 时，发生了溢出，因为 byte 类型的最大值是 127，而 170 超出了这个范围。Java 会按 byte 类型的范围（-128 到 127）来截断数值。byte 的范围是 256（从 -128 到 127 共 256 个值），计算时会对减去256，因此结果是 -86。可以理解为超出一侧范围后从另一个端点开始继续。</p>
+</li>
+<li>
+<p>逻辑运算：</p>
+<p>AND 与：&amp;&amp;，OR 或：||，NOT 非：!=。</p>
+</li>
+<li>
+<p>位运算(二进制)：</p>
+<p>AND 与：&amp;，OR 或：|，XOR 异或：^。</p>
+</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://liaoxuefeng.com/books/java/introduction/index.html">廖雪峰的官方网站</a></li>
+</ul>
+<h2 id="随堂小测">随堂小测</h2>
+<p>1、<code>float a = 0.11 * 100</code> 计算的结果是11.0吗？</p>
+<p>2、以下中 b 输出值为多少？</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">short</span> a <span style="color:#f92672">=</span> 30000:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">short</span> b <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> a
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(b)
+</span></span></code></pre></div><p>3、如果用 Java 语言模拟子网掩码的功能要用到什么运算符？</p>
+<p>4、args 是保留名吗？</p>
+<p>5、<code>double x = 1.00 + 2</code> 计算结果是什么？</p>
+<p>6、如何用强制转换类型随机抽取一个 0 到 100 之间的整数并赋给 a ？</p>
+<h4 id="answer">answer</h4>
+<p>1、不一定      2、-5536      3、&amp;      4、否      5、3.0</p>
+<p>6、int a = (int) (Math.random() * 101)</p>
+</div>
 
   </article>
 

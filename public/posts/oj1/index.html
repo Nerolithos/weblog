@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title> # CSC1003 Practice2 OJ习题 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="龙大 SDS 学院 CSC1003 的 Practice 网站：
+OJ 主站
+OJ 2024
+前言
+
+
+以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。
+
+
+OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/oj1/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/posts/oj1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content=" # CSC1003 Practice2 OJ习题">
+  <meta property="og:description" content="龙大 SDS 学院 CSC1003 的 Practice 网站： OJ 主站 OJ 2024
+前言 以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。
+OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-09-22T15:49:58+08:00">
+    <meta property="article:modified_time" content="2024-09-22T15:49:58+08:00">
+
+  <meta itemprop="name" content=" # CSC1003 Practice2 OJ习题">
+  <meta itemprop="description" content="龙大 SDS 学院 CSC1003 的 Practice 网站： OJ 主站 OJ 2024
+前言 以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。
+OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。">
+  <meta itemprop="datePublished" content="2024-09-22T15:49:58+08:00">
+  <meta itemprop="dateModified" content="2024-09-22T15:49:58+08:00">
+  <meta itemprop="wordCount" content="1689">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content=" # CSC1003 Practice2 OJ习题">
+  <meta name="twitter:description" content="龙大 SDS 学院 CSC1003 的 Practice 网站： OJ 主站 OJ 2024
+前言 以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。
+OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。">
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/oj1.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title"> # CSC1003 Practice2 OJ习题</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1"> # CSC1003 Practice2 OJ习题</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-09-22T15:49:58+08:00">September 22, 2024</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>龙大 SDS 学院 CSC1003 的 Practice 网站：
+<a href="https://oj.cuhk.edu.cn/p/">OJ 主站</a>
+<a href="https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/">OJ 2024</a></p>
+<h4 id="前言">前言</h4>
+<ul>
+<li>
+<p>以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。</p>
+</li>
+<li>
+<p>OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。</p>
+</li>
+<li>
+<p>OJ 系统截止到 2024 年 9 月必须使用 <code>Main</code> 作为类名。</p>
+</li>
+<li>
+<p>OJ 系统和本博客一样，其网页似乎是用 Markdown 格式上传，由 Cloudflare 托管，再转成 HTML 的，<strong>这可能导致一些问题</strong>。比如编写者对网站内容进行修改和增补时，<strong>可能导致网站崩溃</strong>。</p>
+</li>
+<li>
+<p>OJ 系统检测的是答案和程序结构，如果在大致框架上差不多，然后直接 print 答案的话(比如在 P1004中，答案是固定的) 系统可能误判为程序正确。</p>
+</li>
+</ul>
+<h4 id="p1001--abproblem">P1001  A+BProblem</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Scanner;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>    Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(x <span style="color:#f92672">+</span> y);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li><code>import java.util.*;</code> 可以导入 util package 下的所有类，包括 Scanner, Date, Random, Collections 等。</li>
+</ul>
+<h4 id="p1004--narcissistic_numbers">P1004  Narcissistic_numbers</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 100; x <span style="color:#f92672">&lt;</span> 1000; x<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> x <span style="color:#f92672">/</span> 100;
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> (x <span style="color:#f92672">-</span> h <span style="color:#f92672">*</span> 100) <span style="color:#f92672">/</span> 10;
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> u <span style="color:#f92672">=</span> x <span style="color:#f92672">-</span> h <span style="color:#f92672">*</span> 100 <span style="color:#f92672">-</span> d <span style="color:#f92672">*</span> 10;
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> p <span style="color:#f92672">=</span> h <span style="color:#f92672">*</span> h <span style="color:#f92672">*</span> h <span style="color:#f92672">+</span> d <span style="color:#f92672">*</span> d <span style="color:#f92672">*</span> d <span style="color:#f92672">+</span> u <span style="color:#f92672">*</span> u <span style="color:#f92672">*</span> u;
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (p <span style="color:#f92672">==</span> x) {
+</span></span><span style="display:flex;"><span>				System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(x <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>其他解法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 100; x <span style="color:#f92672">&lt;</span> 1000; x<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> x <span style="color:#f92672">/</span> 100;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> (x <span style="color:#f92672">/</span> 10) <span style="color:#f92672">%</span> 10;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> u <span style="color:#f92672">=</span> x <span style="color:#f92672">%</span> 10;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> p <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)(Math.<span style="color:#a6e22e">pow</span>(h, 3) <span style="color:#f92672">+</span> Math.<span style="color:#a6e22e">pow</span>(d, 3) <span style="color:#f92672">+</span> Math.<span style="color:#a6e22e">pow</span>(u, 3));
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (p <span style="color:#f92672">==</span> x) {
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(x <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li>JDK 无法理解 <code>99 &lt; x &lt; 1000</code> 这种连不等式，<strong>需要表达为<code>x &gt; 99 &amp;&amp; x &lt; 1000</code>。</strong></li>
+<li>Java 中 <code>/</code> 是整除，<code>%</code> 是取余。以 <code>int d = (x / 10) % 10;</code> 为例，假设原三位数为 345，345 / 10 = 34，34 % 10 = 4，从而达到取十位数的作用。</li>
+<li><strong><code>println()</code> 输出后换行；<code>print()</code> 只输出。</strong></li>
+<li>为什么不能用 <code>print(x + ' ')</code> ? 在 Java 中，<strong>单引号内的数据是字符(char)而双引号内是字符串(string)</strong>，当你使用 + 运算符连接 int 类型和 char 类型时，<strong>char 会转换为其对应的 ASCII 值参与加法运算</strong>。因此，空格字符的 ASCII 值是 32，导致输出的结果是 x + 32，这会得到错误的数字输出。因此看到的数字的结果比预期的值多了 32。对于 153，实际上打印了 185（因为 153 + 32 = 185），再对应到 ASCII 值时，它正好显示为百分号 %。<strong>与 ASCII 码无关时，请避免使用单引号。</strong></li>
+</ul>
+<h4 id="p1005--divisible">P1005  Divisible</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>		Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (x <span style="color:#f92672">%</span> y <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> y <span style="color:#f92672">%</span> x <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>			System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;true&#34;</span>);
+</span></span><span style="display:flex;"><span>		} <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>			System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;false&#34;</span>);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li><strong><code>if{}else{}</code> 结构千万不要漏 else 前面的大括号。</strong></li>
+<li><code>main(String[] args)</code> 的键盘输入功能收集 <code>java Main 42</code> 中的 42(与运行命令同行)；Scanner 类的键盘输入功能收集 <code>java Main</code> 这一命令行运行后键入的数据。</li>
+<li>与 Python 不同，Java 中的布尔值保留名是<strong>小写</strong>的。</li>
+</ul>
+<h4 id="p1006--pascals_triangle">P1006  Pascal&rsquo;s_Triangle</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 创建一个二维n*n数组来存储帕斯卡三角形的值</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> pascal <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>n<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 生成帕斯卡三角形</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> n; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0; j <span style="color:#f92672">&lt;=</span> i; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 每行的首尾元素为 1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (j <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> j <span style="color:#f92672">==</span> i) {
+</span></span><span style="display:flex;"><span>                    pascal<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>                } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// 中间的元素等于上一行相邻的两个元素之和</span>
+</span></span><span style="display:flex;"><span>                    pascal<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> pascal<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> pascal<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(pascal<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        sc.<span style="color:#a6e22e">close</span>();  <span style="color:#75715e">// 用于释放内存，虽然去掉也能运行</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li>
+<p>二维数组
+对于数组 <code>int[][] array = new int[2][4];</code> ，这是一个二行四列的数组：</p>
+<pre tabindex="0"><code>  →列
+↓  [][][][]
+行 [][][][]
+</code></pre></li>
+<li>
+<p>那么 <code>array[1][3] = 2;</code> 表示:</p>
+<pre tabindex="0"><code>[][][][]
+[][][][2]
+</code></pre></li>
+</ul>
+<h4 id="p1007--reverse">P1007  Reverse</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>		Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>10000<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (;; n<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (sc.<span style="color:#a6e22e">hasNextInt</span>()) {
+</span></span><span style="display:flex;"><span>				nums<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>			} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1; m <span style="color:#f92672">&gt;=</span> 0; m <span style="color:#f92672">--</span>) {
+</span></span><span style="display:flex;"><span>			System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(nums<span style="color:#f92672">[</span>m<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li>数组的长度必须要定义的。</li>
+<li><strong><code>n++</code> 表示将 n+1 的值赋给 n 并调用 n；<code>++n</code> 表示先调用 n 再将 n+1 的值赋给 n</strong>。所以在<code>for (;; n++)</code> 循环中 break(强制退出循环) 时 n 的值为 nums 数组长度+2，也就是最大序号+1。所以后面倒序将数组输出时需要从 n-1 项(也就是数组的最后一项)开始。</li>
+</ul>
+<h4 id="p1008-divisor">P1008 Divisor</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">Divisor</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr1, <span style="color:#66d9ef">int</span> len1, <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr2, <span style="color:#66d9ef">int</span> len2) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> 0; m <span style="color:#f92672">&lt;</span> len1; m<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> 0; n <span style="color:#f92672">&lt;</span> len2; n<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (arr1<span style="color:#f92672">[</span>m<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> arr2<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span>) {
+</span></span><span style="display:flex;"><span>                    max <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">max</span>(max, arr1<span style="color:#f92672">[</span>m<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> max;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> xd <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>100<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> yd <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>100<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> cx <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> cy <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> 1; d <span style="color:#f92672">&lt;=</span> x; d<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">%</span> d <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                xd<span style="color:#f92672">[</span>cx<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> d;
+</span></span><span style="display:flex;"><span>                cx<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> e <span style="color:#f92672">=</span> 1; e <span style="color:#f92672">&lt;=</span> y; e<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (y <span style="color:#f92672">%</span> e <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                yd<span style="color:#f92672">[</span>cy<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e;
+</span></span><span style="display:flex;"><span>                cy<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> result <span style="color:#f92672">=</span> Divisor(xd, cx, yd, cy);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(result);
+</span></span><span style="display:flex;"><span>        sc.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><code>public static int Divisor()</code> 中的 <code>int</code> 表示返回值的类型，位置 <code>void</code> 对等。返回值就是这个方法运行结束时输出(return) 的值。</li>
+</ul>
+<h4 id="p1009--prime_counter">P1009  Prime_Counter</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isPrime</span>(<span style="color:#66d9ef">int</span> num) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (num <span style="color:#f92672">&lt;</span> 2) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> div <span style="color:#f92672">=</span> 2; div <span style="color:#f92672">&lt;=</span> Math.<span style="color:#a6e22e">sqrt</span>(num); div<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (num <span style="color:#f92672">%</span> div <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> prime <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1e7<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 2; x <span style="color:#f92672">&lt;</span> 1e7; x<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (isPrime(x)) {
+</span></span><span style="display:flex;"><span>                prime<span style="color:#f92672">[</span>count<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> x;
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">++</span>count;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> roof <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> 0; n <span style="color:#f92672">&lt;</span> count <span style="color:#f92672">-</span> 1; n<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (prime<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;=</span> roof <span style="color:#f92672">&amp;&amp;</span> prime<span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> roof) {
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(n <span style="color:#f92672">+</span> 1);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (roof <span style="color:#f92672">==</span> 1) {
+</span></span><span style="display:flex;"><span>            	  System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(0);
+</span></span><span style="display:flex;"><span>            	  <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>当方法的<strong>返回值是布尔值类型</strong>时，<strong>这个方法本身可以作为判断/循环语句的条件部分</strong>。</li>
+</ul>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+
+      <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+    
+        <h1> # CSC1003 Practice2 OJ习题</h1>
+    <p>Categories: 
+        
+    </p>
+    <p>Tags: 
+        
+    </p>
+    <div><p>龙大 SDS 学院 CSC1003 的 Practice 网站：
+<a href="https://oj.cuhk.edu.cn/p/">OJ 主站</a>
+<a href="https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/">OJ 2024</a></p>
+<h4 id="前言">前言</h4>
+<ul>
+<li>
+<p>以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。</p>
+</li>
+<li>
+<p>OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。</p>
+</li>
+<li>
+<p>OJ 系统截止到 2024 年 9 月必须使用 <code>Main</code> 作为类名。</p>
+</li>
+<li>
+<p>OJ 系统和本博客一样，其网页似乎是用 Markdown 格式上传，由 Cloudflare 托管，再转成 HTML 的，<strong>这可能导致一些问题</strong>。比如编写者对网站内容进行修改和增补时，<strong>可能导致网站崩溃</strong>。</p>
+</li>
+<li>
+<p>OJ 系统检测的是答案和程序结构，如果在大致框架上差不多，然后直接 print 答案的话(比如在 P1004中，答案是固定的) 系统可能误判为程序正确。</p>
+</li>
+</ul>
+<h4 id="p1001--abproblem">P1001  A+BProblem</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Scanner;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>    Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(x <span style="color:#f92672">+</span> y);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li><code>import java.util.*;</code> 可以导入 util package 下的所有类，包括 Scanner, Date, Random, Collections 等。</li>
+</ul>
+<h4 id="p1004--narcissistic_numbers">P1004  Narcissistic_numbers</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 100; x <span style="color:#f92672">&lt;</span> 1000; x<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> x <span style="color:#f92672">/</span> 100;
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> (x <span style="color:#f92672">-</span> h <span style="color:#f92672">*</span> 100) <span style="color:#f92672">/</span> 10;
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> u <span style="color:#f92672">=</span> x <span style="color:#f92672">-</span> h <span style="color:#f92672">*</span> 100 <span style="color:#f92672">-</span> d <span style="color:#f92672">*</span> 10;
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> p <span style="color:#f92672">=</span> h <span style="color:#f92672">*</span> h <span style="color:#f92672">*</span> h <span style="color:#f92672">+</span> d <span style="color:#f92672">*</span> d <span style="color:#f92672">*</span> d <span style="color:#f92672">+</span> u <span style="color:#f92672">*</span> u <span style="color:#f92672">*</span> u;
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (p <span style="color:#f92672">==</span> x) {
+</span></span><span style="display:flex;"><span>				System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(x <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>其他解法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 100; x <span style="color:#f92672">&lt;</span> 1000; x<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> x <span style="color:#f92672">/</span> 100;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> (x <span style="color:#f92672">/</span> 10) <span style="color:#f92672">%</span> 10;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> u <span style="color:#f92672">=</span> x <span style="color:#f92672">%</span> 10;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> p <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)(Math.<span style="color:#a6e22e">pow</span>(h, 3) <span style="color:#f92672">+</span> Math.<span style="color:#a6e22e">pow</span>(d, 3) <span style="color:#f92672">+</span> Math.<span style="color:#a6e22e">pow</span>(u, 3));
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (p <span style="color:#f92672">==</span> x) {
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(x <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li>JDK 无法理解 <code>99 &lt; x &lt; 1000</code> 这种连不等式，<strong>需要表达为<code>x &gt; 99 &amp;&amp; x &lt; 1000</code>。</strong></li>
+<li>Java 中 <code>/</code> 是整除，<code>%</code> 是取余。以 <code>int d = (x / 10) % 10;</code> 为例，假设原三位数为 345，345 / 10 = 34，34 % 10 = 4，从而达到取十位数的作用。</li>
+<li><strong><code>println()</code> 输出后换行；<code>print()</code> 只输出。</strong></li>
+<li>为什么不能用 <code>print(x + ' ')</code> ? 在 Java 中，<strong>单引号内的数据是字符(char)而双引号内是字符串(string)</strong>，当你使用 + 运算符连接 int 类型和 char 类型时，<strong>char 会转换为其对应的 ASCII 值参与加法运算</strong>。因此，空格字符的 ASCII 值是 32，导致输出的结果是 x + 32，这会得到错误的数字输出。因此看到的数字的结果比预期的值多了 32。对于 153，实际上打印了 185（因为 153 + 32 = 185），再对应到 ASCII 值时，它正好显示为百分号 %。<strong>与 ASCII 码无关时，请避免使用单引号。</strong></li>
+</ul>
+<h4 id="p1005--divisible">P1005  Divisible</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>		Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (x <span style="color:#f92672">%</span> y <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> y <span style="color:#f92672">%</span> x <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>			System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;true&#34;</span>);
+</span></span><span style="display:flex;"><span>		} <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>			System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;false&#34;</span>);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li><strong><code>if{}else{}</code> 结构千万不要漏 else 前面的大括号。</strong></li>
+<li><code>main(String[] args)</code> 的键盘输入功能收集 <code>java Main 42</code> 中的 42(与运行命令同行)；Scanner 类的键盘输入功能收集 <code>java Main</code> 这一命令行运行后键入的数据。</li>
+<li>与 Python 不同，Java 中的布尔值保留名是<strong>小写</strong>的。</li>
+</ul>
+<h4 id="p1006--pascals_triangle">P1006  Pascal&rsquo;s_Triangle</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 创建一个二维n*n数组来存储帕斯卡三角形的值</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> pascal <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>n<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 生成帕斯卡三角形</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> n; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0; j <span style="color:#f92672">&lt;=</span> i; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 每行的首尾元素为 1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (j <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> j <span style="color:#f92672">==</span> i) {
+</span></span><span style="display:flex;"><span>                    pascal<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>                } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// 中间的元素等于上一行相邻的两个元素之和</span>
+</span></span><span style="display:flex;"><span>                    pascal<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> pascal<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> pascal<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(pascal<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        sc.<span style="color:#a6e22e">close</span>();  <span style="color:#75715e">// 用于释放内存，虽然去掉也能运行</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li>
+<p>二维数组
+对于数组 <code>int[][] array = new int[2][4];</code> ，这是一个二行四列的数组：</p>
+<pre tabindex="0"><code>  →列
+↓  [][][][]
+行 [][][][]
+</code></pre></li>
+<li>
+<p>那么 <code>array[1][3] = 2;</code> 表示:</p>
+<pre tabindex="0"><code>[][][][]
+[][][][2]
+</code></pre></li>
+</ul>
+<h4 id="p1007--reverse">P1007  Reverse</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>		Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>10000<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (;; n<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (sc.<span style="color:#a6e22e">hasNextInt</span>()) {
+</span></span><span style="display:flex;"><span>				nums<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>			} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1; m <span style="color:#f92672">&gt;=</span> 0; m <span style="color:#f92672">--</span>) {
+</span></span><span style="display:flex;"><span>			System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(nums<span style="color:#f92672">[</span>m<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li>数组的长度必须要定义的。</li>
+<li><strong><code>n++</code> 表示将 n+1 的值赋给 n 并调用 n；<code>++n</code> 表示先调用 n 再将 n+1 的值赋给 n</strong>。所以在<code>for (;; n++)</code> 循环中 break(强制退出循环) 时 n 的值为 nums 数组长度+2，也就是最大序号+1。所以后面倒序将数组输出时需要从 n-1 项(也就是数组的最后一项)开始。</li>
+</ul>
+<h4 id="p1008-divisor">P1008 Divisor</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">Divisor</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr1, <span style="color:#66d9ef">int</span> len1, <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr2, <span style="color:#66d9ef">int</span> len2) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> 0; m <span style="color:#f92672">&lt;</span> len1; m<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> 0; n <span style="color:#f92672">&lt;</span> len2; n<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (arr1<span style="color:#f92672">[</span>m<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> arr2<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span>) {
+</span></span><span style="display:flex;"><span>                    max <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">max</span>(max, arr1<span style="color:#f92672">[</span>m<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> max;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> xd <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>100<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> yd <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>100<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> cx <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> cy <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> 1; d <span style="color:#f92672">&lt;=</span> x; d<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">%</span> d <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                xd<span style="color:#f92672">[</span>cx<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> d;
+</span></span><span style="display:flex;"><span>                cx<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> e <span style="color:#f92672">=</span> 1; e <span style="color:#f92672">&lt;=</span> y; e<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (y <span style="color:#f92672">%</span> e <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                yd<span style="color:#f92672">[</span>cy<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e;
+</span></span><span style="display:flex;"><span>                cy<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> result <span style="color:#f92672">=</span> Divisor(xd, cx, yd, cy);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(result);
+</span></span><span style="display:flex;"><span>        sc.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><code>public static int Divisor()</code> 中的 <code>int</code> 表示返回值的类型，位置 <code>void</code> 对等。返回值就是这个方法运行结束时输出(return) 的值。</li>
+</ul>
+<h4 id="p1009--prime_counter">P1009  Prime_Counter</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isPrime</span>(<span style="color:#66d9ef">int</span> num) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (num <span style="color:#f92672">&lt;</span> 2) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> div <span style="color:#f92672">=</span> 2; div <span style="color:#f92672">&lt;=</span> Math.<span style="color:#a6e22e">sqrt</span>(num); div<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (num <span style="color:#f92672">%</span> div <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> prime <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1e7<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 2; x <span style="color:#f92672">&lt;</span> 1e7; x<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (isPrime(x)) {
+</span></span><span style="display:flex;"><span>                prime<span style="color:#f92672">[</span>count<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> x;
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">++</span>count;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> roof <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextInt</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> 0; n <span style="color:#f92672">&lt;</span> count <span style="color:#f92672">-</span> 1; n<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (prime<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;=</span> roof <span style="color:#f92672">&amp;&amp;</span> prime<span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> roof) {
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(n <span style="color:#f92672">+</span> 1);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (roof <span style="color:#f92672">==</span> 1) {
+</span></span><span style="display:flex;"><span>            	  System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(0);
+</span></span><span style="display:flex;"><span>            	  <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>当方法的<strong>返回值是布尔值类型</strong>时，<strong>这个方法本身可以作为判断/循环语句的条件部分</strong>。</li>
+</ul>
+</div>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
+    &copy;  Lithos' Blog 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

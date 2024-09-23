@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title> # CSC1003 LEC4~6 条件，循环与数组 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="介绍 if 条件和 while, do-while, for, foreach 循环以及数组">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/1003.3/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/posts/1003.3/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content=" # CSC1003 LEC4~6 条件，循环与数组">
+  <meta property="og:description" content="介绍 if 条件和 while, do-while, for, foreach 循环以及数组">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-09-18T16:23:58+08:00">
+    <meta property="article:modified_time" content="2024-09-18T16:23:58+08:00">
+    <meta property="article:tag" content="CSC1003">
+
+  <meta itemprop="name" content=" # CSC1003 LEC4~6 条件，循环与数组">
+  <meta itemprop="description" content="介绍 if 条件和 while, do-while, for, foreach 循环以及数组">
+  <meta itemprop="datePublished" content="2024-09-18T16:23:58+08:00">
+  <meta itemprop="dateModified" content="2024-09-18T16:23:58+08:00">
+  <meta itemprop="wordCount" content="1670">
+  <meta itemprop="keywords" content="CSC1003">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content=" # CSC1003 LEC4~6 条件，循环与数组">
+  <meta name="twitter:description" content="介绍 if 条件和 while, do-while, for, foreach 循环以及数组">
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1"> # CSC1003 LEC4~6 条件，循环与数组</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-09-18T16:23:58+08:00">September 18, 2024</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h2 id="条件conditions">条件(conditions)</h2>
+<h4 id="if-条件">if 条件</h4>
+<ul>
+<li>if 语句本身不用加分号，如果执行内容只有单行(一个分号)，那不需要添加花括号。不过，建议不要省略，非常容易出错。语法格式如下：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#75715e">/* 条件为真 */</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 执行内容 1;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//......;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 执行内容 2，单行可以不加花括号，else 部分可以省略;</span>
+</span></span></code></pre></div><ul>
+<li>注意：Java 不使用 not, and, or 保留词，而是用 !, &amp;&amp;, || 运算符代替。注意，它们作为运算符也遵守计算法则，比如 <strong><code>boolean x = !true || !true</code>中 ! 的计算优先于 &amp;&amp; 或 ||，结果为 <em>false</em></strong>。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">boolean</span> a <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">boolean</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 使用逻辑非</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>a) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a 是 false&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 使用逻辑与</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (a <span style="color:#f92672">&amp;&amp;</span> b) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a 和 b 都是 true&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 使用逻辑或</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (a <span style="color:#f92672">||</span> b) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a 或 b 至少一个为 true&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span> a <span style="color:#f92672">&amp;&amp;</span> b <span style="color:#f92672">||</span> a) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;true&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="条件运算符">条件运算符</h4>
+<p>在 Java 中，<strong>条件运算符</strong>（也叫作<strong>三元运算符</strong>）是一种简洁的运算符，用于根据一个布尔表达式的结果在两个值之间进行选择。可以替代某些情况下的 if-else 语句。标准语法如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>result <span style="color:#f92672">=</span> (condition) <span style="color:#f92672">?</span> value1 : value2;
+</span></span></code></pre></div><ul>
+<li>
+<p><strong>value 1 和 value 2 必须是同类型数据</strong>。</p>
+</li>
+<li>
+<p>实例如下：</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> 10;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 20;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 使用条件运算符选择较大的数</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> (a <span style="color:#f92672">&gt;</span> b) <span style="color:#f92672">?</span> a : b;
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;最大值是: &#34;</span> <span style="color:#f92672">+</span> max); <span style="color:#75715e">// 输出: 最大值是: 20</span>
+</span></span></code></pre></div><h2 id="循环loops">循环(loops)</h2>
+<h4 id="while-循环">while 循环</h4>
+<p>以下都是 LEC5 中提出的例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Factorial</span> {                      <span style="color:#75715e">// 阶乘</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> num) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">parseInt</span>(num<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (a <span style="color:#f92672">&gt;</span> 0) {
+</span></span><span style="display:flex;"><span>        c <span style="color:#f92672">=</span> a <span style="color:#f92672">*</span> c;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">--</span>a;    <span style="color:#75715e">// a = a - 1</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(c);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>while 循环只有<strong>一个成员变量，表示循环条件</strong>，循环节重复直到该条件为假。一般来说 while 循环中都需要自带“计数器”，改变成员变量的值，否则就会永远循环。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Sqrt</span> {    <span style="color:#75715e">// 精确计算 √c</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">double</span> c <span style="color:#f92672">=</span> Double.<span style="color:#a6e22e">parseDouble</span>(args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> t <span style="color:#f92672">=</span> c;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (Math.<span style="color:#a6e22e">abs</span>(t <span style="color:#f92672">*</span> t <span style="color:#f92672">-</span> c) <span style="color:#f92672">&gt;</span> 1e<span style="color:#f92672">-</span>15 ) {
+</span></span><span style="display:flex;"><span>    	    t <span style="color:#f92672">=</span> (t <span style="color:#f92672">+</span> c <span style="color:#f92672">/</span> t) <span style="color:#f92672">/</span> 2.<span style="color:#a6e22e">0</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(t);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>1e-15 是科学计数法的 1x 10^-15。</li>
+<li>这个程序使 t^2 逐渐逼近 c ，直到差距小于显示极限，比 Math.sqrt()方法更精准。</li>
+</ul>
+<h4 id="do-while-循环">do-while 循环</h4>
+<p>其条件在循环体之后检查，确保循环体至少执行一次。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(i);
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&lt;</span> 5);
+</span></span></code></pre></div><h4 id="for-循环">for 循环</h4>
+<p>Java 的 <code>for</code> 循环标准格式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#75715e">/*初始化部分; 条件部分; 迭代部分*/</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 循环体</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 比如说：</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> 5; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(i);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>for 循环的成员变量中的任何一个或多个都可以被省略，<strong>但是分号不能省略</strong>。比如：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">&gt;=</span> 5) <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(i);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><strong>break 代表强制结束循环</strong>。</li>
+</ul>
+<h4 id="foreach-循环">foreach 循环</h4>
+<p>foreach 循环是对 for 循环用于遍历数组或集合时的增强版本。但它会遍历 <strong>each and every</strong>，而<strong>不支持数组的索引功能</strong>。</p>
+<ul>
+<li>对于数组(array)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> array <span style="color:#f92672">=</span> {1, 3, 7, 34};
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 定义一个整数数组，与 &#34;String[] args&#34; 是同类语句</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 使用 foreach 循环遍历数组</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x : array) {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(x);  <span style="color:#75715e">// 输出每个元素</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>不难发现 Java 中的 <code>for (&lt;Element_type&gt; &lt;Element&gt; : &lt;AC&gt;) </code>与 Python 中的<code>for &lt;Element&gt; in &lt;AC&gt;</code>  的语序是对应的。注：AC is short for ‘Array or Collection’。</p>
+</li>
+<li>
+<p>对于集合(collection)</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.ArrayList;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.List;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> names <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>        names.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;Alice&#34;</span>);
+</span></span><span style="display:flex;"><span>        names.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;Bob&#34;</span>);
+</span></span><span style="display:flex;"><span>        names.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;Charlie&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 使用增强型 for 循环遍历集合</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (String name : names) {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(name);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="数组arrays">数组(arrays)</h2>
+<ul>
+<li>数组是一系列<strong>相同数据类型</strong>的数据组成的<strong>可索引</strong>的<strong>编号序列</strong>。</li>
+<li><strong>数组的索引编号从 0 开始</strong>。</li>
+<li>基础语法：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>String<span style="color:#f92672">[]</span> args;  <span style="color:#75715e">// 声明一个字符串类数组：args[] (同 main 方法)</span>
+</span></span><span style="display:flex;"><span>args <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>42<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 然后创造出一个指定长度的数组</span>
+</span></span><span style="display:flex;"><span>String<span style="color:#f92672">[]</span> args <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>42<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 合并操作</span>
+</span></span><span style="display:flex;"><span>args.<span style="color:#a6e22e">length</span>;  <span style="color:#75715e">//获取数组长度。length 是属性，不是方法，不需要使用括号。</span>
+</span></span></code></pre></div><ul>
+<li>
+<p>相关优化：<strong>当处理键盘输入时，如果确定输入值只有整数，可以用<code>int[] num</code>修改 main 方法，这样可以省略<code>Integer.parseInt(num[i])</code>这一步。</strong></p>
+</li>
+<li>
+<p>复制数组：存在数组 a，现新定义数组 b，<strong><code>b = a</code> 不会复制数组，而是会让 b 和 a 指向内存中的同一数据列</strong>。正确语法：</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">double</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>a.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> a.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>  b<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;
+</span></span></code></pre></div><ul>
+<li>注意被复制数组和复制数组<strong>长度需要相等</strong>。<strong>此处不能用 foreach 循环，因为它不支持索引功能。</strong></li>
+<li>二维(矩阵)数组：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">// 声明和创建一个二维数组</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> matrix <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>2<span style="color:#f92672">][</span>3<span style="color:#f92672">]</span>; <span style="color:#75715e">// 2 行 3 列的数组</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 初始化一个二维数组</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> matrix2 <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    {1, 2, 3},
+</span></span><span style="display:flex;"><span>    {4, 5, 6}
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> value <span style="color:#f92672">=</span> matrix2<span style="color:#f92672">[</span>1<span style="color:#f92672">][</span>2<span style="color:#f92672">]</span>; <span style="color:#75715e">// 获取第二行第三列的元素，值为 6</span>
+</span></span></code></pre></div><h2 id="随堂小测">随堂小测</h2>
+<p>1、<code>while (;i &gt; 0;) {</code> 是正确的循环条件吗？</p>
+<p>2、请修改以下代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1000<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">int</span> numbers : a) {
+</span></span><span style="display:flex;"><span>  String<span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>a.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span>  b<span style="color:#f92672">[</span>numbers<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>numbers<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="answer">answer</h4>
+<p>1、是</p>
+<p>2、如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> a <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1000<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 1.a 只被创造而没被声明</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>a.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span>; <span style="color:#75715e">// 2.定义 b 需要放在循环外，否则每循环一次就会重复创造 b，会报错。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> a.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {  <span style="color:#75715e">// 3.foreach 不支持索引功能，而且还和 while 循环搞混了</span>
+</span></span><span style="display:flex;"><span>    b<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 4.分号不见了</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc1003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC1003</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+
+      <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+    
+        <h1> # CSC1003 LEC4~6 条件，循环与数组</h1>
+    <p>Categories: 
+        
+    </p>
+    <p>Tags: 
+        
+            <a href="http://localhost:1313/tags/csc1003">CSC1003</a>
+        
+    </p>
+    <div><h2 id="条件conditions">条件(conditions)</h2>
+<h4 id="if-条件">if 条件</h4>
+<ul>
+<li>if 语句本身不用加分号，如果执行内容只有单行(一个分号)，那不需要添加花括号。不过，建议不要省略，非常容易出错。语法格式如下：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#75715e">/* 条件为真 */</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 执行内容 1;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//......;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 执行内容 2，单行可以不加花括号，else 部分可以省略;</span>
+</span></span></code></pre></div><ul>
+<li>注意：Java 不使用 not, and, or 保留词，而是用 !, &amp;&amp;, || 运算符代替。注意，它们作为运算符也遵守计算法则，比如 <strong><code>boolean x = !true || !true</code>中 ! 的计算优先于 &amp;&amp; 或 ||，结果为 <em>false</em></strong>。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">boolean</span> a <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">boolean</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 使用逻辑非</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>a) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a 是 false&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 使用逻辑与</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (a <span style="color:#f92672">&amp;&amp;</span> b) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a 和 b 都是 true&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 使用逻辑或</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (a <span style="color:#f92672">||</span> b) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a 或 b 至少一个为 true&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span> a <span style="color:#f92672">&amp;&amp;</span> b <span style="color:#f92672">||</span> a) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;true&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="条件运算符">条件运算符</h4>
+<p>在 Java 中，<strong>条件运算符</strong>（也叫作<strong>三元运算符</strong>）是一种简洁的运算符，用于根据一个布尔表达式的结果在两个值之间进行选择。可以替代某些情况下的 if-else 语句。标准语法如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>result <span style="color:#f92672">=</span> (condition) <span style="color:#f92672">?</span> value1 : value2;
+</span></span></code></pre></div><ul>
+<li>
+<p><strong>value 1 和 value 2 必须是同类型数据</strong>。</p>
+</li>
+<li>
+<p>实例如下：</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> 10;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 20;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 使用条件运算符选择较大的数</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> (a <span style="color:#f92672">&gt;</span> b) <span style="color:#f92672">?</span> a : b;
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;最大值是: &#34;</span> <span style="color:#f92672">+</span> max); <span style="color:#75715e">// 输出: 最大值是: 20</span>
+</span></span></code></pre></div><h2 id="循环loops">循环(loops)</h2>
+<h4 id="while-循环">while 循环</h4>
+<p>以下都是 LEC5 中提出的例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Factorial</span> {                      <span style="color:#75715e">// 阶乘</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> num) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">parseInt</span>(num<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (a <span style="color:#f92672">&gt;</span> 0) {
+</span></span><span style="display:flex;"><span>        c <span style="color:#f92672">=</span> a <span style="color:#f92672">*</span> c;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">--</span>a;    <span style="color:#75715e">// a = a - 1</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(c);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>while 循环只有<strong>一个成员变量，表示循环条件</strong>，循环节重复直到该条件为假。一般来说 while 循环中都需要自带“计数器”，改变成员变量的值，否则就会永远循环。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Sqrt</span> {    <span style="color:#75715e">// 精确计算 √c</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">double</span> c <span style="color:#f92672">=</span> Double.<span style="color:#a6e22e">parseDouble</span>(args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> t <span style="color:#f92672">=</span> c;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (Math.<span style="color:#a6e22e">abs</span>(t <span style="color:#f92672">*</span> t <span style="color:#f92672">-</span> c) <span style="color:#f92672">&gt;</span> 1e<span style="color:#f92672">-</span>15 ) {
+</span></span><span style="display:flex;"><span>    	    t <span style="color:#f92672">=</span> (t <span style="color:#f92672">+</span> c <span style="color:#f92672">/</span> t) <span style="color:#f92672">/</span> 2.<span style="color:#a6e22e">0</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(t);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>1e-15 是科学计数法的 1x 10^-15。</li>
+<li>这个程序使 t^2 逐渐逼近 c ，直到差距小于显示极限，比 Math.sqrt()方法更精准。</li>
+</ul>
+<h4 id="do-while-循环">do-while 循环</h4>
+<p>其条件在循环体之后检查，确保循环体至少执行一次。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(i);
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&lt;</span> 5);
+</span></span></code></pre></div><h4 id="for-循环">for 循环</h4>
+<p>Java 的 <code>for</code> 循环标准格式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#75715e">/*初始化部分; 条件部分; 迭代部分*/</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 循环体</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 比如说：</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> 5; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(i);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>for 循环的成员变量中的任何一个或多个都可以被省略，<strong>但是分号不能省略</strong>。比如：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">&gt;=</span> 5) <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(i);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><strong>break 代表强制结束循环</strong>。</li>
+</ul>
+<h4 id="foreach-循环">foreach 循环</h4>
+<p>foreach 循环是对 for 循环用于遍历数组或集合时的增强版本。但它会遍历 <strong>each and every</strong>，而<strong>不支持数组的索引功能</strong>。</p>
+<ul>
+<li>对于数组(array)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> array <span style="color:#f92672">=</span> {1, 3, 7, 34};
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 定义一个整数数组，与 &#34;String[] args&#34; 是同类语句</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 使用 foreach 循环遍历数组</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> x : array) {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(x);  <span style="color:#75715e">// 输出每个元素</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>不难发现 Java 中的 <code>for (&lt;Element_type&gt; &lt;Element&gt; : &lt;AC&gt;) </code>与 Python 中的<code>for &lt;Element&gt; in &lt;AC&gt;</code>  的语序是对应的。注：AC is short for ‘Array or Collection’。</p>
+</li>
+<li>
+<p>对于集合(collection)</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.ArrayList;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.List;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> names <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>        names.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;Alice&#34;</span>);
+</span></span><span style="display:flex;"><span>        names.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;Bob&#34;</span>);
+</span></span><span style="display:flex;"><span>        names.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;Charlie&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 使用增强型 for 循环遍历集合</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (String name : names) {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(name);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="数组arrays">数组(arrays)</h2>
+<ul>
+<li>数组是一系列<strong>相同数据类型</strong>的数据组成的<strong>可索引</strong>的<strong>编号序列</strong>。</li>
+<li><strong>数组的索引编号从 0 开始</strong>。</li>
+<li>基础语法：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>String<span style="color:#f92672">[]</span> args;  <span style="color:#75715e">// 声明一个字符串类数组：args[] (同 main 方法)</span>
+</span></span><span style="display:flex;"><span>args <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>42<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 然后创造出一个指定长度的数组</span>
+</span></span><span style="display:flex;"><span>String<span style="color:#f92672">[]</span> args <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>42<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 合并操作</span>
+</span></span><span style="display:flex;"><span>args.<span style="color:#a6e22e">length</span>;  <span style="color:#75715e">//获取数组长度。length 是属性，不是方法，不需要使用括号。</span>
+</span></span></code></pre></div><ul>
+<li>
+<p>相关优化：<strong>当处理键盘输入时，如果确定输入值只有整数，可以用<code>int[] num</code>修改 main 方法，这样可以省略<code>Integer.parseInt(num[i])</code>这一步。</strong></p>
+</li>
+<li>
+<p>复制数组：存在数组 a，现新定义数组 b，<strong><code>b = a</code> 不会复制数组，而是会让 b 和 a 指向内存中的同一数据列</strong>。正确语法：</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">double</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>a.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> a.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>  b<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;
+</span></span></code></pre></div><ul>
+<li>注意被复制数组和复制数组<strong>长度需要相等</strong>。<strong>此处不能用 foreach 循环，因为它不支持索引功能。</strong></li>
+<li>二维(矩阵)数组：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">// 声明和创建一个二维数组</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> matrix <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>2<span style="color:#f92672">][</span>3<span style="color:#f92672">]</span>; <span style="color:#75715e">// 2 行 3 列的数组</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 初始化一个二维数组</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> matrix2 <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    {1, 2, 3},
+</span></span><span style="display:flex;"><span>    {4, 5, 6}
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> value <span style="color:#f92672">=</span> matrix2<span style="color:#f92672">[</span>1<span style="color:#f92672">][</span>2<span style="color:#f92672">]</span>; <span style="color:#75715e">// 获取第二行第三列的元素，值为 6</span>
+</span></span></code></pre></div><h2 id="随堂小测">随堂小测</h2>
+<p>1、<code>while (;i &gt; 0;) {</code> 是正确的循环条件吗？</p>
+<p>2、请修改以下代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1000<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">int</span> numbers : a) {
+</span></span><span style="display:flex;"><span>  String<span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>a.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span>  b<span style="color:#f92672">[</span>numbers<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>numbers<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="answer">answer</h4>
+<p>1、是</p>
+<p>2、如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> a <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1000<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 1.a 只被创造而没被声明</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>a.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span>; <span style="color:#75715e">// 2.定义 b 需要放在循环外，否则每循环一次就会重复创造 b，会报错。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> a.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {  <span style="color:#75715e">// 3.foreach 不支持索引功能，而且还和 while 循环搞混了</span>
+</span></span><span style="display:flex;"><span>    b<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 4.分号不见了</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></div>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
+    &copy;  Lithos' Blog 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

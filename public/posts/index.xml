@@ -6,8 +6,22 @@
     <description>Recent content in Posts on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 12 Sep 2024 11:28:58 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 22 Sep 2024 15:49:58 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title> # CSC1003 Practice2 OJ习题</title>
+      <link>http://localhost:1313/posts/oj1/</link>
+      <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/oj1/</guid>
+      <description>&lt;p&gt;龙大 SDS 学院 CSC1003 的 Practice 网站：&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/p/&#34;&gt;OJ 主站&lt;/a&gt;&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/&#34;&gt;OJ 2024&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h4 id=&#34;前言&#34;&gt;前言&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title> # CSC1003 LEC4~6 条件，循环与数组</title>
+      <link>http://localhost:1313/posts/1003.3/</link>
+      <pubDate>Wed, 18 Sep 2024 16:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.3/</guid>
+      <description>介绍 if 条件和 while, do-while, for, foreach 循环以及数组</description>
+    </item>
     <item>
       <title># 咖啡与OOP</title>
       <link>http://localhost:1313/posts/oop/</link>
@@ -16,14 +30,14 @@
       <description>&lt;p&gt;OOP(Object-Oriented Programming) 即面向对象编程。我们来了解 Java (不是指咖啡) 中的 OOP。它包括以下内容：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;类(Class)&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;对象(Object) ≈ 实例(Instance)&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
     <item>
-      <title># CSC1003 Besides LEC</title>
+      <title># CSC1003 TBL1 网络与计算机史</title>
       <link>http://localhost:1313/posts/1003.2/</link>
       <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/1003.2/</guid>
-      <description>&lt;h2 id=&#34;网络与计算机的历史&#34;&gt;网络与计算机的历史&lt;/h2&gt;&#xA;&lt;p&gt;20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。&lt;/p&gt;</description>
+      <description>&lt;p&gt;TBL = Things Beyond Lecture。是讲座跳过的 PPT 内容，你可以在Chat.1里找到这些内容的简略版。&lt;/p&gt;&#xA;&lt;h2 id=&#34;网络与计算机的历史&#34;&gt;网络与计算机的历史&lt;/h2&gt;&#xA;&lt;p&gt;20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。&lt;/p&gt;</description>
     </item>
     <item>
-      <title> # CSC1003 LEC1~3</title>
+      <title> # CSC1003 LEC1~3 函数、数据类型与计算</title>
       <link>http://localhost:1313/posts/1003.1/</link>
       <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/1003.1/</guid>
@@ -37,17 +51,17 @@
       <description>&lt;p&gt;240822，有几位同学在龙大的选课培训直播间提出&lt;a href=&#34;https://postimg.cc/7bqTcdMd&#34;&gt;几个网络问题&lt;/a&gt;。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。&lt;/p&gt;</description>
     </item>
     <item>
-      <title> # 龙大邮箱抓取尝试</title>
+      <title># 龙大邮箱抓取尝试</title>
       <link>http://localhost:1313/posts/outlook/</link>
       <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/outlook/</guid>
       <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;&#xA;&lt;p&gt;&lt;strong&gt;注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。&lt;/p&gt;</description>
     </item>
     <item>
-      <title>如何在 cloudflare 上部署 Hugo 构架的博客</title>
-      <link>http://localhost:1313/posts/how-to-deploy-blog-on-cloudflare/</link>
+      <title>在 cloudflare 部署 Hugo 构架博客的 manual</title>
+      <link>http://localhost:1313/posts/weblog_deploy/</link>
       <pubDate>Tue, 10 Sep 2024 23:34:08 +0800</pubDate>
-      <guid>http://localhost:1313/posts/how-to-deploy-blog-on-cloudflare/</guid>
+      <guid>http://localhost:1313/posts/weblog_deploy/</guid>
       <description>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。</description>
     </item>
     <item>
