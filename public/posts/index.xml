@@ -16,7 +16,7 @@
       <description>&lt;p&gt;龙大 SDS 学院 CSC1003 的 Practice 网站：&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/p/&#34;&gt;OJ 主站&lt;/a&gt;&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/&#34;&gt;OJ 2024&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h4 id=&#34;前言&#34;&gt;前言&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。&lt;/p&gt;</description>
     </item>
     <item>
-      <title> # CSC1003 LEC4~6 条件，循环与数组</title>
+      <title># CSC1003 LEC4~6 条件，循环与数组</title>
       <link>http://localhost:1313/posts/1003.3/</link>
       <pubDate>Wed, 18 Sep 2024 16:23:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/1003.3/</guid>
@@ -37,7 +37,7 @@
       <description>&lt;p&gt;TBL = Things Beyond Lecture。是讲座跳过的 PPT 内容，你可以在Chat.1里找到这些内容的简略版。&lt;/p&gt;&#xA;&lt;h2 id=&#34;网络与计算机的历史&#34;&gt;网络与计算机的历史&lt;/h2&gt;&#xA;&lt;p&gt;20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。&lt;/p&gt;</description>
     </item>
     <item>
-      <title> # CSC1003 LEC1~3 函数、数据类型与计算</title>
+      <title># CSC1003 LEC1~3 函数、数据类型与计算</title>
       <link>http://localhost:1313/posts/1003.1/</link>
       <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/1003.1/</guid>

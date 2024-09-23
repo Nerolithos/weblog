@@ -14,7 +14,13 @@
     <loc>http://localhost:1313/posts/1003.3/</loc>
     <lastmod>2024-09-18T16:23:58+08:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2024-09-18T16:23:58+08:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/csc1003/</loc>
+    <lastmod>2024-09-18T16:23:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/sds/</loc>
     <lastmod>2024-09-18T16:23:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
@@ -33,9 +39,6 @@
     <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/outlook/</loc>
-    <lastmod>2024-09-11T09:26:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/</loc>
     <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</loc>

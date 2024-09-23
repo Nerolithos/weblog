@@ -1,11 +1,14 @@
-+++
-title = ' # CSC1003 Practice2 OJ习题'
-date = 2024-09-22T15:49:58+08:00
-draft = false
-
-featured_image = '/images/oj1.jpg'
-
-+++
+---
+title: "# CSC1003 Practice2 OJ习题"
+date: 2024-09-22T15:49:58+08:00
+draft: false
+categories: 
+- SDS
+tags: 
+- CSC1003
+- 练习
+featured_image: "/images/oj1.jpg"
+---
 
 
 
