@@ -1,5 +1,5 @@
 ---
-title: "# CSC1003 Practice2 OJ习题"
+title: "# CSC1003 Practice2 OJ习题+21届HW1"
 date: 2024-09-22T15:49:58+08:00
 draft: false
 categories: 
@@ -14,7 +14,10 @@ featured_image: "/images/oj1.jpg"
 
 龙大 SDS 学院 CSC1003 的 Practice 网站：
 [OJ 主站](https://oj.cuhk.edu.cn/p/)
+
 [OJ 2024](https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/)
+
+[OJ(曾用)内网地址](http://10.26.200.13/)
 
 
 
@@ -26,6 +29,10 @@ featured_image: "/images/oj1.jpg"
 - OJ 系统截止到 2024 年 9 月必须使用 `Main` 作为类名。
 - OJ 系统和本博客一样，其网页似乎是用 Markdown 格式上传，由 Cloudflare 托管，再转成 HTML 的，**这可能导致一些问题**。比如编写者对网站内容进行修改和增补时，**可能导致网站崩溃**。
 - OJ 系统检测的是答案和程序结构，如果在大致框架上差不多，然后直接 print 答案的话(比如在 P1004中，答案是固定的) 系统可能误判为程序正确。
+
+
+
+## 第三周-Practice2
 
 
 
@@ -308,3 +315,115 @@ public class PriCount {
 
 - 当方法的**返回值是布尔值类型**时，**这个方法本身可以作为判断/循环语句的条件部分**。
 - 在`int[] prime = new int[1e7]` 中使用科学计数法会导致报错：`错误: 不兼容的类型: 从double转换到int可能会有损失`。
+
+
+
+
+
+## 21 届的 Assignment 1
+
+
+
+#### 1. TestFibonacci
+
+- 编写一段代码，输入"n, d" 格式的字符串，输出斐波那契数列 从 `fib[n]` 到 `fib[n-d+1]` 的所有项(共 d 项)，并以逗号空格连接。
+
+```java
+import java.util.*;
+
+public class Fibonacci {
+    static Scanner input = new Scanner(System.in);
+    // here is the function you need to implement
+    public static void parse_line(int n, int d) {
+        if (n < d) {
+            System.out.println("invalid");
+            return;
+        }
+        int[] a = new int[n];
+        a[0]=1;
+        a[1]=1;
+        for (int i=2;i<n;i++) {
+            a[i]=a[i-1]+a[i-2];
+        }
+        int i = 0;
+        while (i<d) {
+            System.out.print(a[n-i-1]);
+            i++;
+            if (i<d) {
+                System.out.print(", ");           
+            }
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) throws Exception {
+            String s = input.nextLine();
+            input.close();
+            String[] t = s.split(", ");
+            int n = Integer.parseInt(t[0]);
+            int d = Integer.parseInt(t[1]);
+            if (t.length != 2) System.out.println("invalid");
+            else Fibonacci.parse_line(n, d);
+    }
+}
+```
+
+- `System.out.println()` 直接使用时起到换行的作用。
+- `throw Exception` 的作用是在运行时终端不抛出报错，交给程序员处理报错。那么如果该结构中没有处理错误部分，且实际出错，那么运行时不会输出任何东西。
+- `throw Exception` 可以被 `try-catch` 结构替代：
+
+```java
+    public static void main(String[] args) {
+        try {
+            String s = input.nextLine();
+            String[] t = s.split(", ");
+            int n = Integer.parseInt(t[0]);
+            int d = Integer.parseInt(t[1]);
+            Fibonacci.parse_line(n, d);
+        } catch (Exception e) {
+            System.out.println("invalid");
+        }
+    }
+```
+
+- `Exception e` 代表了终端所有种类的报错。
+
+
+
+#### 2. TestMathExpr
+
+- 编写一段代码，输入结构为 "num1 sign num2" 四则运算，比如 "3 / 2"。输出计算结果，但如果输入不符合预期或者无法计算，输出 "invalid"。
+
+```java
+import java.util.*;
+
+public class TestMathExpr {
+    static Scanner input = new Scanner(System.in);
+    // here is the function you need to implement
+	public static void parse_line(String s1, String s2, String s3) {
+        int n1 = Integer.parseInt(s1); int n2 = Integer.parseInt(s3);
+        if (s2.equals("+")) System.out.println(n1 + n2);
+        if (s2.equals("-")) System.out.println(n1 - n2);
+        if (s2.equals("*")) System.out.println(n1 * n2);
+        if (s2.equals("/")) {
+            if (n2 == 0) {
+                System.out.println("invalid");
+            } else System.out.println(n1 / n2);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        String s = input.nextLine();
+        input.close();
+        String t[] = s.split(" ");
+        if (t.length != 3) {
+            System.out.println("invalid input");
+        } else {
+            TestMathExpr.parse_line(t[0], t[1], t[2]);
+        }
+    }
+}
+```
+
+- 在 Java 中 String 和 int 是两种不兼容的类型，不能通过强制类型转换 (int) 来实现转换。如果你的 String 包含的是有效的整数，你可以使用 Integer.parseInt() 方法来将 String 转换为 int。**强制转换只能在数字类型间使用**。
+- 如果在 if 语句中使用 `s2 == "+"` 等字符串比较，就会犯 Java 中的一个常见错误。Java 中不能使用 == 来比较字符串的内容。因为 == 比较的是两个对象的**引用**是否相同，而不是字符串的内容是否相同。应使用` .equals()` 方法来比较字符串的内容。
