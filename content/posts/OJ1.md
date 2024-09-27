@@ -252,7 +252,7 @@ public class Main {
 ```java
 import java.util.*;
 
-public class Prime {
+public class Main {
     public static boolean isPrime(int num) {
         if (num < 2) return false;
         for (int div = 2; div <= Math.sqrt(num); div++) {
@@ -289,7 +289,7 @@ public class Prime {
 
 ```java
 import java.util.*;
-public class PriCount {
+public class Main {
     public static boolean isPrime(int num) {
         if (num < 2) return false;
         for (int div = 2; div * div <= num; div++) {
