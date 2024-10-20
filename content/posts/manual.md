@@ -5,6 +5,7 @@ draft: false
 summary: "龙大人自己的生存指南，绝赞创作中"
 categories: 
   - 帮助
+featured_image: "/images/square.jpg"
 ---
 
 
