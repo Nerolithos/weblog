@@ -1,11 +1,11 @@
 ---
 title: "# 龙 大 生 存 指 南"
-date: 2024-10-20T22:23:58+08:00
+date: 2024-10-21T22:23:58+08:00
 draft: false
 summary: "龙大人自己的生存指南，绝赞创作中"
 categories: 
   - 帮助
-featured_image: "/images/square.jpg"
+featured_image: "/images/square1.jpg"
 ---
 
 
