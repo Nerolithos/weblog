@@ -39,6 +39,10 @@ featured_image: "/images/lgu.jpg"
 
 - 学生证：期末考试硬性规则需要出示学生证，如若丢失，需要当场填一式两表，保留其下联交给 TA1 的教务处。但是，令人费解的是，你无法通过身份证、护照、驾驶证、电子学生证中的任何一者或多者作为提交时的身份证明。你需要在 48 小时内前往中信银行在下沉广场的网点补办学生证（30 元）。注意，当场交给你的学生证不会立即生效。如果超出 48 小时，本科成绩记作零分。这是个巨大的行政漏洞，在可见的未来不会改正。
 
+- 抢课与 AD 周：学校在 sis 系统上的抢课系统存在一个显然的漏洞，即，虽然教务处规定不参与预选课的学生将延迟 10 分钟开始抢课作为惩罚，但是并没有规定要按照自己的真实需求预选课，所以很多人会在预选课时只报一两门充数，然后在正式选课时加上大量未预选的科目。这就导致了教务处在使用预选课统计每门课的意向报名人数时数据的巨大偏差。解决这个问题的方案比如将学院必修课（核心课）改为直接安排给学生，只开通选修课（CEC、ENG、CHI 等）的抢课。
+
+  AD 周一般有两个阶段，在学期开始当日或者两天之内的某日，即 AD 周的第一天，教务处会开放剩余名额，学生可以以普通选课方式加课。在 AD 周中间某日起开始线上交表，建议与意向课程教授事先沟通，因为教授对交表的通过与否有最大话语权。交表流程 Registry 会用邮件通知，成功的话也会另行邮件告知。
+
 -  以 SDS 为例，BIO1008, ENG1001, CEC1000 是教务处在选课之后自动推给该学院的学生的，所以在sis.cuhk.edu.cn 上是无法加课的。SDS 学生只需要选 PED, CSC, MAT, CHI 即可。
   "Courses Assigned by Registry Office:
   Course BIO1008, ENG1001, CEC1000# will be assigned by Registry after course registration. Additionally, for Columbia Class students, MAT1011 will also be assigned by Registry after course registration."
