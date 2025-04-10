@@ -13,23 +13,27 @@ categories:
 
 
 
-
 ## 如何求求反三角矩阵的行列式？
-$$
-已知\ 
+
+
+
+已知：
+
+```math
 \left|
 \begin{matrix}
 a_{11} & a_{12} & \cdots & a_{1n} \\
-0 & a_{22} & \cdots & a_{2n} \\
+0      & a_{22} & \cdots & a_{2n} \\
 \vdots & \vdots & \ddots & \vdots \\
-0 & 0 & \cdots & a_{nn}
+0      & 0      & \cdots & a_{nn}
 \end{matrix}
 \right|
-= \prod_{i=1}^{n} a_{(i,\ i)}\ （对角线元素之积）
-$$
+= \prod_{i=1}^{n} a_{(i,\ i)} \quad （对角线元素之积）
+```
 
-$$
-那么\ 
+那么
+
+```math
 \left|
 \begin{matrix}
 a_{11} & a_{12} & \cdots & a_{1n} \\
@@ -39,7 +43,11 @@ a_{n1} & \cdots & 0 & 0
 \end{matrix}
 \right|
 = ???
-$$
+```
+
+
+
+
 
 行列式计算：行或列两 两交换时，结果 乘 -1;
 统计学：一列队伍从矮到高排序经过交换变成从高到矮排序在冒泡排序下交换次数是:$${n(n-1)\over2}\ (排序因子)$$
