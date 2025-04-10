@@ -2,7 +2,7 @@
 title: "# Brainstorming"
 date: 2025-04-10T17:15:34+08:00
 draft: false
-summary: "跨学科的突发奇想如何带来突破性进展"
+summary: "从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…"
 categories: 
 - SDS
 ---
@@ -13,45 +13,21 @@ categories:
 
 
 
+这篇小记起源于 2025 年 4 月 3 日的 MAT 2041 课堂上的一次让我走神的思考。
+
+
+
 ## 如何求求反三角矩阵的行列式？
 
 
 
-已知：
-
-```math
-\left|
-\begin{matrix}
-a_{11} & a_{12} & \cdots & a_{1n} \\
-0      & a_{22} & \cdots & a_{2n} \\
-\vdots & \vdots & \ddots & \vdots \\
-0      & 0      & \cdots & a_{nn}
-\end{matrix}
-\right|
-= \prod_{i=1}^{n} a_{(i,\ i)} \quad （对角线元素之积）
-```
-
-那么
-
-```math
-\left|
-\begin{matrix}
-a_{11} & a_{12} & \cdots & a_{1n} \\
-a_{21} & a_{22} & \cdots & 0 \\
-\vdots & \vdots & \ddots & \vdots \\
-a_{n1} & \cdots & 0 & 0
-\end{matrix}
-\right|
-= ???
-```
+![前言](/images/b0.jpg)
 
 
 
-
-
-行列式计算：行或列两 两交换时，结果 乘 -1;
+行列式计算：行或列两两交换时，结果乘 -1;
 统计学：一列队伍从矮到高排序经过交换变成从高到矮排序在冒泡排序下交换次数是:$${n(n-1)\over2}\ (排序因子)$$
-已知三角矩阵行列式均为 1，反三角矩阵行列式就为：
+把矩阵列空间含0多的向量想象成较矮的人，那么两个问题本质上是等价的。已知三角矩阵行列式均为 1，反三角矩阵行列式就为：
 $$
 (-1)^{\frac{n(n-1)}{2}} \cdot\prod_{i=1}^na_{(i,\ n-i+1)}\ (反对角线元素之积)
 $$
