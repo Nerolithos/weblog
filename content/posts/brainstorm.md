@@ -18,7 +18,7 @@ categories:
 $$已知\ \begin{vmatrix}a_{11} & a_{12} & \cdots & a_{1n} \\0 & a_{22} & \cdots & a_{2n} \\\vdots & \vdots & \ddots & \vdots \\0 & 0 & \cdots & a_{nn}\end{vmatrix}=\prod_{i=1}^{n} a_{(i,\ i)}\ (对角线元素之积)$$
 $$那么\ \begin{vmatrix}a_{11} & a_{12} & \cdots & a_{1n} \\a_{21} & a_{22} & \cdots & 0 \\\vdots & \vdots & \ddots & \vdots \\a_{n1} & \cdots & 0 & 0\end{vmatrix}= ???$$
 
-行列式计算：行或列两 两交换时，结果 乘 -1。
+行列式计算：行或列两 两交换时，结果 乘 -1;
 统计学：一列队伍从矮到高排序经过交换变成从高到矮排序在冒泡排序下交换次数是:$${n(n-1)\over2}\ (排序因子)$$
 已知三角矩阵行列式均为 1，反三角矩阵行列式就为：$$(-1)^{\frac{n(n-1)}{2}} \cdot\prod_{i=1}^na_{(i,\ n-i+1)}\ (反对角线元素之积)$$
 ![计算过程](/images/b1.jpg)
