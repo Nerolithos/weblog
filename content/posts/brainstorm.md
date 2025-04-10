@@ -1,6 +1,6 @@
 ---
 title: "# Brainstorming"
-date: 2025-4-10T17:15:34+08:00
+date: 2025-04-10T17:15:34+08:00
 draft: false
 summary: "跨学科的突发奇想"
 categories: 
