@@ -1,0 +1,22 @@
+{{ define "main" }}
+  <main class="pa4">
+    <h1 class="f2">📚 最新文章</h1>
+
+    {{ range .Pages }}
+      <article class="mb5">
+        <h2 class="f3 mb1">
+          <a href="{{ .RelPermalink }}" class="link dim black">
+            {{ .Title }}
+          </a>
+        </h2>
+        <p class="gray f6">
+          📅 {{ .Date.Format "2006-01-02" }} |
+          📝 {{ .WordCount }} 字 |
+          ⏱️ {{ .ReadingTime }} 分钟阅读
+        </p>
+        <p>{{ .Summary }}</p>
+        <a href="{{ .RelPermalink }}" class="link blue">阅读全文 →</a>
+      </article>
+    {{ end }}
+  </main>
+{{ end }}
