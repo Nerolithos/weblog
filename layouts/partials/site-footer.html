@@ -1,0 +1,11 @@
+<footer class="custom-footer">
+  <p>&copy; {{ .Site.Title }} {{ now.Year }}</p>
+
+  {{ with .Site.Params.footer_links }}
+    <ul class="footer-links">
+      {{ range . }}
+        <li><a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .name }}</a></li>
+      {{ end }}
+    </ul>
+  {{ end }}
+</footer>
