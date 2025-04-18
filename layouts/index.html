@@ -1,13 +1,19 @@
 {{ define "main" }}
-  <main class="pa4">
+  <div class="pa4">
     <h1 class="f2">📚 最新文章</h1>
 
-    {{ range .Pages }}
+    {{/* 渲染首页自己的内容（不带时间） */}}
+    {{ with .Content }}
+      <section class="mb4">
+        {{ . }}
+      </section>
+    {{ end }}
+
+    {{/* 渲染文章列表（显示阅读时间等） */}}
+    {{ range .Site.RegularPages }}
       <article class="mb5">
         <h2 class="f3 mb1">
-          <a href="{{ .RelPermalink }}" class="link dim black">
-            {{ .Title }}
-          </a>
+          <a href="{{ .RelPermalink }}" class="link black dim">{{ .Title }}</a>
         </h2>
         <p class="gray f6">
           📅 {{ .Date.Format "2006-01-02" }} |
@@ -15,8 +21,7 @@
           ⏱️ {{ .ReadingTime }} 分钟阅读
         </p>
         <p>{{ .Summary }}</p>
-        <a href="{{ .RelPermalink }}" class="link blue">阅读全文 →</a>
       </article>
     {{ end }}
-  </main>
+  </div>
 {{ end }}
