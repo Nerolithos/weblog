@@ -19,7 +19,7 @@ enableRobotsTXT = true
   background_color_class = "bg-black"
   recent_posts_number = 100
   footer_links = [
-    { name = "💻 GitHub", url = "https://github.com/Nero-Lithos" },
+    { name = "💻 GitHub", url = "https://github.com/Nerolithos" },
     { name = "🎨 Pixiv", url = "https://www.pixiv.net/users/107379421" },
     { name = "🏠 Home", url = "https://blog.nero-lithos.com/" }
   ]
