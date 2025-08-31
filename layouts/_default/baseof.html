@@ -27,7 +27,8 @@
     {{ end }}
 
     {{ partial "site-style.html" . }}
-    <link rel="stylesheet" href="/css/custom.css">
+    <!-- 自定义样式：使用 relURL，兼容子路径/多语言部署 -->
+    <link rel="stylesheet" href="{{ "css/custom.css" | relURL }}">
     {{ partial "site-scripts.html" . }}
 
     {{ block "favicon" . }}
@@ -47,7 +48,6 @@
       <link rel="canonical" href="{{ .Permalink }}">
     {{ end }}
 
-    {{/* NOTE: These Hugo Internal Templates can be found starting at https://github.com/gohugoio/hugo/tree/master/tpl/tplimpl/embedded/templates */}}
     {{- template "_internal/opengraph.html" . -}}
     {{- template "_internal/schema.html" . -}}
     {{- template "_internal/twitter_cards.html" . -}}
@@ -55,28 +55,27 @@
     {{ if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production")  }}
       {{ template "_internal/google_analytics.html" . }}
     {{ end }}
-	{{ block "head" . }}{{ partial "head-additions.html" . }}{{ end }}
-  <!-- KaTeX CSS -->
-<link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
 
-<!-- KaTeX JS -->
-<script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    {{ block "head" . }}{{ partial "head-additions.html" . }}{{ end }}
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    if (typeof renderMathInElement === "function") {
-      renderMathInElement(document.body, {
-        delimiters: [
-          {left: "$$", right: "$$", display: true},
-          {left: "$", right: "$", display: false}
-        ]
+    <!-- KaTeX CSS/JS（保持不变） -->
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
       });
-    } else {
-      console.warn("KaTeX 渲染器未定义！");
-    }
-  });
-</script>
+    </script>
   </head>
 
   <body class="ma0 {{ $.Param "body_classes"  | default "avenir bg-near-white"}}{{ with getenv "HUGO_ENV" }} {{ . }}{{ end }}">
