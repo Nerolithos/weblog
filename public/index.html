@@ -21,6 +21,12 @@
 
 
 
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
     
 
     
@@ -37,8 +43,6 @@
 
     
       <link rel="canonical" href="http://localhost:1313/">
-    
-
     <meta property="og:url" content="http://localhost:1313/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
   <meta property="og:title" content="Lithos&#39; Blog">
@@ -48,13 +52,33 @@
 
   <meta itemprop="name" content="Lithos&#39; Blog">
   <meta itemprop="description" content="a CUHKSZ survival documentation">
-  <meta itemprop="datePublished" content="2024-09-22T15:49:58+08:00">
-  <meta itemprop="dateModified" content="2024-09-22T15:49:58+08:00">
+  <meta itemprop="datePublished" content="2025-08-31T11:29:34+08:00">
+  <meta itemprop="dateModified" content="2025-08-31T11:29:34+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Lithos&#39; Blog">
   <meta name="twitter:description" content="a CUHKSZ survival documentation">
 
-	
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
   </head>
 
   <body class="ma0 avenir bg-near-white">
@@ -74,6 +98,34 @@
     <div class="flex-l items-center">
       
 
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
       
       
 <div class="ananke-socials">
@@ -100,181 +152,386 @@
 
     <main class="pb7" role="main">
       
-  <article class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy mid-gray">
-      
-    </article>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-      <div class="pa3 pa4-ns w-100 w-70-ns center">
-        
-        
-            <h1 class="flex-none">
-              
-            </h1>
-          
+<div class="pa4">
+  <h1 class="f2">📚 最新文章</h1>
 
-        
+  
 
-        <section class="w-100 mw8">
-          
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
-      
-          
-        <div class="pr3-ns mb4 mb0-ns w-100 w-40-ns">
-          <a href="http://localhost:1313/posts/oj1/" class="db grow">
-            <img src="http://localhost:1313/images/oj1.jpg" class="img" alt="image from  # CSC1003 Practice2 OJ习题">
-          </a>
-        </div>
-      
-      <div class="blah w-100 w-60-ns pl3-ns">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/oj1/" class="color-inherit dim link">
-             # CSC1003 Practice2 OJ习题
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          <p>龙大 SDS 学院 CSC1003 的 Practice 网站：
-<a href="https://oj.cuhk.edu.cn/p/">OJ 主站</a>
-<a href="https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/">OJ 2024</a></p>
-<h4 id="前言">前言</h4>
-<ul>
-<li>
-<p>以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。</p>
-</li>
-<li>
-<p>OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。</p>
-        </div>
-          <a href="http://localhost:1313/posts/oj1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/3001.1/"># CSC3001 LEC1 离散数学入门</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2025-08-31 · 3 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        CUHKSZ 大二课程 CSC3001 的入门指导
       </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/3001.1/">阅读全文 →</a>
+      </p>
     </div>
-  </div>
-</article>
 
-            </div>
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
+    
+    
       
-      <div class="blah w-100">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/1003.3/" class="color-inherit dim link">
-            # CSC1003 LEC4~6 条件，循环与数组
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          介绍 if 条件和 while, do-while, for, foreach 循环以及数组
-        </div>
-          <a href="http://localhost:1313/posts/1003.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
+      
+      
+        <a class="dn db-l w-third-l pl3" href="http://localhost:1313/">
+          <img src="http://localhost:1313/images/30011.jpg" alt="Lithos&#39; Blog"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/streamliturl/">How to personalize Streamlit URL?</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2025-08-31 · 3 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试
       </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/streamliturl/">阅读全文 →</a>
+      </p>
     </div>
-  </div>
-</article>
 
-            </div>
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/autorelease/">Automation of Ssg Post Release</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2025-04-25 · 2 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/autorelease/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/brainstorm/"># Brainstorming</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2025-04-10 · 2 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/brainstorm/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/lgu/"># 龙大生存指南 CUHKSZ Survival Handbook</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-12-09 · 5 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        龙大人自己的生存指南，绝赞创作中
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/lgu/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
       
-          
-        <div class="pr3-ns mb4 mb0-ns w-100 w-40-ns">
-          <a href="http://localhost:1313/posts/oop/" class="db grow">
-            <img src="http://localhost:1313/images/coffee.jpg" class="img" alt="image from # 咖啡与OOP">
-          </a>
-        </div>
       
-      <div class="blah w-100 w-60-ns pl3-ns">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/oop/" class="color-inherit dim link">
-            # 咖啡与OOP
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          <p>OOP(Object-Oriented Programming) 即面向对象编程。我们来了解 Java (不是指咖啡) 中的 OOP。它包括以下内容：</p>
+      
+        <a class="dn db-l w-third-l pl3" href="http://localhost:1313/">
+          <img src="http://localhost:1313/images/lgu.jpg" alt="Lithos&#39; Blog"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/1003.6/"># CSC1003 期末总结</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-11-29 · 5 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        总结 Java 中好用的语句和易错的用法
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/1003.6/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/assignment2/"># CSC1003 Assignment2 二维数组</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-10-31 · 3 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <h1 id="二维数组">二维数组</h1>
+<h3 id="例题一easy">例题一(easy)：</h3>
+<p>编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。
+比如：</p>
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/assignment2/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/sheperd/"># 《牧羊人》</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-10-30 · 2 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <p>牧羊人是个精明人，他总是能从羊群身上获得最多价值。冬天，羊长出很多毛，他就把大半的毛都剃掉，薄利多销地卖与人。因为价格实惠，人们都赞不绝口，经常从他那里进货。但牧羊人告诉羊群这些毛是为了实现羊群富足的必要牺牲，他永远以羊群利益至上。之所以要把毛交给牧羊人是因为他是羊群的主心骨，带领羊群走向温饱。</p>
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/sheperd/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/1003.5/"># CSC1003 LEC13-15 递归</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-10-22 · 3 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        介绍递归，栈与堆，以及栈溢出
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/1003.5/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+      
+      
+      
+        <a class="dn db-l w-third-l pl3" href="http://localhost:1313/">
+          <img src="http://localhost:1313/images/recursion.jpg" alt="Lithos&#39; Blog"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/whisper/"># 如何快速批量地将音频转文字？</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-10-21 · 1 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <h1 id="whisper-模型">Whisper 模型</h1>
+<p>事情的起因是龙大 ENG1001 课程需要就 TedTalk 视频进行 Reflection Presentation。但我懒得边听边记，实时转录文字太慢又不太准确。</p>
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/whisper/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/1003.4/"># CSC1003 LEC10-12 Midterm Revision</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-10-19 · 2 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        期中考试复习与模拟题
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/1003.4/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/assignment1/"># CSC1003 Assignment1 OJPractice</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-22 · 6 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <p>龙大 SDS 学院 CSC1003 的 Practice 网站：
+<a href="https://oj.cuhk.edu.cn/p/">OJ 主站</a></p>
+<p><a href="https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/">OJ 2024</a></p>
+<p><a href="http://10.26.200.13/">OJ(曾用)内网地址</a></p>
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/assignment1/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+      
+      
+      
+        <a class="dn db-l w-third-l pl3" href="http://localhost:1313/">
+          <img src="http://localhost:1313/images/oj1.jpg" alt="Lithos&#39; Blog"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/oop/"># 咖啡与OOP</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-12 · 3 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <p>OOP(Object-Oriented Programming) 即面向对象编程。我们来了解 Java (不是指咖啡) 中的 OOP。它包括以下内容：</p>
 <ul>
 <li>
 <p><strong>类(Class)</strong></p>
 </li>
 <li>
 <p><strong>对象(Object) ≈ 实例(Instance)</strong></p>
-        </div>
-          <a href="http://localhost:1313/posts/oop/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
       </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/oop/">阅读全文 →</a>
+      </p>
     </div>
-  </div>
-</article>
 
-            </div>
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
+    
+    
       
-          
-        <div class="pr3-ns mb4 mb0-ns w-100 w-40-ns">
-          <a href="http://localhost:1313/posts/1003.2/" class="db grow">
-            <img src="http://localhost:1313/images/eniac.jpg" class="img" alt="image from # CSC1003 TBL1 网络与计算机史">
-          </a>
-        </div>
       
-      <div class="blah w-100 w-60-ns pl3-ns">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/1003.2/" class="color-inherit dim link">
-            # CSC1003 TBL1 网络与计算机史
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          <p>TBL = Things Beyond Lecture。是讲座跳过的 PPT 内容，你可以在Chat.1里找到这些内容的简略版。</p>
+      
+        <a class="dn db-l w-third-l pl3" href="http://localhost:1313/">
+          <img src="http://localhost:1313/images/coffee.jpg" alt="Lithos&#39; Blog"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/1003.2/"># CSC1003 TBL1 网络与计算机史</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-11 · 5 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <p>TBL = Things Beyond Lecture。是讲座跳过的 PPT 内容，你可以在Chat.1里找到这些内容的简略版。</p>
 <h2 id="网络与计算机的历史">网络与计算机的历史</h2>
 <p>20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。</p>
-        </div>
-          <a href="http://localhost:1313/posts/1003.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
       </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/1003.2/">阅读全文 →</a>
+      </p>
     </div>
-  </div>
-</article>
 
-            </div>
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
+    
+    
       
-      <div class="blah w-100">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/1003.1/" class="color-inherit dim link">
-            # CSC1003 LEC1~3 函数、数据类型与计算
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          <p><strong>All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.</strong></p>
+      
+      
+        <a class="dn db-l w-third-l pl3" href="http://localhost:1313/">
+          <img src="http://localhost:1313/images/eniac.jpg" alt="Lithos&#39; Blog"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/1003.1/"># CSC1003 LEC1~3 函数、数据类型与计算</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-11 · 6 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <p><strong>All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.</strong></p>
 <p><strong>一切归功于李文烨教授，他是24年这门科目的主讲人。</strong></p>
 <h2 id="java-第一个程序">JAVA 第一个程序</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hello</span> {
@@ -283,142 +540,152 @@
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pr
-        </div>
-          <a href="http://localhost:1313/posts/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
       </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/1003.1/">阅读全文 →</a>
+      </p>
     </div>
-  </div>
-</article>
 
-            </div>
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
-      
-      <div class="blah w-100">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/web/" class="color-inherit dim link">
-             # IP地址与子网掩码
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          <p>240822，有几位同学在龙大的选课培训直播间提出<a href="https://postimg.cc/7bqTcdMd">几个网络问题</a>。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。</p>
-        </div>
-          <a href="http://localhost:1313/posts/web/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/web/"> # IP地址与子网掩码</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-11 · 2 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <p>240822，有几位同学在龙大的选课培训直播间提出<a href="https://postimg.cc/7bqTcdMd">几个网络问题</a>。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。</p>
       </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/web/">阅读全文 →</a>
+      </p>
     </div>
-  </div>
-</article>
 
-            </div>
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
-      
-      <div class="blah w-100">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/outlook/" class="color-inherit dim link">
-            # 龙大邮箱抓取尝试
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          <h2 id="前言">前言</h2>
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/outlook/"># 龙大邮箱抓取尝试</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-11 · 4 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <h2 id="前言">前言</h2>
 <p><strong>注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。</strong></p>
 <p>本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。</p>
-        </div>
-          <a href="http://localhost:1313/posts/outlook/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
       </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/outlook/">阅读全文 →</a>
+      </p>
     </div>
-  </div>
-</article>
 
-            </div>
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
-      
-      <div class="blah w-100">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/weblog_deploy/" class="color-inherit dim link">
-            在 cloudflare 部署 Hugo 构架博客的 manual
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。
-        </div>
-          <a href="http://localhost:1313/posts/weblog_deploy/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
-      </div>
-    </div>
-  </div>
-</article>
-
-            </div>
-          
-            <div class="relative w-100 mb4">
-              
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
-      
-          
-        <div class="pr3-ns mb4 mb0-ns w-100 w-40-ns">
-          <a href="http://localhost:1313/posts/yaumatei/" class="db grow">
-            <img src="http://localhost:1313/images/ymt.jpg" class="img" alt="image from  # Grassroot HongKong">
-          </a>
-        </div>
-      
-      <div class="blah w-100 w-60-ns pl3-ns">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="http://localhost:1313/posts/yaumatei/" class="color-inherit dim link">
-             # Grassroot HongKong
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          <p>What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.</p>
-<p>I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.</p>
-        </div>
-          <a href="http://localhost:1313/posts/yaumatei/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-        
-      </div>
-    </div>
-  </div>
-</article>
-
-            </div>
-          
-        </section>
-
-        
-
-        </div>
     
+    
+  </article>
   
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/weblog_deploy/">在 cloudflare 部署 Hugo 构架博客的 manual</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-10 · 6 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/weblog_deploy/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/river_town/"># River Town: the Metaphor of Chapter VI. ‘Storm’</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-10 · 3 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <p>In Chapter six of River Town, the metaphor of &ldquo;storm&rdquo; is incredibly ingenious, much like the line from <em>Border Town</em>: &ldquo;The heavy rain washed everything, yet it washed away nothing.&rdquo; True, storms rinsed both HongKong and Fuling the night of HongKong’s handover to China. Yet only when people, like Andy in <em>The Shawshank Redemption</em>, allow the rain to cleanse the blockages and stubbornness deep within their souls, and reach their arms out to the sky, can they attain true liberation.</p>
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/river_town/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+  </article>
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/yaumatei/"># Grassroot HongKong</a>
+      </h2>
+      <p class="gray f6 mb2">
+        2024-09-10 · 2 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        <p>What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.</p>
+<p>I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.</p>
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="http://localhost:1313/posts/yaumatei/">阅读全文 →</a>
+      </p>
+    </div>
+
+    
+    
+      
+      
+      
+        <a class="dn db-l w-third-l pl3" href="http://localhost:1313/">
+          <img src="http://localhost:1313/images/ymt.jpg" alt="Lithos&#39; Blog"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      
+    
+  </article>
+  
+</div>
 
     </main>
-    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
-  <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
-    &copy;  Lithos' Blog 2024 
-  </a>
-    <div>
-<div class="ananke-socials">
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2025</p>
+
   
-</div>
-</div>
-  </div>
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://ai.nero-lithos.com" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
 </footer>
 
   </body>

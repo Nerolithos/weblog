@@ -21,6 +21,12 @@
 
 
 
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
     
 
     
@@ -37,8 +43,6 @@
 
     
       <link rel="canonical" href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/">
-    
-
     <meta property="og:url" content="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
   <meta property="og:title" content="技术">
@@ -46,12 +50,32 @@
   <meta property="og:type" content="website">
 
   <meta itemprop="name" content="技术">
-  <meta itemprop="datePublished" content="2024-09-11T09:26:58+08:00">
-  <meta itemprop="dateModified" content="2024-09-11T09:26:58+08:00">
+  <meta itemprop="datePublished" content="2024-10-21T00:26:58+08:00">
+  <meta itemprop="dateModified" content="2024-10-21T00:26:58+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="技术">
 
-	
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
   </head>
 
   <body class="ma0 avenir bg-near-white">
@@ -70,6 +94,34 @@
     <div class="flex-l items-center">
       
 
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
       
       
 <div class="ananke-socials">
@@ -105,10 +157,39 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
+      <a href="http://localhost:1313/posts/whisper/" class="link black dim">
+        # 如何快速批量地将音频转文字？
+      </a>
+    </h1>
+    <div class="gray f6 mt2">
+      📅 2024-10-21 |
+      📝 383 字 |
+      ⏱️ 1 分钟阅读
+    </div>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="whisper-模型">Whisper 模型</h1>
+<p>事情的起因是龙大 ENG1001 课程需要就 TedTalk 视频进行 Reflection Presentation。但我懒得边听边记，实时转录文字太慢又不太准确。</p>
+    </div>
+    <a href="http://localhost:1313/posts/whisper/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="relative w-100  mb4 bg-white">
+          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
+  <div class="bg-white mb3 pa4 gray overflow-hidden">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/outlook/" class="link black dim">
         # 龙大邮箱抓取尝试
       </a>
     </h1>
+    <div class="gray f6 mt2">
+      📅 2024-09-11 |
+      📝 1683 字 |
+      ⏱️ 4 分钟阅读
+    </div>
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       <h2 id="前言">前言</h2>
 <p><strong>注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。</strong></p>
@@ -129,6 +210,11 @@
         在 cloudflare 部署 Hugo 构架博客的 manual
       </a>
     </h1>
+    <div class="gray f6 mt2">
+      📅 2024-09-10 |
+      📝 2745 字 |
+      ⏱️ 6 分钟阅读
+    </div>
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。
     </div>
@@ -142,17 +228,22 @@
   </div>
 
     </main>
-    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
-  <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
-    &copy;  Lithos' Blog 2024 
-  </a>
-    <div>
-<div class="ananke-socials">
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2025</p>
+
   
-</div>
-</div>
-  </div>
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://ai.nero-lithos.com" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
 </footer>
 
   </body>

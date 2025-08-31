@@ -6,8 +6,15 @@
     <description>Recent content in 技术 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 11 Sep 2024 09:26:58 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 21 Oct 2024 00:26:58 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title># 如何快速批量地将音频转文字？</title>
+      <link>http://localhost:1313/posts/whisper/</link>
+      <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/whisper/</guid>
+      <description>&lt;h1 id=&#34;whisper-模型&#34;&gt;Whisper 模型&lt;/h1&gt;&#xA;&lt;p&gt;事情的起因是龙大 ENG1001 课程需要就 TedTalk 视频进行 Reflection Presentation。但我懒得边听边记，实时转录文字太慢又不太准确。&lt;/p&gt;</description>
+    </item>
     <item>
       <title># 龙大邮箱抓取尝试</title>
       <link>http://localhost:1313/posts/outlook/</link>

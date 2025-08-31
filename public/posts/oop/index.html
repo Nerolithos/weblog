@@ -27,6 +27,12 @@
 
 
 
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
     
 
     
@@ -38,8 +44,6 @@
 
     
       <link rel="canonical" href="http://localhost:1313/posts/oop/">
-    
-
     <meta property="og:url" content="http://localhost:1313/posts/oop/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
   <meta property="og:title" content="# 咖啡与OOP">
@@ -65,13 +69,32 @@
 类(Class)
 对象(Object) ≈ 实例(Instance)">
 
-	
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
   </head>
 
   <body class="ma0 avenir bg-near-white">
 
     
-   
   
 
   
@@ -87,6 +110,34 @@
     <div class="flex-l items-center">
       
 
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
       
       
 <div class="ananke-socials">
@@ -112,9 +163,9 @@
       
   
   <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
     <header class="mt4 w-100">
       <aside class="instapaper_ignoref b helvetica tracked ttu">
-          
         Posts
       </aside>
       
@@ -134,15 +185,16 @@
 
 
       <h1 class="f1 athelas mt3 mb1"># 咖啡与OOP</h1>
+
       
-      
+
       
       <time class="f6 mv4 dib tracked" datetime="2024-09-12T11:28:58+08:00">September 12, 2024</time>
       
 
       
-      
     </header>
+
     <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>OOP(Object-Oriented Programming) 即面向对象编程。我们来了解 Java (不是指咖啡) 中的 OOP。它包括以下内容：</p>
 <ul>
 <li>
@@ -262,8 +314,7 @@
   
 </ul>
 <div class="mt6 instapaper_ignoref">
-
-      <div id="disqus_thread"></div>
+        <div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -292,145 +343,26 @@
 
 
 </aside>
-    
-        <h1># 咖啡与OOP</h1>
-    <p>Categories: 
-        
-    </p>
-    <p>Tags: 
-        
-    </p>
-    <div><p>OOP(Object-Oriented Programming) 即面向对象编程。我们来了解 Java (不是指咖啡) 中的 OOP。它包括以下内容：</p>
-<ul>
-<li>
-<p><strong>类(Class)</strong></p>
-</li>
-<li>
-<p><strong>对象(Object) ≈ 实例(Instance)</strong></p>
-</li>
-<li>
-<p><strong>封装(Encapsulation)</strong></p>
-</li>
-<li>
-<p><strong>继承(Inheritance)</strong></p>
-</li>
-<li>
-<p><strong>多态(Polymorphism)</strong></p>
-</li>
-<li>
-<p><strong>抽象(Abstraction)</strong></p>
-</li>
-</ul>
-<h2 id="类实例对象字段">类，实例，对象，字段</h2>
-<p><strong>类</strong> (class) 是<strong>抽象</strong>的概念，<strong>实例</strong> (instance) 是<strong>具体</strong>的物体。如果说咖啡是一个类，那么Expresso、Frappe、美式、拿铁、卡布奇诺之类的都是这个类的实例。类是对象母版，<strong>实例也可以叫做对象</strong> (object)，实例都按照类的模版创造，但<strong>字段</strong>(field)不同。(字段也称为成员变量)</p>
-<p>比如咖啡有浓缩咖啡占比、蒸奶占比、奶泡占比这三个成员变量：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Coffee</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> espresso;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> milk;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> foam;    <span style="color:#75715e">//成员变量通常在类体内直接定义(方法之外)</span>
-</span></span><span style="display:flex;"><span>  
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Coffee</span>(<span style="color:#66d9ef">double</span> espresso, <span style="color:#66d9ef">double</span> milk, <span style="color:#66d9ef">double</span> foam) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">espresso</span> <span style="color:#f92672">=</span> espresso;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">milk</span> <span style="color:#f92672">=</span> milk;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">foam</span> <span style="color:#f92672">=</span> foam;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//...</span>
-</span></span></code></pre></div><p>那么卡布奇诺与美式就是：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
-</span></span><span style="display:flex;"><span>        Coffee cappuccino <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Coffee(1 <span style="color:#f92672">/</span> 3, 1 <span style="color:#f92672">/</span> 3, 1 <span style="color:#f92672">/</span> 3);
-</span></span><span style="display:flex;"><span>        Coffee latte <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Coffee(0.<span style="color:#a6e22e">2</span>, 0.<span style="color:#a6e22e">6</span>, 0.<span style="color:#a6e22e">2</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//...</span>
-</span></span></code></pre></div><p>(以上代码段并不完整，仅供演示)</p>
-<p>不难发现 new 关键字用于<strong>创建类的新对象实例</strong>，这个过程叫做<strong>实例化</strong>。当你使用 new 时，Java 会在内存中分配空间来存储该对象，并调用类的<strong>构造方法</strong>来初始化对象。其通用语法为：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>ClassName objectName <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassName();
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//类名(大写) 实例名(小写) = new 类名(传入的参数)</span>
-</span></span></code></pre></div><p>比如建立数组：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> numbers <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>5<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 创建一个长度为5的int类型数组</span>
-</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(numbers.<span style="color:#a6e22e">length</span>);  <span style="color:#75715e">// 输出: 5</span>
-</span></span></code></pre></div><p>如此，numbers 被用于调用<code>int[5]</code>这个实例对象。</p>
-<h2 id="方法构造方法方法重载">方法、构造方法、方法重载</h2>
-<p>以下是一段完整的示例：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Coffee</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Private fields</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> espresso;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> milk;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> foam; 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Constructor(构造方法)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Coffee</span>(<span style="color:#66d9ef">double</span> espresso, <span style="color:#66d9ef">double</span> milk, <span style="color:#66d9ef">double</span> foam) {
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 在构造函数中初始化 private 字段</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">espresso</span> <span style="color:#f92672">=</span> espresso;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">milk</span> <span style="color:#f92672">=</span> milk;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">foam</span> <span style="color:#f92672">=</span> foam;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Getter 方法</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">getEspresso</span>() {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> espresso;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">getMilk</span>() {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> milk;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">getFoam</span>() {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> foam;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Main method</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 使用构造函数初始化 Coffee 对象</span>
-</span></span><span style="display:flex;"><span>        Coffee cappuccino <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Coffee(1.<span style="color:#a6e22e">0</span> <span style="color:#f92672">/</span> 3, 1.<span style="color:#a6e22e">0</span> <span style="color:#f92672">/</span> 3, 1.<span style="color:#a6e22e">0</span> <span style="color:#f92672">/</span> 3);
-</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Cappuccino - Espresso: &#34;</span> <span style="color:#f92672">+</span> cappuccino.<span style="color:#a6e22e">getEspresso</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, Milk: &#34;</span> <span style="color:#f92672">+</span> cappuccino.<span style="color:#a6e22e">getMilk</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, Foam: &#34;</span> <span style="color:#f92672">+</span> cappuccino.<span style="color:#a6e22e">getFoam</span>());
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><ul>
-<li>注意到程序中的第一个方法不填写 <code>void</code>类型。因为在 Java 中，<strong>构造方法(constructor)</strong> 是一种特殊的方法，用于<strong>初始化</strong>对象的状态。构造方法的名称必须<strong>与类名相同</strong>。构造方法并不需要像普通方法那样返回一个值，因为它的作用是<strong>建立对象本身</strong>。</li>
-<li>在 main 方法中调用了 <code>Coffee()</code> 构造方法，因为在类的定义中，**如果字段是 private 属性，那么只有类的内部(即只有构造方法、构造函数)才能直接访问或修改字段。**如果在类体中宣布字段是 public，那么理论上如下的修改也是可以的：</li>
-</ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
-</span></span><span style="display:flex;"><span>        Coffee americano <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Coffee();
-</span></span><span style="display:flex;"><span>        americano.<span style="color:#a6e22e">espresso</span> <span style="color:#f92672">=</span> 1;
-</span></span><span style="display:flex;"><span>        americano.<span style="color:#a6e22e">milk</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>10;
-</span></span><span style="display:flex;"><span>        americano.<span style="color:#a6e22e">foam</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>100;
-</span></span></code></pre></div><ul>
-<li>**显然没有人能够在每喝完一份冰美式之后原地还给母牛 10 份牛奶，或者化身某种人力发泡机。**这就是为什么我们需要 private 属性来限制对初始化后的字段进行修改。(private 情况下，在 main 方法中如此定义在编译时会报错)</li>
-</ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setMilk</span>(<span style="color:#66d9ef">int</span> age) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (milk <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> milk <span style="color:#f92672">&gt;</span> 1) {
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException(<span style="color:#e6db74">&#34;invalid milk value&#34;</span>);
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">milk</span> <span style="color:#f92672">=</span> milk;
-</span></span><span style="display:flex;"><span>    }
-</span></span></code></pre></div><ul>
-<li>如此，就可以防止输入值出现离谱的情况。这种方法叫做 setter，而外部代码要读取字段时要用 getter (上方主程序段已经演示了)。这样保证了类在定义时**封装(Encapsulation) **的严密性。</li>
-<li>在字段定义时可以直接初始化值：</li>
-</ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Coffee</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> espresso <span style="color:#f92672">=</span> 1 <span style="color:#f92672">/</span> 3;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> milk <span style="color:#f92672">=</span> 1 <span style="color:#f92672">/</span> 3;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> foam <span style="color:#f92672">=</span> 1 <span style="color:#f92672">/</span> 3; 
-</span></span></code></pre></div><ul>
-<li>然而由于构造方法 (在 main 方法中)的运行在字段定义之后，如果两者同时初始化字段值，字段值最终由构造方法决定。</li>
-<li>没有定义构造方法时，编译器会自动创建一个默认的无参数构造方法。</li>
-<li><strong>方法重载</strong>是指多个方法的方法名相同，但各自的参数不同，构造方法也可以重载。编译器根据参数自动判断调用的是哪个方法。</li>
-</ul>
-</div>
 
   </article>
 
     </main>
-    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
-  <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
-    &copy;  Lithos' Blog 2024 
-  </a>
-    <div>
-<div class="ananke-socials">
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2025</p>
+
   
-</div>
-</div>
-  </div>
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://ai.nero-lithos.com" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
 </footer>
 
   </body>

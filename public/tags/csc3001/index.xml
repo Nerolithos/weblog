@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CSC3001 on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/csc3001/</link>
+    <description>Recent content in CSC3001 on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 31 Aug 2025 11:29:34 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/csc3001/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title># CSC3001 LEC1 离散数学入门</title>
+      <link>http://localhost:1313/posts/3001.1/</link>
+      <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.1/</guid>
+      <description>CUHKSZ 大二课程 CSC3001 的入门指导</description>
+    </item>
+  </channel>
+</rss>

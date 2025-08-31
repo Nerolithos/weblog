@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title># CSC1003 期末总结 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="总结 Java 中好用的语句和易错的用法">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/1003.6/">
+    <meta property="og:url" content="http://localhost:1313/posts/1003.6/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="# CSC1003 期末总结">
+  <meta property="og:description" content="总结 Java 中好用的语句和易错的用法">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-11-29T14:15:34+08:00">
+    <meta property="article:modified_time" content="2024-11-29T14:15:34+08:00">
+    <meta property="article:tag" content="CSC1003">
+
+  <meta itemprop="name" content="# CSC1003 期末总结">
+  <meta itemprop="description" content="总结 Java 中好用的语句和易错的用法">
+  <meta itemprop="datePublished" content="2024-11-29T14:15:34+08:00">
+  <meta itemprop="dateModified" content="2024-11-29T14:15:34+08:00">
+  <meta itemprop="wordCount" content="2084">
+  <meta itemprop="keywords" content="CSC1003">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="# CSC1003 期末总结">
+  <meta name="twitter:description" content="总结 Java 中好用的语句和易错的用法">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1"># CSC1003 期末总结</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-11-29T14:15:34+08:00">November 29, 2024</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="csc-final">CSC Final</h1>
+<h2 id="字符串的处理">字符串的处理</h2>
+<h3 id="areplaceb-c"><code>a.replace(b, c)</code></h3>
+<ul>
+<li>
+<p><code>a.replace(b, c)</code>会将一个字符串 a 里的所有字符串 b 替换为 c。也可以直接去除 b，或者在每两个字符间加一个 c。</p>
+</li>
+<li>
+<p>适用于字符和字符串。</p>
+</li>
+<li>
+<p>例如，去除单词间的空格：<code>&quot;Hello world&quot;.replace(&quot; &quot;, &quot;&quot;);</code></p>
+</li>
+<li>
+<p>应用：OJ 习题P1019 (BanishLetter2)</p>
+<p>Write a static method that takes a String and many char values. Delete all the characters in the String that equals to the char values, and return the result. For example:</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Input:            Output:
+</span></span><span style="display:flex;"><span>Hello World       He Wrd
+</span></span><span style="display:flex;"><span>o l k
+</span></span></code></pre></div><ul>
+<li>确实，我们可以逐个检验字符串，并过滤要求的字母：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Scanner;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BanishLetter2</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        String in <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String filterset <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> input <span style="color:#f92672">=</span> in.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> filter <span style="color:#f92672">=</span> filterset.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        next:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">&lt;</span>input.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span>0; j<span style="color:#f92672">&lt;</span>filter.<span style="color:#a6e22e">length</span>; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (filter<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>.<span style="color:#a6e22e">equals</span>(input<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>)) <span style="color:#66d9ef">continue</span> next;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(input<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>但使用 replace 方法可以不把目标字符串拆成数组，直接处理：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Scanner;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BanishLetter2</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        String input <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String filterset <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> filter <span style="color:#f92672">=</span> filterset.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">&lt;</span>filter.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) input <span style="color:#f92672">=</span> input.<span style="color:#a6e22e">replace</span>(filter<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>, <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(input);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="astartwithb-和-aendwithc"><code>a.startWith(b)</code> 和 <code>a.endWith(c)</code></h3>
+<ul>
+<li>
+<p>判断 a 字符一开始是否包含某个字符串 b; 判断 a 字符一开始是否包含某个字符串 c。</p>
+</li>
+<li>
+<p>应用：OJ 习题P1015 (Longest Common Prefix)</p>
+<p>Write a static method that takes a String array and return the longest common prefix. Return an empty String if common prefix does not exist.</p>
+<p>Input1: <code>flower flow flight</code></p>
+<p>Output1: <code>fl</code></p>
+<p>Input2: <code>hello world csc1003</code></p>
+<p>Output2:</p>
+</li>
+<li>
+<p>思路：通过假设第一个单词是 LCP ，只要余下的单词有一个不 startsWith 它，就把它最后一位字符去掉。如此循环知道其余所有单词每个都等于这个修剪后的 LCP。</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Scanner;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LCP</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">lcp</span>(String<span style="color:#f92672">[]</span> strs) {
+</span></span><span style="display:flex;"><span>        String prefix <span style="color:#f92672">=</span> strs<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 先假设第一个单词是最长共同前缀</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1; i <span style="color:#f92672">&lt;</span> strs.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>strs<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>.<span style="color:#a6e22e">startsWith</span>(prefix)) {  <span style="color:#75715e">//如果数组存在单词与默认前缀不相等，则缩短一位</span>
+</span></span><span style="display:flex;"><span>                prefix <span style="color:#f92672">=</span> prefix.<span style="color:#a6e22e">substring</span>(0, prefix.<span style="color:#a6e22e">length</span>() <span style="color:#f92672">-</span> 1);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (prefix.<span style="color:#a6e22e">isEmpty</span>()) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> prefix;  <span style="color:#75715e">//缩短到所有单词都满足被缩短过的第一个单词后，返回值 ·</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        String input <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> words <span style="color:#f92672">=</span> input.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        String result <span style="color:#f92672">=</span> lcp(words);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(result);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="asubstringb-c"><code>a.substring(b, c)</code></h3>
+<ul>
+<li>
+<p><code>a.substring(b, c)</code> 可以把字符串 a 取出其中索引在 <code>[b, c)</code> 范围内的字符取出。也可以只取出 <code>a[b]</code>。</p>
+</li>
+<li>
+<p>例如，逐个 字母输出一个字符串：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>String str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Hello World&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">=</span>str.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>str.<span style="color:#a6e22e">substring</span>(i, i<span style="color:#f92672">+</span>1).<span style="color:#a6e22e">equals</span>(<span style="color:#e6db74">&#34; &#34;</span>)) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(str.<span style="color:#a6e22e">substring</span>(i, i<span style="color:#f92672">+</span>1)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+<li>
+<p>应用：OJ 习题P1021 (Bool)</p>
+<p>A Boolean expression is an expression that evaluates to either true or false. Valid expressions follow the following conventions:</p>
+<p>the result of &rsquo;t&rsquo; is true; the result of &lsquo;f&rsquo; is false; &lsquo;!(subExpr)&rsquo; means to perform logical NOT operation on the internal expression subExpr; &lsquo;&amp;(subExpr1, subExpr2, &hellip;, subExprn)&rsquo; means to perform logical AND operation on 2 or more internal expressions subExpr1, subExpr2, &hellip;, subExprn; &lsquo;|(subExpr1, subExpr2, &hellip;, subExprn)&rsquo; means to perform logical OR operation on 2 or more internal expressions subExpr1, subExpr2, &hellip;, subExprn.</p>
+<p>Given a boolean expression in the form of a String, you need to return the result of the expression.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Input1: |<span style="color:#f92672">(</span>f,f,f,t<span style="color:#f92672">)</span>           Input2: !<span style="color:#f92672">(</span>&amp;<span style="color:#f92672">(</span>f,t<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Output1: t                   Output2: true
+</span></span></code></pre></div></li>
+<li>
+<p>这道题如果要把字符串变成数组然后循环数组来操作就过于麻烦；而且 substring 可以直接选中字符串中某一部分，而数组需要写循环甚至嵌套循环。</p>
+</li>
+<li>
+<p>我的解法：方法检测到操作符(&amp;, |)就去掉前后面的括号和所有逗号，然后递归这个处理后的字符串；检测到 &ldquo;t&rdquo;, &ldquo;f&rdquo; 就返回对应布尔值；检测到 &ldquo;!&rdquo; 就返回后面值的相反值。</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Bool</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        String expression <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(evaluateExpr(expression));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">evaluateExpr</span>(String expr) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 处理括号内的 f 和 t </span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">equals</span>(<span style="color:#e6db74">&#34;t&#34;</span>)) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">equals</span>(<span style="color:#e6db74">&#34;f&#34;</span>)) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 所有的 return 都会把信息返还给调用函数处，所以递归时使用 return 不会结束函数</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;!&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>evaluateExpr(expr.<span style="color:#a6e22e">substring</span>(2, expr.<span style="color:#a6e22e">length</span>() <span style="color:#f92672">-</span> 1)); <span style="color:#75715e">// 去掉前后括号</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;&amp;&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            String innerExprs <span style="color:#f92672">=</span> filter(expr.<span style="color:#a6e22e">substring</span>(2, expr.<span style="color:#a6e22e">length</span>() <span style="color:#f92672">-</span> 1));
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">&lt;</span>innerExprs.<span style="color:#a6e22e">length</span>(); i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>evaluateExpr(innerExprs.<span style="color:#a6e22e">substring</span>(i, i<span style="color:#f92672">+</span>1))) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// AND 操作只要有一个 f 就是 false</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;|&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            String innerExprs <span style="color:#f92672">=</span> filter(expr.<span style="color:#a6e22e">substring</span>(2, expr.<span style="color:#a6e22e">length</span>() <span style="color:#f92672">-</span> 1));
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">&lt;</span>innerExprs.<span style="color:#a6e22e">length</span>(); i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (evaluateExpr(innerExprs.<span style="color:#a6e22e">substring</span>(i, i<span style="color:#f92672">+</span>1))) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// OR 操作只要有一个 t 就是 true</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>; <span style="color:#75715e">//这里的 return 值无所谓，因为输入信息符合要求时，代码不可能运行到这里</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">filter</span>(String expr) {
+</span></span><span style="display:flex;"><span>        String split <span style="color:#f92672">=</span> expr.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">&#34;,&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> split;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="acontainschar-b"><code>a.contains(Char b)</code></h3>
+<ul>
+<li>判断 a 字符串是否包含 b 字符，返回 true 或 false。一般会用在判断语句中作为 if 或 while 的条件。</li>
+</ul>
+<h3 id="aindexofchar-b和-aindexofstring-b"><code>a.IndexOf(Char b)</code>和 <code>a.IndexOf(String b)</code></h3>
+<ul>
+<li>类似于上面一种，但是可以处理字符串，会指出字符(串) b 首次出现在 a 的哪里，返回值是 Int 类型。</li>
+<li>如果用于判断 a 中是否含有 b 字符(串)，只需要判断返回值是否为 -1。</li>
+</ul>
+<h2 id="易错用法">易错用法</h2>
+<h3 id="alength-和-alength"><code>a.length</code> 和 <code>a.length()</code></h3>
+<ul>
+<li><code>a.length</code> 用于 a 为一个数组时返回长度，<code>a.length()</code> 则用于 a 为一个字符串时，两者无法混用。</li>
+<li>数组和字符串都是数据类型。数组的长度显然是其成员变量，而字符串的长度是一个方法。</li>
+</ul>
+<h3 id="type-b-和-integerparseintb"><code>(&lt;type&gt;) b</code> 和 <code>Integer.parseInt(b)</code></h3>
+<ul>
+<li>强制转换 <code>type a = (type) b</code> 只能用于数字类型(long, short, int, String&hellip;)相互转化，一般用于取整：。</li>
+</ul>
+<h3 id="关于-return-和方法递归">关于 <code>return</code> 和方法递归</h3>
+<ul>
+<li>很多人认为 <code>return</code> 的作用是直接结束方法，并把返回调用方法处。实际上在递归时 <code>return</code> 并不会结束方法，而是返回上一次调用自己时的位置。</li>
+<li>比如一个方法“recur(String a)&quot;，可以在 recur 方法中调用 <code>return recur(String b) + recur(String c)</code> 完成复杂或拆解类递归操作，比如编程处理复杂计算式时，按运算符分解计算式，大而化小，小而化之。</li>
+</ul>
+<h2 id="oop-和-dt">OOP 和 DT</h2>
+<ul>
+<li>
+<p>每当我们在 Java 中遇到 <code>Class.b</code> 时就说明 b 是“Class“类一个成员变量，比如在定义类”Coffee“时，在类中声明 <code>public final foam;</code> 并在 Constructor：<code>public Coffee(double foam)</code> 中声明 <code>this.foam = foam;</code> 即可调用 foam 变量：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>Coffee cappuccino <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Coffee(1<span style="color:#f92672">/</span>3);  <span style="color:#75715e">// 此处调用的正是构造方法 Constructer！</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">double</span> foampct <span style="color:#f92672">=</span> cappuccino.<span style="color:#a6e22e">foam</span>  <span style="color:#75715e">// foampct = 0.333333...</span>
+</span></span></code></pre></div></li>
+<li>
+<p>更常见的 例子便是 <code>array.length</code> ，其中 length 是 array(给定数组)的不可更改的成员变量。</p>
+</li>
+<li>
+<p>注意：如果成员变量不是“final”(不可更改)的，那便不建议直接访问成员变量，而是要依靠 Getter 方法访问变量。这是为了维护类的封装的完整性。</p>
+</li>
+<li>
+<p>关于 DT 的创建，Lecture 中的例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Complex</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">double</span> re;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">double</span> im;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Complex</span>(<span style="color:#66d9ef">double</span> real, <span style="color:#66d9ef">double</span> imag) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">re</span> <span style="color:#f92672">=</span> real;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">im</span> <span style="color:#f92672">=</span> imag;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Complex <span style="color:#a6e22e">plus</span>(Complex b) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> real <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">re</span> <span style="color:#f92672">+</span> b.<span style="color:#a6e22e">re</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> imag <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">im</span> <span style="color:#f92672">+</span> b.<span style="color:#a6e22e">im</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Complex(real, imag);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Complex <span style="color:#a6e22e">times</span>(Complex b) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> real <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">re</span> <span style="color:#f92672">*</span> b.<span style="color:#a6e22e">re</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">im</span> <span style="color:#f92672">*</span> b.<span style="color:#a6e22e">im</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> imag <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">re</span> <span style="color:#f92672">*</span> b.<span style="color:#a6e22e">im</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">im</span> <span style="color:#f92672">*</span> b.<span style="color:#a6e22e">re</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Complex(real, imag);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">modulus</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> Math.<span style="color:#a6e22e">sqrt</span>(re <span style="color:#f92672">*</span> re <span style="color:#f92672">+</span> im <span style="color:#f92672">*</span> im);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 测试代码</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Complex a <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Complex(3.<span style="color:#a6e22e">0</span>, 4.<span style="color:#a6e22e">0</span>);
+</span></span><span style="display:flex;"><span>        Complex b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Complex(1.<span style="color:#a6e22e">0</span>, 2.<span style="color:#a6e22e">0</span>);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a: &#34;</span> <span style="color:#f92672">+</span> a);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;b: &#34;</span> <span style="color:#f92672">+</span> b);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a + b: &#34;</span> <span style="color:#f92672">+</span> a.<span style="color:#a6e22e">plus</span>(b));
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a * b: &#34;</span> <span style="color:#f92672">+</span> a.<span style="color:#a6e22e">times</span>(b));
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Modulus of a: &#34;</span> <span style="color:#f92672">+</span> a.<span style="color:#a6e22e">modulus</span>());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>这是一个能接收并计算复数加法、乘法和膜的代码。</li>
+<li>每次涉及到复数都需要调用构造方法。</li>
+<li>a.plus(b) 和 a.times(b) 中的 b 不可省略，因为声明方法时代码中的&quot;b&quot;跟实例化的&quot;b&quot;不是一个东西。</li>
+</ul>
+</li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc1003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC1003</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/assignment2/"># CSC1003 Assignment2 二维数组</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/1003.5/"># CSC1003 LEC13-15 递归</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/1003.4/"># CSC1003 LEC10-12 Midterm Revision</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/assignment1/"># CSC1003 Assignment1 OJPractice</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/1003.2/"># CSC1003 TBL1 网络与计算机史</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/1003.1/"># CSC1003 LEC1~3 函数、数据类型与计算</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2025</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://ai.nero-lithos.com" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

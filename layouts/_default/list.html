@@ -25,16 +25,21 @@
             </p>
           </div>
 
-          <!-- 右侧：featured_image（有就显示，无就不占位） -->
+          <!-- 右侧：featured_image -->
           {{ with .Params.featured_image }}
-          <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
-            <img
-              src="{{ . | relURL }}"
-              alt="{{ $.Title }} featured image"
-              loading="lazy"
-              style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);"
-            />
-          </a>
+            {{ if reflect.IsMap . }}
+              {{ with .src }}
+              <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
+                <img src="{{ . | relURL }}" alt="{{ $.Params.featured_image.alt | default $.Title }}"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+              {{ end }}
+            {{ else }}
+              <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
+                <img src="{{ . | relURL }}" alt="{{ $.Title }}"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            {{ end }}
           {{ end }}
         </article>
       {{ end }}
@@ -43,6 +48,5 @@
     {{- template "_internal/pagination.html" . -}}
   </article>
 {{ end }}
-
 
 

@@ -6,21 +6,91 @@
     <description>Recent content on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 22 Sep 2024 15:49:58 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 31 Aug 2025 11:29:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title> # CSC1003 Practice2 OJ习题</title>
-      <link>http://localhost:1313/posts/oj1/</link>
-      <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/oj1/</guid>
-      <description>&lt;p&gt;龙大 SDS 学院 CSC1003 的 Practice 网站：&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/p/&#34;&gt;OJ 主站&lt;/a&gt;&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/&#34;&gt;OJ 2024&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h4 id=&#34;前言&#34;&gt;前言&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;以下程序均通过了 OJ 系统(截止到 2024 年 9 月)的批改，仅供参考。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;OJ 系统截止到 2024 年 9 月都无法使用 main 方法的键盘录入功能，只能依靠 Scanner 类。&lt;/p&gt;</description>
+      <title># CSC3001 LEC1 离散数学入门</title>
+      <link>http://localhost:1313/posts/3001.1/</link>
+      <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.1/</guid>
+      <description>CUHKSZ 大二课程 CSC3001 的入门指导</description>
     </item>
     <item>
-      <title># CSC1003 LEC4~6 条件，循环与数组</title>
-      <link>http://localhost:1313/posts/1003.3/</link>
-      <pubDate>Wed, 18 Sep 2024 16:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/1003.3/</guid>
-      <description>介绍 if 条件和 while, do-while, for, foreach 循环以及数组</description>
+      <title>How to personalize Streamlit URL?</title>
+      <link>http://localhost:1313/posts/streamliturl/</link>
+      <pubDate>Sun, 31 Aug 2025 10:50:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/streamliturl/</guid>
+      <description>一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试</description>
+    </item>
+    <item>
+      <title>Automation of Ssg Post Release</title>
+      <link>http://localhost:1313/posts/autorelease/</link>
+      <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
+      <guid>http://localhost:1313/posts/autorelease/</guid>
+      <description>SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？</description>
+    </item>
+    <item>
+      <title># Brainstorming</title>
+      <link>http://localhost:1313/posts/brainstorm/</link>
+      <pubDate>Thu, 10 Apr 2025 17:15:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/brainstorm/</guid>
+      <description>从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…</description>
+    </item>
+    <item>
+      <title># 龙大生存指南 CUHKSZ Survival Handbook</title>
+      <link>http://localhost:1313/posts/lgu/</link>
+      <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/lgu/</guid>
+      <description>龙大人自己的生存指南，绝赞创作中</description>
+    </item>
+    <item>
+      <title># CSC1003 期末总结</title>
+      <link>http://localhost:1313/posts/1003.6/</link>
+      <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.6/</guid>
+      <description>总结 Java 中好用的语句和易错的用法</description>
+    </item>
+    <item>
+      <title># CSC1003 Assignment2 二维数组</title>
+      <link>http://localhost:1313/posts/assignment2/</link>
+      <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/assignment2/</guid>
+      <description>&lt;h1 id=&#34;二维数组&#34;&gt;二维数组&lt;/h1&gt;&#xA;&lt;h3 id=&#34;例题一easy&#34;&gt;例题一(easy)：&lt;/h3&gt;&#xA;&lt;p&gt;编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。&#xA;比如：&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title># 《牧羊人》</title>
+      <link>http://localhost:1313/posts/sheperd/</link>
+      <pubDate>Wed, 30 Oct 2024 13:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/sheperd/</guid>
+      <description>&lt;p&gt;牧羊人是个精明人，他总是能从羊群身上获得最多价值。冬天，羊长出很多毛，他就把大半的毛都剃掉，薄利多销地卖与人。因为价格实惠，人们都赞不绝口，经常从他那里进货。但牧羊人告诉羊群这些毛是为了实现羊群富足的必要牺牲，他永远以羊群利益至上。之所以要把毛交给牧羊人是因为他是羊群的主心骨，带领羊群走向温饱。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title># CSC1003 LEC13-15 递归</title>
+      <link>http://localhost:1313/posts/1003.5/</link>
+      <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.5/</guid>
+      <description>介绍递归，栈与堆，以及栈溢出</description>
+    </item>
+    <item>
+      <title># 如何快速批量地将音频转文字？</title>
+      <link>http://localhost:1313/posts/whisper/</link>
+      <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/whisper/</guid>
+      <description>&lt;h1 id=&#34;whisper-模型&#34;&gt;Whisper 模型&lt;/h1&gt;&#xA;&lt;p&gt;事情的起因是龙大 ENG1001 课程需要就 TedTalk 视频进行 Reflection Presentation。但我懒得边听边记，实时转录文字太慢又不太准确。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title># CSC1003 LEC10-12 Midterm Revision</title>
+      <link>http://localhost:1313/posts/1003.4/</link>
+      <pubDate>Sat, 19 Oct 2024 23:56:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.4/</guid>
+      <description>期中考试复习与模拟题</description>
+    </item>
+    <item>
+      <title># CSC1003 Assignment1 OJPractice</title>
+      <link>http://localhost:1313/posts/assignment1/</link>
+      <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/assignment1/</guid>
+      <description>&lt;p&gt;龙大 SDS 学院 CSC1003 的 Practice 网站：&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/p/&#34;&gt;OJ 主站&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/&#34;&gt;OJ 2024&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://10.26.200.13/&#34;&gt;OJ(曾用)内网地址&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title># 咖啡与OOP</title>
@@ -65,7 +135,14 @@
       <description>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。</description>
     </item>
     <item>
-      <title> # Grassroot HongKong</title>
+      <title># River Town: the Metaphor of Chapter VI. ‘Storm’</title>
+      <link>http://localhost:1313/posts/river_town/</link>
+      <pubDate>Tue, 10 Sep 2024 15:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/river_town/</guid>
+      <description>&lt;p&gt;In Chapter six of River Town, the metaphor of &amp;ldquo;storm&amp;rdquo; is incredibly ingenious, much like the line from &lt;em&gt;Border Town&lt;/em&gt;: &amp;ldquo;The heavy rain washed everything, yet it washed away nothing.&amp;rdquo; True, storms rinsed both HongKong and Fuling the night of HongKong’s handover to China. Yet only when people, like Andy in &lt;em&gt;The Shawshank Redemption&lt;/em&gt;, allow the rain to cleanse the blockages and stubbornness deep within their souls, and reach their arms out to the sky, can they attain true liberation.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title># Grassroot HongKong</title>
       <link>http://localhost:1313/posts/yaumatei/</link>
       <pubDate>Tue, 10 Sep 2024 09:08:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/yaumatei/</guid>

@@ -2,16 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/lgu/</loc>
-    <lastmod>2024-12-09T14:23:58+08:00</lastmod>
+    <loc>http://localhost:1313/posts/3001.1/</loc>
+    <lastmod>2025-08-31T11:29:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2024-12-09T14:23:58+08:00</lastmod>
+    <lastmod>2025-08-31T11:29:34+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/csc3001/</loc>
+    <lastmod>2025-08-31T11:29:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2024-12-09T14:23:58+08:00</lastmod>
+    <lastmod>2025-08-31T11:29:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-08-31T11:29:34+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/sds/</loc>
+    <lastmod>2025-08-31T11:29:34+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-08-31T11:29:34+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/streamliturl/</loc>
+    <lastmod>2025-08-31T10:50:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E5%B8%AE%E5%8A%A9/</loc>
+    <lastmod>2025-08-31T10:50:30+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/autorelease/</loc>
+    <lastmod>2025-04-25T15:43:45+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/brainstorm/</loc>
+    <lastmod>2025-04-10T17:15:34+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/lgu/</loc>
     <lastmod>2024-12-09T14:23:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</loc>
@@ -20,16 +44,7 @@
     <loc>http://localhost:1313/posts/1003.6/</loc>
     <lastmod>2024-11-29T14:15:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/brainstorm/</loc>
-    <lastmod>2024-11-29T14:15:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/csc1003/</loc>
-    <lastmod>2024-11-29T14:15:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/sds/</loc>
-    <lastmod>2024-11-29T14:15:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
     <lastmod>2024-11-29T14:15:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/assignment2/</loc>

@@ -6,8 +6,22 @@
     <description>Recent content in 帮助 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 11 Sep 2024 09:26:58 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 09 Dec 2024 14:23:58 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title># 龙大生存指南 CUHKSZ Survival Handbook</title>
+      <link>http://localhost:1313/posts/lgu/</link>
+      <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/lgu/</guid>
+      <description>龙大人自己的生存指南，绝赞创作中</description>
+    </item>
+    <item>
+      <title># 如何快速批量地将音频转文字？</title>
+      <link>http://localhost:1313/posts/whisper/</link>
+      <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/whisper/</guid>
+      <description>&lt;h1 id=&#34;whisper-模型&#34;&gt;Whisper 模型&lt;/h1&gt;&#xA;&lt;p&gt;事情的起因是龙大 ENG1001 课程需要就 TedTalk 视频进行 Reflection Presentation。但我懒得边听边记，实时转录文字太慢又不太准确。&lt;/p&gt;</description>
+    </item>
     <item>
       <title># 龙大邮箱抓取尝试</title>
       <link>http://localhost:1313/posts/outlook/</link>

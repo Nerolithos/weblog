@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>练习 on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/%E7%BB%83%E4%B9%A0/</link>
+    <description>Recent content in 练习 on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 31 Oct 2024 14:49:58 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E7%BB%83%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title># CSC1003 Assignment2 二维数组</title>
+      <link>http://localhost:1313/posts/assignment2/</link>
+      <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/assignment2/</guid>
+      <description>&lt;h1 id=&#34;二维数组&#34;&gt;二维数组&lt;/h1&gt;&#xA;&lt;h3 id=&#34;例题一easy&#34;&gt;例题一(easy)：&lt;/h3&gt;&#xA;&lt;p&gt;编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。&#xA;比如：&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title># CSC1003 Assignment1 OJPractice</title>
+      <link>http://localhost:1313/posts/assignment1/</link>
+      <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/assignment1/</guid>
+      <description>&lt;p&gt;龙大 SDS 学院 CSC1003 的 Practice 网站：&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/p/&#34;&gt;OJ 主站&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/&#34;&gt;OJ 2024&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://10.26.200.13/&#34;&gt;OJ(曾用)内网地址&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

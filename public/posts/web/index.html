@@ -21,6 +21,12 @@
 
 
 
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
     
 
     
@@ -32,8 +38,6 @@
 
     
       <link rel="canonical" href="http://localhost:1313/posts/web/">
-    
-
     <meta property="og:url" content="http://localhost:1313/posts/web/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
   <meta property="og:title" content=" # IP地址与子网掩码">
@@ -53,13 +57,32 @@
   <meta name="twitter:title" content=" # IP地址与子网掩码">
   <meta name="twitter:description" content="240822，有几位同学在龙大的选课培训直播间提出几个网络问题。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。">
 
-	
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
   </head>
 
   <body class="ma0 avenir bg-near-white">
 
     
-   
   
 
   <header>
@@ -74,6 +97,34 @@
     <div class="flex-l items-center">
       
 
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
       
       
 <div class="ananke-socials">
@@ -93,9 +144,9 @@
       
   
   <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
     <header class="mt4 w-100">
       <aside class="instapaper_ignoref b helvetica tracked ttu">
-          
         Posts
       </aside>
       
@@ -115,15 +166,16 @@
 
 
       <h1 class="f1 athelas mt3 mb1"> # IP地址与子网掩码</h1>
+
       
-      
+
       
       <time class="f6 mv4 dib tracked" datetime="2024-09-11T09:26:58+08:00">September 11, 2024</time>
       
 
       
-      
     </header>
+
     <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>240822，有几位同学在龙大的选课培训直播间提出<a href="https://postimg.cc/7bqTcdMd">几个网络问题</a>。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。</p>
 <p>全球范围内，局域网(LAN)中常用的私有 IP 地址前缀(前一到两组十进制数)有以下几种，这些前缀是根据 <a href="https://tools.ietf.org/html/rfc1918">RFC 1918</a> 定义的：</p>
 <ul>
@@ -144,8 +196,7 @@
   
 </ul>
 <div class="mt6 instapaper_ignoref">
-
-      <div id="disqus_thread"></div>
+        <div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -174,46 +225,26 @@
 
 
 </aside>
-    
-        <h1> # IP地址与子网掩码</h1>
-    <p>Categories: 
-        
-    </p>
-    <p>Tags: 
-        
-    </p>
-    <div><p>240822，有几位同学在龙大的选课培训直播间提出<a href="https://postimg.cc/7bqTcdMd">几个网络问题</a>。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。</p>
-<p>全球范围内，局域网(LAN)中常用的私有 IP 地址前缀(前一到两组十进制数)有以下几种，这些前缀是根据 <a href="https://tools.ietf.org/html/rfc1918">RFC 1918</a> 定义的：</p>
-<ul>
-<li>
-<p><strong>10.0.0.0/8</strong> - 覆盖范围为 10.0.0.0 到 10.255.255.255。这是一个非常大的地址空间，通常用于大型企业网络。(你龙专竟然用这么大的网络)</p>
-</li>
-<li>
-<p><strong>172.16.0.0/12</strong> - 覆盖范围为 172.16.0.0 到 172.31.255.255。这个地址空间相对较小，常见于中型网络。</p>
-</li>
-<li>
-<p><strong>192.168.0.0/16</strong> - 覆盖范围为 192.168.0.0 到 192.168.255.255。这是最常见的家用路由器和小型网络中使用的地址空间。
-这些IP地址前缀是私有的，<strong>不能在互联网中路由</strong>，主要用于内网通信。</p>
-</li>
-</ul>
-<p>以下以我的家用路由器局域网为例。“IP 地址”是私有的，<strong>不能在互联网中路由</strong>，主要用于内网通信。那么为什么 IP 地址是“软地址”？为什么非要折腾一个出 MAC 地址？显然，仅仅靠192.168后面几位数字，不可能在整个互联网上不重复。其中192.168.0.0是网络地址；192.168.255.255是广播地址，都不能用做主机地址，那也就是说一共只有2^8-2=254个不同地址名。所以肯定需要一个更长的数字编码来表示一个绝不重复的地址，所以有 MAC 地址。</p>
-<p>所谓子网掩码就是帮助路由器知道一个网络地址是否属于其下的子网的。一个主机的IP地址，比如192.168.50.137中，192.168.50是网络部分，而.137是主机部分，因为我的私有网络地址为192.168.50.0，所以在子网中前缀为192.168.50的网络地址都属于这个子网内，.137可以被隐去。这时候子网掩码255.255.255.0就起作用了，因为二进制运算逻辑AND中，1 AND 1 = 1，1 AND 0 = 0，0 AND 0 = 0，所以255.255.255.0 与 IP地址进行 AND 运算时，11111111.11111111.11111111.0 会把前三位数字原封不动保留，而把最后一位同一变成 0。这样，所有IP地址属于这个路由器下的设备在子网掩码计算后都是192.168.50.0。这也就解释了为什么在龙大的网络10.0.0.0下的任意一台设备都可以路由到10.20.219.31，而从外网不行了。</p>
-</div>
 
   </article>
 
     </main>
-    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
-  <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
-    &copy;  Lithos' Blog 2024 
-  </a>
-    <div>
-<div class="ananke-socials">
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2025</p>
+
   
-</div>
-</div>
-  </div>
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://ai.nero-lithos.com" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
 </footer>
 
   </body>

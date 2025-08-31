@@ -2,6 +2,7 @@
 title: "# CSC1003 Assignment1 OJPractice"
 date: 2024-09-22T15:49:58+08:00
 draft: false
+summary: "CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践"
 categories: 
 - SDS
 tags: 

@@ -6,14 +6,70 @@
     <description>Recent content in SDS on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 18 Sep 2024 16:23:58 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 31 Aug 2025 11:29:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/sds/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title># CSC1003 LEC4~6 条件，循环与数组</title>
-      <link>http://localhost:1313/posts/1003.3/</link>
-      <pubDate>Wed, 18 Sep 2024 16:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/1003.3/</guid>
-      <description>介绍 if 条件和 while, do-while, for, foreach 循环以及数组</description>
+      <title># CSC3001 LEC1 离散数学入门</title>
+      <link>http://localhost:1313/posts/3001.1/</link>
+      <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.1/</guid>
+      <description>CUHKSZ 大二课程 CSC3001 的入门指导</description>
+    </item>
+    <item>
+      <title>How to personalize Streamlit URL?</title>
+      <link>http://localhost:1313/posts/streamliturl/</link>
+      <pubDate>Sun, 31 Aug 2025 10:50:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/streamliturl/</guid>
+      <description>一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试</description>
+    </item>
+    <item>
+      <title>Automation of Ssg Post Release</title>
+      <link>http://localhost:1313/posts/autorelease/</link>
+      <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
+      <guid>http://localhost:1313/posts/autorelease/</guid>
+      <description>SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？</description>
+    </item>
+    <item>
+      <title># Brainstorming</title>
+      <link>http://localhost:1313/posts/brainstorm/</link>
+      <pubDate>Thu, 10 Apr 2025 17:15:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/brainstorm/</guid>
+      <description>从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…</description>
+    </item>
+    <item>
+      <title># CSC1003 期末总结</title>
+      <link>http://localhost:1313/posts/1003.6/</link>
+      <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.6/</guid>
+      <description>总结 Java 中好用的语句和易错的用法</description>
+    </item>
+    <item>
+      <title># CSC1003 Assignment2 二维数组</title>
+      <link>http://localhost:1313/posts/assignment2/</link>
+      <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/assignment2/</guid>
+      <description>&lt;h1 id=&#34;二维数组&#34;&gt;二维数组&lt;/h1&gt;&#xA;&lt;h3 id=&#34;例题一easy&#34;&gt;例题一(easy)：&lt;/h3&gt;&#xA;&lt;p&gt;编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。&#xA;比如：&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title># CSC1003 LEC13-15 递归</title>
+      <link>http://localhost:1313/posts/1003.5/</link>
+      <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.5/</guid>
+      <description>介绍递归，栈与堆，以及栈溢出</description>
+    </item>
+    <item>
+      <title># CSC1003 LEC10-12 Midterm Revision</title>
+      <link>http://localhost:1313/posts/1003.4/</link>
+      <pubDate>Sat, 19 Oct 2024 23:56:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.4/</guid>
+      <description>期中考试复习与模拟题</description>
+    </item>
+    <item>
+      <title># CSC1003 Assignment1 OJPractice</title>
+      <link>http://localhost:1313/posts/assignment1/</link>
+      <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/assignment1/</guid>
+      <description>&lt;p&gt;龙大 SDS 学院 CSC1003 的 Practice 网站：&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/p/&#34;&gt;OJ 主站&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/&#34;&gt;OJ 2024&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://10.26.200.13/&#34;&gt;OJ(曾用)内网地址&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title># CSC1003 TBL1 网络与计算机史</title>

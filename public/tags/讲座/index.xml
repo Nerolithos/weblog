@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>讲座 on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/</link>
+    <description>Recent content in 讲座 on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 22 Oct 2024 17:23:58 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title># CSC1003 LEC13-15 递归</title>
+      <link>http://localhost:1313/posts/1003.5/</link>
+      <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.5/</guid>
+      <description>介绍递归，栈与堆，以及栈溢出</description>
+    </item>
+    <item>
+      <title># CSC1003 LEC1~3 函数、数据类型与计算</title>
+      <link>http://localhost:1313/posts/1003.1/</link>
+      <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/1003.1/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;一切归功于李文烨教授，他是24年这门科目的主讲人。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;java-第一个程序&#34;&gt;JAVA 第一个程序&lt;/h2&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Hello&lt;/span&gt; {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args) {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        System.&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello, world!&amp;#34;&lt;/span&gt;);&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pr</description>
+    </item>
+  </channel>
+</rss>

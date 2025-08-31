@@ -9,14 +9,34 @@
   {{ end }}
 
   {{ range .Site.RegularPages }}
-  <article class="mb5">
-    <h2 class="f3 mb1">
-      <a href="{{ .RelPermalink }}" class="link black dim">{{ .Title }}</a>
-    </h2>
-    <p class="gray f6">
-      {{ .Date.Format "2006-01-02" }} | {{ .WordCount }} 字 | {{ .ReadingTime }} 分钟阅读
-    </p>
-    <p>{{ .Summary }}</p>
+  <article class="cf pv4 bb b--black-10 flex-l items-start">
+    <!-- 左侧：标题 / 元信息 / 摘要 -->
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      </h2>
+      <p class="gray f6 mb2">
+        {{ .Date.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
+      </p>
+      <div class="lh-copy mid-gray">
+        {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
+      </div>
+      <p class="mt3">
+        <a class="link dim" href="{{ .RelPermalink }}">阅读全文 →</a>
+      </p>
+    </div>
+
+    <!-- 右侧：featured_image（有才显示） -->
+    {{ with .Params.featured_image }}
+      {{ $img := . }}
+      {{ if reflect.IsMap . }}{{ $img = .src }}{{ end }}
+      {{ with $img }}
+        <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
+          <img src="{{ . | relURL }}" alt="{{ $.Title }}"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      {{ end }}
+    {{ end }}
   </article>
   {{ end }}
 </div>
