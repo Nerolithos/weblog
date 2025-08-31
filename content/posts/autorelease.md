@@ -2,7 +2,7 @@
 title:     "Automation of Ssg Post Release"
 date:      2025-04-25T15:43:45+08:00
 draft:     false
-summary:   ""
+summary:   "SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？"
 categories:
   - SDS
 tags: [帮助]
