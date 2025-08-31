@@ -12,6 +12,7 @@ googleAnalytics = ""
 enableRobotsTXT = true
 
 [params]
+  custom_css = ["css/custom.css"]
   text_color = ""
   author = ""
   favicon = ""
