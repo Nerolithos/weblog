@@ -1,15 +1,45 @@
 {{ define "main" }}
   <article class="pa3 pa4-ns nested-copy-line-height">
+    <!-- 顶部正文区，保持原样 -->
     <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy {{ $.Param "text_color" | default "mid-gray" }}">
       {{- .Content -}}
     </section>
-    <section class="flex-ns flex-wrap justify-around mt5">
+
+    <!-- 列表区：每篇文章左文右图 -->
+    <section class="ph3 ph5-l center">
       {{ range .Paginator.Pages }}
-        <div class="relative w-100 w-30-l mb4 bg-white">
-          {{ .Render "summary" }}
-        </div>
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          <!-- 左侧：标题 / 元信息 / 摘要 -->
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="{{ .RelPermalink }}">{{ .Title }}</a>
+            </h2>
+            <p class="gray f6 mb2">
+              {{ .Date.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="{{ .RelPermalink }}">阅读全文 →</a>
+            </p>
+          </div>
+
+          <!-- 右侧：featured_image（有就显示，无就不占位） -->
+          {{ with .Params.featured_image }}
+          <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
+            <img
+              src="{{ . | relURL }}"
+              alt="{{ $.Title }} featured image"
+              loading="lazy"
+              style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);"
+            />
+          </a>
+          {{ end }}
+        </article>
       {{ end }}
     </section>
+
     {{- template "_internal/pagination.html" . -}}
   </article>
 {{ end }}
