@@ -2,7 +2,7 @@ baseURL = 'https://blog.nero-lithos.com/'
 defaultContentLanguage = "zh-cn"
 defaultContentLanguageInSubdir = false
 languageCode = 'zh-cn'
-title = "Lithos' Blog" # Blog title 
+title = "Lithos' Blog" # Blog title
 theme = 'ananke1'
 hasCJKLanguage = true
 canonifyurls = true
@@ -18,19 +18,40 @@ enableRobotsTXT = true
   site_logo = ""
   background_color_class = "bg-black"
   recent_posts_number = 100
+  # 仍然保留页脚链接
   footer_links = [
     { name = "💻 GitHub", url = "https://github.com/Nerolithos" },
     { name = "🎨 Pixiv", url = "https://www.pixiv.net/users/107379421" },
-    { name = "🏠 Home", url = "https://blog.nero-lithos.com/" }
+    { name = "🏠 Home",  url = "https://blog.nero-lithos.com/" },
+    { name = "🤖 CUHKSZ AI", url = "https://ai.nero-lithos.com" }
   ]
+
+# 顶部导航菜单（Ananke 会在 header 渲染 .Site.Menus.main）
+[menu]
+  [[menu.main]]
+    name = "💻 GitHub"
+    url  = "https://github.com/Nerolithos"
+    weight = 1
+  [[menu.main]]
+    name = "🎨 Pixiv"
+    url  = "https://www.pixiv.net/users/107379421"
+    weight = 2
+  [[menu.main]]
+    name = "🏠 Home"
+    url  = "/"
+    weight = 3
+  [[menu.main]]
+    name = "🤖 CUHKSZ AI"
+    url  = "https://ai.nero-lithos.com"
+    weight = 4
 
 [services]
   [services.disqus]
     shortname = 'nero-lithos'
 
 [taxonomies]
-   category = "categories"
-   tag = "tags"
+  category = "categories"
+  tag = "tags"
 
 [markup]
   [markup.goldmark]
