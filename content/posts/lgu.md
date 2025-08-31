@@ -1,5 +1,5 @@
 ---
-title: "# 龙大生存指南 CUHKSZ Survival Handbook"
+title: "🐉🧱 龙大生存指南 CUHKSZ Survival Handbook"
 date: 2024-12-09T14:23:58+08:00
 draft: false
 summary: "龙大人自己的生存指南，绝赞创作中"
