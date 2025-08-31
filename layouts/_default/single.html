@@ -41,7 +41,9 @@
       {{- .Content -}}
       {{- partial "tags.html" . -}}
       <div class="mt6 instapaper_ignoref">
-        {{ partial "disqus.html" . }}
+        {{ if .Site.DisqusShortname }}
+          {{ template "_internal/disqus.html" . }}
+        {{ end }}
       </div>
     </div>
 

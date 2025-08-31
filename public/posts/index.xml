@@ -90,7 +90,7 @@
       <link>http://localhost:1313/posts/assignment1/</link>
       <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/assignment1/</guid>
-      <description>&lt;p&gt;龙大 SDS 学院 CSC1003 的 Practice 网站：&#xA;&lt;a href=&#34;https://oj.cuhk.edu.cn/p/&#34;&gt;OJ 主站&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://oj.cuhk.edu.cn/d/csc1003_2024_fall/p/&#34;&gt;OJ 2024&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://10.26.200.13/&#34;&gt;OJ(曾用)内网地址&lt;/a&gt;&lt;/p&gt;</description>
+      <description>CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践</description>
     </item>
     <item>
       <title># 咖啡与OOP</title>
@@ -111,7 +111,7 @@
       <link>http://localhost:1313/posts/1003.1/</link>
       <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/1003.1/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;一切归功于李文烨教授，他是24年这门科目的主讲人。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;java-第一个程序&#34;&gt;JAVA 第一个程序&lt;/h2&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Hello&lt;/span&gt; {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args) {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        System.&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello, world!&amp;#34;&lt;/span&gt;);&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pr</description>
+      <description>CUHKSZ 大一课程 CSC1003（Java） 的入门</description>
     </item>
     <item>
       <title> # IP地址与子网掩码</title>
