@@ -6,7 +6,7 @@ summary:   "一次在没有外网 VPS 的前提下试图将 Streamlit app 指向
 categories:
   - SDS
 tags: [帮助]
-
+featured_image: "/images/st.jpg"
 ---
 
 

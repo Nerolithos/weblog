@@ -4,7 +4,7 @@ date: 2024-10-30T13:49:58+08:00
 draft: false
 tags: 
 - Diary
-- featured_image: "/images/them.jpg"
+featured_image: "/images/them.jpg"
 ---
 
 
