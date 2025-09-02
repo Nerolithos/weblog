@@ -24,7 +24,7 @@ enableRobotsTXT = true
     { name = "💻 GitHub", url = "https://github.com/Nerolithos" },
     { name = "🎨 Pixiv", url = "https://www.pixiv.net/users/107379421" },
     { name = "🏠 Home",  url = "https://blog.nero-lithos.com/" },
-    { name = "🤖 CUHKSZ AI", url = "https://ai.nero-lithos.com" }
+    { name = "🤖 CUHKSZ AI", url = "https://futuregate.streamlit.app/" }
   ]
 
 # 顶部导航菜单（Ananke 会在 header 渲染 .Site.Menus.main）
