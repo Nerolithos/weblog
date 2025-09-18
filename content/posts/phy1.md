@@ -28,7 +28,7 @@ $$Orthodecomp.：\vec r(t)=\vec v(0)t+{1\over 2}at^2\to r_x(t)=v_x(0)+{1\over 2}
 - 30 degrees north to east：北偏东 30°
 - 向量叉乘：
 
-$$(x_1,x_2,x_3) \times (y_1,y_2,y_3) = \begin{vmatrix}x_1&x_2&x_3\\y_1&y_2&y_3\\\vec i&\vec j&\vec k\end{vmatrix}\ \ (反斜方向为正项)$$
+$$(x_1,x_2,x_3) \times (y_1,y_2,y_3)\ 等于：两个向量和单位向量组成的三阶行列式 (反斜方向为正项)$$
 
 <br>
 
@@ -42,7 +42,7 @@ $$v={2\pi r\over T},\ \ ω={2\pi\over T}$$
 - 牛顿三定理：
 $$NFL:\ \vec F_{net}=0\iff const\ \vec v\ ,\ \vec a=0$$
 $$NSL:\ \vec F_{net}=m\vec a,\ \ \vec F_{x\ net}=m\vec a_x\ ...$$
-$$NTL:for\ two\ entities\ A\ \&\ B:\ ∀\  \vec F_{AB},\ ∃\ \vec F_{BA},\ \vec F_{AB}=-F_{BA}$$_
+$$NTL:for\ two\ entities\ A,\ B:\ ∀\  \vec F_{AB},\ ∃\ \vec F_{BA},\ \vec F_{AB}=-F_{BA}$$_
 - **变加速度时间方程**(用于推导 v(t), x(t) 和 a(t))
 $$a={dv\over dt}={F(v)\over m}\to \int_{v_0}^{v_t}{1\over F(v)}dv=\int_0^t{1\over m}dt\to v(t)=...$$
 (需要尽量剥离 F(v)中的 v)
