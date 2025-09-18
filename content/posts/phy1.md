@@ -17,7 +17,7 @@ featured_image: "/images/phy1.jpg"
 - 基础微分方程：
 $$a={dv\over{dt}},\ v={dx\over{dt}}$$
 
-- 变加速度位移方程(用于推 导 v(x))：
+- **变加速度位移方程**(用于推 导 v(x))：
   $$a=\boxed{a(v)}={dv\over{dt}}={dv\over{dx}}\times{dx\over{dt}}=\boxed{v\ dv\over{dx}}\to\ \int_{v_0}^{v_t}{v\over{a(v)}}dv=\int_{x_0}^{x_t} dx=\Delta x\to v(x)=...$$
   (需要尽量剥离 a(v)中的 v)
 
@@ -39,13 +39,11 @@ $$(x_1,x_2,x_3) \times (y_1,y_2,y_3) = \begin{vmatrix}x_1&x_2&x_3\\y_1&y_2&y_3\\
 - 匀速圆周运动公式：
 $$v=ωr,\ \ \vec a={\vec v^2\over r}=ω^2={4\pi ^2r\over T^2}$$
 $$v={2\pi r\over T},\ \ ω={2\pi\over T}$$
-
 - 牛顿三定理：
 $$NFL:\ \vec F_{net}=0\iff const\ \vec v\ ,\ \vec a=0$$
 $$NSL:\ \vec F_{net}=m\vec a,\ \ \vec F_{x\ net}=m\vec a_x\ ...$$
-$$NTL:for\ two\ entities\ A\ \&\ B:\ ∀\  \vec F_{AB},\ ∃\ \vec F_{BA},\ \vec F_{AB}=-F_{BA}$$
-
-- 变加速度时间方程(用于推导 v(t), x(t) 和 a(t))
+$$NTL:for\ two\ entities\ A\ \&\ B:\ ∀\  \vec F_{AB},\ ∃\ \vec F_{BA},\ \vec F_{AB}=-F_{BA}$$_
+- **变加速度时间方程**(用于推导 v(t), x(t) 和 a(t))
 $$a={dv\over dt}={F(v)\over m}\to \int_{v_0}^{v_t}{1\over F(v)}dv=\int_0^t{1\over m}dt\to v(t)=...$$
 (需要尽量剥离 F(v)中的 v)
 $$trivially,\ a(t)={d\ v(t)\over dt};\ \ x(t)=\int_0^t v(t)\ dt$$
@@ -81,3 +79,14 @@ $$trivially,\ a(t)={d\ v(t)\over dt};\ \ x(t)=\int_0^t v(t)\ dt$$
 - v：相对流速（逆流逆风速度正叠加）
 
 比如计算半径为 R 的水滴在空气中的最终速度满足：$$\tfrac{1}{2}C \rho_{air} \pi R^2 v_t^2 = {4\over3}\pi R^3 \rho_{water}g$$
+
+<br>
+
+- **变加速度速度方程**：(用于推导 x(v) 和极限位移)
+
+  （假设受到两个力 f, F)
+
+  $$ma=m{dv\over dt}=f(x)+F(x)\to {dv\over dt}={f(x)+F(x)\over m},\ multiply\ by\ dx=vdt:$$
+  $$\int dx=\int{mvdv\over f(x)+F(x)},\ then\ we\ have\ x(v)$$
+
+  
