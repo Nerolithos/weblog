@@ -47,7 +47,7 @@ $F_{\rm NET}=f_s=m a_{\rm COM}\le \mu_s N$（不打滑时）
 $\tau=\tau_{\rm applied}-f_s R$  
 $a_{\rm COM}=\alpha R$  
 解得：$a_C=\dfrac{\tau_{\rm eng}R}{I+mR^2},\qquad
-f_s=m\,a_C=\dfrac{m\,\tau_{\rm eng}R}{I+mR^2}\,.$
+f_s=ma_C=\dfrac{m\,\tau_{\rm eng}R}{I+mR^2}.$
 
 - 比如一个转动的球被丢在光滑平面上，没有摩擦力就只会在原地打滚。  
 - 比如无动力的轮子上坡：摩擦力与重力 $\sin$ 分力方向相反，指向前进方向，做正旋转功。  
@@ -61,7 +61,7 @@ $F_{\rm NET}=F_{\rm applied}-f_s=m a_{\rm COM}$
 $\tau=f_s R\le \mu_s N R$（不打滑时）  
 $a_{\rm COM}=\alpha R$  
 解得：$a_C=\dfrac{F}{m+I/R^2},\qquad
-f_s=\dfrac{I}{R^2}\,a_C=\dfrac{F I}{I+mR^2}$
+f_s=\dfrac{I}{R^2}a_C=\dfrac{F I}{I+mR^2}$
 
 </br>
 
@@ -94,16 +94,16 @@ $\omega(t)=\omega_0-\alpha t$
 
 可以推导出直到滑动停止所需的时间公式：
 $$
-\boxed{\ t=\frac{\big|\,v_0-\omega_0 R\,\big|}
+\boxed{\ t=\frac{\big|v_0-\omega_0 R\big|}
 {\mu_k g\left(1+\dfrac{MR^2}{I}\right)}
-=\frac{M\big|\,v_0-\omega_0 R\,\big|}
+=\frac{M\big|v_0-\omega_0 R\big|}
 {f_k\left(1+\dfrac{MR^2}{I}\right)}\ }
 $$
 这是只受摩擦力下，停止滑动所需时间的通解。
 
 一般不会考虑初线速度，也就是 $v_0=0\Rightarrow$ 纯滚瞬间的速度与角速度：  
-$$v =\frac{I}{I+MR^2}\,\omega_0 R ;\ \  \omega =\frac{I}{I+MR^2}\,\omega_0$$  
-能量损失（变为内能）：$\displaystyle \Delta K=-\tfrac12\,\frac{IMR^2}{I+MR^2}\,\omega_0^2$
+$$v =\frac{I}{I+MR^2}\omega_0 R ;\ \  \omega =\frac{I}{I+MR^2}\omega_0$$  
+能量损失（变为内能）：$\displaystyle \Delta K=-\tfrac12\frac{IMR^2}{I+MR^2}\omega_0^2$
 
 </br>
 
