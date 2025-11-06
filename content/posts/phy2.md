@@ -26,10 +26,12 @@ featured_image: "/images/phy2.jpg"
 - $角动量：\vec L = \vec r\times \vec p,\ L = rp = rMv = I\omega$
   (叉乘都用右手定则判断方向，$\vec r$ 永远从轴心指向边)
 - 对于无外力做功的刚性系，系统角动量守恒：$\vec L_i=\vec L_f$
-- 轨道进动(Precession)：$进动角\ 𝑑∅ = {𝑑𝐿\over 𝐿}\ \ 进动角速度\ Ω = {𝑑∅\over 𝑑𝑡} = {𝑀𝑔𝑟\over 𝐼𝜔}$
- - 不打滑滚动意味着：$s=\theta r$，即质心的位移等于边滚过的距离
-   $\to$ 在质心上，$v = v_{COM} + \omega \times r = 0$，即 $v_{COM} = \omega r$
-   $\to$ 在接地点 p 作为瞬间旋转轴处，$v_p = \omega \times r$ 并且 $a_{COM} = \alpha R$
+- 轨道进动(Precession)：$进动角\ 𝑑∅ = {𝑑𝐿\over 𝐿}$  $进动角速度\ Ω = {𝑑∅\over 𝑑𝑡} = {𝑀𝑔𝑟\over 𝐼𝜔}$
+ - 不打滑滚动意味着：$s= θr$，即质心的位移等于边滚过的距离
+   
+   - 在质心上，$v = v_{COM} + \omega \times r = 0$，即 $v_{COM} = \omega r$
+   
+   - 在接地点 p 作为瞬间旋转轴处，$v_p = \omega \times r$ 并且 $a_{COM} = \alpha R$
 
 </br>
 
