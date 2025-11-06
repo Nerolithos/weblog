@@ -42,7 +42,7 @@ featured_image: "/images/phy2.jpg"
 
 </br>
 
-**主动轮：**角加速度由“引擎”提供，静摩擦力朝前进方向，负责平动。  
+**主动轮**：角加速度由“引擎”提供，静摩擦力朝前进方向，负责平动。  
 $F_{\rm NET}=f_s=m a_{\rm COM}\le \mu_s N$（不打滑时）  
 $\tau=\tau_{\rm applied}-f_s R$  
 $a_{\rm COM}=\alpha R$  
@@ -56,7 +56,7 @@ f_s=m\,a_C=\dfrac{m\,\tau_{\rm eng}R}{I+mR^2}\,.$
 
 </br>
 
-**从动轮：**静摩擦力朝受力的反方向，负责转动。  
+**从动轮**：静摩擦力朝受力的反方向，负责转动。  
 $F_{\rm NET}=F_{\rm applied}-f_s=m a_{\rm COM}$  
 $\tau=f_s R\le \mu_s N R$（不打滑时）  
 $a_{\rm COM}=\alpha R$  
@@ -94,16 +94,16 @@ $\omega(t)=\omega_0-\alpha t$
 
 可以推导出直到滑动停止所需的时间公式：
 $$
-\boxed{\,t_*=\frac{\big|\,v_0-\omega_0 R\,\big|}
+\boxed{\ t=\frac{\big|\,v_0-\omega_0 R\,\big|}
 {\mu_k g\!\left(1+\dfrac{MR^2}{I}\right)}
 =\frac{M\big|\,v_0-\omega_0 R\,\big|}
-{f_k\!\left(1+\dfrac{MR^2}{I}\right)}\,}
+{f_k\!\left(1+\dfrac{MR^2}{I}\right)}\ }
 $$
 这是只受摩擦力下，停止滑动所需时间的通解。
 
 一般不会考虑初线速度，也就是 $v_0=0\Rightarrow$ 纯滚瞬间的速度与角速度：  
-$v_*=\dfrac{I}{I+MR^2}\,\omega_0 R,\qquad \omega_*=\dfrac{I}{I+MR^2}\,\omega_0.$  
-能量损失（变为内能）：$\displaystyle \Delta K=-\tfrac12\,\frac{IMR^2}{I+MR^2}\,\omega_0^2.$
+$$v =\frac{I}{I+MR^2}\,\omega_0 R ;\ \  \omega =\frac{I}{I+MR^2}\,\omega_0$$  
+能量损失（变为内能）：$\displaystyle \Delta K=-\tfrac12\,\frac{IMR^2}{I+MR^2}\,\omega_0^2$
 
 </br>
 
@@ -113,10 +113,7 @@ $v_*=\dfrac{I}{I+MR^2}\,\omega_0 R,\qquad \omega_*=\dfrac{I}{I+MR^2}\,\omega_0.$
 
 对于解中心位置、解力的大小或者存在变力的情况下，常用力与力矩平衡解答：
 $$
-\begin{cases}
-F_{\rm net,\,COM}=0\\[6pt]
-\tau_{\rm net}=0
-\end{cases}
+F_{\rm net,\,COM}=0;\ \ \tau_{\rm net}=0
 $$
 通过选择特殊点作为力矩轴（通常是接触点或质心），可以让一些麻烦的力的力矩为 0
 
