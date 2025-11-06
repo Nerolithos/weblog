@@ -28,7 +28,7 @@ featured_image: "/images/phy2.jpg"
 - 对于无外力做功的刚性系，系统角动量守恒：$\vec L_i=\vec L_f$
 - 轨道进动 (Precession)：
   - $\text{进动角 } d\phi=\dfrac{dL}{L}$
-  - $$\text{进动角速度 }\ \Omega=\frac{d\phi}{dt}=\frac{Mgr}{I\omega}$$
+  - $\text{进动角速度 }\ \omega=\frac{d\phi}{dt}=\frac{Mgr}{I\omega}$
 
 - 不打滑滚动意味着：$s=\theta r$，即质心的位移等于边滚过的距离  
   - 在质心上，$v=v_{\rm COM}+\boldsymbol\omega\times\mathbf r=0$，即 $v_{\rm COM}=\omega r$  
@@ -95,9 +95,9 @@ $\omega(t)=\omega_0-\alpha t$
 可以推导出直到滑动停止所需的时间公式：
 $$
 \boxed{\ t=\frac{\big|\,v_0-\omega_0 R\,\big|}
-{\mu_k g\!\left(1+\dfrac{MR^2}{I}\right)}
+{\mu_k g\left(1+\dfrac{MR^2}{I}\right)}
 =\frac{M\big|\,v_0-\omega_0 R\,\big|}
-{f_k\!\left(1+\dfrac{MR^2}{I}\right)}\ }
+{f_k\left(1+\dfrac{MR^2}{I}\right)}\ }
 $$
 这是只受摩擦力下，停止滑动所需时间的通解。
 
@@ -113,7 +113,7 @@ $$v =\frac{I}{I+MR^2}\,\omega_0 R ;\ \  \omega =\frac{I}{I+MR^2}\,\omega_0$$
 
 对于解中心位置、解力的大小或者存在变力的情况下，常用力与力矩平衡解答：
 $$
-F_{\rm net,\,COM}=0;\ \ \tau_{\rm net}=0
+F_{\rm net,\ COM}=0;\ \ \tau_{\rm net}=0
 $$
 通过选择特殊点作为力矩轴（通常是接触点或质心），可以让一些麻烦的力的力矩为 0
 
