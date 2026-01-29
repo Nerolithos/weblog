@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🧮 CSC3001 LEC17-19 function mapping | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3001.8/">
+    <meta property="og:url" content="http://localhost:1313/posts/3001.8/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🧮 CSC3001 LEC17-19 function mapping">
+  <meta property="og:description" content="CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-17T12:19:24+08:00">
+    <meta property="article:modified_time" content="2025-11-17T12:19:24+08:00">
+    <meta property="article:tag" content="CSC3001">
+
+  <meta itemprop="name" content="🧮 CSC3001 LEC17-19 function mapping">
+  <meta itemprop="description" content="CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数">
+  <meta itemprop="datePublished" content="2025-11-17T12:19:24+08:00">
+  <meta itemprop="dateModified" content="2025-11-17T12:19:24+08:00">
+  <meta itemprop="wordCount" content="1763">
+  <meta itemprop="keywords" content="CSC3001">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🧮 CSC3001 LEC17-19 function mapping">
+  <meta name="twitter:description" content="CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30018.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🧮 CSC3001 LEC17-19 function mapping</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🧮 CSC3001 LEC17-19 function mapping</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-11-17T12:19:24+08:00">November 17, 2025</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>(涵盖第 13、14个讲义)</p>
+<h1 id="ln13">LN13</h1>
+</br>
+<h1 id="函数映射">函数映射</h1>
+</br>
+<ul>
+<li>函数的三种映射
+给定集合 A 和 B，函数 f:A → B 把每个输入 a ∈ A 指向<strong>唯一</strong>的输出 f(a) ∈ B。如果不同的输入不会落在同一输出上，|A| ≥ |B|，称 <strong>单射 Injection</strong>；如果每个 B 里的元素都能被命中，|A| ≤ |B|，称 <strong>满射 Surjection</strong>；两者兼具称 <strong>双射 Bijection</strong>。双射意味着 |A| = |B|——可以把难数的集合 A 转换为好数的集合 B 来计数 |A|。</li>
+<li>“双射计数法”
+步骤：①想一个更好数的集合 B；②构造映射 f:A → B；③论证 f 是双射（或者 “k-to-1”，后续补充）；④数 |B|（或用除法规则 |A|=k|B|，后续补充）。</li>
+</ul>
+</br>
+</br>
+<h1 id="除法规则-division-rule">除法规则 (Division Rule)</h1>
+</br>
+<ul>
+<li>除法规则：
+若 f: A → B 是 k-to-1（每个 b ∈ B 都恰被 k 个 A 中的元素命中），则 |A| = k·|B|，从而 $|B|=\dfrac{|A|}{k}$。这拓展了上述的双射情形（k=1）。</li>
+</ul>
+</br>
+<h2 id="四个常见模型">四个常见模型</h2>
+</br>
+<ol>
+<li>
+<p>幂集基数 (Cardinality of Power Set)
+回忆上半学期的知识：幂集 = 包含某一集合全部子集的集合；基数 = 集合包含的元素个数。假设集合 |M| = k。
+A：幂集的元素
+B： k 位<strong>二进制数</strong>，用 0 | 1 表示 M 中各个元素是否在当前子集中，共有 2<sup>k</sup> 个可能的数
+因为 B 覆盖所有子集情况，A → B 为双射，|A| = |B| = 2<sup>k</sup>。</p>
+<p>类似的，基数为 m 的子集个数可以理解<strong>排列数到组合数</strong>的 m!·(k-m)!-to-1 <strong>映射</strong>，得到的结果阐释了组合数的由来：$\frac{k!}{m!·(k-m)!}= {k \choose m}$</p>
+</li>
+</ol>
+</br>
+<ol start="2">
+<li>
+<p>环形排列 (Circular Permutation)
+A：n 个元素的线性排列：P(n) = n!</p>
+<p><img src="https://i.postimg.cc/gk6wcgxB/tu-xiang.png" alt=""></p>
+<p>B：n 个元素的环形排列：需要考虑封闭队列没有首尾导致的“<strong>旋转等价冗余</strong>” ，比如 ABCD、BCDA、CDAB、DABC 四个是旋转等价的。普遍的，n 个元素排列就有 n 个不同元素在 A 中作为排头的冗余，故而 A → B 为 n-to-1。
+所以根据除法规则， $|B|=\dfrac{n!}{n}=(n-1)!$。</p>
+</li>
+</ol>
+</br>
+<ol start="3">
+<li>相同棋子的排序冗余
+把象棋中 “两车不互吃的摆法” 映射到四元组 (r(1),c(1),r(2),c(2)) 且 $r(1)\neq r(2),c(1)\neq c(2)$。注意：互换“哪辆车叫 1 还是 2”应当得到同一布局，所以 A → B 为 2!-to-1：
+$|B|=\dfrac{|A|}{2!}=\dfrac{8\cdot8\cdot7\cdot7}{2}=1568$。</li>
+</ol>
+</br>
+<ol start="4">
+<li>隔板法 (Stars-and-Bars Method) 的数学化
+从五个种类选一打 (12 个) 甜甜圈：表示为二进制数。
+A：用四个 1 分割出五段<strong>有序</strong>空间，其中填入 0 作为这种甜甜圈要几个，形成的 16-bit 二进制数代表一种选择。比如对于五元组 (choco, icing, plain, glazed, crème)，1100010000010000 表示三个原味的、五个蘸糖的、四个奶油的
+B：五个种类选一打
+因为 A 覆盖了所有可能，A → B 为双射，|B| = |A| = $16 \choose 4$ = 1820。</li>
+</ol>
+</br>
+<p>所以，所有<strong>隔板法都可以转化为二进制数</strong>来描述，其通解为：${隔板数+选择次数 \choose 隔板数}$=$C(0)+C(1) \choose C(1)$( C() 代表某个字符在二进制数中的出现次数)</p>
+</br>
+<h2 id="练习题">练习题</h2>
+</br>
+<ul>
+<li>
+<p>12 个人分成人数相同的三组，并围着三个桌子坐下，有多少坐法？
+$$\frac{12!}{(4!)^3·3!}\times((4-1)!)^3 =\frac{12!·(3!)^2}{(4!)^3}=1247400$$</p>
+<p>$$Takeaway:\ 对于一个\ n\ 排序，有\ k\ 个无序组\ I,排序数：{n!\over \prod_{k}|I_k|!}$$</p>
+</li>
+</ul>
+</br>
+</br>
+<h1 id="卡塔兰数-catalan-number">卡塔兰数 (Catalan Number)</h1>
+</br>
+<p>这里有四个看似不同的问题：</p>
+<p>(A) 正方形网格从左下角到右上角，只能向右或向上，不越过对角线的走法有多少？
+(B) Dyck-n 词 (含相同数量 x 和 y 的字符串，每个 y 之前的 x 数量必须大于 y 数量) 有多少种？
+(C)  n 对括号的合法配对方法有多少？
+(D) 一笔能表示固定距离的上坡或下坡，画 n 笔能有多少种合理的山脉轮廓？</p>
+<p>它们之间两两之前存在双射，因此“答案相同”，全部都符合卡塔兰数。</p>
+</br>
+<ul>
+<li>双射示例
+把 (A)“右/上路径” 编码成含 n 个 x 与 n 个 y 的字符串，要求任何前缀中 x 的数不少于 y 的数，这正是 (B)<strong>Dyck-2n 词</strong> 的定义；把“(”映成 x、“)”映成 y，就变成了 (C)“合法括号串”。</li>
+</ul>
+</br>
+<ul>
+<li>
+<p>反射法 (Reflection / Flipping) 证明
+以 (A) 为例，先数从 (0,0) 到 (n,n) 的所有右上方法 $\binom{2n}{n}$；再把“越过对角线的路径”与“从 (0,0) 到 (n-1,n+1) 的路径”做<strong>双射</strong>：在 (0,0) 到 (n,n) 路径第一次穿过对角线处开始把之后所有步骤反转(右变成上，上变成右），就变成了(0,0) 到 (n-1,n+1) 的<strong>对应</strong>路径。<strong>因为不超出对角线的路径绝对无法走到 (n-1,n+1)，所以越过对角线的走法与(0,0) 到 (n-1,n+1)的所有走法 1-to-1 对应。</strong></p>
+<p><img src="https://i.postimg.cc/7Z6WTTys/jie-ping2025-11-17-12-22-49.png" alt=""></p>
+<p>双射：|(0, 0)→(n, n) Exceed| = |(0, 0)→(n-1, n+1) All| = $\binom{2n}{n+1}$</p>
+<p>$$Catalan(n)=\binom{2n}{n}-\binom{2n}{n+1}=\frac{1}{n+1}\binom{2n}{n}.$$</p>
+<p>这样就可以证明卡塔兰数。</p>
+</li>
+</ul>
+</br>
+</br>
+</br>
+<h1 id="ln14">LN14</h1>
+</br>
+<h1 id="cardinality-基数">Cardinality 基数</h1>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3001/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3001</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.7/">🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.6/">🧮 CSC3001 LEC14-16 Graph</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.5/">🧮 CSC3001 LEC11-13 GCD and Mod</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.4/">🧮 CSC3001 LEC8-10 递归</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.3/">🧮 CSC3001 LEC6-7 数学归纳法</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.2/">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

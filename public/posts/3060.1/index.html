@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Introduction to Computer System | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3060.1/">
+    <meta property="og:url" content="http://localhost:1313/posts/3060.1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Introduction to Computer System">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-06T10:30:34+08:00">
+    <meta property="article:modified_time" content="2026-01-06T10:30:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Introduction to Computer System">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识">
+  <meta itemprop="datePublished" content="2026-01-06T10:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-01-06T10:30:34+08:00">
+  <meta itemprop="wordCount" content="8565">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Introduction to Computer System">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30601.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Introduction to Computer System</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Introduction to Computer System</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2026-01-06T10:30:34+08:00">January 6, 2026</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="week-1--introduction">Week 1  Introduction</h1>
+<p>Computer System = <strong>Hardware + System Software</strong></p>
+<p>We want computers to &hellip;</p>
+<ol>
+<li>do more (more transistors, more cores &hellip;)</li>
+<li>run faster (concurrency, optimization, cache &hellip;)</li>
+</ol>
+<p>本科目偏向于软件，比如代码如何被编译，如何优化代码等等。课本为 CS: APP (v3)。</p>
+</br>
+<h2 id="why-binary">Why Binary?</h2>
+<p>为什么冯·诺依曼选择了二进制？</p>
+<p>从技术角度思考，当代芯片技术 CMOS 大致符合以下动态功耗：P ≈ k·C·U<sup>2</sup>·f (负载电容 x 电压方 x 交变频率的倍数)，使用远超 1V 的电路有指数级增大的漏电、击穿和熔断风险，加之芯片技术不断微缩，高电压的稳定性和对冷却系统的要求完全不现实。因此我们只用 0~1V 左右的电信号表达 ”信息“。</p>
+<p>在此前提下，由于电压误差十分常见，所以噪音裕量 (noise margin) 是必要的——比如 “0” 跟 “1” 不能粗糙的定义为 0.1V 跟 0.2V，因为电压噪音让两者在现实操作中难以分辨。在此情况下，运行最稳定的就是二进制，即 0V 附近表达 “0”，1V 附近表达 “1”，噪音难以让两者 “互串”。</p>
+<p>除此之外，电子管、继电器、晶体管天然都是 ”开关“ 双稳态 (bistable) 设备，而自然界大部分东西都是双稳态的，甚至包括人类的逻辑——布尔代数——你很难想象比 ”是非“ 更精简直白的逻辑系统了。</p>
+<p>归根结底，“宇宙想要毁灭计算机”，因为 <u><strong>稳定性 (确定性) 是反熵增定律</strong></u> 的，而二进制最具确定性、最黑白分明不过了。</p>
+</br>
+</br>
+<h2 id="硬件cpu">硬件：CPU</h2>
+<ul>
+<li>
+<p><strong>CPU (处理器)</strong> 由一个或多个叫做 “<strong>core (核)</strong>” 的最小处理单元组成，核至少可以独立处理一条进程，所以“<u>多核并行，单核并发</u>”，后续展开阐述。</p>
+</li>
+<li>
+<p>CPU 并非连续运作，而是按照 “fetch, decode, execute” (从内存/缓存取指令、解译命令、运算或访问)的循环周期性工作。最小时间单位为 cycle，以 GHz (频率)计算，比如 3GHz 的 CPU每秒处理 3x10<sup>9</sup> 个 cycle。</p>
+</li>
+<li>
+<p>CPU 由以下基本部分组成：</p>
+<p><strong>PC (program counter)</strong> 是 CPU 的状态存储部件，属于特殊的<strong>指令寄存器</strong>，存储<u>指向主存中某条<strong>命令</strong>的<strong>指针</strong></u>，同时只能被一个进程的一个命令占用，CPU 处理 PC 指向的命令，然后更新 PC 指向下一个命令……它不连接数据存储模块，因为经手数据流。</p>
+<p><strong>Registers</strong> 寄存器：存储<strong>一个</strong> <strong>“字”</strong> (即 <strong>n-bit 计算机上的 n bit</strong> 二进制数) 的 “最小最快” 存储结构；</p>
+<p><strong>Register file</strong> 寄存器文件：一些通用寄存器组成的临时<strong>数据存储部件</strong>，一共只有几百字节，它们直接连接着 ALU；</p>
+<p><strong>ALU</strong> 是计算与逻辑模块，对寄存器文件的一或多个寄存器的值进行计算；</p>
+<p><strong>SRAM L1~L3</strong> 高速缓存：连接着 Register file</p>
+<p><strong>bus interface</strong> 是 CPU 暴露给总线的接口，用于通信。</p>
+</li>
+</ul>
+<p><img src="https://i.postimg.cc/44hwD0VY/jie-ping2026-01-06-18-29-15.png" alt=""></p>
+</br>
+</br>
+<h2 id="硬件bus-总线">硬件：Bus (总线)</h2>
+<ul>
+<li>
+<p>CPU、内存、I/O 设备都用一系列物理层的导线 “bus” 进行通信，传送 “字” 大小的字节块，常见三类信号：<strong>数据线</strong> (data)、<strong>地址线</strong> (address)、<strong>控制线</strong> (control)。缓慢的访存和更加慢的 I/O 会造成总线 “堵车”。这个问题促使 cache、DMA 等技术诞生。</p>
+</li>
+<li>
+<p><strong>Direct Memory Access</strong> 在 “设备 ↔ 内存”之间搬数据，不能执行指令；<strong>能“绕过 CPU 内的总线，但绕不过 I/O 和内存总线”</strong>。</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="硬件记忆分区">硬件：记忆分区</h2>
+<h3 id="memory-hierarchy">Memory Hierarchy</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"><strong>存储类型</strong></th>
+          <th style="text-align: left"><strong>访问时间</strong></th>
+          <th style="text-align: left">位置</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">L0 Registers 寄存器</td>
+          <td style="text-align: left">~1 cycle</td>
+          <td style="text-align: left">CPU</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L1 Cache</td>
+          <td style="text-align: left">~4 cycles</td>
+          <td style="text-align: left">CPU</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L2 Cache</td>
+          <td style="text-align: left">~10 cycles</td>
+          <td style="text-align: left">CPU</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L4 DRAM 主存 (内存)</td>
+          <td style="text-align: left">~100–300 cycles</td>
+          <td style="text-align: left">I/O 桥之外</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L5 Local SSD (如磁盘)</td>
+          <td style="text-align: left">~10<sup>5</sup> cycles</td>
+          <td style="text-align: left">I/O 桥之外</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L6 Web Server</td>
+          <td style="text-align: left">\</td>
+          <td style="text-align: left">计算机之外</td>
+      </tr>
+  </tbody>
+</table>
+<p>记忆阶级性 hierarchy：<strong>上层可用作其下层的缓存</strong> (如 DRAM 是 SSD 的缓存区)，从下到上；存储量变小变贵，但速度变快。</p>
+<p>分区的原因：主存缓慢、两个局部性、隔离进程。</p>
+<p>多级缓存的意义：通过增大空间，消除时间上的访问不确定性 (延长缓存有效时间)。</p>
+</br>
+<h3 id="主存-dram">主存 (DRAM)</h3>
+<p>主存是 CPU 外，<strong>临时</strong>的存储模块。电脑的文件未使用时都在磁盘里，只有使用时会缓存到主存。</p>
+<p><strong>为什么主存这么慢？</strong>
+<strong>DRAM = Dynamic RAM (动态随机存储器)</strong>：使用<strong>电容</strong>的 “满/空” 表示二进制 bit，电容会漏电，所以必须<strong>周期性刷新 (refresh)</strong>。<u>主存慢、便宜、规模大</u>。</p>
+<p>因此我们需要 CPU 缓存来缓冲寄存器文件和主存的时间鸿沟。</p>
+</br>
+<h3 id="cpu-缓存-sram">CPU 缓存 (SRAM)</h3>
+<p>CPU Cache 是<strong>位于 CPU 与主存 (DRAM) 之间的小而快的存储</strong>，SRAM 使用 <strong>flip-flop circuit</strong>  的<strong>双稳态</strong>表示二进制 bit。<u>缓存快、昂贵、规模小</u>。</p>
+<ul>
+<li>通过把<strong>最可能</strong>用到的数据提前放在 CPU 附近防止缓慢的 DRAM 掐死 CPU 的高速运行。
+所谓“最可能” 的依据——时间与空间局部性：</li>
+</ul>
+<ol>
+<li>Temporal Locality：访问 A 后的一段时间很可能再次访问 A</li>
+<li>Spatial Locality：访问 A 后，其邻居，如 A-1、A+1 都很可能被访问</li>
+</ol>
+</br>
+</br>
+<h2 id="program-lifetime">Program Lifetime</h2>
+<ol>
+<li>源代码(ASCII text)：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;hello, world</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);]
+</span></span></code></pre></div><ol start="2">
+<li>编译 (compilation)：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>gcc -o hello hello.c
+</span></span></code></pre></div><p>分为四步：
+<strong>pre-processor</strong>：宏展开 (macro expansion); process &ldquo;include&rdquo;, &ldquo;define&rdquo;; 去注释, <strong>.c→.i</strong></p>
+<p><strong>compiler</strong>：查错 (semantic check), ASCII(<strong>.i</strong>)→assembly(<strong>.s</strong>)</p>
+<p><strong>assembler</strong>：assembly(<strong>.s</strong>)→binary(<strong>.o</strong>)</p>
+<p><strong>linker</strong>：pack object files and libraries into executable, <strong>.o</strong>→<strong>.exe</strong></p>
+<ul>
+<li>实际上编译器是会跳过汇编语言直接编译到二进制，除非编译时加上 &ldquo;-S&rdquo; flag。</li>
+</ul>
+<ol start="3">
+<li>产出可执行文件 (二进制命令) 储存在磁盘上 (Unix: hello, Linux: hello.exe)</li>
+<li>运行：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>./hello
+</span></span></code></pre></div><p>以下为具体过程</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">┌──────────────────────┐
+│        User          │ 物理层：输入 &#34;./hello&#34; shell 命令
+└──────────┬───────────┘
+┌──────────▼───────────┐
+│   Shell (bash/zsh)   │ 应用层：命令解释器解析用户输入的 shell 命令并请求 OS 执行
+└──────────┬───────────┘
+┌──────────▼───────────┐
+│   OS Kernel          │ 软件层：OS kernel 将文件用 DMA 搬到主存，kernel 负责执行调度并发
+└──────────┬───────────┘
+┌──────────▼───────────┐
+│   Device Drivers     │ 软硬交界：驱动程序让 OS 可以与硬件通信，负责读入写出
+└──────────┬───────────┘
+┌──────────▼───────────┐
+│   Hardware (CPU/IO)  │ 硬件层：CPU 把 &#34;hello, world\n&#34; 搬到寄存器并命令显示器显示
+└──────────-───────────┘
+</code></pre><ul>
+<li>./hello 键入后，shell 请求 OS 处理这行命令，命令从 I/O 主线经过 I/O 桥再从系统主线进入 CPU 的主线接口，经过内主线存储到寄存器；CPU 接下来直接经过 I/O 桥和内存桥存储 “hello” 到主存；通过 DMA，磁盘 L5 中的 hello 文件按页被临时缓存到主存 L4 ；主存中的命令再被各层 SRAM (cache) 传递到寄存器，并命令 I/O 桥另一侧的显示器显示结果。</li>
+</ul>
+<p><img src="https://i.postimg.cc/43WsTyCF/tu-xiang.png" alt=""></p>
+<ul>
+<li>shell 是连接用户输入和 OS 的软件，Unix: zsh 和 Linux: cmd 都属于不同种类的 shell</li>
+<li>OS 花费很多时间在<strong>搬数据</strong>，而非算术计算</li>
+<li><strong>主存和寄存器的时间鸿沟</strong>导致 “缓存” 的必要性，“命中缓存” 是优化的核心</li>
+</ul>
+</br>
+</br>
+<h2 id="软件操作系统">软件：操作系统</h2>
+<p>OS 是调度并管理硬件资源的软件层，将硬件<strong>抽象</strong>建模为可操作的<strong>虚拟</strong>对象：</p>
+<ol>
+<li>
+<p><strong>Process (进程)</strong>：对 CPU、内存、I/O 的抽象，进程可能由多条线程组成。</p>
+<ul>
+<li>
+<p>Thread (线程)：共享虚拟内存的进程的分支，故而交流快但互相干扰。</p>
+</li>
+<li>
+<p><strong>Concurrency (并发)</strong>：<u>多进程概念上同时存在，比如交替进行</u>。<u>单核处理器通过 <strong>OS kernel</strong> 进行 context switching 实现多线并发</u>(concurrency)，也就是多个进程切换交替占用 CPU。context switching：在每个进程运行时切换到其对应上下文 (参数/环境等等)，实现<strong>独占 CPU 的假象</strong>。</p>
+</li>
+<li>
+<p><strong>Parallelism (并行)</strong>：<u>多进程实际上同时进行 (PLP/TLP)，是一种<strong>特殊的并发</strong></u>。多核或多处理器可以真正地同时运行多个进程，不一定需要切换。<u>多核 = 进程/线程级并行</u>。</p>
+</li>
+<li>
+<p>注：以下是<u><strong>非进程级</strong>虚拟并行</u>，完全不是同个概念</p>
+<p>ILP (指令级并行)：“手脚同时做多件事情”。<u><strong>无需多核</strong></u>，比如多个处理单元并行指令 (如 ALU，MLU 同时计算加法和乘法) 。</p>
+<p>DLP (单指令数据级并行)：“用复写纸同时做多件类似的事情”。<u><strong>无需多核</strong></u>，比如利用 <strong>SIMD</strong> 同时计算数组所有元素的两倍。</p>
+</li>
+<li>
+<p>Hyperthreading (超线程)：每个单核被暴露为多个虚拟核 (逻辑 CPU)，可以辅助并发、并行的进行。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Virtual Memory（虚拟内存）</strong>：对主存+磁盘的抽象， 虚拟地址空间存储<strong>在磁盘上</strong></p>
+<ul>
+<li>虚拟内存的分区是“语义与安全模型”，与硬件层的寄存器、缓存、主存等<strong>毫无对应关系</strong></li>
+</ul>
+</li>
+</ol>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">高地址
+┌─────────────────┐0x ffff ffff ffff ffff
+│   Kernel Space  │  ← 内核，对程序代码不可见
+├─────────────────┤
+│      Stack      │  ← 函数调用、局部变量
+│        ↓        │
+│                 │            
+│        ↑        │
+│     Library     │  ← 共享库在内存中的映射，如 ”math“
+│                 │ 
+│        ↑        │
+│      Heap       │  ← malloc / new 手动生成的长期变量
+├─────────────────┤ 
+│     R&amp;W Data    │  ← global / static 变量，来自程序
+├─────────────────┤
+│  Read Only Text │  ← 程序代码
+├─────────────────┤0x 0000 0000 0000 0fff
+│      empty      │  ← 空指针预留空间 (page 0)
+└─────────────────┘0
+低地址
+</code></pre><ul>
+<li>堆向上 (变大)分配，栈向下 (变小) 分配，中间是未分配的虚拟地址；虚拟地址空间按 <strong>页 (page)</strong> 管理，<strong>第 0 页 (0x0000 0000 ～ 0x0000 0FFF) 不映射到任何物理内存</strong>，这段空间表示程序错误。</li>
+<li>虚拟内存通常是按 Byte 寻址，即每次读 8 bits，但也有 word(32b)/double-word(64b)。一台 “n-bit 计算机” 有 2<sup>n</sup> Byte 的理论<strong>虚拟存储空间</strong>。</li>
+<li>根据内存阶级性，<strong>L4-DRAM 是 (L5-磁盘) 虚拟内存的缓存</strong>，只保存 “正在用的 page”</li>
+<li>虚拟地址空间可以大于物理内存。64-bit 计算机<strong>并没有</strong> 2<sup>64</sup> B 的物理内存。</li>
+<li>允许多个进程共享数据：不同进程<strong>虚拟地址不同，可以映射到相同的 DRAM 物理页</strong>，这也是 concurrency 的一种。</li>
+</ul>
+<ol start="3">
+<li><strong>File（文件）</strong>：把 I/O 设备抽象为连续的字节</li>
+</ol>
+</br>
+</br>
+<h2 id="amdahls-law">Amdahl&rsquo;s Law</h2>
+<p>如果一个系统中占比 α 的部分效率提升 k 倍，总效率变化仍显著受剩余部分拖累：
+$$T_{new} = (1-\alpha)T_{old} + \frac{\alpha T_{old}}{k},\ \ \text{Speedup} = \frac{1}{(1-\alpha) + \alpha/k}$$</p>
+<ul>
+<li>
+<p>优化代码应当优先修改最慢的部分，而不是优化已经较快的字段</p>
+<p>要想显著加速整个系统，必须提升全系统中相当大的部分的速度:</p>
+</li>
+</ul>
+<p>$$S_{k\to \infty} = \frac{1}{1- \alpha}$$</p>
+<ul>
+<li>摩尔定律无法将晶体管数量和计算机效率联系起来，因为物理资源的增加和效率没有直接关系</li>
+</ul>
+</br>
+</br>
+</br>
+<h1 id="week-2--storage-of-data">Week 2  Storage of Data</h1>
+<p>对字节寻址机而言，所有数据都是一串字节，数据类型只是给编译器看的。按字节寻址即每次读 8 bits，将 64 位计算机的内存抽象为一个 2<sup>64</sup> B 即 16 EB 的虚拟空间，所有的文件都可以视为其中的字节块。(32-bit 则为 4 GB)</p>
+</br>
+<h2 id="进制">进制</h2>
+<p>对十六进制敏感是读懂汇编语言和内存表达的关键&hellip;</p>
+<ul>
+<li>
+<p><strong>一个十六进制位等于 4 比特 (二进制位)</strong></p>
+</li>
+<li>
+<p>“1111” 默认是十进制数，&quot;**<u>0x</u>**1111&quot; 才是表达十六进制数的写法。</p>
+</li>
+<li>
+<p><strong>“位向量”</strong> 指一个二进制数从右到左写成向量：42→11010<sub>BIN</sub>→[1, 1, 0, 1, 0]。</p>
+</li>
+<li>
+<p>一个字节为 0000 0000<sub>BIN</sub> ~ 1111 1111<sub>BIN</sub> 或者 0<sub>DEC</sub> ~ 255<sub>DEC</sub> 或者 0x00 ~ 0xff</p>
+</li>
+<li>
+<p>十六进制数中的字母数字 a<del>f 是<strong>大小写不敏感</strong>的，可以写成 0000</del>1111 的**<u>四位</u>**二进制数</p>
+</li>
+</ul>
+<p>进制转换：</p>
+<ul>
+<li>HEX→BIN：**<u>从右到左</u>**把每一位展开为<u>四位二进制数</u></li>
+<li>BIN→HEX：<strong><u>从右到左</u></strong><u>每四位</u>写成一个二进制数</li>
+<li>HEX→DEC：将第 n 位分别乘以 16<sup>n</sup> 并加起来</li>
+<li>DEC→HEX：用 <strong>Euclid&rsquo;s Method</strong> 反复除以 16 并将<u>余数从右到左排列</u></li>
+</ul>
+</br>
+</br>
+<h2 id="整数的表达">整数的表达</h2>
+<ul>
+<li>在 C 语言中，整数 (如 0x42) 默认是有符号的，除非写成 0x42u 或 0x42U。</li>
+<li>整数型数据 (int, long&hellip;) 直接用二进制串存储数据，比如 12345 在 (大端法) 内存中就是 “00 00 30 39”。</li>
+<li>整数型分两种：unsigned or signed，对于 n Byte 的整数类型，前者可存 0～2<sup>8n</sup>-1；后者牺牲最高位给负数，可存 -2<sup>8n-1</sup>～2<sup>8n-1</sup>-1，<u><strong>最高位为 1 的都是负数</strong></u>。</li>
+</ul>
+</br>
+<h3 id="unsigned-integer">Unsigned Integer</h3>
+<p>B2U<sub>ω</sub>() 是二进制转化 ω 位无符号整数的**<u>双射函数</u>**：</p>
+<p>$$B2U_ω(\vec x) = \sum_{i=0}^{ω-1}x_i·2^ω $$</p>
+<ul>
+<li>
+<p>E.g. 1B 的 unsigned char，可以表达 0 ~ 255；对于 n B 的无符号整数，最大数是 <strong>0xF&hellip;F (n/4 个 F)</strong>。</p>
+</li>
+<li>
+<p>整数型数据在达到二进制位数限制后不再有效，称为溢出 (overflow)，因为计算机直接将超出的最高位丢弃。</p>
+</li>
+</ul>
+</br>
+<h3 id="signed-integer-补码">Signed Integer (补码)</h3>
+<ul>
+<li>1B 的 char，则表达 -128 ~ +127，C 语言中，常用**<u>补码(2&rsquo;s complement)</u>** 记录负数——相反数是<u><strong>对应的二进制数取补并加一</strong></u>。比如 1 是 0000 0001，那 -1 就是 1111 1111； 127 是 0111 1111，那 -127 就是 1000 0001，-128 就是 1000 0000。</li>
+<li>手算一般用十六进制：0x3039 &mdash;取反→ 0xCFC6 &mdash;+1→ 0xCFC7，你可以看取反将每一位 n 变成 F-n 即可。</li>
+<li>⚠️ <strong>补码的优点</strong>：<u>补码的本质是 “要求一个数加自己是 0”</u>。所有减法当做 “加负数” 来计算，<strong><u>溢出恰好会得到正确值</u></strong>：比如对于 char <code>3-2 = 3+(-2) → 0011 + 1110 = 10001 → 1</code>。</li>
+</ul>
+<p>B2T<sub>ω</sub>() 是二进制转化 ω 位有符号 (补码) 整数的<u><strong>双射函数</strong></u>：</p>
+<p>$$B2T_ω(\vec x) = -x_{ω-1}2^{ω-1}+ {\sum_{i=0}^{ω-2}x_i·2^ω}$$</p>
+<ul>
+<li>
+<p>对于 n B 的补码整数，最小数是 <strong>0x80&hellip; (n/4-1 个 0)</strong>；最大数是 <strong>0x7F&hellip; (n/4-1 个 F)</strong>。</p>
+</li>
+<li>
+<p>也存在其他表示负数的方法：inverse (只取反不加 1)、signed magnitude (直接将第一位作为符号位：0正 1负) 但都**<u>没有补码的计算优点</u>**</p>
+</li>
+</ul>
+</br>
+<h3 id="天坑强转换">天坑：强转换</h3>
+<ul>
+<li><strong>SignExtension</strong>：如果将一个数据类型提升 (e.g. char→int) 但不改变有无符号，只需复制最高位并填充空余位即可，比如 char: 10000101 等于 int: 1111&hellip;10000101。</li>
+<li><strong>Truncation</strong>：反之将数据类型降级 (位宽减小) 会直接截断超出的位，这是一种 **UB **(未定义行为)。</li>
+</ul>
+<p>在 C 语言中 <strong>signed ↔ unsigned 的混用</strong>是常见且危险的逻辑错误，因为两者的二进制-十进制映射不相同。</p>
+<ul>
+<li>
+<p><strong>TypeCast 只改变解释数据的方法，不一定改变二进制值</strong>：比如 <code>int a = -4242; auto b = (unsigned) a;</code> a 和 b 都对应了 <code>~(0x00001092)+1 = 0xFFFFEF6E</code> ，b 被作为无符号整数解释成 <strong>4294963054</strong>。即，负数补码在 unsigned 里会变成大正数。<img src="https://i.postimg.cc/DfrD11nJ/tu-xiang.png" alt=""></p>
+</li>
+<li>
+<p>⚠️ <strong>极危险操作</strong>：当一个运算同时包含 signed 和 unsigned 数时：<strong>C 会把 signed 隐式转换成 unsigned 再进行运算</strong>。</p>
+</li>
+</ul>
+</br>
+<h3 id="史诗级-bug---">史诗级 bug . . .</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">&lt;</span> vec.<span style="color:#a6e22e">size</span>())   <span style="color:#75715e">// 若 i 是负数，因为 size() 是 size_t，强转换数值起飞
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; i<span style="color:#f92672">--</span>)   <span style="color:#75715e">// 若 n 或 i 是 unsigned，都死循环
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">unsigned</span> len <span style="color:#f92672">=</span> a <span style="color:#f92672">-</span> b;   <span style="color:#75715e">// a &lt; b 时数值爆炸
+</span></span></span></code></pre></div><p>⚠️ <strong>索引、下标统一用 unsigned；循环迭代器统一用 signed；有无符号切忌混用；比较数值前显示转换提醒自己。</strong></p>
+</br>
+</br>
+<h2 id="浮点数的表达">浮点数的表达</h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">type</th>
+          <th style="text-align: left">sizeof(～)</th>
+          <th style="text-align: left">composition</th>
+          <th style="text-align: left">composition size</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">float</td>
+          <td style="text-align: left">4 Byte</td>
+          <td style="text-align: left">sign, exponent + <strong>127</strong>, fraction</td>
+          <td style="text-align: left">1b + 8b + 23b</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">double</td>
+          <td style="text-align: left">8 Byte</td>
+          <td style="text-align: left">sign, exponent + <strong>1023</strong>, fraction</td>
+          <td style="text-align: left">1b + 11b + 52b</td>
+      </tr>
+  </tbody>
+</table>
+<p>比如 (float)12345.0，可以表达为 11000000111001<sub>BIN</sub>，<strong>即 1.1000000111001x2<sup>13</sup></strong>，所以拆解开来为：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">0 (代表正数) ｜13+“偏移量 (bias)” = 140 → 10001100 | “小数位” 10000001110010000000000
+</code></pre><p>故单精度浮点数 12345.0 在 (大端法) 内存中就是 “46 40 E4 00”。</p>
+<ul>
+<li><u><strong>偏移量</strong></u>：因为指数有正负，所以给 n Byte 的数据<em><strong>加上 2<sup>n-1</sup>-1</strong></em>，以<u>平移到自然数域</u>。</li>
+</ul>
+</br>
+<h2 id="字符串">字符串</h2>
+<p>在 C 中，字符串就是 字符映射到 ASCII 表形成的数组。</p>
+<p>比如字符串 “AaZz” 在内存上就是 ”41 61 5A 7A 00“，因为这个字符串相当于字符数组 ”<code>char[A, a, Z, z, \0]</code>“。(你或许注意到我没有做 ”大端法“ 的标记，这是因为字面量没有位权重，我们后续再展开说)</p>
+<h3 id="代码">代码</h3>
+<p>在不同机器上，同个代码文件编译出的<u><strong>二进制指令是完全不同</strong></u>的，在计算机视角下的程序不过是字节序列，没有关于源码的信息时，二进制代码很难在不同 <strong>OS, ISA, calling convension</strong> 的机器间移植，称为 <strong>ABI incompatible</strong>。</p>
+</br>
+</br>
+<h2 id="字数据大小">字数据大小</h2>
+<p><img src="https://i.postimg.cc/c1kNMC7F/jie-ping2026-01-08-15-27-40.png" alt=""></p>
+<ul>
+<li>n-bit 计算机的所有指针都占用 n 个 bit——“许多程序员假设一个声明为 int 类型的对象能被用来存储一个指针。这在大多 32 位的机器上能正常工作，但是在一台64 位的机器上却会导致问题。“</li>
+<li><code>gcc -m32 hello.c</code> 编译后可以在 32/64-bit 机上运作，但换成 <code>-m64</code> flag 时只能在 64-bit 机上运行。这种 <strong><u>”向后兼容“</u></strong> 是必要的，确保计算机改新换代时文件数据的可移植性。</li>
+<li>LP64 和 ILP64 之争：从 32 到 64 bit 的大迁徙中，ILP64 的支持方认为 int 应当是 8B，由于程序员喜欢混用 32 位机的整型和指针型 (位宽相同)，64 位机只有保持两者相同位宽才能移植；而 LP64 一方则认为这会过大开销内存并降低性能。很明显，最终 LP64 被广泛接纳了。</li>
+</ul>
+</br>
+</br>
+<h2 id="寻址和字节序">寻址和字节序</h2>
+<p>C 中，指针 (n-bit 机显然需要 n-bit 的指针) 指向对应数据的第一个字节所在位置，比如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> val <span style="color:#f92672">=</span> <span style="color:#ae81ff">4242</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> ptr <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>val;
+</span></span></code></pre></div><p>假设 <code>&amp;val</code> 分配在 0x0010，那么 val 占据了 0x0010~0x0013 共 4 Byte 的虚拟内存，ptr 为 0x0010。对如上这样<u>跨越多个字节的</u>数据类型，将其分为多个 (两位十六进制数) 字节段 —— 4242<sub>DEC</sub> 即 0x0000 109A，会被拆成 4 个字节段，存在两种 <u>”字节序“</u>：</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">储存时的字节序</th>
+          <th style="text-align: left">0x0010</th>
+          <th style="text-align: left">0x0011</th>
+          <th style="text-align: left">0x0012</th>
+          <th style="text-align: left">0x0013</th>
+          <th style="text-align: left">常见于：</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">大端法 (big endian)</td>
+          <td style="text-align: left">00</td>
+          <td style="text-align: left">00</td>
+          <td style="text-align: left">10</td>
+          <td style="text-align: left">9A</td>
+          <td style="text-align: left">TCP/IP, IBM, Motorola</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">小端法 (little endian)</td>
+          <td style="text-align: left">9A</td>
+          <td style="text-align: left">10</td>
+          <td style="text-align: left">00</td>
+          <td style="text-align: left">00</td>
+          <td style="text-align: left">Intel (x86), IOS, Android</td>
+      </tr>
+  </tbody>
+</table>
+<p>所谓“大小端”就是把数据按<em><strong>位权</strong></em>由大到小还是由小到大排列，故字面量如<u>字符串没有大小端的说法</u>！</p>
+<p>很多当代的处理器**<u>硬件部分</u>**是兼容双端法 (bi-endian) 的，但<u>操作系统固定了字节顺序</u>。比如手机的 ARM 芯片一旦选定 OS，如最常见的 IOS 和 Andoid OS，就只能运行小端了。</p>
+<p>字节序被编译器隐藏，对一般程序员不可见。但在以下情况下，字节序必须考虑：</p>
+<ol>
+<li>
+<p>网络通信：大小端机不可直接互发二进制串，需要<u><strong>统一用网络协议的大端法</strong></u>通信，否则歧义。</p>
+</li>
+<li>
+<p>汇编程序：阅读对二进制程序进行反汇编的结果 <code>4004d3: 01 05 43 0b 20 00  add %eax,0x200b43(%rip)</code> ，其大致对应 ”<code>指令的内存地址: 指令 43 0b 20 00  汇编解释</code>“ 显然，小端机的字节序是反直觉的，字面数据应当为 0x200b43。</p>
+</li>
+<li>
+<p>强制转换：以下代码展示了 C 语言的指针特权，可通过将内存地址 typecast 为 <code>unsigned char*</code> 逐字节读取，无关原本是什么类型，皆可作为 “字节数组” 看待：</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>bytePtr;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">showBytes</span>(bytePtr start, <span style="color:#66d9ef">size_t</span> len) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">size_t</span> i;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; i<span style="color:#f92672">++</span>) <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%.2x&#34;</span>, start[i]);
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">showInt</span>(<span style="color:#66d9ef">int</span> x) <span style="color:#a6e22e">show_bytes</span>((bytePtr)<span style="color:#f92672">&amp;</span>x, <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>)); <span style="color:#75715e">// typecast
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">showFloat</span>(<span style="color:#66d9ef">float</span> x) <span style="color:#a6e22e">show_bytes</span>((bytePtr)<span style="color:#f92672">&amp;</span>x, <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">float</span>);
+</span></span></code></pre></div><p>运行以上代码，假设 x = 4242 即 0x3039，在小端机上读出来是反直觉的 “39 30 00 00”，而在大端机上读出来则是正常的 “00 00 30 39”。</p>
+</br>
+</br>
+<h2 id="布尔代数">布尔代数</h2>
+<p>对此话题生疏者，请参见：<a href="https://blog.nero-lithos.com/posts/3001.1/">CSC3001 布尔代数基础</a>。</p>
+<p>计算机根本上只需要实现一种逻辑门 (即布尔运算符)：NAND (⊼ 与非)，因为 {NAND} 是 “完备” 的，其他运算符都可以用它实现，比如：</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">~A</th>
+          <th style="text-align: left">A | B</th>
+          <th style="text-align: left">A &amp; B</th>
+          <th style="text-align: left">A ^ B</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">A ⊼ A</td>
+          <td style="text-align: left">(~A) ⊼ (~B)</td>
+          <td style="text-align: left">(A ⊼ B) ⊼ (A ⊼ B)</td>
+          <td style="text-align: left">(A ⊼ (A ⊼ B)) ⊼ (B ⊼ (A ⊼ B))</td>
+      </tr>
+  </tbody>
+</table>
+<ul>
+<li>a &amp; (b|c) = (a&amp;b)|(a&amp;c)；a|(b&amp;c) = (a|b) &amp; (a|c)</li>
+<li>a ^ a=0；(a ^ b) ^ a=b</li>
+</ul>
+<p>例：不用临时变量的数据交换：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> x, <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> y) {
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span>y <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>x <span style="color:#f92672">^</span> <span style="color:#f92672">*</span>y;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>x <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>x <span style="color:#f92672">^</span> <span style="color:#f92672">*</span>y;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>y <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>x <span style="color:#f92672">^</span> <span style="color:#f92672">*</span>y;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></br>
+<h3 id="位运算">位运算</h3>
+<p>⚠️ 位运算三大铁律：</p>
+<ol>
+<li>不可出现浮点数 (比如说<strong>不能用 pow()</strong>)</li>
+<li>用 uint32_t/uint64_t 这种定宽整数</li>
+<li>记住当前数据类型到底有多少位，小心 <strong>UB</strong></li>
+</ol>
+<p>在学习 CSC3001 时，布尔纯粹是一种数字或逻辑运算，在 CSE 的语境下，布尔代数更多是位级运算 (bitwise calculation)。⚠️ 我们<u><strong>把全集和某有限数据集的 SOP 从右往左写，称作位向量</strong></u>，然后对位向量进行布尔运算。比如对于 128-维 ASCII 全集，用 128 位 0/1 从右往左表示一个字符集是否存在每个 ASCII 字符；又比如对于全集 {1, 2, 3, 4, 5}，{2, 1, 5} 可以被表达为 “10011”。</p>
+</br>
+<h3 id="移位运算">移位运算</h3>
+<ol>
+<li>
+<p>左移 n (<code>&lt;&lt; n</code>) 将数据向左移动 n 个二进制位 (即 n/4 个十六进制位)，并在**<u>左边抹去超出位数上限</u><strong>的部分，在</strong><u>右边空余位补 0</u>**。</p>
+<p>比如生成 n 位网络掩码：<code>uint32_t mask = 0xFFFFFFFFu &lt;&lt; (32 - n);</code> (如 24 位掩码 0xFFFFFF00)。</p>
+<p><code>int x = 1 &lt;&lt; 31;</code> 是不合法的，因为 1 被移动到了 整型的符号位。由此可见位运算**<u>最好别用 signed</u>**。</p>
+</li>
+<li>
+<p>右移 n (<code>&gt;&gt; n</code>) 分为 <strong>算数右移</strong> (Java <code>&gt;&gt;</code>，<strong>左边复制最高位</strong>) 和 <strong>逻辑右移</strong> (Java <code>&gt;&gt;&gt;</code>，左边补 0)。</p>
+<p>几乎所有编译器都**<u>对有符号数使用算术右移</u><strong>，但是</strong><u>对无符号数 ⚠️ 必须使用逻辑右移</u>**，这是因为算数右移会把负数移成正数。<code>-5&gt;&gt;2 → </code></p>
+</li>
+</ol>
+<ul>
+<li>左右移都是左结合且优先度低于四则运算的，如 <code>1+2 &lt;&lt; a+1 &gt;&gt; 3</code> 相当于 <code>((1+2)&lt;&lt;(a+1))&gt;&gt;3</code>。</li>
+<li>如果移动位数 <code>n</code> 超出数据类型位宽 <code>l</code>，CPU 只会位移 <code>n mod l</code>。然而**<u>在 C 中位移超出位宽是违法的，属于 UB (未定义行为)</u>**。</li>
+</ul>
+</br>
+<h3 id="可选-网络掩码">(可选) 网络掩码</h3>
+<p>如果你对 “<a href="https://blog.nero-lithos.com/posts/3200.f1/">位向量掩码</a>” 抑或者 “<a href="https://blog.nero-lithos.com/posts/web/">网络掩码</a>” 有兴趣，请点击对应的链接。以下简单展示 IPv4 中网络掩码的功能：网络掩码是网络不崩溃的核心，它将被掩盖的所有 IP 抽象为 “网络”。互联网通信时，<strong><u>互联网路由器只需要判断目标在自己的哪个 “方向”</u></strong> (哪个网络)，具体在哪里只有边缘设备 (直接与 PC 相连的路由器) 才关心。</p>
+<p>⚠️ 简单来说，路由器记录了其相邻的网络号，依靠比较掩码与这些网络号来寻找目标大致在哪个网络中，然后交由那个子网路由器重复这个操作。</p>
+<p>所有 PC (终端) 都处于边缘设备 (如家用路由器) 下，假设这台路由器 X 声明其子网叫做 <strong>192.168.50.0</strong>，那 X 对于其子网就是第一台设备 “192.168.50.1”，X 分配给 PC 的子网地址假设是 192.168.50.123。如果 X 的子网少于 255 台设备，显然最后八位二进制数足够表示所有子网设备。那么，这个子网就可以使用 24 位掩码，即 255.255.255.0。你可以看出，⚠️ <strong><u>掩码越大，子网越小，因为掩码掩盖的部分是子网的主机命名空间</u></strong>。将掩码与 PC 的子网地址进行 <u><strong>AND 操作</strong></u>，就会隐藏 PC 在 X 中的**<u>主机号</u>**，得到我们一开始定义的 (子) <strong><u>网络号</u></strong> <strong>192.168.50.0</strong>，如下：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">IP = 11000000.10101000.00000001.01111011/24
+(24-bit) mask = 11111111.11111111.11111111.00000000
+subnet IP = IP &amp; mask = 11000000.10101000.00000001.00000000/24
+</code></pre><p>这么做的目的是什么呢？现在假设 X 之上还有一级路由器 W，其子网为 192.168.2.0，并使用 23 位掩码 (即最多可以有 511 台设备)，颁布给 X 路由器的子网地址假设叫 192.168.2.2。有一条信息要经由 W 寻址到 PC，那么**<u>对于 W 来说，PC 的主机号 &ldquo;123&rdquo; 毫无意义</u>**_——⚠️ <strong>路由器通过掩码和自己的相邻层级网络号比对，即 “最长前缀匹配 (LPM) ”，只确定目的地址所属的网络方向，而不关心具体主机的身份。</strong></p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">router W: 我处于公网的 14.14.14.1, 我有一个子网 192.168.2.0/23
+router X: 我在 W 的子网地址是 192.168.2.2/23, 我有一个子网 192.168.50.0/24
+PC: 我在 X 的子网地址是 192.168.50.123/24
+
+W 眼中：10.0.0.0/8      → 方向 A
+       172.16.0.0/12   → 方向 B
+       192.168.0.0/16  → 方向 C
+       ......
+       192.168.50.0/24 → 方向 X
+所以只需要去找 X，至于 “123”，W 看不见也用不着
+</code></pre></br>
+<h3 id="逻辑运算">逻辑运算</h3>
+<ul>
+<li>C 语言中，所有非 0 参数都 True，诸如 0, \0, NULL, nullptr 假；反之如 42, &ldquo;0&rdquo;, &ldquo;null&rdquo; 真。比如：<code>!! 0x42</code> 等于真 (<code>0x1</code>)。</li>
+<li>逻辑运算符： &amp;&amp;(和), ||(或), !(非)，<strong>切勿与位运算混淆</strong>！它们将变量当做布尔值，不关心 “位”。比如：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>, b <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%d, %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, a <span style="color:#f92672">&amp;</span> b, a <span style="color:#f92672">&amp;&amp;</span> b);
+</span></span></code></pre></div><p>​    以上代码会打印 “2, 1” (0010 &amp; 1010 = 10；2 &amp;&amp; 10 = 1)。</p>
+<ul>
+<li>⚠️ 逻辑运算的特性：逻辑运算对表达式从左往右算，如果算到一半能确定整体的布尔值，就不会算下去。这个性质导致 <strong>&amp;&amp;</strong> 常用于<u><strong>if/while 条件语句的短路器</strong></u>，比如 <code>ptr &amp;&amp; *ptr == 10</code> 永远不会解指空指针；<code>i &lt; n &amp;&amp; !arr[i]</code> 绝对不会下标越界。</li>
+</ul>
+</br>
+</br>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

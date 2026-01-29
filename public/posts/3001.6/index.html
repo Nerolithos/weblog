@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🧮 CSC3001 LEC14-16 Graph | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ CSC3001 图论">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3001.6/">
+    <meta property="og:url" content="http://localhost:1313/posts/3001.6/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🧮 CSC3001 LEC14-16 Graph">
+  <meta property="og:description" content="CUHKSZ CSC3001 图论">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-10-28T17:30:24+08:00">
+    <meta property="article:modified_time" content="2025-10-28T17:30:24+08:00">
+    <meta property="article:tag" content="CSC3001">
+
+  <meta itemprop="name" content="🧮 CSC3001 LEC14-16 Graph">
+  <meta itemprop="description" content="CUHKSZ CSC3001 图论">
+  <meta itemprop="datePublished" content="2025-10-28T17:30:24+08:00">
+  <meta itemprop="dateModified" content="2025-10-28T17:30:24+08:00">
+  <meta itemprop="wordCount" content="2237">
+  <meta itemprop="keywords" content="CSC3001">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🧮 CSC3001 LEC14-16 Graph">
+  <meta name="twitter:description" content="CUHKSZ CSC3001 图论">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30016.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🧮 CSC3001 LEC14-16 Graph</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🧮 CSC3001 LEC14-16 Graph</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-10-28T17:30:24+08:00">October 28, 2025</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>(涵盖第 8、9、11 个讲义)</p>
+<h1 id="ln8-11-图论">LN8-11 图论</h1>
+<br>
+<h2 id="一笔走完-问题">“一笔走完” 问题</h2>
+<ul>
+<li>对于一张由 V vertex/vertices(点) 和 E edge(桥) 组成的图，如果想要 “一笔走完”，也就是恰好经过每个桥一次 (称为<strong>欧拉路径</strong>)，每个中途经过的点都需要连着偶数个桥（指向该点和指离该点），而只有路径的头尾可以有奇数个桥 (负责一笔的开始和结束)。所以，对于一个有 n 个桥的图，如果想要经过每个桥恰好一次，<strong>最多只能有两个点有奇数桥</strong>。</li>
+<li>下图为柯尼斯堡七桥问题，由于所有点都连着奇数桥，所以是不可能的。</li>
+</ul>
+<p><img src="https://i.postimg.cc/jjzTHdhv/IMG-20251028113611968.png" alt=""></p>
+<p><strong>欧拉定理</strong>：对于单体连续图，只存在小于等于两个“奇桥点”，那么图有欧拉路径。</p>
+<ul>
+<li>如果一个欧拉路径不是只能 “原路返回”，而是首尾相连的话，就叫做<strong>欧拉回路</strong>。</li>
+</ul>
+<p><strong>欧拉定理 (续)</strong>：对于单体连续图，所有点都有偶数个桥，那么图有欧拉回路。</p>
+<ul>
+<li>你可以这么理解：所有欧拉路径经过的点中，只有开始/结尾点是可以有奇数个桥的。如果没有头尾，那所有点都得是偶数桥的。而一个没有头尾的欧拉路径就是欧拉回路。</li>
+</ul>
+<br>
+<br>
+<h2 id="图论基础">图论基础</h2>
+<ul>
+<li><strong>度数</strong> deg(v)：图中任意点 v 指出去的桥数 (自指桥算两次)。比如上面那张“柯尼斯堡七桥”图片中最左边那个点的度数为 5</li>
+<li><strong>简单图</strong> (simple graph)：两点间不存在多桥、桥没有方向、桥不指向自己的图，也就是所有点的度数 ≤ 2</li>
+<li>multigraph：桥没有方向，但可以有多桥或自指桥</li>
+<li>directed graph：桥有方向，也可以有多桥或自指桥</li>
+<li><strong>相邻集</strong> N(v)：点 v 的相邻点组成的集合</li>
+<li>degree sequence：所有点的桥数组成的点坐标 “(deg(a), deg(b), …)”</li>
+<li>同构图：通过扭曲、改变视角、改变名字可以互相等效的图，同构图一定有相同的 degree sequence。</li>
+<li>树图：没有循环，也没有 deg()&gt;2 的点的单体图。其 “叶” 是所有 deg()=1 的点。</li>
+</ul>
+<br>
+<p><strong>握手定理</strong>：对于任意种类的单体连续图，$2E = \sum_{v∈V} deg(v)$。所以：</p>
+<ul>
+<li>度数和不为偶数的图不存在</li>
+<li>永远只可能存在偶数个“奇桥点”</li>
+</ul>
+<br>
+<br>
+<h2 id="匹配与完全图">匹配与完全图</h2>
+<p>一般把简单图的 vertex 数叫做 n，edge 数叫做 m，某种匹配叫做 M</p>
+<ul>
+<li>Matching (匹配)：桥互不共享点，所有点度数小于等于 1 的图。</li>
+<li>Maximum matching (最大匹配)：桥数最多的匹配。
+Berge 引理：一个匹配 M 是最大匹配 <strong>⇔</strong> 图中不存在相对 M 的<strong>增广路</strong> (augmenting path)</li>
+<li>M() perfect matching (完美匹配)：<strong>n 必为偶数</strong>，覆盖全部点的匹配，所有点度数为 1。</li>
+<li>K<sub>n</sub> complete graph (完全图)：每个点与所有其它点都有桥，所有点度数为 n-1 的图。</li>
+</ul>
+<p>某个 “偶数完全图” 的完美配对数，也就是 M(K<sub>2n</sub>) 是多少？第一个点有 2n-1 种配对可能，配对后给第三个点留下 2n-3 种配对可能，以此类推直到最后两点只有唯一的配对方式：$$(2n-1)!!\ =\prod_{ß=0}^{ß=n-1}(2n-1-2ß)={(2n)!\over 2^nn!}$$</p>
+<br>
+<br>
+<h2 id="二分图和霍尔婚配定理">二分图和霍尔婚配定理</h2>
+<p>二分图 Bipartite K<sub>m, n</sub>就是将点分为数量为 m, n 的两个组，组内不存在桥。</p>
+<p><strong>二分图中的欧拉定理：</strong></p>
+<ul>
+<li>K<sub>m, n</sub>有欧拉回路 <strong>⇔</strong> m 和 n 都是偶数</li>
+<li>K<sub>m, n</sub>有欧拉路径**⇔** m 和 n 都是偶数 <strong>or</strong> m 和 n 分别是 2 和奇数 <strong>or</strong> m = n = 1</li>
+</ul>
+<br>
+<h3 id="hall-定理-判断二分图能否完美匹配">Hall 定理 (判断二分图能否完美匹配)</h3>
+<p>对二分图 G=(X,Y,E)，存在覆盖 X 的完美匹配 <strong>⇔</strong> 对任意 S⊆X，有 |N(S)| ≥ |S|。即 X 的所有非空子集包含的点的桥数和大于每个子集的大小。</p>
+<ul>
+<li>证明：核查所有子集</li>
+<li>证伪：给出一个反例子集 S 使 |N(S)|&lt;|S|</li>
+</ul>
+<p>例：
+U = {u1, u2, u3, u4}, V = {v1, v2, v3, v4}; N(u1) = {v1, v2}, N(u2) = {v1, v3}, N(u3) = {v2, v4}, N(u4) = {v3, v4}.</p>
+<ul>
+<li>|S|=1：显然 |N(S)| = 2 ≥ 1</li>
+<li>|S|=2：例如 |N({u1, u2})| = 3；|N({u3, u4})| = 3，其他二元子集也至少包含 2 个顶点</li>
+<li>|S|=3：如 |N({u1, u2, u3})| = 4，其它三元子集同理</li>
+<li>|S|=4：N(U)=V，|N(U)|=4 ≥ 4
+证毕，存在完美配对。</li>
+</ul>
+<br>
+<br>
+<h2 id="染色问题">染色问题</h2>
+<p>染色问题需要相邻的点有不同颜色；χ(图) = k 代表某个图在染色问题下最少需要 k 种颜色。文字记作 k-colorable (k-染)：</p>
+<ul>
+<li>比如简单环 C<sub>n</sub> (∀ v, deg(v) = 2)，称为一个循环，χ(奇循环) = 3、χ(偶循环) = 2。</li>
+<li>又比如任意的完全图 K<sub>n</sub>，χ(K<sub>n</sub>) = n；所以说任何图的染色都大于等于其最大子完全图大小： $χ(G) ≥ \omega(G)$。特殊的：**所有区间图 interval graph 的染色解等于其最大子完全图大小相等。**比如下图左边是航班到达的区间图，画成 “航班冲突图” 之后最大完全图为 K<sub>3</sub>，所以需要的最少登机口为 χ(K<sub>3</sub>) = n。</li>
+</ul>
+<p><img src="https://i.postimg.cc/5jWCPSVV/jie-ping2025-11-04-11-44-24.png" alt=""></p>
+<ul>
+<li>任何二分图都<strong>不存在奇循环</strong>，也就一定可以 2-染。任意有奇循环的图显然不可 2-染。</li>
+<li>所有地图都是 4-染。(把地图每个国家想象成点，接壤区域想象成桥即可)</li>
+</ul>
+<br>
+<br>
+<h2 id="平面问题">平面问题</h2>
+<p><strong>平面图的性质：在纸面上画出来时，可以做到不让任何两个桥相交。</strong></p>
+<ul>
+<li>三个点以上的完全图一定不是平面图。（如下图所示，桥一定会重叠）</li>
+</ul>
+<p><img src="https://i.postimg.cc/fRSDbvS3/jie-ping2025-10-28-17-17-07.png" alt=""></p>
+<h3 id="平面欧拉公式">平面欧拉公式</h3>
+<ul>
+<li>”面“ 是指相邻点连接形成的连续空间，分为内空间和外空间。内空间是封闭的，是至少三个桥围成的连续区域；外空间是不封闭的所有点外部的区域。比如 f(K<sub>4</sub>)=5。</li>
+<li><strong>欧拉公式(平面)</strong>：如果一个<strong>连续</strong>单体平面图有 n 个点, m 个桥, and f 个面，那么：<strong>n – m + f = 2</strong>。</li>
+</ul>
+<br>
+<h3 id="简单图的边长推论">简单图的边长推论</h3>
+<p>因为简单图中没有两点间双桥，每个面的 “边长“ <strong>至少</strong>是 3 (个桥)，而每个桥两边的空间如果被三个桥围起来才是面，所以每个桥<strong>最多</strong>提供了 2 个“边长”，因此知道：<strong>2m ≥ 3f</strong>。</p>
+<ul>
+<li>你可以这么理解：”每个桥<strong>最多</strong>作为 2 个边长 (LHS)，每个面<strong>最少</strong>边长为 3 (RHS)“</li>
+</ul>
+<p>结合平面欧拉公式，我们得到<strong>欧拉引理</strong>：<strong>m ≤ 3n-6</strong>；再套用握手定理的变形 ( 平均度数 = ∑deg(v)/n = 2m/n)，我们又可以知道：$\bar{d} =  {2m\over n} ≤ {6n-12\over n} = 6- {12\over n}$，无论 n 的值是多少，<strong>简单平面图的平均度数小于 6</strong>，也就是至少有一个点的度数小于等于 5。</p>
+<ul>
+<li>从这里可以证明<strong>所有平面图均可 6-染</strong>。(数学归纳法) 图 G 中一定存在某点 v 有最多 5 个桥，假设 G-v 可以 6-染，很容易证明 G 也可以 6-染。</li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3001/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3001</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.5/">🧮 CSC3001 LEC11-13 GCD and Mod</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.4/">🧮 CSC3001 LEC8-10 递归</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.3/">🧮 CSC3001 LEC6-7 数学归纳法</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.2/">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

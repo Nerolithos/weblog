@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🧮 CSC3001 LEC6-7 数学归纳法 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ CSC3001 更多数学证明法">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3001.3/">
+    <meta property="og:url" content="http://localhost:1313/posts/3001.3/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🧮 CSC3001 LEC6-7 数学归纳法">
+  <meta property="og:description" content="CUHKSZ CSC3001 更多数学证明法">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-11T11:31:34+08:00">
+    <meta property="article:modified_time" content="2025-09-11T11:31:34+08:00">
+    <meta property="article:tag" content="CSC3001">
+
+  <meta itemprop="name" content="🧮 CSC3001 LEC6-7 数学归纳法">
+  <meta itemprop="description" content="CUHKSZ CSC3001 更多数学证明法">
+  <meta itemprop="datePublished" content="2025-09-11T11:31:34+08:00">
+  <meta itemprop="dateModified" content="2025-09-11T11:31:34+08:00">
+  <meta itemprop="wordCount" content="1127">
+  <meta itemprop="keywords" content="CSC3001">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🧮 CSC3001 LEC6-7 数学归纳法">
+  <meta name="twitter:description" content="CUHKSZ CSC3001 更多数学证明法">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30013.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🧮 CSC3001 LEC6-7 数学归纳法</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🧮 CSC3001 LEC6-7 数学归纳法</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-09-11T11:31:34+08:00">September 11, 2025</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>(涵盖第 4 个讲义)</p>
+<h1 id="ln4-proof-by-induction-科学归纳法">LN4 Proof by Induction 科学归纳法</h1>
+<br>
+<h2 id="ordinary-induction">Ordinary Induction</h2>
+<br>
+<p>证明对于任意 x ≥ n, P(x)
+Base case:  直接计算 P(n)，说明其正确
+Induction step：<strong>假设 P(m)正确</strong>，推导 P(m+1)正确</p>
+<p>例：证明柯西不等式(对于任意 a<sub>i</sub>, b<sub>i</sub>)
+$$a_{1}b_{1} + a_{2}b_{2} + \cdots + a_{n}b_{n} ;\leq; \sqrt{a_{1}^{2} + a_{2}^{2} + \cdots + a_{n}^{2}} ; \sqrt{b_{1}^{2} + b_{2}^{2} + \cdots + b_{n}^{2}}\ \ \ \ \ (n)$$
+$$Proof:\ Base\ case:|a_1b_1| = \sqrt{a_1^2}\sqrt{b_1^2},\ \ so\ a_1b_1 ≤ \sqrt{a_1^2}\sqrt{b_1^2}\ \ \ \ \ (1)$$
+$$Induction:Given\ (n),\ denote\ it\ as\ \ x≤pq,\ so:$$
+$$x+a_{n+1}b_{n+1}≤pq+a_{n+1}b_{n+1}$$
+$$Given\ (2),\ pq+a_{n+1}b_{n+1}≤\sqrt{p^2+a_{n+1}^2}\sqrt{q^2+b_{n+1}^2}\ \ \ \ \ (n+1)\ \ Q.E.D$$
+(因为递归用到了两项成立的结论，<strong>需要额外证明两项时成立</strong>)</p>
+<br>
+<br>
+<h2 id="strong-induction">Strong Induction</h2>
+<br>
+<p>证明对于任意 x ≥ n, P(x)
+Base case:  直接计算 P(n)，说明其正确
+Induction step：<strong>假设 P(n)&hellip;P(m)全部正确</strong>，推导 P(m+1)正确</p>
+<p>例：证明只用 3 和 5 的加法操作可以组成任意大于 8 的整数
+列举：3+5=8，3+3+3=9，5+5=10
+对于 n = 11，n-3 = 8，可以表示
+……
+对于 n = m, n-k3 = 8 or 9 or 10，可以表示
+(任意 n ≥ 11，n-k3 一定等于 8 或 9 或 10，只要再加 k 个 3 即可组成)</p>
+<br>
+<br>
+<h2 id="良序性-wop">良序性 WOP</h2>
+<br>
+<p>$ WOP：任意非空的自然数集合都有一个最小元素。
+变形：任意非空正整数集合都有一个最小元素。</p>
+<p>证明对于任意 x ∈ N, P(x)
+假设 ¬P(x)，那么 S ::= {n ∈ N | ¬P(n)} 有良序性
+找出最小项或最小项必须符合的性质，再通过这个性质推出更小项，产生矛盾</p>
+<br>
+<h3 id="例-1证明-2-是无理数">例 1：证明 √2 是无理数</h3>
+<br>
+<p>Proof by Contradiction: Suppose √2 is natural, then it can be written as √2 = p / q,
+where p and q are natural numbers.
+Then, in the natural set of denominators p, there must be a least one (By WOP).
+$${p^2 \over{q^2}}=2,\ so\ smallest\ p\ should\ be\ a\ even\ number:\ p_0=2k, q_0=2l$$
+$$4k^2=2\times 4l^2,\ but\ k={p_0\over 2}\ also\ hold,\ so\ p_0\ is\ NOT\ smallest.$$
+there&rsquo;s always a smaller denominator, thus the hypothesis is false.</p>
+<br>
+<h3 id="例-2证明方程-4asup3sup2bsup3supcsup3sup-无正整数解">例 2：证明方程 4a<sup>3</sup>+2b<sup>3</sup>=c<sup>3</sup> 无正整数解</h3>
+<br>
+<p>Suppose there is a Z<sup>+</sup> solution for this function. then S::={a ∈ℤ<sup>+</sup>| ∃𝑏,𝑐∈ℤ+, 4a<sup>3</sup>+2b<sup>3</sup>=c<sup>3</sup>}
+must have a smallest element (By WOP). Denote smallest one as a<sub>0</sub>, b<sub>0</sub>, c<sub>0</sub>.
+$$Since\ 4a^3\ and\ 2b^3\ are\ both\ even,\ c^3\ and\ hence\ c\ are\ even,\ denote\ c_0=2p$$
+$$Thus,\ 4a^3+2b^3=(2p)^3 \to b^3=4p^3-2a^3,\ hence\ b^3\ and\ b\ are\ even,\ denote\ b_0=2q$$
+$$a^3=2p^3-4q^3, then\ a_0,b_0\ and\ c_0\ are\ all\ even$$
+$$However,\ ({a\over 2},{b\over 2},{c\over 2})\ also\ must\in S, thus\ hypothesis\ is\ false.$$</p>
+<br>
+<br>
+<h2 id="不变量法-invariant-method">不变量法 Invariant Method</h2>
+<br>
+<p>对于一列整数(一到一百)，每次随机拿走两个数，并加入这两个数的平方和，最终剩下的数大小固定吗？是奇数还是偶数？</p>
+<p><strong>思路：“总奇偶性”是不变量。</strong>
+大小不固定，因为返回的平方和也有几率被再次选中。但不管拿走哪两个数，其的平方和的奇偶性永远等于它们的和的奇偶性。所以最后的奇偶性等于原本所有数的和的奇偶性(偶数)。</p>
+<br>
+<h3 id="思考题">思考题</h3>
+<br>
+<p><img src="https://i.postimg.cc/q7Mtm6cc/IMG-20250911094701356.png" alt=""></p>
+<p>猜想：
+设左边为初始状态(也就是偶排列)，把排列奇偶性(即从初始状态需要多少次才能推出)记作 a，假设从下到上、从右到左每一行分别为 1-4 行，yOx。把奇数记作 1，偶数记作 0。空格奇偶性为 x⊕y：</p>
+<p><img src="https://i.postimg.cc/Kjkjsxvb/2025-09-11-16-44-54.png" alt=""></p>
+<p>总奇偶性为 (x⊕y)⊕a，初始状态为 0⊕0⊕0=0。
+以空格为对象，空格向上交换一次：1⊕0⊕1=0，再向左交换一次：1⊕1⊕0=0…
+无论如何， 运算结果一定是 0，但右侧是奇数排序：0⊕0⊕1=1，所以不可能。</p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3001/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3001</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.2/">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

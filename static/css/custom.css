@@ -84,3 +84,9 @@
     height: auto;
   }
 }
+
+/* D3 小实验页面通用容器（如果被 Hugo 主题引用也不会冲突） */
+.d3-demo-page {
+  max-width: 960px;
+  margin: 0 auto;
+}

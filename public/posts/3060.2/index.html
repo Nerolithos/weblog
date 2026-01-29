@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3060.2/">
+    <meta property="og:url" content="http://localhost:1313/posts/3060.2/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-20T10:30:34+08:00">
+    <meta property="article:modified_time" content="2026-01-20T10:30:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算">
+  <meta itemprop="datePublished" content="2026-01-20T10:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-01-20T10:30:34+08:00">
+  <meta itemprop="wordCount" content="4811">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30602.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2026-01-20T10:30:34+08:00">January 20, 2026</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="week-3--process-of-data">Week 3  Process of Data</h1>
+<h2 id="整数运算-integer-arithmetics">整数运算 (Integer Arithmetics)</h2>
+<p>由于 C 语言家族的时代和奠基性，其数据类型不是 Python 那样动态存储的，由于运算 “溢出” 导致的严重问题层出不穷。</p>
+<p>⚠️ n-bit <strong>有符号数</strong>的溢出：<strong>&ldquo;wraparound&rdquo;</strong>——$u = (a + b)\bmod 2^n \quad$</p>
+<ul>
+<li><strong>上溢</strong>：超过上界就减去 2<sup>n</sup>，绕到负区间</li>
+<li><strong>下溢</strong>：低于下界就加上 2<sup>n</sup>，绕到正区间</li>
+</ul>
+<p>2 补码数溢出的检测：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int32_t</span> <span style="color:#a6e22e">sign</span>(<span style="color:#66d9ef">int32_t</span> x) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">uint32_t</span>)x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">add_overFlow</span>(<span style="color:#66d9ef">int32_t</span> a, <span style="color:#66d9ef">int32_t</span> b, <span style="color:#66d9ef">int32_t</span> r) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ((<span style="color:#f92672">~</span>(sign(a) <span style="color:#f92672">^</span> sign(b))) <span style="color:#f92672">&amp;</span> (sign(a) <span style="color:#f92672">^</span> sign(r))) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>不会在硬件层面上用 trap 捕捉溢出 (比如用 CPU 逻辑门限制)，否则会产生巨大的效率损失，而且有些领域 (如哈希加密) 需要用到溢出 —— 故一般用软件处理。</p>
+<p>精确异常：由于计算机执行指令有可能乱序执行，部分较快的运算会先完成 —— 快指令先把结果写进寄存器，一旦前面某条慢指令异常，状态就会乱。为了乱序执行下仍满足 “Precise Exception”，CPU 必须做很多额外的复杂机制：<strong>机器内部可以乱跑，但对外必须 “看起来” 是顺序的。</strong></p>
+</br>
+<h3 id="1-bit-全加器和加减法">1-bit 全加器和加减法</h3>
+<p>加法进位有两个构成：propagate (传递进位) 和 generate (产生进位)</p>
+<p>对于两个二进制数 A 和 B，其某一位 i 受到上一位 i-1 的进位 C<sub>in</sub> ，其加法结果是：S<sub>i</sub> = A<sub>i</sub> ^ B<sub>i</sub> ^ C<sub>in</sub></p>
+<p>当前位是否产生进位：C<sub>out</sub> = (A<sub>i</sub> &amp; B<sub>i</sub>) | (C<sub>in</sub> &amp; (A<sub>i</sub> ^ B<sub>i</sub>))</p>
+<p><img src="https://i.postimg.cc/VkcJRzzV/jie-ping2026-01-20-10-37-42.png" alt=""></p>
+<p>具体的 cpp 实现方法——利用位移运算 <strong>CLA</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">uint32_t</span> <span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">uint32_t</span> a, <span style="color:#66d9ef">int32_t</span> b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p <span style="color:#f92672">=</span> a <span style="color:#f92672">^</span> b;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int32_t</span> g <span style="color:#f92672">=</span> a <span style="color:#f92672">&amp;</span> b;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>    g <span style="color:#f92672">=</span> g <span style="color:#f92672">|</span> (p <span style="color:#f92672">&amp;</span> (g <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> p <span style="color:#f92672">&amp;</span> (p <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>); 
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// carry look-ahead: 重复翻倍检测进位 &lt;&lt;1, &lt;&lt;2, &lt;&lt;4 ... 直到覆盖位宽
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> (a <span style="color:#f92672">^</span> b) <span style="color:#f92672">^</span> (g <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>类似的，减法很容易实现，因为 A - B 等价于 A + (~B+1)。</p>
+</br>
+<h3 id="乘法器">乘法器</h3>
+<p>类似于十进制数乘法，两个数相乘等于 “第一个数乘上第二个数的各位及其维权的和”。在二进制 无符号数中，这相当于：$a \times m = \sum_{i=0}^{n} m_i (a &laquo; i)$，类似于小学生做乘法每乘一位往左移一次，我们也用左移表示 “增加位权”。</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">       0010       A  
+     × 1011       B            C = 0u
+-------------------------------------- &#34;Shift and Add Method&#34;
+       0010   if(B &amp; 1u) C += (A &lt;&lt; 0)
+      0010    if(B &amp; 2u) C += (A &lt;&lt; 1)
+     0000     if(B &amp; 4u) C += (A &lt;&lt; 2)
+    0010      if(B &amp; 8u) C += (A &lt;&lt; 3)
+--------------------------------------
+ = 00010110       C
+</code></pre><p>至于有符号整数，我们只关心结果的符号等于 A ^ B 即可。</p>
+</br>
+<h3 id="除法器">除法器</h3>
+<p>小学生式做二进制除法的本质是 ：从被除数最高位开始取位，尝试能不能减除数，能减就把新取的那位在商中记作 1，减去除数后继续尝试……</p>
+<p>具体逻辑：利用一个掩码 1u&laquo;31，循环把它逻辑右移一位，通过 AND 操作可以逐位取出被除数，并存到一个临时变量中（左移一位并添加到最低位），每取一位把这个变量减一次除数，若结果不是负数，就往 ”商“ 加上当前的掩码。</p>
+</br>
+</br>
+<h2 id="浮点数和浮点数运算">浮点数和浮点数运算</h2>
+<p>相比整数，浮点数是对数字 ”不精确的估计“。复习之前提到的 IEEE 的单/双精度浮点数表达：</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">type</th>
+          <th style="text-align: left">sizeof(～)</th>
+          <th style="text-align: left">composition</th>
+          <th style="text-align: left">composition size</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">float</td>
+          <td style="text-align: left">4 Byte</td>
+          <td style="text-align: left">sign, exponent + <strong>127</strong>, fraction</td>
+          <td style="text-align: left">1b + 8b + 23b</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">double</td>
+          <td style="text-align: left">8 Byte</td>
+          <td style="text-align: left">sign, exponent + <strong>1023</strong>, fraction</td>
+          <td style="text-align: left">1b + 11b + 52b</td>
+      </tr>
+  </tbody>
+</table>
+<p>⚠️ Bias (指数偏移量)：为了表示负指数，我们将指数加上 <strong>2<sup>小数位宽-1</sup>-1</strong>。</p>
+<p>以单精度数为例，有两种指数情况：</p>
+<ul>
+<li>若 e ≠ 0000&hellip;0 或 1111&hellip;1 (<strong>规格化 normaliaed</strong>)：$$x = (-1)^s \times (1+\frac{f}{2^{23}})\times 2^{(e-127)}\ \ (s:sign, f:fraction, e:exponent)$$</li>
+<li>若 e = 00000000 (<strong>非规格化 denormalized</strong>)，当 f = 0 时表示 0：$$x = (-1)^s \times \left(\frac{f}{2^{23}}\right)\times 2^{-126}$$</li>
+<li>若 e = 11111111 (<strong>非规格化 denormalized</strong>)：$$F=0: \pm\infty,\ \ F ≠ 0: NaN$$</li>
+</ul>
+<p>⚠️ 注意：在 denormalized 情况下，指数<strong>恒为 +126，不存在 ”偏离量 +127“</strong>，比如 “0 00000000 1000&hellip;” 就是 2<sup>-126</sup>x(2<sup>22</sup>/2<sup>23</sup>) = 2<sup>-127</sup>。</p>
+</br>
+<h3 id="何为浮点数">何为浮点数？</h3>
+<p>⚠️ 核心：<u>表达范围与精确性不可兼得</u>！根据<strong>等比例缩放</strong>，巨大数的精确性不如 0 附近的小数重要。⚠️ <strong>具体的，规格化单精度浮点数在每个 2<sup>e</sup>~2<sup>e+1</sup>区间上间隔 (步长) 为 2<sup>e-23</sup> (e ≥ -126)；非规格化步长固定为 2<sup>-149</sup>。</strong></p>
+<p>非规格化区段的意义：<u>将 -127 这个最小指数直接借给部分 -1 到 1 之间的极小数</u>。从 2<sup>-149</sup> (smallest denormalized) 到 2<sup>-126</sup> (smallest normalized) 之间人为制造出有一段稠密的可表示数，间隔固定。如此，实现<strong>渐进下溢</strong>：小正数在 rounding 时一步步接近 0，而不是断崖式被下溢到 0。(在乘除法中，0 和  2<sup>-149</sup> 有很大区别)</p>
+<p><img src="https://i.postimg.cc/GhP0mTqh/jie-ping2026-01-22-11-16-21.png" alt=""></p>
+<p>如此，我们牺牲了大数的精度，只在接近 0 的地方精确 (如上图)。<u>这种 ”可精确表达点的浮动“ 换来更大的表达范围</u>，故得名 ”浮点数“。</p>
+</br>
+<h3 id="二进制展开">二进制展开</h3>
+<p>我们通过将一个十进制数的小数部分循环反复 ”乘二并取 1 的余“可以得到转化为二进制浮点数：<img src="https://i.postimg.cc/15DgRBkm/jie-ping2026-01-22-11-30-10.png" alt=""></p>
+<ul>
+<li>标准二进制展开法：1、分离整数小数部分；2、小数部分循环进行 x 2 并 mod 1，直到找出规律</li>
+</ul>
+</br>
+<h3 id="rounding-近似">Rounding (近似)</h3>
+<p>IEEE 有四种 rounding 模式: <strong>Round-to-even</strong>, Round-towards-0, Round down, Round up。最常用的默认方法是偶数近似。浮点数强转换到整数时则会用 Round-towards-0，即，<strong>大于 2<sup>24</sup> 时整数不再全部有精确表示</strong>，这时强转换会导致下溢。</p>
+</br>
+<h3 id="浮点数运算">浮点数运算</h3>
+<ul>
+<li>加法/乘法交换律存在，但结合律不存在：(2 + 2<sup>100</sup>) - 2<sup>100</sup> ≠ 2 + (2<sup>100</sup> - 2<sup>100</sup>)  左侧估计右侧精确。</li>
+<li>int32_t 强转换 float 是精确的，反之很可能发生近似，因为 float 的表达范围比 int32_t 大，甚至可能溢出。</li>
+<li>FPA：align (对齐指数), add (小数相加), normalize (移到小数的整数位为 1), round&amp;renormalize (处理精度溢出，可能需要重新调整)</li>
+</ul>
+</br>
+</br>
+</br>
+<h1 id="week-4--machine-level-programming">Week 4  Machine-level Programming</h1>
+<h2 id="通过汇编看机器级语言">通过汇编看机器级语言</h2>
+<ul>
+<li><strong>x86</strong> 是一大类源自 Intel 8086 的 <strong>CPUISA家族</strong>。我们以 <strong>x86-64</strong> (AMD64) 为例，是 x86 的 64-bit 扩展。前者指代寄存器为 %eax, %ebx&hellip;；后者为 <strong>%rax, %rbx</strong>&hellip;。PC 的地址是 <strong>%rip</strong>，命令被移到 PC 就会被执行。x86 是 2-operand 机。</li>
+<li><strong>ISA</strong> (指令集架构) 是“<u>软件看到的 CPU 规格说明书</u>”。不同 CPU 生态，不同 ISA —— e.g. 硬件复杂软件简单的 <strong>CISC</strong> (x86) vs 硬件精简软件复杂的 <strong>RISC</strong> (ARM、RISC-V)。</li>
+<li><strong>机器真正执行的是“字节序列”</strong>——十六进制字节，每一段对应一条指令；meanwhile 机器对源码 (变量名、数据类型等) 几乎一无所知。</li>
+<li><strong>汇编语言</strong>就是某个 ISA 中机器级程序的的人类可读写法。查看机器码常用两条路：
+<ol>
+<li>编译时强制输出汇编文件：<code>gcc -Og -S xxx.c</code></li>
+<li>用 <strong>反汇编器</strong> 把字节序列 “翻译” 得<u>类似于</u>汇编：<code>objdump -d xxx.o</code> (Linux)</li>
+</ol>
+</li>
+<li>反汇编输出通常含：<strong>地址/偏移、字节、等价汇编</strong>。</li>
+<li>x86-64 的一个重要特性：<strong>指令长度可变 (1–15 字节)</strong>，常用/操作数少的更短。</li>
+<li>反汇编是“从字节推回指令”，<strong>不需要源代码</strong>；而且反汇编器在指令命名、后缀省略上可能与 GCC 输出略有差别。</li>
+</ul>
+</br>
+</br>
+<h2 id="x86-64">x86-64</h2>
+<h3 id="访问信息寄存器">访问信息——寄存器</h3>
+<p>64 位 CPU 有 1 个指令寄存器 PC (%rip) 和 16 个通用寄存器(%rax, %rbx&hellip;)。每个通用寄存器有灵活的用途，最特殊的是 <strong>%rsp</strong> 固定为栈指针。</p>
+<ul>
+<li>16 个寄存器都属于 64 位整数寄存器，即，来存储整数数据和指针。</li>
+<li>多少 bit 的 CPU 其寄存器就是对应 bit 的。可以通过 b, w, l, q 控制一次访问 8、16、32 还是 64 位，下文会展开说明。
+<img src="https://i.postimg.cc/VNWTjZZw/jie-ping2026-01-26-21-42-57.png" alt=""></li>
+</ul>
+</br>
+<h3 id="x86-64-常见汇编指令">x86-64 常见汇编指令</h3>
+<ol>
+<li><strong>数据搬运 / 地址</strong></li>
+</ol>
+<ul>
+<li><code>mov a, b</code>：<strong>从 a 拷贝数据到 b</strong>，<u>根据传递数据的位宽</u>分为 <code>movb</code> = 8b, <code>movw</code> = 16b, <code>movl</code> = 32b, <code>movq</code> = 64b (比如 64 位机器的地址/指针/栈都是 q，所有机器中整数是 l)。这四种后缀在类似命令，如 <code>call</code>, <code>ret</code>, <code>pop</code> 等也适用，实际中经常省略。
+<img src="https://i.postimg.cc/FRcQ0K4k/jie-ping2026-01-26-21-26-09.png" alt=""></li>
+<li><code>lea</code>：<strong>取地址/做地址计算</strong>（常用于指针运算、乘加组合，比 mov 不同，它不读内存）</li>
+</ul>
+<ol start="2">
+<li><strong>栈</strong></li>
+</ol>
+<ul>
+<li><code>pushq a</code>：把栈顶指针往 “更低虚拟地址” 拓宽 8B，即 <strong>%rsp -= 8</strong>，然后把 a 的值压栈。</li>
+<li><code>popq a</code>：从栈顶取出到 a (寄存器/内存)，即 <strong>%rsp += 8</strong>。</li>
+</ul>
+<ol start="3">
+<li><strong>算术</strong></li>
+</ol>
+<ul>
+<li><code>add</code> / <code>sub</code> / <code>neg</code>：加 / 减 / 取反。</li>
+<li><code>imul</code>：乘 (有多种形式)；<code>idiv</code>：除 (配合 rdx:rax 作为被除数)。</li>
+<li><code>inc</code> / <code>dec</code>：+1 / -1（常被 <code>add/sub $1</code> 替代）。</li>
+<li><code>and</code> /<code> or</code> / <code>xor</code> / <code>not</code>：与 / 或 / 异或 / 非。</li>
+<li><code>shl</code> / <code>shr</code>：逻辑左移/逻辑右移；<code>sar</code>：算术右移 (有符号)。</li>
+</ul>
+<ol start="4">
+<li><strong>函数调用</strong></li>
+</ol>
+<ul>
+<li><code>call a</code>：把返回地址 (下一个指令) <strong>push</strong> 入栈，然后跳到目标执行，即 <strong>mov a, %rip</strong>。</li>
+<li><code>ret</code>：从栈弹出返回地址并跳回去，即 <strong>movq %rsp, %rip</strong>,  <strong>%rsp += 8</strong>。</li>
+</ul>
+</br>
+<h3 id="x86-64-操作数与寻址">x86-64 操作数与寻址</h3>
+<p><strong>操作数 (operand) 三大类:</strong></p>
+<ul>
+<li><strong>立即数</strong>：常量，在 AT&amp;T 语法中用 $ 引导 (比如 $1, $0x42)。</li>
+<li><strong>寄存器</strong>：如 %rax、%rbx 等。</li>
+<li><strong>内存引用</strong>：用“地址表达式”算出有效地址，再访问该地址处的内存。</li>
+</ul>
+<p><strong>内存寻址格式：Imm(r<sub>b</sub>, r<sub>i</sub>, s)</strong></p>
+<ul>
+<li>有效地址由四部分组成：位移 Imm、基址寄存器 r<sub>b</sub>、变址寄存器 r<sub>i</sub>、伸缩因子 s。</li>
+<li>计算为： <strong>M[Imm + R[R<sub>b</sub>] + R[r<sub>i</sub>]·s]</strong>。其中 R 表示寄存器数组中对应的指，M 表示内存数组中对应的值。</li>
+<li><strong>伸缩因子</strong> <strong>s</strong> <strong>必须是 1/2/4/8</strong>，这正好覆盖了常见基本类型大小，方便“数组下标 × 元素大小”的地址计算。</li>
+<li>一些例子：$0x42 的寻址结果是 0x42，0x42 结果是这个内存位置对应的数据，%rax 是这个寄存器中的值，(%rax) 是寄存器值指向内存位置对应的数据。</li>
+</ul>
+</br>
+</br>
+<h2 id="risc-v">RISC-V</h2>
+<p>RV32I (RISC-V32I) 是 RISC-V 架构中最基础、强制性的 32 位整数指令集。它采用 Load/Store 架构，拥有 32 个 32-bit 通用寄存器 (x0~x31，x0 强制固定为 0) 、个 32-bit PC 以及一些 CSR (控制状态寄存器)，是所有 RISC-V 处理器实现的基础。</p>
+<p><strong>RV32I 的关键特性与组成：</strong></p>
+<ul>
+<li>
+<p>RV32I 中 的 “I” 是基础整数指令集 (base integer)，此外有另一种实现 E：嵌入式裁剪版 (例如只有 16 个寄存器) 。以及更多的扩展，M：乘除扩展 (mul/div) 、A：原子内存指令、C：压缩扩展 (16 位指令)、F/D：单/双精度浮点、V：向量扩展…… 可以组合出比如 “RV64EMAFDCV” 这样的复杂 ISA。</p>
+</li>
+<li>
+<p><strong>指令分类：</strong> 包含 R型 (寄存器-寄存器)、I型 (立即数/Load)、S型 (Store)、B型 (分支)、U型 (长立即数)、J型 (跳转) 共 6 种指令格式。</p>
+</li>
+<li>
+<p>RISC 是 3-operand (3-操作数) 的，意思是命令格式为 A = B op C，比如 ADD x6, x0, x7 (x6 = x0 + x7)。</p>
+</li>
+<li>
+<p><strong>Load/Store 架构：</strong> 内存访问仅通过 load 和 store 指令实现，其他运算在寄存器间进行。</p>
+</li>
+<li>
+<p>不包含乘法/除法 (属于 M 扩展) 也不包含浮点运算 (属于 F/D 扩展)。</p>
+</li>
+<li>
+<p><strong>x0 永远是 0，因为 0 很常用</strong>，e.g. negate: <code>sub x9, x0, x8</code>;  copy: <code>add x9 x0 x8</code>。</p>
+</li>
+<li>
+<p><strong>寄存器不是越多越好</strong>。pipeline 更高效，但同时指令必须加长，访问时间也会变长。</p>
+</li>
+</ul>
+</br>
+<h3 id="rv32i-指令分类">RV32I 指令分类</h3>
+<h4 id="按功能分类">按功能分类：</h4>
+<ul>
+<li>ALU（寄存器-寄存器、寄存器-立即数）</li>
+<li>控制流（分支 B、跳转 J）</li>
+<li>内存访问（load/store）</li>
+<li>CSR 指令（与特权/异常相关，常是 read-modify-write）</li>
+<li>特权指令（操作系统/内核态才能执行）</li>
+</ul>
+<h4 id="-按编码格式分类">⚠️ 按编码格式分类：</h4>
+<p>在 RV32I 的 32 位指令中，地址从大到小存储，其信息结构是固定的六种情况 (<strong>RISBUJ</strong>)。其中：</p>
+<ul>
+<li><strong>opcode</strong> 是 7 位操作码，它告诉 CPU 当前指令属于哪个大类。</li>
+<li><strong>rd</strong> 表示 <strong>Register Destination</strong>，如果输出到寄存器就需要在这个 5-bit 字段声明目标是 x1~x31 中的哪个。</li>
+<li><strong>rs</strong> 表示 <strong>Register Source</strong>，表示从哪个寄存器读取数据，显然也是 5b。</li>
+<li><strong>funct3/7</strong> 是更详细的操作分类，比如 funct3 区分 add vs sub、srl vs sra；funct7 区分 add vs srl。</li>
+<li><strong>imm</strong> 是立即数，有时用于计算，在储存/加载内存时表示 “偏移量”，在跳转命令中表示跳转多远。</li>
+</ul>
+<p><img src="https://i.postimg.cc/gjmgnSZd/image.png" alt=""></p>
+<p>⚠️ 命令的六大类：**R / I / B / J **(常见)，以及 store 用 <strong>S</strong>、上位立即数用 <strong>U</strong>：</p>
+<ul>
+<li><strong>R</strong>：无立即数，比如各种<u>寄存器运算</u> (opcode 0110011)： <code>add</code>, <code>sub</code>, <code>and</code>, <code>sll</code> (逻辑左移)&hellip;</li>
+<li><strong>I</strong>：12 位立即数，比如各种<u>寄存器-立即数运算</u> (0010011)：<code>addi</code>, <code>andi</code>&hellip; 以及 ⚠️ <strong>所有</strong> <u>Load 命令 </u> (0000011)：<code>lw</code>, <code>lb</code>, <code>lh</code>&hellip;</li>
+<li><strong>B</strong>：12 位立即数，分支类命令，<strong>没有 rd</strong>，比如 <code>beq</code> (相等跳转), <code>bne </code>(不等跳转)&hellip;</li>
+<li><strong>J</strong>：20 位立即数，比如 <code>jal</code> (跳转并链接)&hellip;</li>
+<li><strong>S</strong>：储存到内存，比如 <code>sw</code>, <code>sb</code>, <code>sh</code>&hellip;</li>
+</ul>
+</br>
+<h3 id="alu-指令">ALU 指令</h3>
+<p>R-type：对两个寄存器数据进行计算并返回到寄存器—— <code>OP: rd ← rs1 (funct3, funct7) rs2</code></p>
+<ul>
+<li>
+<p>比如 sub: <code>0100000 00000 00110 000 00110 0110011</code> 表示将 x6 的值变成其相反数然后存回 x6；</p>
+</li>
+<li>
+<p>add: <code>0000000 00000 00110 000 00111 0110011</code> 表示将 x6 的值复制到 x7。</p>
+</li>
+</ul>
+<p>I-type：对一个寄存器和 12-bit 立即数计算并返回到寄存器—— <code>OP-IMM: rd ← rs1 (funct3) I-imm </code></p>
+<ul>
+<li>比如 addi: <code>010000000000 00110 000 00111 0010011</code> 表示将 x6 加上 1024 后存到 x7。</li>
+<li>移位立即数指令也是 I-type，但为了区分逻辑/算数， <strong>imm 不再是一个 12 位有符号数</strong>；它的低位是 <strong>&ldquo;shamt&rdquo;</strong> (RV32I: 5b, RV64I: 6b)，高位 (含一个标记位 inst[30]) 用来区分 SRLI (0) 和 SRAI (1)。<code>OP-IMM: rd ← rs1 (funct3, inst[30]) I-imm[4:0]</code></li>
+</ul>
+</br>
+<h3 id="load-指令">Load 指令</h3>
+<p>I-type：用寄存器表示基值+立即数表示偏移，表示内存地址，并将其取出到寄存器—— <code>LOAD: rd ← memory[rs1 + I-imm]</code></p>
+<ul>
+<li>比如 lw: <code>111111111001 00110 010 00111 0000011</code> 表示从地址为 [x6]-7 的内存取 4 个字节到 x7。12 位<strong>有符号</strong> IMM 可以表示偏移量 [-2048, +2047]。</li>
+<li>lb 读 1 字节，lh 读 2 字节；RV64I 还有 ld 读 8 字节。</li>
+</ul>
+</br>
+<h3 id="store-指令">Store 指令</h3>
+<p>S-type：将一个寄存器的值存到 (寄存器+立即数表示地址) 内存中—— <code>STORE: mem[rs1 + S-imm] ← rs2</code></p>
+<ul>
+<li>比如 sw: <code>0011111 00110 00111 010 00001 0100011</code> 表示将 x6 的全部字存到地址为 [x7]+1 的内存中。<strong>S 类的立即数只有 5-bit</strong>。</li>
+</ul>
+<p><strong>数据对齐</strong>：Store n 字节的数据时，地址一定是 n 的倍数，比如 <code>sw</code> / <code>lw</code> 的操作地址一定是 4 的倍数。RISC-V 本身并不强制数据对齐，但编译器会，故大部分 RISC 机，比如 ARM 都是数据对齐的。数据对齐可以防止超出 “页”、“cache line” 或者其他存储单位。</p>
+</br>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Introduction to Computer System</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

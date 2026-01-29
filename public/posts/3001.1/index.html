@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title># CSC3001 LEC1 离散数学入门 | Lithos&#39; Blog</title>
+    <title>🧮 CSC3001 LEC1-2 离散数学入门 | Lithos&#39; Blog</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="CUHKSZ 大二课程 CSC3001 的入门指导">
     <meta name="generator" content="Hugo 0.134.1">
@@ -40,7 +40,7 @@
       <link rel="canonical" href="http://localhost:1313/posts/3001.1/">
     <meta property="og:url" content="http://localhost:1313/posts/3001.1/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
-  <meta property="og:title" content="# CSC3001 LEC1 离散数学入门">
+  <meta property="og:title" content="🧮 CSC3001 LEC1-2 离散数学入门">
   <meta property="og:description" content="CUHKSZ 大二课程 CSC3001 的入门指导">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="article">
@@ -49,14 +49,14 @@
     <meta property="article:modified_time" content="2025-08-31T11:29:34+08:00">
     <meta property="article:tag" content="CSC3001">
 
-  <meta itemprop="name" content="# CSC3001 LEC1 离散数学入门">
+  <meta itemprop="name" content="🧮 CSC3001 LEC1-2 离散数学入门">
   <meta itemprop="description" content="CUHKSZ 大二课程 CSC3001 的入门指导">
   <meta itemprop="datePublished" content="2025-08-31T11:29:34+08:00">
   <meta itemprop="dateModified" content="2025-08-31T11:29:34+08:00">
-  <meta itemprop="wordCount" content="1132">
+  <meta itemprop="wordCount" content="1527">
   <meta itemprop="keywords" content="CSC3001">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="# CSC3001 LEC1 离散数学入门">
+  <meta name="twitter:title" content="🧮 CSC3001 LEC1-2 离散数学入门">
   <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3001 的入门指导">
 
 
@@ -140,7 +140,7 @@
 
       <div class="tc-l pv6 ph3 ph4-ns">
         
-          <div class="f2 f1-l fw2 white-90 mb0 lh-title"># CSC3001 LEC1 离散数学入门</div>
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🧮 CSC3001 LEC1-2 离散数学入门</div>
           
         
       </div>
@@ -174,7 +174,7 @@
   </div>
 
 
-      <h1 class="f1 athelas mt3 mb1"># CSC3001 LEC1 离散数学入门</h1>
+      <h1 class="f1 athelas mt3 mb1">🧮 CSC3001 LEC1-2 离散数学入门</h1>
 
       
 
@@ -185,8 +185,27 @@
       
     </header>
 
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="离散数学-discrete-mathematics">离散数学 Discrete Mathematics</h1>
-<h2 id="l01-propositions-and-operations-命题与算子">L01 Propositions and Operations 命题与算子</h2>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>(涵盖第 1 个讲义(Lecture Note))</p>
+<h1 id="离散数学-discrete-mathematics">离散数学 Discrete Mathematics</h1>
+<br>
+<ul>
+<li>
+<p>是什么？</p>
+<p>数学的一个研究”可数、不连续且独立“对象的分支</p>
+</li>
+<li>
+<p>研究什么？</p>
+<p>命题、逻辑、数学证明、集合论、函数映射、排列组合、图论、群、复杂性(P/NP problem)…</p>
+</li>
+<li>
+<p>为什么要学？</p>
+<p>计算机的底层逻辑和离散数学的底层逻辑都是布尔运算、布尔函数… 0 和 1</p>
+</li>
+</ul>
+<br>
+<br>
+<h2 id="ln1-propositions-and-operations-命题与算子">LN1 Propositions and Operations 命题与算子</h2>
+<br>
 <h3 id="induction-数学归纳法命题逻辑-propositional-logic">Induction 数学归纳法：命题逻辑 (Propositional Logic)</h3>
 <ol>
 <li><strong>Base Case</strong>
@@ -196,38 +215,59 @@
 <li><strong>Inductive Step</strong>
 在假设的基础上，证明命题在 n=k+1 时也成立。</li>
 </ol>
+<br>
+<br>
 <h3 id="boolean-algebra-布尔代数">Boolean Algebra 布尔代数</h3>
-<p><strong>布尔代数（Boolean algebra）</strong> 跟普通代数有类比关系：
-在布尔代数里只有两个离散数值：<strong>真 (1) 和假 (0)</strong>。</p>
+<p><strong>布尔代数 (Boolean algebra)</strong> 跟普通代数有类比关系：
+在布尔代数里只有两个离散数值，即 <strong>“真 (1)” 和 “假 (0)”</strong>。</p>
+<p>布尔操作符：</p>
 <ul>
-<li>AND(∧) 对应 <strong>product (×)</strong>，因为真的可能少，称作 minterm：
+<li>AND (∧) 对应 <strong>product (×)</strong>，因为真的可能少，称作 minterm：
 因为只要有 0 就是 0，对应数字里只有 1×1=1。</li>
-<li>OR(∨) 对应 无溢出的 <strong>sum (+)</strong>，因为真的可能多，称作 maxterm：
+<li>OR (∨) 对应 无溢出的 <strong>sum (+)</strong>，因为真的可能多，称作 maxterm：
 因为只要有一个 1 就是 1，对应数字里 1+0=1, 1+1=<em>1</em>。</li>
-<li>NOT(¬) 对应<strong>补运算</strong>，类似于 1−x。</li>
-<li>XOR(⊕) 对应有溢出的 <strong>sum (+)</strong>：
+<li>NOT (¬) 对应<strong>补运算</strong>，类似于 1−x。</li>
+<li>XOR (⊕) 对应有溢出的 <strong>sum (+)</strong>：
 1+0=1, 1+1=2=0。</li>
 </ul>
+<p><strong>功能完备性 (functional completeness)</strong>：表示一个操作符集合可以表示出所有操作符，e.g.，{AND, NOT} 是不完备的，但 {AND, NOT, OR} 是完备的。</p>
+<br>
+<br>
 <h3 id="logic-operators-逻辑算子">Logic Operators 逻辑算子</h3>
 <ul>
-<li>Proposition/Statement（命题）是在没有额外条件下一定正确或一定错误的判断句。</li>
-<li>x&gt;0 不是有效命题</li>
-<li>算子是一种布尔函数，描述布尔代数中的逻辑运算</li>
-<li>Truth table 是将所有真假组合以及某种函数运算结果全列出来的表格
+<li>
+<p>Proposition/Statement（命题）是在没有额外条件下一定正确或一定错误的判断句。</p>
+</li>
+<li>
+<p>x&gt;0 不是有效命题</p>
+</li>
+<li>
+<p>算子是一种布尔函数，描述布尔代数中的逻辑运算</p>
+</li>
+<li>
+<p>Truth table 是将所有真假组合以及某种函数运算结果全列出来的表格
 三种基本算子：
 $$非：NOT\ P=¬P= \overline{P}$$
 $$与：P\ AND\ Q=P∧Q\ \ (iff\ both\ true\ then\ true)$$
-$$或：P\ OR\ Q=P∨Q\ \ (iff\ both\ false\ then\ false)$$</li>
-<li>一切算子都可以用三种基本算子表达，有两种<strong>规范形</strong>（canonical forms）可用于构造一切算子等价公式：
+$$或：P\ OR\ Q=P∨Q\ \ (iff\ both\ false\ then\ false)$$</p>
+</li>
+<li>
+<p>一切算子都可以用三种基本算子表达，有两种<strong>规范形</strong>（canonical forms）可用于构造一切算子等价公式：</p>
 <ol>
 <li>只对(运算结果为真的)“真行”做 Sum-of-Products (<strong>SOP，与再或</strong>)——把每一行的每个输入(通过  NOT)作为真项用 AND 连接(minterm)，所有行再用 OR 连接。</li>
 <li>只对(运算结果为假的)“假行”做 Product-of-Sums (<strong>POS，或再与</strong>)——把每一行的每个输入(通过  NOT)作为假项用 OR 连接(maxterm)，所有行再用 AND 连接。
 (两者互为德摩根定律中的等价式)</li>
 </ol>
+<p><strong>e.g. 异或 XOR：</strong></p>
+<p><img src="https://i.postimg.cc/XNhrMVj5/30019.png" alt=""></p>
+<p>$$P\oplus Q \equiv (P\land \neg Q)\ \lor\ (\neg P\land Q) \equiv (\neg P \lor \neg Q)\land(P\lor Q) \equiv (P\lor Q)\land \neg(P\land Q)$$</p>
 </li>
-<li>e.g. 异或 XOR：$$P\oplus Q \equiv (P\land \neg Q)\ \lor\ (\neg P\land Q) \equiv (\neg P \lor \neg Q)\land(P\lor Q) \equiv (P\lor Q)\land \neg(P\land Q)$$</li>
-<li>对于三项及以上的多元函数，也适用这两种规范型。</li>
+<li>
+<p>对于三项及以上的多元函数，也适用这两种规范型。</p>
+</li>
 </ul>
+<br>
+<br>
 <h3 id="de-morgans-law-of-equivalence-德摩根律">De Morgan&rsquo;s Law of Equivalence 德摩根律</h3>
 <p>$$\neg(P\land Q)\ \equiv\ (\neg P)\ \lor\ (\neg Q)\qquad \neg(P\lor Q)\ \equiv\ (\neg P)\ \land\ (\neg Q)$$</p>
 <ul>
@@ -245,32 +285,54 @@ $$或：P\ OR\ Q=P∨Q\ \ (iff\ both\ false\ then\ false)$$</li>
 <p>注意第五条定律，P∧¬P 是恒假命题(t)；P∨¬P为恒真命题(c)。</p>
 </li>
 </ul>
+<br>
+<br>
 <h3 id="conditional-statements-条件命题">Conditional Statements 条件命题</h3>
+<br>
 <h4 id="if">If</h4>
 <ul>
 <li>if P then Q: P→Q (P implies Q)</li>
 <li>只有 P 真且 Q 假时，该命题才假(因为 P 假时没有直接说明命题为假)</li>
 <li>因此：&quot;¬(P→Q) ≡ P ∧ ¬Q&rdquo;  →  &ldquo;P→Q ≡ ¬P ∨ Q&rdquo;</li>
 </ul>
+<br>
 <h4 id="contrapositive-逆否命题">Contrapositive 逆否命题</h4>
 <ul>
 <li>P→Q ≡ ¬Q→¬P</li>
 <li>只否不逆不等价</li>
 </ul>
+<br>
 <h4 id="iff-当且仅当">Iff 当且仅当</h4>
 <ul>
 <li>P↔Q ≡ (P→Q) ∧ (Q→P)</li>
 </ul>
+<br>
+<br>
 <h3 id="arguments-论证">Arguments 论证</h3>
 <p>Modus Ponens(肯定式)：(P, P→Q) → Q
 Modus Tollens(否定式)：(¬Q, P→Q) → ¬P
 <img src="https://i.postimg.cc/GtrCfX5t/Arguments.png" alt=""></p>
-<h4 id="自指谬误">自指谬误</h4>
+<br>
+<h4 id="自指谬误">&ldquo;自指&quot;谬误</h4>
 <p>在布尔代数中，命题向自己或互相赋予真假很容易导致悖论，破坏二值性(bivalence)</p>
 <ul>
-<li>P ≡ ¬P</li>
-<li>P: Q ≡ c, Q: P ≡ t</li>
+<li>
+<p>“P ≡ ¬P”：导致 P 自相矛盾</p>
+</li>
+<li>
+<p>“P: Q ≡ c，Q: P ≡ t”：导致 P 和 Q 相互矛盾</p>
+</li>
 </ul>
+<p>类似于命题，集合也不能随意自指或互指</p>
+<ul>
+<li>
+<p>LEC2 会提到的 Russell&rsquo;s Paradox 罗素悖论：$$W={,S\mid S\ \text{是集合且}\ S\notin S,},\ W\ 自相矛盾$$</p>
+</li>
+<li>
+<p>Barber’s Paradox 理发师悖论：理发师只给“不自己理发”的人理发——那么理发师给不给自己理？无论“给/不给”都矛盾。</p>
+</li>
+</ul>
+<p>问题出在 “naive comprehension”：允许以上这些<strong>毫无约束的自指或互指</strong>定义，会导致自相矛盾。</p>
 <ul class="pa0">
   
    <li class="list di">
@@ -279,7 +341,8 @@ Modus Tollens(否定式)：(¬Q, P→Q) → ¬P
   
 </ul>
 <div class="mt6 instapaper_ignoref">
-        <div id="disqus_thread"></div>
+        
+          <div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -299,6 +362,7 @@ Modus Tollens(否定式)：(¬Q, P→Q) → ¬P
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
       </div>
     </div>
 
@@ -313,7 +377,7 @@ Modus Tollens(否定式)：(¬Q, P→Q) → ¬P
 
     </main>
     <footer class="custom-footer">
-  <p>&copy; Lithos&#39; Blog 2025</p>
+  <p>&copy; Lithos&#39; Blog 2026</p>
 
   
     <ul class="footer-links">
@@ -324,7 +388,7 @@ Modus Tollens(否定式)：(¬Q, P→Q) → ¬P
       
         <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
       
-        <li><a href="https://ai.nero-lithos.com" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
       
     </ul>
   

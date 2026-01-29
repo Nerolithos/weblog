@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "main.css",
-	"sourceRoot": "/Users/Lithos/Documents/Github/weblog",
+	"sourceRoot": "/Users/Lithos/Documents/GitHub/weblog",
 	"sources": [
 		"ananke/css/main.css"
 	],

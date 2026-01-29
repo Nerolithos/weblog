@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DDA3003 on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/dda3003/</link>
+    <description>Recent content in DDA3003 on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 22 Jan 2026 16:30:34 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/dda3003/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🎨 DDA3003 Introduction to D3</title>
+      <link>http://localhost:1313/posts/3003.1/</link>
+      <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3003.1/</guid>
+      <description>CUHKSZ 选修课程 DDA3003 Visualization，介绍 D3.js ——— 一种 HTML 可视化工具</description>
+    </item>
+  </channel>
+</rss>

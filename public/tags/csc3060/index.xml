@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CSC3060 on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/csc3060/</link>
+    <description>Recent content in CSC3060 on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 20 Jan 2026 10:30:34 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/csc3060/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
+      <link>http://localhost:1313/posts/3060.2/</link>
+      <pubDate>Tue, 20 Jan 2026 10:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.2/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Introduction to Computer System</title>
+      <link>http://localhost:1313/posts/3060.1/</link>
+      <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.1/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
+    </item>
+  </channel>
+</rss>

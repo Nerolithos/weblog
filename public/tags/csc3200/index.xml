@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CSC3200 on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/csc3200/</link>
+    <description>Recent content in CSC3200 on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 11 Dec 2025 07:07:34 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/csc3200/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC3200 Final Revision C&#43;&#43; 期末样卷</title>
+      <link>http://localhost:1313/posts/3200.f3/</link>
+      <pubDate>Thu, 11 Dec 2025 07:07:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.f3/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 是新课，我们用 3002 真卷作复习参考</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)</title>
+      <link>http://localhost:1313/posts/3200.f2/</link>
+      <pubDate>Thu, 27 Nov 2025 13:33:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.f2/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</title>
+      <link>http://localhost:1313/posts/3200.f1/</link>
+      <pubDate>Fri, 21 Nov 2025 13:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.f1/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 LEC3-5 C&#43;&#43;进阶</title>
+      <link>http://localhost:1313/posts/3200.2/</link>
+      <pubDate>Mon, 15 Sep 2025 18:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.2/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 关于 C/C++ 中数组、指针和流操作</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 LEC1-2 C&#43;&#43;入门</title>
+      <link>http://localhost:1313/posts/3200.1/</link>
+      <pubDate>Mon, 01 Sep 2025 18:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.1/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 关于 C++ 基础语法和 OOP 的介绍</description>
+    </item>
+  </channel>
+</rss>

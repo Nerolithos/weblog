@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8" />
+  <title>D3 小实验 · 力导向图</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/custom.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050505;
+      color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .d3-demo-page {
+      flex: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem;
+    }
+    .d3-demo-header {
+      margin-bottom: 1.5rem;
+    }
+    .d3-demo-header h1 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+    }
+    .d3-demo-header p {
+      margin: 0;
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+    .d3-demo-canvas-wrapper {
+      margin-top: 1.5rem;
+      background: radial-gradient(circle at top, #1b2735 0, #090a0f 60%, #020308 100%);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.65);
+    }
+    .d3-demo-svg {
+      width: 100%;
+      height: 480px;
+      display: block;
+    }
+    .d3-demo-node {
+      stroke: #111;
+      stroke-width: 1.2px;
+      cursor: grab;
+    }
+    .d3-demo-node:active {
+      cursor: grabbing;
+    }
+    .d3-demo-link {
+      stroke: rgba(200, 220, 255, 0.45);
+      stroke-width: 1.4px;
+    }
+    .d3-demo-label {
+      fill: #f5f7ff;
+      font-size: 11px;
+      pointer-events: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+    .d3-demo-legend {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+    .d3-demo-legend code {
+      background: rgba(255,255,255,0.06);
+      padding: 0.12rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+    .d3-demo-backlink {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+    }
+    .d3-demo-backlink a {
+      color: #8ab4ff;
+      text-decoration: none;
+    }
+    .d3-demo-backlink a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 640px) {
+      .d3-demo-svg {
+        height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="d3-demo-page">
+    <header class="d3-demo-header">
+      <h1>D3.js 小实验：力导向图</h1>
+      <p>简单演示 D3 的 <code>forceSimulation</code>，节点可以用鼠标拖拽。</p>
+    </header>
+
+    <section class="d3-demo-canvas-wrapper">
+      <svg id="d3-demo-svg" class="d3-demo-svg"></svg>
+      <div class="d3-demo-legend">
+        提示：拖拽节点观察布局变化；双击空白区域可轻微“摇一摇”重排。
+      </div>
+    </section>
+
+    <div class="d3-demo-backlink">
+      <a href="/">← 返回博客首页</a>
+    </div>
+  </main>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    const svg = d3.select("#d3-demo-svg");
+    const width = parseInt(svg.style("width"));
+    const height = parseInt(svg.style("height"));
+
+    const nodes = [
+      { id: "D3", group: 1 },
+      { id: "数据", group: 2 },
+      { id: "可视化", group: 2 },
+      { id: "力导向", group: 3 },
+      { id: "SVG", group: 3 },
+      { id: "交互", group: 4 },
+      { id: "缩放", group: 4 },
+      { id: "拖拽", group: 4 }
+    ];
+
+    const links = [
+      { source: "D3", target: "数据" },
+      { source: "D3", target: "可视化" },
+      { source: "D3", target: "力导向" },
+      { source: "D3", target: "SVG" },
+      { source: "交互", target: "拖拽" },
+      { source: "交互", target: "缩放" },
+      { source: "可视化", target: "交互" },
+      { source: "数据", target: "可视化" }
+    ];
+
+    const color = d3.scaleOrdinal()
+      .domain([1, 2, 3, 4])
+      .range(["#ffb347", "#8fd3f4", "#b19cd9", "#90ee90"]);
+
+    const zoomLayer = svg.append("g");
+
+    const link = zoomLayer.append("g")
+      .attr("stroke-linecap", "round")
+      .selectAll("line")
+      .data(links)
+      .enter()
+      .append("line")
+      .attr("class", "d3-demo-link");
+
+    const node = zoomLayer.append("g")
+      .selectAll("circle")
+      .data(nodes)
+      .enter()
+      .append("circle")
+      .attr("class", "d3-demo-node")
+      .attr("r", 16)
+      .attr("fill", d => color(d.group));
+
+    const label = zoomLayer.append("g")
+      .selectAll("text")
+      .data(nodes)
+      .enter()
+      .append("text")
+      .attr("class", "d3-demo-label")
+      .attr("text-anchor", "middle")
+      .attr("dy", 4)
+      .text(d => d.id);
+
+    const simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(links).id(d => d.id).distance(120).strength(0.6))
+      .force("charge", d3.forceManyBody().strength(-280))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(28))
+      .on("tick", ticked);
+
+    const drag = d3.drag()
+      .on("start", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on("drag", (event, d) => {
+        d.fx = event.x;
+        d.fy = event.y;
+      })
+      .on("end", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      });
+
+    node.call(drag);
+
+    svg.on("dblclick", () => {
+      simulation.alpha(0.6).restart();
+    });
+
+    svg.call(
+      d3.zoom()
+        .scaleExtent([0.5, 2.5])
+        .on("zoom", (event) => {
+          zoomLayer.attr("transform", event.transform);
+        })
+    );
+
+    function ticked() {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      node
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+
+      label
+        .attr("x", d => d.x)
+        .attr("y", d => d.y);
+    }
+  </script>
+</body>
+</html>

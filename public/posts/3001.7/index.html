@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3001.7/">
+    <meta property="og:url" content="http://localhost:1313/posts/3001.7/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem">
+  <meta property="og:description" content="CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-13T09:24:24+08:00">
+    <meta property="article:modified_time" content="2025-11-13T09:24:24+08:00">
+    <meta property="article:tag" content="CSC3001">
+
+  <meta itemprop="name" content="🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem">
+  <meta itemprop="description" content="CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理">
+  <meta itemprop="datePublished" content="2025-11-13T09:24:24+08:00">
+  <meta itemprop="dateModified" content="2025-11-13T09:24:24+08:00">
+  <meta itemprop="wordCount" content="2139">
+  <meta itemprop="keywords" content="CSC3001">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem">
+  <meta name="twitter:description" content="CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30017.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-11-13T09:24:24+08:00">November 13, 2025</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>(涵盖第 12 个讲义)</p>
+<h1 id="ln12">LN12</h1>
+<br>
+<h1 id="二项式恒等式-binomial-identities">二项式恒等式 (Binomial Identities)</h1>
+<br>
+<ul>
+<li>记 $\displaystyle{n\choose k}$ 为从 n 个互异元素里选 k 个的方式数（“从 n 里挑 k”）。</li>
+<li>代数定义：$\displaystyle{n\choose k}=\frac{n!}{k!(n-k)!}$，并约定 ${n\choose 0}={n\choose n}=1$。</li>
+<li>组合解释（极其重要）：<strong>每个</strong> ${n\choose k}$ <strong>就是一类“从</strong> n <strong>个位置里挑</strong> k <strong>个位置”的计数问题</strong>。</li>
+<li>常见推理思路：
+1、直接数学证明：LHS = RHS；
+2、利用组合数与二项式的内在关联转换问题：比如 $\sum_{i=0}^n{n\choose i}^2={2n\choose n}$ 可以利用 (x+1)<sup>n</sup>(x+1)<sup>n</sup> = (x+1)<sup>2n</sup> 这个二项式等式左右的 x<sup>n</sup> 项系数相等证明；
+3、举例证明：想象为袋中选球。</li>
+</ul>
+<br>
+<h2 id="二项式定理">二项式定理</h2>
+<p>$$(1+x)^n=\sum_{k=0}^{n}{n\choose k}x^k.$$</p>
+<p><strong>组合证明</strong>：把 $(1+x)^n$ 看作 n 个因子 (1+x) 的乘积；从每个因子里选“1”或“x”。系数 x^k 等于从 n 个因子里选出 k 个放“x”的方式数——正是 ${n\choose k}$。</p>
+<h3 id="直接推论"><strong>直接推论</strong></h3>
+<ol>
+<li>取 x=1：$\displaystyle \sum_{k=0}^n{n\choose k}=2^n$。
+组合解释：子集计数（每个元素取或不取）。</li>
+<li>取 x=-1：$\displaystyle \sum_{k\ \text{偶}}{n\choose k}=\sum_{k\ \text{奇}}{n\choose k}=2^{n-1}$。
+组合解释：把每个子集与其补集配对，偶数大小与奇数大小一样多。</li>
+<li>${n\choose k}={n\choose n-k}.$</li>
+</ol>
+<br>
+<h2 id="帕斯卡递推公式">帕斯卡递推公式</h2>
+<p>$${n+1\choose k}={n\choose k-1}+{n\choose k}.$$</p>
+<p><strong>组合证明</strong>：在 n+1 中固定一个元素 x，去掉 x 留下 n 个元素。如果 x 不在 k 中，就仍然从 n 中选 k 个；如果 x 在 k 中，就只能选 k-1 个元素，为被去掉的 x 预留位置。
+（或者直接拆开计算，LHS = RHS）</p>
+<br>
+<h2 id="hockey-stick-恒等式">Hockey-stick 恒等式</h2>
+<p>$$\sum_{i=r}^{n}{i\choose r}={n+1\choose r+1}.$$</p>
+<p><strong>组合证明</strong>：从 {1, …, n+1} 里选 r+1 个元素，按“最大元素 λ”分类（λ ∈ [r+1, n+1]），除了最大项 λ 以外的 r 个元素从 1 到 λ-1 里随便选——得到 ${λ-1\choose r}$，对 λ 求和即得证。</p>
+  <br>
+<h2 id="vandermonde-恒等式">Vandermonde 恒等式</h2>
+<p>$$\sum_{i=0}^{k}{r\choose i}{s\choose k-i}={r+s\choose k}.$$</p>
+<p><strong>组合证明</strong>：把 r+s 个元素分两堆（大小 r,s），总体选 k 个；按“从第一堆取 i 个、第二堆取 k-i 个”分类求和。</p>
+  <br>
+<h2 id="吸收恒等式常在化简里用">“吸收”恒等式（常在化简里用）</h2>
+<p>$$(k+1){n\choose k+1}=(n-k){n\choose k},\qquad k{n\choose k}=n{n-1\choose k-1}.$$</p>
+<p><strong>组合证明</strong>（第二式）：先从 n 人里选一位“队长”再选其余 k-1 人；或先定 k 人小队再在队内定队长。</p>
+  <br>
+<h2 id="加权求和微分组合双法">加权求和（微分/组合双法）</h2>
+<p>$$\sum_{k=0}^n k{n\choose k}=n2^{,n-1},\quad \sum_{k=0}^n k(k-1){n\choose k}=n(n-1)2^{,n-2}.$$</p>
+<ul>
+<li><strong>代数法</strong>：对 (1+x)^n 求导，代 x=1；再求二阶导。</li>
+<li><strong>组合法</strong>：左式是“计数带标记的选择”的方式数：选一个（或两个人有序）再补足其余成员。</li>
+</ul>
+<br>
+<br>
+<h1 id="容斥原理-inclusion-exclusion">容斥原理 (Inclusion-Exclusion)</h1>
+<br>
+<h2 id="2-集与-3-集">2 集与 3 集</h2>
+<p>容斥原理：用交集求并集
+$|A\cup B|=|A|+|B|-|A\cap B|;$
+$|A\cup B\cup C| =|A|+|B|+|C| -|A\cap B|-|A\cap C|-|B\cap C| +|A\cap B\cap C|.$</p>
+<p><img src="https://i.postimg.cc/FK0n9SLZ/jie-ping2025-11-13-09-32-32.png" alt=""></p>
+<p>使用例：计算 1000 以内能被 x 或 y 整除的数的个数
+$⌊{1000\over x}⌋+⌊{1000\over y}⌋-⌊{1000\over lcm(x, y)}⌋$</p>
+<br>
+<h2 id="一般形式">一般形式</h2>
+<p>$$\Big|\bigcup_{i=1}^n A_i\Big| =\sum_{t=1}^n(-1)^{t-1}!!\sum_{1\le i_1&lt;\cdots&lt;i_t\le n} \left|A_{i_1}\cap\cdots\cap A_{i_t}\right|.$$</p>
+<p>你可以这么理解：每个元素若落在 m 个集合里，就被计了 $\sum_{t=1}^{m}(-1)^{t-1}{m\choose t}=1$ 次。</p>
+<br>
+<h3 id="应用例">应用例</h3>
+<ol>
+<li>错排 D<sub>n</sub>：n 个人每人提供一件礼物，随机抽取时没有人拿到自己的礼物的情况：
+假设“第 i 个人拿到自己的礼物”记作 M<sub>i</sub>：$D_n = |\bigcap_{i=1}^n\bar M_i|=|Ω|-|\bigcup_{i=1}^n M_i| =n!+\sum_{i=1}^n (-1)^i{n \choose i}(n-i)!=n!\sum_{i=0}^n\frac{(-1)^i}{i!};$
+概率 $P=\frac{D_n}{n!}=\sum_{i=0}^n\frac{(-1)^i}{i!}(n\to \infty)\to e^{-1}.$</li>
+<li>Euler φ(n) 函数：小于 n 并与它互素的正整数的个数。
+假设 n 可分解为一些质因数次方的乘积：$n=\prod p_i^{c_i}$，将“一个 [1, n] 中的数可以被 pi 整除”记作 D<sub>i</sub>：
+$\varphi(n) = |\bigcap_{i=1}^n\bar D_i|=n-|\bigcup_{i=1}^n D_i|;$
+$\varphi(n)=n\prod(1-\frac1{p_i}).$</li>
+<li>非负整数解（<strong>隔板法</strong> + 容斥约束）
+a+b+c=11 且 P: 0≤a≤3、Q: 0≤b≤4、R: 0≤c≤6 有多少解? |P∩Q∩R| = |Ω| - |P<sub>c</sub>∪Q<sub>c</sub>∪R<sub>c</sub>|
+<ul>
+<li>先算无约束情况下的全集 |Ω| = ${11+2\choose 2}$ (隔板法：11 个球和 2 个板占据 13 个空间，有多少放法？)</li>
+<li>计算所有容斥项：|Pc| = ${13-4 \choose 2}$；|Pc∪Qc| = ${13-4-5 \choose 2}$；|Pc∩Qc∩Rc| = 0；……</li>
+<li>最后就可以算出：|P∩Q∩R| = 78-36-28-15+6+1+0-0 = 6</li>
+</ul>
+</li>
+</ol>
+<br>
+<br>
+<h1 id="鸽巢定理-pigeon-hole-theorem">鸽巢定理 (Pigeon-Hole Theorem)</h1>
+<br>
+<h2 id="定义与思路">定义与思路</h2>
+<ul>
+<li>基本定义：n 只鸽子塞进 h 个洞，若 n &gt; h，必有洞里 ≥ 2 只。</li>
+<li>广义定义：一定存在洞里 ≥ ⌈n / h⌉ 只的情况。</li>
+<li>函数定义：从更大的集合到更小集合的映射不可能单射。</li>
+</ul>
+<p><img src="https://i.postimg.cc/bv1Fznt9/jie-ping2025-11-13-09-31-46.png" alt=""></p>
+<p>解题思路：</p>
+<ul>
+<li>“洞”是什么？（通常是“分类标签”：和、余数、奇数部分、区间段、组合对、颜色对……）</li>
+<li>把“要放的对象”映射到这些洞。</li>
+<li>只要对象数 &gt; 洞数，就能得<strong>至少一个</strong> “重复” 结论。</li>
+</ul>
+<br>
+<h2 id="应用例-1">应用例</h2>
+<ol>
+<li>配对求和：证明从 {1, …, 8} 选 5 个元素，必有一对和为 9。
+洞是<strong>含有两个元素和为 9 的集合</strong>：{1,8},{2,7},{3,6},{4,5}。在 4 个集合选 5 个数 ⇒ 必有某个集合被选 2 次 ⇒ 得到一对和为 9。</li>
+</ol>
+<br>
+<ol start="2">
+<li>握手问题：证明 n 个人随便互相握手，必有两人与相等个数的人握手。
+将握手问题看作<strong>图论</strong>，洞是所有可能的<strong>度数</strong>：n 人各自的度数∈ {0, …, n-1}；
+(1) 若有人度数 0，则没人能是 n-1；于是 n 人在 {0, …, n-2} 中选度数：⌈n / n-1⌉ = 2 ⇒ 必有两人度数相同。
+(2) 若无人不握手，则 n 人在 {1, …, n-1} 中选度数：⌈n / n-1⌉ = 2 ⇒ 必有两人度数相同。
+<strong>Takeaway：可以通过分类讨论减少“洞”，让其小于“鸽子”</strong></li>
+</ol>
+<br>
+<ol start="3">
+<li>生日悖论：n 个人没有重复生日的概率。
+$P(n) = \frac{无重复选法}{随机选法} = \frac{365\cdot 364\cdots(365-n+1)}{365^n}$，P(23) &lt; 0.5。</li>
+</ol>
+<br>
+<ol start="4">
+<li>和/差/倍数类问题：任取 n+1 个数于 {1, …, 2n}，必有一对整除另一对。
+把每个数分解成唯一的 $2^t\cdot q$ (q 为奇数)；在 1～2n 中共有 {1, 3, …, 2n-1} 也就是 n 个奇数；按 q 的可能取值构造 n 个洞，则 n+1 个数在 n 个奇数因子中选一个：⌈n+1 / n⌉ = 2 ⇒ 必有两数为偶倍数。
+<strong>Takeaway：本题也可以用欧拉函数做，但可能要用黎曼 ζ 函数来定量质数的个数</strong></li>
+</ol>
+<br>
+<ol start="5">
+<li><strong>子集和不可能全不同</strong>：90个 25 位十进制数组成的集合，必有两个子集和相等。
+子集数 2<sup>90</sup>（鸽子）&gt; 和的取值个数 9x10<sup>26</sup>（洞），故存在两子集同和。</li>
+</ol>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3001/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3001</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.6/">🧮 CSC3001 LEC14-16 Graph</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.5/">🧮 CSC3001 LEC11-13 GCD and Mod</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.4/">🧮 CSC3001 LEC8-10 递归</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.3/">🧮 CSC3001 LEC6-7 数学归纳法</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.2/">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

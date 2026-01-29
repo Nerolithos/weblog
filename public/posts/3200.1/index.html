@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3200 LEC1-2 C&#43;&#43;入门 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3200 关于 C&#43;&#43; 基础语法和 OOP 的介绍">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3200.1/">
+    <meta property="og:url" content="http://localhost:1313/posts/3200.1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3200 LEC1-2 C&#43;&#43;入门">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3200 关于 C&#43;&#43; 基础语法和 OOP 的介绍">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-01T18:29:34+08:00">
+    <meta property="article:modified_time" content="2025-09-01T18:29:34+08:00">
+    <meta property="article:tag" content="CSC3200">
+
+  <meta itemprop="name" content="💻 CSC3200 LEC1-2 C&#43;&#43;入门">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3200 关于 C&#43;&#43; 基础语法和 OOP 的介绍">
+  <meta itemprop="datePublished" content="2025-09-01T18:29:34+08:00">
+  <meta itemprop="dateModified" content="2025-09-01T18:29:34+08:00">
+  <meta itemprop="wordCount" content="3451">
+  <meta itemprop="keywords" content="CSC3200">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3200 LEC1-2 C&#43;&#43;入门">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3200 关于 C&#43;&#43; 基础语法和 OOP 的介绍">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/32001.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3200 LEC1-2 C&#43;&#43;入门</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3200 LEC1-2 C&#43;&#43;入门</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-09-01T18:29:34+08:00">September 1, 2025</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="csc3200-lec-1-2--cpp-入门">CSC3200 LEC 1-2  CPP 入门</h1>
+<br>
+<h2 id="一怎么运行">一、怎么运行？</h2>
+<br>
+<p>MacOS 自带 clang++，你可以在终端查询：</p>
+<p><code>clang++ --version</code></p>
+<p>没有就 <code>brew install clang++</code>  或者 <code> brew install g++</code></p>
+<p>运行一个项目文件：hello.cpp</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>clang++ -std<span style="color:#f92672">=</span>c++17 -Wall -O2 <span style="color:#75715e">#filename#.cpp -o #compilename#</span>
+</span></span><span style="display:flex;"><span>clang++ <span style="color:#75715e">#filename#.cpp -o #compilename#  // 也可以这么编译，比较快，但重要代码不建议</span>
+</span></span><span style="display:flex;"><span>./#compilename#  // 运行
+</span></span></code></pre></div><p>Win 可以用 Dev-C++，但如果要用 VScode 之类的内置终端运行，可能需要下载 MSYS2 / MinGW 之类的编译器，具体不太清楚</p>
+<br>
+<h3 id="多项目运行">多项目运行</h3>
+<p>src/ math.h, math.cpp, main.cpp</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>clang++ -std<span style="color:#f92672">=</span>c++17 -Wall -O2 src/main.cpp src/math.cpp -Iinclude -o app
+</span></span><span style="display:flex;"><span>./app
+</span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="二数据类型计算符与命名规则">二、数据类型、计算符与命名规则</h2>
+<br>
+<h3 id="数据类型">数据类型</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> age <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;      <span style="color:#75715e">// 整数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> pi <span style="color:#f92672">=</span> <span style="color:#ae81ff">3.14</span>;  <span style="color:#75715e">// 浮点数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> grade <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;A&#39;</span>;  <span style="color:#75715e">// 字符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> flag <span style="color:#f92672">=</span> true;  <span style="color:#75715e">// 布尔值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> constant;  <span style="color:#75715e">// 可以
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> constant;  <span style="color:#75715e">// 不可以，常值必须在声明时复制，因为不可更改
+</span></span></span></code></pre></div><p>注意，C 中有另一种声明常值的语句：<code>#define constant 42;</code>
+但是它只对单文件有效，不同文件可以有不同值，容易导致故障。</p>
+<br>
+<h3 id="计算符">计算符</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">double</span>(<span style="color:#ae81ff">4</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">5</span>;  <span style="color:#75715e">// 4
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> n <span style="color:#f92672">=</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">4.2</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;  <span style="color:#75715e">// 2.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> p <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">5</span>;  <span style="color:#75715e">// 0.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 所以要获得小数的精确值至少在算式中要有一个“double/float&#34;类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iomanip&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> setprecision(<span style="color:#ae81ff">3</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3.141592</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;/n&#34;</span>;  <span style="color:#75715e">// 保留三位小数
+</span></span></span></code></pre></div><p>自增：(同样适用于减法)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> a<span style="color:#f92672">++</span>;  <span style="color:#75715e">// 赋值然后自增：a=1, x=0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> <span style="color:#f92672">++</span>b;  <span style="color:#75715e">// 自增然后赋值：b=1, y=1
+</span></span></span></code></pre></div><h4 id="布尔运算符">布尔运算符</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#66d9ef">double</span>(<span style="color:#ae81ff">2.0</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">bool</span>(true)  <span style="color:#75715e">// 非 0 数皆为真，真且真为真
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#f92672">||</span> NULL <span style="color:#f92672">!=</span> false  <span style="color:#75715e">// 非空字符(串)都为真，真且假为真
+</span></span></span></code></pre></div><p>三元运算符：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> ((a <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;Even&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Odd&#34;</span>) <span style="color:#f92672">&lt;&lt;</span> endl;  
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ? 前的条件真就输出: 前一项，反之就输出冒号后一项
+</span></span></span></code></pre></div><br>
+<p>string 类型需要单独引用，否则有可能失败 (因为 &lt;iostream&gt; 间接调用了 &lt;string&gt;，有一些情况下有概率可以编译)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>string name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;csc3200&#34;</span>
+</span></span></code></pre></div><p>引用空间(库)：<code>#include &lt;…&gt;</code> <strong>不能写分号</strong></p>
+<p>引用本地 .h 文件：<code>#include &quot;….h&quot;</code> 同上</p>
+<p>.cpp 文件无法被调用</p>
+<br>
+<h3 id="命名规则">命名规则</h3>
+<ul>
+<li>只能用字母、数字、下划线，且不能以数字开头。</li>
+<li>区分大小写：Age 和 age 是不同变量。</li>
+<li>不能使用关键字(如 int、if、class 等)。所有 cpp 保留词都在 <code>std</code> namespace 中。</li>
+<li>常见风格：camelCase（小驼峰），或 snake_case。</li>
+</ul>
+<p>所有关键词全部存储在一个叫做 std 的 namespace 中，调用时在代码顶部声明：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;   <span style="color:#75715e">//只引用一个：using std::string//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>string name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;csc3200&#34;</span>;
+</span></span></code></pre></div><p>否则每次使用都要写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span> std<span style="color:#f92672">::</span>string name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;csc3200&#34;</span>;
+</span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="三standard-io">三、Standard I/O</h2>
+<br>
+<h3 id="cout">cout</h3>
+<ul>
+<li>short for &ldquo;character output&rdquo;，代表标准输出流(standard output stream)，通常就是屏幕</li>
+<li>来自头文件 #include &lt;iostream&gt;
+例：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Hello, world!&#34;</span>;  <span style="color:#75715e">// 向屏幕输出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><br>
+<h3 id="--流输出运算符">&laquo;  (流输出运算符)</h3>
+<ul>
+<li>stream insertion operator</li>
+<li>作用是把右边的内容“插入”到左边的输出流中。</li>
+<li>无论什么情况，<code>&lt;&lt;</code> 都不会自动在多个输出项中间自动加空格。
+例1：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;答案是: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">42</span>;
+</span></span></code></pre></div><ul>
+<li>string &ldquo;答案是: &quot; 被插入到 cout 里 → 显示在屏幕上。</li>
+<li>然后 42 也被插入到同一个流中 → 紧接着显示。</li>
+<li>output：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>答案是: <span style="color:#ae81ff">42</span>
+</span></span></code></pre></div><p>例2：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>string s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Hello&#34;</span>;
+</span></span><span style="display:flex;"><span>s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34; World&#34;</span>;              <span style="color:#75715e">// 拼接
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> s <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; 长度: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> s.length() <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span></code></pre></div><ul>
+<li>output：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Hello World 长度: <span style="color:#ae81ff">11</span>
+</span></span></code></pre></div><br>
+<h3 id="endl">endl</h3>
+<ul>
+<li>short for &ldquo;end line&rdquo;</li>
+<li>作用是换行（相当于 &ldquo;\n&rdquo; <strong>转义字符</strong>），同时刷新输出缓冲区</li>
+<li>来自头文件 #include &lt;iostream&gt;
+例：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;2&#34;</span>
+</span></span><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;3</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;4&#34;</span>;
+</span></span></code></pre></div><ul>
+<li>output：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">4</span>
+</span></span></code></pre></div><p>区别：</p>
+<ul>
+<li><code>\n</code> 只是换行转义符</li>
+<li><code>endl</code> = 换行 + 强制刷新缓冲区(立即显示)</li>
+<li>当遇到 <code>\n</code> 并且输出目标是 <strong>终端</strong> 时，通常能看到换行。但如果输出目标是 <strong>文件</strong> 或 <strong>管道</strong>，则 \n 不会触发刷新，可能要等缓冲区满才写入</li>
+</ul>
+<br>
+<h3 id="--流提取运算符">&raquo;  (流提取运算符)</h3>
+<p>一般是配合 <code>cin</code>(character input)，从键盘读取信息：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> age;
+</span></span><span style="display:flex;"><span>    string name;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;请输入姓名和年龄: &#34;</span>;
+</span></span><span style="display:flex;"><span>    cin <span style="color:#f92672">&gt;&gt;</span> name <span style="color:#f92672">&gt;&gt;</span> age;   <span style="color:#75715e">// 变量之间空格或换行皆可
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;结果: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> name <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">&lt;&lt;</span> age <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>如果不想被空格隔开，直接读整行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>string name;
+</span></span><span style="display:flex;"><span>getline(cin, name);  <span style="color:#75715e">// 读到回车为止
+</span></span></span></code></pre></div><p>但是 <code>getline()</code> 函数前如果紧跟着另一个 cin 或 getline，会导致回车被作为变量读进去：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>cin <span style="color:#f92672">&gt;&gt;</span> age;  <span style="color:#75715e">// 输入 18↵
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cin.ignore(numeric_limits<span style="color:#f92672">&lt;</span>streamsize<span style="color:#f92672">&gt;::</span>max(), <span style="color:#e6db74">&#39;\n&#39;</span>);
+</span></span><span style="display:flex;"><span>getline(cin, name);  <span style="color:#75715e">// 省略上一行的话，这里直接读到空行！
+</span></span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="四函数定义与调用">四、函数定义与调用</h2>
+<br>
+<ul>
+<li><code>main()</code> 是入口方法，自动运行，不要去调用它，可以有参数，返回值<strong>一定是整数型</strong>的，只有返回 <strong>0</strong> 才是正常退出状态码（也可以不写）。</li>
+<li>函数可以有多个 <code>return</code>，但在单次运行时只能遇到一次 <code>return</code>，<code>return</code> 只能返回声明的返回值类型，所以即使有条件语句也不能返回多种数据类型。</li>
+</ul>
+<p>例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 计算差值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">diff</span>(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (a <span style="color:#f92672">&gt;</span> b) <span style="color:#66d9ef">return</span> a <span style="color:#f92672">-</span> b;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (a <span style="color:#f92672">&lt;=</span> b) <span style="color:#66d9ef">return</span> b <span style="color:#f92672">-</span> a;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> diff(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>) <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;   <span style="color:#75715e">// cpp-11 以后的版本中可以省略
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><ul>
+<li>格式：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-md" data-lang="md"><span style="display:flex;"><span>返回类型 函数名(参数列表) {
+</span></span><span style="display:flex;"><span>    // 函数体
+</span></span><span style="display:flex;"><span>    return 值;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="五条件结构">五、条件结构</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;positive&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (x <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;zero&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;negative&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>switch:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">switch</span> (<span style="color:#960050;background-color:#1e0010">#变量或表达式#</span>) {
+</span></span><span style="display:flex;"><span>    case1:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#条件#;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#条件#;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="六循环结构">六、循环结构</h2>
+<br>
+<h3 id="for-循环">for 循环</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>输出：0 1 2 3 4</p>
+<br>
+<h3 id="while-循环">while 循环</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span>;
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><br>
+<h3 id="do-while-循环">do-while 循环</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span>;
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>);
+</span></span></code></pre></div><p>（至少执行一次）</p>
+<hr>
+<br>
+<br>
+<h2 id="七地址指针引用和传递">七、地址，指针，引用和传递</h2>
+<br>
+<p><code>&amp;a</code>：取用变量 a 的地址</p>
+<p><code>int&amp; r = a</code>：引用 a (给 a 另一个名字 r)</p>
+<p><code>int* p = &amp;a</code>：声明 p 属于 a 的指针</p>
+<p><code>*p</code>：取用指针 p 对应变量的值</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>a;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> r <span style="color:#f92672">=</span> a;  <span style="color:#75715e">// r 引用 a
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">*</span>p;  <span style="color:#75715e">// 输出 12 位 16 进制整数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;  <span style="color:#75715e">//指针也可以直接修改对应变量的值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>r;  <span style="color:#75715e">//指针可以改变对象，但此时位置不变，因为 r 引用 a
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#f92672">&amp;</span>r <span style="color:#f92672">==</span> <span style="color:#f92672">&amp;</span>a) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;  <span style="color:#75715e">// return 1 （C++ 里输出 true 会变成 1）
+</span></span></span></code></pre></div><br>
+<p><code>const int&amp; r = a</code>：常量引用 (不可以通过 r 修改 a 值) const ref.</p>
+<p><code>int* const p = &amp;a</code>：指针常量 (可以修改 a 值，不能改指向别的变量) const pointer</p>
+<p><code>const int* p = &amp;a</code>：常量指针 (不可以修改 a 值，可以改指向别的变量) pointer of const</p>
+<p><code>const int* const p = &amp;x</code>：常量指针常量……  const pointer of const</p>
+<br>
+<ul>
+<li>指针传参：（修改但不复制 a， 传 a 的指针 p 给函数，可兼容 C）</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setZero</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p) { <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span> setZero(<span style="color:#f92672">&amp;</span>a); <span style="color:#75715e">// a 变成 0
+</span></span></span></code></pre></div><ul>
+<li>引用传参：(修改单不复制 a，传 a 的别名 b 给函数，不可兼容 C)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">SetZero</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> b) { b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; } 
+</span></span><span style="display:flex;"><span>SetZero(a);
+</span></span></code></pre></div><ul>
+<li>按值传参：（不修改 a 的值，只修改传给函数的复制体 b 的值）<strong>浅拷贝</strong></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setZero</span>(<span style="color:#66d9ef">int</span> b) { b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span>setZero(a);
+</span></span></code></pre></div><ul>
+<li>常量引用传参：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">SetZero</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> b) { <span style="color:#75715e">/* b = 0 在这里是无效的 */</span> } 
+</span></span><span style="display:flex;"><span>SetZero(a); <span style="color:#75715e">// 会报错
+</span></span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="八类与对象实例oop">八、类与对象(实例)——OOP</h2>
+<br>
+<ul>
+<li>如果 int 是类，42 就是一个实例</li>
+<li>对象都是指某种类的实例</li>
+<li>类中的函数——成员函数，就是“方法”</li>
+<li>实例化就是赋予成员变量以值</li>
+<li>类的成员变量一般是 private 的</li>
+<li>在每个类中，constructor 可以有多个，destructor 只有一个</li>
+<li>在一个完整的类结束后，<strong>最后一个大括号后要加分号</strong></li>
+<li>rule of three</li>
+</ul>
+<p>类的基础模型：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#960050;background-color:#1e0010">类</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">返回类型</span> <span style="color:#960050;background-color:#1e0010">成员函数</span>(<span style="color:#960050;background-color:#1e0010">函数参数</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">成员变量</span> <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">函数参数；</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">数据类型</span> <span style="color:#960050;background-color:#1e0010">成员变量；</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>对象 obj 要调用类 C 中的定义的成员函数 func(int, v)：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>C obj;
+</span></span><span style="display:flex;"><span>obj.func(<span style="color:#ae81ff">3</span>);
+</span></span></code></pre></div><p>对象要调用类的成员变量 variab:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>C obj;
+</span></span><span style="display:flex;"><span>obj.variab <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+</span></span></code></pre></div><br>
+<p>对象的声明：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>IntCell m1;            <span style="color:#75715e">// OK：默认构造
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>IntCell <span style="color:#a6e22e">m2</span>(<span style="color:#ae81ff">12</span>);        <span style="color:#75715e">// OK：有参构造
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>IntCell<span style="color:#f92672">*</span> m3;           <span style="color:#75715e">// OK：指针声明
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>Intcell <span style="color:#a6e22e">m4</span>();          <span style="color:#75715e">// 这其实是函数声明，不是对象！
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>m3<span style="color:#f92672">-&gt;</span>function();  <span style="color:#75715e">// 指针访问成员要用箭头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>m1.function();
+</span></span></code></pre></div><br>
+<h3 id="接口-实现-分离">接口-实现 分离</h3>
+<p>IntCell.h：（头文件，包括类声明、构造方法）</p>
+<ul>
+<li>头文件也可以用 <code>\#pragma once</code> 防重包含。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#ifndef INTCELL_H     </span><span style="color:#75715e">// 防止重复包含
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define INTCELL_H
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IntCell</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    IntCell(<span style="color:#66d9ef">int</span> initialValue <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">// 构造函数声明
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">read</span>() <span style="color:#66d9ef">const</span>;              <span style="color:#75715e">// 读取
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">write</span>(<span style="color:#66d9ef">int</span> x);             <span style="color:#75715e">// 写入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> storedValue;               <span style="color:#75715e">// 私有成员
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span></code></pre></div><p>IntCell.cpp：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;IntCell.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>IntCell<span style="color:#f92672">::</span>IntCell(<span style="color:#66d9ef">int</span> initialValue)   <span style="color:#75715e">// 类::成员函数(变量)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> storedValue(initialValue) { }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> IntCell<span style="color:#f92672">::</span>read() <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> storedValue;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> IntCell<span style="color:#f92672">::</span>write(<span style="color:#66d9ef">int</span> x) {
+</span></span><span style="display:flex;"><span>    storedValue <span style="color:#f92672">=</span> x;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><br>
+<h3 id="this-指针">this 指针</h3>
+<ul>
+<li>成员函数和普通裸函数的区别就是：它有一个隐式的 this 参数(指针)。</li>
+<li>在类被实例化的过程中，每一个对象(实例)调用类的成员函数的时候，编译器会把对象的地址传进类中。this 是一个指针，<strong>指向当前调用这个函数的对象的位置</strong>。</li>
+<li><code>this-&gt;value = v</code>：把调用函数的对象里的 value 成员变量的值改成 v。</li>
+<li>-&gt; 是“通过指针访问成员”的运算符</li>
+<li><code>this-&gt;value</code> 就<strong>等价</strong>于 <code>(*this).value</code>。可以理解为 “this 指向的位置对应的对象的 value 变量的值”的意思</li>
+<li>value 本来就是成员变量，你可以直接写 value = v。但如果<strong>函数参数和成员变量同名</strong>：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Tick</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> value;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> setValue(<span style="color:#66d9ef">int</span> value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>value <span style="color:#f92672">=</span> value;  <span style="color:#75715e">// 左边是成员变量，右边是参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>Tick b1, b2;  <span style="color:#75715e">// 将 Tick 实例化，产生对象
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>b1.setValue <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>b2.setValue <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;
+</span></span><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> b1.value <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">&lt;&lt;</span> b2.value; <span style="color:#75715e">// 输出 10 20
+</span></span></span></code></pre></div><br>
+<h3 id="rule-of-three">Rule of Three</h3>
+<p>Copy Constructor(拷贝构造函数)、Copy Assignment Operator(拷贝赋值运算符)、Destructor(析构函数)必须同时在一个自定义类里被定义。</p>
+<h4 id="copy-constructor">Copy Constructor</h4>
+<ul>
+<li>用一个对象初始化另一个全新对象时调用的方法</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyArray</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> size;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    MyArray(<span style="color:#66d9ef">int</span> s) <span style="color:#f92672">:</span> size(s) {data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size];}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ✅ 拷贝构造函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    MyArray(<span style="color:#66d9ef">const</span> MyArray<span style="color:#f92672">&amp;</span> other) {
+</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">=</span> other.size;
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size];
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> size; i<span style="color:#f92672">++</span>) data[i] <span style="color:#f92672">=</span> other.data[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>MyArray <span style="color:#a6e22e">a1</span>(<span style="color:#ae81ff">5</span>);
+</span></span><span style="display:flex;"><span>MyArray a2 <span style="color:#f92672">=</span> a1; <span style="color:#75715e">// 调用运行
+</span></span></span></code></pre></div><p>上述 Copy Constructor 深拷贝了 MyArray 的一个实例 other，确保新数组的存储位置与 other 不同，防止 Destructor 在清理内存时全部删除，导致程序崩溃。</p>
+<h4 id="copy-assignment-operator">Copy Assignment Operator</h4>
+<ul>
+<li>对已存在的对象赋值时调用</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyArray</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> size;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    MyArray(<span style="color:#66d9ef">int</span> s) <span style="color:#f92672">:</span> size(s) { data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size]; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ✅ 拷贝赋值运算符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    MyArray<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> MyArray<span style="color:#f92672">&amp;</span> other) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">&amp;</span>other) {            <span style="color:#75715e">// 防止自赋值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">delete</span>[] data;               <span style="color:#75715e">// 先释放旧资源
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            size <span style="color:#f92672">=</span> other.size;
+</span></span><span style="display:flex;"><span>            data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size];
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> size; i<span style="color:#f92672">++</span>) data[i] <span style="color:#f92672">=</span> other.data[i];
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;  <span style="color:#75715e">// 允许链式赋值 a = b = c;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>MyArray <span style="color:#a6e22e">a1</span>(<span style="color:#ae81ff">5</span>);
+</span></span><span style="display:flex;"><span>MyArray <span style="color:#a6e22e">a2</span>(<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>a2 <span style="color:#f92672">=</span> a1; <span style="color:#75715e">// 调用运行
+</span></span></span></code></pre></div><p>保证赋值时安全释放旧资源，再分配并复制新资源。</p>
+<h4 id="destructor">Destructor</h4>
+<ul>
+<li>需要释放不必要内存时使用</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyArray</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> size;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    MyArray(<span style="color:#66d9ef">int</span> s) <span style="color:#f92672">:</span> size(s) { data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size]; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ✅ 析构函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">~</span>MyArray() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">delete</span>[] data;   <span style="color:#75715e">// 释放内存
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 对象遇到这一段自动销毁
+</span></span></span></code></pre></div><ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3200/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3200</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

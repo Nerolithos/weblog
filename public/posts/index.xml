@@ -6,10 +6,129 @@
     <description>Recent content in Posts on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 31 Aug 2025 11:29:34 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 22 Jan 2026 16:30:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title># CSC3001 LEC1 离散数学入门</title>
+      <title>🎨 DDA3003 Introduction to D3</title>
+      <link>http://localhost:1313/posts/3003.1/</link>
+      <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3003.1/</guid>
+      <description>CUHKSZ 选修课程 DDA3003 Visualization，介绍 D3.js ——— 一种 HTML 可视化工具</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
+      <link>http://localhost:1313/posts/3060.2/</link>
+      <pubDate>Tue, 20 Jan 2026 10:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.2/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Introduction to Computer System</title>
+      <link>http://localhost:1313/posts/3060.1/</link>
+      <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.1/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 Final Revision C&#43;&#43; 期末样卷</title>
+      <link>http://localhost:1313/posts/3200.f3/</link>
+      <pubDate>Thu, 11 Dec 2025 07:07:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.f3/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 是新课，我们用 3002 真卷作复习参考</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)</title>
+      <link>http://localhost:1313/posts/3200.f2/</link>
+      <pubDate>Thu, 27 Nov 2025 13:33:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.f2/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</title>
+      <link>http://localhost:1313/posts/3200.f1/</link>
+      <pubDate>Fri, 21 Nov 2025 13:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.f1/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC17-19 function mapping</title>
+      <link>http://localhost:1313/posts/3001.8/</link>
+      <pubDate>Mon, 17 Nov 2025 12:19:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.8/</guid>
+      <description>CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</title>
+      <link>http://localhost:1313/posts/3001.7/</link>
+      <pubDate>Thu, 13 Nov 2025 09:24:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.7/</guid>
+      <description>CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理</description>
+    </item>
+    <item>
+      <title>🧮 PHY1001 LEC10-15 旋转运动学</title>
+      <link>http://localhost:1313/posts/phy2/</link>
+      <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/phy2/</guid>
+      <description>CUHKSZ 大一/大二课程 PHY1001 绕轴运动 important takeaway</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC14-16 Graph</title>
+      <link>http://localhost:1313/posts/3001.6/</link>
+      <pubDate>Tue, 28 Oct 2025 17:30:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.6/</guid>
+      <description>CUHKSZ CSC3001 图论</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC11-13 GCD and Mod</title>
+      <link>http://localhost:1313/posts/3001.5/</link>
+      <pubDate>Tue, 14 Oct 2025 12:30:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.5/</guid>
+      <description>CUHKSZ CSC3001 最大公因数问题与模问题</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC8-10 递归</title>
+      <link>http://localhost:1313/posts/3001.4/</link>
+      <pubDate>Sat, 11 Oct 2025 12:16:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.4/</guid>
+      <description>CUHKSZ CSC3001 从数学证明法到递归思想，以及解递归式</description>
+    </item>
+    <item>
+      <title>🧮 PHY1001 LEC1-5 基础运动学与牛顿力学</title>
+      <link>http://localhost:1313/posts/phy1/</link>
+      <pubDate>Tue, 16 Sep 2025 11:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/phy1/</guid>
+      <description>CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 LEC3-5 C&#43;&#43;进阶</title>
+      <link>http://localhost:1313/posts/3200.2/</link>
+      <pubDate>Mon, 15 Sep 2025 18:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.2/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 关于 C/C++ 中数组、指针和流操作</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC6-7 数学归纳法</title>
+      <link>http://localhost:1313/posts/3001.3/</link>
+      <pubDate>Thu, 11 Sep 2025 11:31:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.3/</guid>
+      <description>CUHKSZ CSC3001 更多数学证明法</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</title>
+      <link>http://localhost:1313/posts/3001.2/</link>
+      <pubDate>Tue, 02 Sep 2025 13:31:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3001.2/</guid>
+      <description>CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 LEC1-2 C&#43;&#43;入门</title>
+      <link>http://localhost:1313/posts/3200.1/</link>
+      <pubDate>Mon, 01 Sep 2025 18:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3200.1/</guid>
+      <description>CUHKSZ 大二课程 CSC3200 关于 C++ 基础语法和 OOP 的介绍</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC1-2 离散数学入门</title>
       <link>http://localhost:1313/posts/3001.1/</link>
       <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3001.1/</guid>
@@ -30,14 +149,14 @@
       <description>SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？</description>
     </item>
     <item>
-      <title># Brainstorming</title>
+      <title>🧠 Brainstorming</title>
       <link>http://localhost:1313/posts/brainstorm/</link>
       <pubDate>Thu, 10 Apr 2025 17:15:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/brainstorm/</guid>
       <description>从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…</description>
     </item>
     <item>
-      <title># 龙大生存指南 CUHKSZ Survival Handbook</title>
+      <title>🐉🧱 龙大生存指南 CUHKSZ Survival Handbook</title>
       <link>http://localhost:1313/posts/lgu/</link>
       <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/lgu/</guid>
@@ -93,7 +212,7 @@
       <description>CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践</description>
     </item>
     <item>
-      <title># 咖啡与OOP</title>
+      <title>☕️ 咖啡与OOP</title>
       <link>http://localhost:1313/posts/oop/</link>
       <pubDate>Thu, 12 Sep 2024 11:28:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/oop/</guid>
@@ -118,7 +237,7 @@
       <link>http://localhost:1313/posts/web/</link>
       <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/web/</guid>
-      <description>&lt;p&gt;240822，有几位同学在龙大的选课培训直播间提出&lt;a href=&#34;https://postimg.cc/7bqTcdMd&#34;&gt;几个网络问题&lt;/a&gt;。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。&lt;/p&gt;</description>
+      <description>&lt;p&gt;240822，有几位同学在龙大的选课培训直播间提出几个网络问题 (见下图)。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。&lt;/p&gt;</description>
     </item>
     <item>
       <title># 龙大邮箱抓取尝试</title>

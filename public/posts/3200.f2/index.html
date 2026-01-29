@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性) | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3200.f2/">
+    <meta property="og:url" content="http://localhost:1313/posts/3200.f2/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-27T13:33:34+08:00">
+    <meta property="article:modified_time" content="2025-11-27T13:33:34+08:00">
+    <meta property="article:tag" content="CSC3200">
+
+  <meta itemprop="name" content="💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构">
+  <meta itemprop="datePublished" content="2025-11-27T13:33:34+08:00">
+  <meta itemprop="dateModified" content="2025-11-27T13:33:34+08:00">
+  <meta itemprop="wordCount" content="13783">
+  <meta itemprop="keywords" content="CSC3200">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/RBT.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-11-27T13:33:34+08:00">November 27, 2025</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="c-数据结构非线性-树堆图">C++ 数据结构(非线性) ：树、堆、图</h1>
+</br>
+<h1 id="六树-tree">六、树 Tree</h1>
+</br>
+<h2 id="树的抽象定义">树的抽象定义</h2>
+<p>一棵树是若干“节点”的集合，满足：</p>
+<ol>
+<li>可以是空的（没有任何节点）。</li>
+<li>如果非空：有一个特殊的节点 r (root, <strong>根</strong>)；根下面以<strong>有向边</strong> (directed-edge) 连着 0 个或多个<strong>子树</strong> T1, T2, …, Tk，每个<strong>子树本身也是树</strong>。</li>
+<li>树 = “一个根 + 若干棵子树”，而每棵子树又是同样的<strong>递归结构</strong>。</li>
+</ol>
+<p>树的基本性质：</p>
+<ol>
+<li>一个有 N 个节点的树一定有 N-1 条边</li>
+<li>树中的节点不是根就是叶，不可能同时是两者。</li>
+</ol>
+<p>树相关的术语：</p>
+<ul>
+<li>父节点 parent：A 是 B 的 parent，当且仅当有一条边 <strong>A → B</strong>。</li>
+<li>子节点 child：相同情况下，B 是 A 的 child。</li>
+<li>兄弟 sibling：同一个父节点的不同子节点是 sibling。</li>
+<li>叶子 leaf：没有任何子节点的节点 (整个结构最底层的点)。</li>
+<li>路径 path：节点 n1 → n2 → … → nk，一连串<strong>从父到子</strong>的边。路径长度是这条路径上<strong>边的数量</strong>而<strong>不是节点数</strong>。</li>
+<li>深度 depth：某个节点到根的路径长度。根的深度是 0。</li>
+<li>高度 height：某个节点的高度 = 从它出发<strong>顺着边往下</strong>能到达的最远叶子的路径长度。一棵树的高度 = 根节点的高度。</li>
+<li>祖先 / 后代 ancestor / descendant：A 到 B 有路径，则 A 是 B 的祖先，B 是 A 的后代。如果 A ≠ B，叫做“proper ancestor / descendant”（真祖先/真后代）。</li>
+</ul>
+<p>特殊的，<strong>二叉树 (Binary Tree)</strong> 指的是所有<strong>根最多有两个子树 T<sub>L</sub>、T<sub>R</sub>的树</strong>。</p>
+</br>
+</br>
+<h2 id="树的基础实现">树的基础实现</h2>
+<p>一个通用树节点的结构如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">TreeNode</span> {
+</span></span><span style="display:flex;"><span>    Object element;           <span style="color:#75715e">// 存的东西不限制数据类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    TreeNode <span style="color:#f92672">*</span>firstChild;     <span style="color:#75715e">// 指向“第一个 (最左边) 的孩子”
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    TreeNode <span style="color:#f92672">*</span>nextSibling;    <span style="color:#75715e">// 指向“下一个 (右侧) 兄弟”
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><ul>
+<li>每个节点有不定个数的孩子（2 个、5 个、100 个都可能），用 left/right 两个指针只能实现二叉树；但<strong>用 <code>std::vector&lt;TreeNode*&gt; children</code> 也可以</strong>代替</li>
+<li>firstChild / nextSibling 的好处是：任意树都能用固定两个指针表示；遍历“该节点的所有子节点”时，从 firstChild 开始，通过 nextSibling 一直向右走即可；
+例如“打印一个节点所有孩子”：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printChildren</span>(TreeNode <span style="color:#f92672">*</span>p) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (TreeNode <span style="color:#f92672">*</span>child <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>firstChild; child <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nullptr</span>; child <span style="color:#f92672">=</span> child<span style="color:#f92672">-&gt;</span>nextSibling) {
+</span></span><span style="display:flex;"><span>        cout <span style="color:#f92672">&lt;&lt;</span> child<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>以下是二叉树的节点结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">tree_node</span> {
+</span></span><span style="display:flex;"><span>    Object element;
+</span></span><span style="display:flex;"><span>    tree_node <span style="color:#f92672">*</span>left;
+</span></span><span style="display:flex;"><span>    tree_node <span style="color:#f92672">*</span>right;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div></br>
+</br>
+<h2 id="树与递归">树与递归</h2>
+<p>回忆计算<strong>阶乘</strong>的递归函数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">fact</span>(<span style="color:#66d9ef">int</span> n) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {        <span style="color:#75715e">// 基本情况（base case）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {             <span style="color:#75715e">// 递归拆分
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> n <span style="color:#f92672">*</span> fact(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>同样的套路可以直接套到树上：</p>
+<ul>
+<li>基本情况：树是空的（指针是 NULL / nullptr）</li>
+<li>否则：对“子树”递归自己
+<strong>典型模式</strong>：</li>
+</ul>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">if (树是空的) {
+    // 直接返回一个简单结果
+} else {
+    // 把问题拆成：左子树 / 右子树 / 所有子树 ...
+    // 对每棵子树递归调用
+    // 最后把结果组合起来
+}
+</code></pre><p>后面所有“遍历、查找最大值、统计叶子数、高度”等函数，其实都是这个范式的实例。</p>
+</br>
+</br>
+<h2 id="树的遍历顺序">树的遍历顺序</h2>
+<p>“遍历 traversal”就是“按照某种顺序访问每个节点一次”。</p>
+<h3 id="前序-preorder-逻辑"><strong>前序 (preorder)</strong> 逻辑：</h3>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">Algorithm preOrder(v)
+    visit(v)
+    for each child w of v
+        preOrder(w)
+</code></pre><p><strong>先根</strong>然后从<strong>左到右</strong>对每个子节点递归做同样的事。
+对于二叉树：根、左、右</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">preorder</span>(tree_node <span style="color:#f92672">*</span>p) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (p <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        cout <span style="color:#f92672">&lt;&lt;</span> p<span style="color:#f92672">-&gt;</span>data <span style="color:#f92672">&lt;&lt;</span> endl;     <span style="color:#75715e">// 1. 先访问根
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        preorder(p<span style="color:#f92672">-&gt;</span>left);     <span style="color:#75715e">// 2. 再遍历左子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        preorder(p<span style="color:#f92672">-&gt;</span>right);    <span style="color:#75715e">// 3. 最后遍历右子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>你可以这么理解：打印带目录结构的大纲，先打标题再打各子章节：1→1.1→1.1.1→1.1.2→1.2→…</p>
+</br>
+<h3 id="后序-postorder-逻辑"><strong>后序 (postorder)</strong> 逻辑：</h3>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">Algorithm postOrder(v)
+    for each child w of v
+        postOrder(w)
+    visit(v)
+</code></pre><p><strong>先左到右子树</strong>再处理根，向右的兄弟继续。
+对于二叉树：左、右、根</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">postorder</span>(tree_node <span style="color:#f92672">*</span>p) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (p <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        postorder(p<span style="color:#f92672">-&gt;</span>left);    <span style="color:#75715e">// 1. 左子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        postorder(p<span style="color:#f92672">-&gt;</span>right);   <span style="color:#75715e">// 2. 右子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        cout <span style="color:#f92672">&lt;&lt;</span> p<span style="color:#f92672">-&gt;</span>data <span style="color:#f92672">&lt;&lt;</span> endl;     <span style="color:#75715e">// 3. 根
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>你可以这么理解：计算一个文件夹占用空间，先把所有子目录和文件的空间加完，最后追溯回根目录记一个总数。
+重要应用：按指针删除整棵树。</p>
+</br>
+<h3 id="中序-inorder-逻辑"><strong>中序 (inorder)</strong> 逻辑：</h3>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">Algorithm inOrder(v)
+	if(v == NULL) return
+	inOrder (v.left)
+	visit(v)
+	inOrder (v.right)
+</code></pre><p>先左子树再处理根，最后处理右边子树。
+对于二叉树：左、根、右</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">inorder</span>(tree_node <span style="color:#f92672">*</span>p) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (p <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        inorder(p<span style="color:#f92672">-&gt;</span>left);      <span style="color:#75715e">// 1. 左子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        cout <span style="color:#f92672">&lt;&lt;</span> p<span style="color:#f92672">-&gt;</span>data <span style="color:#f92672">&lt;&lt;</span> endl;     <span style="color:#75715e">// 2. 根
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        inorder(p<span style="color:#f92672">-&gt;</span>right);     <span style="color:#75715e">// 3. 右子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>重要应用：如果这棵树是“二叉搜索树” (BST，后面会讲)，中序遍历输出的序列就是“从小到大排序好的元素”。</p>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="七二叉树-binary-tree">七、二叉树 Binary Tree</h1>
+</br>
+<p>上文提到过，二叉树是所有根节点最多有两个子树的树。</p>
+<h2 id="高度与高度-节点定律">高度与高度-节点定律</h2>
+<p>讲义定义：</p>
+<ul>
+<li>空树高度 = -1。</li>
+<li>非空树 T：根记为 r，左子树 T<sub>L</sub>，右子树 T<sub>R</sub>；高度 height(T) = 1 + max(height(T<sub>L</sub>), height(T<sub>R</sub>))，也就是最长路径长度。求高度的递归函数如下：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">height</span>(tree_node <span style="color:#f92672">*</span>p) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (p <span style="color:#f92672">==</span> NULL) <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// 空树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> hl <span style="color:#f92672">=</span> height(p<span style="color:#f92672">-&gt;</span>left);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> hr <span style="color:#f92672">=</span> height(p<span style="color:#f92672">-&gt;</span>right);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> std<span style="color:#f92672">::</span>max(hl, hr);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></br>
+<h3 id="最大最小高度的结论">最大/最小高度的结论</h3>
+<ol>
+<li><strong>高度为 h 的二叉树，最多能有 $2^{(h+1)} - 1$ 个节点</strong>。证明：第 0 层最多 1 个、第 1 层最多 2 个……第 h 层最多 $2^h$ 个，所有层加起来即可。</li>
+<li><strong>有 N 个节点的二叉树，它的“最小可能高度”约等于 $⌈log_2(N+1) - 1⌉$</strong>。证明：把上一条“最大节点”公式倒过来解 h。当每一层都填满，高度最小 (叫“ 完全二叉树”)；缺一点点也不会改变高度，所以要取上整。</li>
+<li>有 N 个节点的二叉树，它的“最大可能高度”显然等于 $N-1$。</li>
+<li>有 N 个节点的二叉树的<strong>数量符合卡塔兰数</strong>： C<sub>N</sub> = ${\frac{1}{N+1}}{2N\choose N}$</li>
+</ol>
+<p>满二叉树（full binary tree）：每个节点要么 0 个孩子，要么 2 个孩子；不存在只有一个孩子的节点。</p>
+<p>完全二叉树（complete binary tree）：除最后一层外，每一层都是满的；最后一层的节点都连续地靠左排列。
+同时“满且完全”的情况：比如高度为 2、节点数为 7 的完美小树。</p>
+</br>
+</br>
+<h2 id="二叉搜索树-bst">二叉搜索树 BST</h2>
+<p>对每个节点 X：</p>
+<ol>
+<li>左子树里所有值 &lt; X.element；</li>
+<li>右子树里所有值 &gt; X.element；</li>
+<li>左右子树本身也都是 BST。</li>
+</ol>
+<p>所以<strong>二叉搜索树的中序输出</strong>恰好是<strong>从小到大</strong>排列的所有元素</p>
+<p>这就相当于可以把数组里的二分法转换到树形结构上：查找、插入、删除平均高度只要 O(log N)。</p>
+</br>
+<h3 id="二叉节点类">二叉节点类</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BinaryNode</span> {
+</span></span><span style="display:flex;"><span>    T element;
+</span></span><span style="display:flex;"><span>    BinaryNode <span style="color:#f92672">*</span>left;   <span style="color:#75715e">// 左子节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    BinaryNode <span style="color:#f92672">*</span>right;  <span style="color:#75715e">// 右子节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    BinaryNode(<span style="color:#66d9ef">const</span> T <span style="color:#f92672">&amp;</span> theElement, BinaryNode <span style="color:#f92672">*</span>lt,
+</span></span><span style="display:flex;"><span>               BinaryNode <span style="color:#f92672">*</span>rt)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">:</span> element(theElement), left(lt), right(rt) { }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>实例化时像 <code>new BinaryNode&lt;int&gt;(5, nullptr, nullptr)</code> 这样。</p>
+</br>
+<h3 id="查找-findx-t-函数">查找 find(x, t) 函数</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> find(<span style="color:#66d9ef">const</span> T <span style="color:#f92672">&amp;</span>x, BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>t) <span style="color:#66d9ef">const</span> {   <span style="color:#75715e">// t 是根节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (t <span style="color:#f92672">==</span> NULL) <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (x <span style="color:#f92672">&lt;</span> t<span style="color:#f92672">-&gt;</span>element) <span style="color:#66d9ef">return</span> find(x, t<span style="color:#f92672">-&gt;</span>left); 
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 目标小于当前节点 -&gt; 去左子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (t<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;</span> x) <span style="color:#66d9ef">return</span> find(x, t<span style="color:#f92672">-&gt;</span>right);      
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 目标大于当前节点 -&gt; 去右子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">return</span> t;     <span style="color:#75715e">// 否则就是相等 -&gt; 找到了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>这就是“递归版的二分法查找”：每一步把问题规模减半（只在左子树或右子树继续找）。</p>
+</br>
+<h3 id="找最小最大项函数">找最小、最大项函数</h3>
+<p>最小值 = 最左下的节点；最大值 = 最右下的节点。是否递归都能做。
+递归思路：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> findMin(BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>t) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (t <span style="color:#f92672">==</span> NULL) <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (t<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> NULL) <span style="color:#66d9ef">return</span> t;  <span style="color:#75715e">// 没有左孩子 -&gt; 自己就是最小
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">findMin</span>(t<span style="color:#f92672">-&gt;</span>left);        <span style="color:#75715e">// 否则一直往左找
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>非递归思路 (while loop)：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> findMax(BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>t) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (t <span style="color:#f92672">!=</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (t<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL)
+</span></span><span style="display:flex;"><span>            t <span style="color:#f92672">=</span> t<span style="color:#f92672">-&gt;</span>right;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> t;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></br>
+<h3 id="插入-insertx-t-函数">插入 insert(x, t) 函数</h3>
+<ol>
+<li>从根 t 开始，像 find 一样往下走，找不到就可以创造叶子；</li>
+<li>如果遇到相同的值，什么也不做 (不允许重复)；</li>
+<li>如果走到空指针位置（NULL），说明这里应该是新节点的位置，就 new 一个节点挂上去。
+注意 <code>BinaryNode&lt;T&gt;* &amp; t</code> 是“指针的引用”，允许在函数里修改指针本身</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> insert(<span style="color:#66d9ef">const</span> T <span style="color:#f92672">&amp;</span>x, BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> <span style="color:#f92672">&amp;</span>t) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (t <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        t <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(x, NULL, NULL);  <span style="color:#75715e">// 新建根/子节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (x <span style="color:#f92672">&lt;</span> t<span style="color:#f92672">-&gt;</span>element) insert(x, t<span style="color:#f92672">-&gt;</span>left);  <span style="color:#75715e">// 插入到左子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (t<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;</span> x) insert(x, t<span style="color:#f92672">-&gt;</span>right);  <span style="color:#75715e">// 插入到右子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">else</span> ; <span style="color:#75715e">// 重复值：不做任何事
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><ul>
+<li>每层递归都在“缩小范围”：只往一边走；当 t 为 NULL 时，把 t 改成一个新节点，相当于“在这里长出了一棵子树”。</li>
+</ul>
+</br>
+<h3 id="删除-removex-t-函数的三种情况">删除 remove(x, t) 函数的三种情况</h3>
+<p>删除的核心难点就是“<strong>保持 BST 性质不变</strong>”，分三类：</p>
+<ol>
+<li>
+<p>删除叶子节点（无孩子）：直接把父节点指向它的指针设成 NULL，然后删掉这个节点。</p>
+</li>
+<li>
+<p>删除只有一个孩子的节点：让父节点直接指向它的孩子，绕过这个要删的节点，然后 delete 它。(<strong>类似于链表的删除</strong>)</p>
+</li>
+<li>
+<p>删除有两个孩子的节点：<strong>随便删会导致左右子树丢失</strong></p>
+<p>标准做法：找到“右子树里最小的节点”，即中序遍历的下一项；用这个值覆盖当前节点的 element 参数；然后在“右子树”里把那个 successor 节点删除 (它最多只有左子节点)。</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> remove(<span style="color:#66d9ef">const</span> T <span style="color:#f92672">&amp;</span>x, BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> <span style="color:#f92672">&amp;</span>t) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (t <span style="color:#f92672">==</span> NULL) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&lt;</span> t<span style="color:#f92672">-&gt;</span>element) remove(x, t<span style="color:#f92672">-&gt;</span>left);  <span style="color:#75715e">// 去左子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (t<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;</span> x) remove(x, t<span style="color:#f92672">-&gt;</span>right);  <span style="color:#75715e">// 去右子树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (t<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL <span style="color:#f92672">&amp;&amp;</span> t<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 情况3：有两个孩子
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        t<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">=</span> findMin(t<span style="color:#f92672">-&gt;</span>right)<span style="color:#f92672">-&gt;</span>element;  <span style="color:#75715e">// 用中序遍历后继值替换
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        remove(t<span style="color:#f92672">-&gt;</span>element, t<span style="color:#f92672">-&gt;</span>right);  <span style="color:#75715e">// 删掉右子树里的那个后继节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> {  <span style="color:#75715e">// 情况1/2：最多只有一个孩子
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>oldNode <span style="color:#f92672">=</span> t;
+</span></span><span style="display:flex;"><span>        t <span style="color:#f92672">=</span> (t<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL) <span style="color:#f92672">?</span> t<span style="color:#f92672">-&gt;</span>left : t<span style="color:#f92672">-&gt;</span>right;  <span style="color:#75715e">// t 指向唯一孩子或空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">delete</span> oldNode;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>情况 3 有另一种处理，也就是 “找左子树里最大的节点”，即中序遍历的上一项。因为左树 max、根、右树 min 在中序遍历时是连续项，用两个相邻替换根的位置都是可以的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (t<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL <span style="color:#f92672">&amp;&amp;</span> t<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>    t<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">=</span> findMax(t<span style="color:#f92672">-&gt;</span>left)<span style="color:#f92672">-&gt;</span>element; 
+</span></span><span style="display:flex;"><span>    remove(t<span style="color:#f92672">-&gt;</span>element, t<span style="color:#f92672">-&gt;</span>left);
+</span></span></code></pre></div></br>
+<h3 id="bst-的效率与退化">BST 的效率与退化</h3>
+<ul>
+<li>
+<p>BST 的效率和插入时的<strong>无序性</strong>成正比。</p>
+</li>
+<li>
+<p>平均情况下，树的高度 ≈ ⌈log2(n+1)-1⌉：查找/插入/删除平均 O(log N)。</p>
+</li>
+<li>
+<p>但是，如果完全按“升序”插入：每次新节点都会变成“上一节点的右孩子”，<strong>整棵树退化成单链</strong>，平均复杂度 O(N)，<strong>类似于链表</strong>。</p>
+<p>这就是为什么需要<strong>平衡树 (AVL、红黑树)</strong> 的原因。</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="treesort用树进行二分法排序">TreeSort——用树进行二分法排序</h2>
+<p>思路：</p>
+<ol>
+<li>先把数组里的 n 个元素逐个插入到 BST 中；</li>
+<li>再对 BST 做一次中序遍历（inorder），按访问顺序把元素写回数组。</li>
+</ol>
+<p>复杂度：插入 n 个元素平均每次 O(log N)，共 O(N log N)。最坏情况下，如果<strong>数组本身就有序</strong>会<strong>退化</strong>成 O(N^2)。中序遍历 O(N)。</p>
+<p>所以 TreeSort平均 <strong>O(N log N)</strong>，和快排同一个量级；但是实现复杂，实际工程用得少。</p>
+<p>保存一个 BST 要比保存一个数组占据的<strong>内存大</strong>很多。所以你可以保存数组，并在代码中完成<strong>数组和 BST 的相互转换</strong>。BST 转数组很简单，直接中序遍历即可；而用升序数组生成 BST 的方法如下 (<strong>二分法</strong>)：</p>
+<ol>
+<li>单向指针</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> createBST(Node <span style="color:#f92672">*&amp;</span>p, <span style="color:#66d9ef">int</span> n, T <span style="color:#f92672">*</span>data) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>		p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryNode<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">0</span>, NULL, NULL);
+</span></span><span style="display:flex;"><span>		createBST(p<span style="color:#f92672">-&gt;</span>left, n <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>, data);
+</span></span><span style="display:flex;"><span>		p<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">=</span> data[idx<span style="color:#f92672">++</span>];
+</span></span><span style="display:flex;"><span>		createBST(p<span style="color:#f92672">-&gt;</span>right, (n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>, data);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>data <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">7</span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>ptr;
+</span></span><span style="display:flex;"><span>createBST(ptr, <span style="color:#ae81ff">7</span>, data);
+</span></span></code></pre></div><ol start="2">
+<li>头尾双向指针</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> BSTer(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">*</span> arr, <span style="color:#66d9ef">int</span> init, <span style="color:#66d9ef">int</span> end) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (init <span style="color:#f92672">&gt;</span> end) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> (init <span style="color:#f92672">+</span> end) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(arr[mid]);
+</span></span><span style="display:flex;"><span>    root<span style="color:#f92672">-&gt;</span>left  <span style="color:#f92672">=</span> BSTer(arr, init, mid <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    root<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> BSTer(arr, mid <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, end);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> root;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></br>
+<hr>
+</br>
+</br>
+<h1 id="八平衡二叉搜索树-avl">八、平衡二叉搜索树 AVL</h1>
+</br>
+<p>为了防止树退化的情况出现，需要给二叉树定义平衡限制：对于任意节点，其<strong>左右子树高度差不超过一</strong>：|height(left) - height(right)| ≤ 1。这样除了便利以外的操作都趋近于 <strong>O(log<sub>2</sub>n)</strong></p>
+<p>可是在插入/删除操作后，<strong>平衡可能被破坏</strong>：插入/删除节点所在路径可能过长/过短。平衡树经常需要平衡判断，所以成员应引入高度：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AvlNode</span> {
+</span></span><span style="display:flex;"><span>    T element;
+</span></span><span style="display:flex;"><span>    AvlNode <span style="color:#f92672">*</span>left;
+</span></span><span style="display:flex;"><span>    AvlNode <span style="color:#f92672">*</span>right;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> height; 
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ......
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">height</span>(<span style="color:#66d9ef">const</span> AvlNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>t) <span style="color:#66d9ef">return</span> t <span style="color:#f92672">==</span> NULL <span style="color:#f92672">?</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> t<span style="color:#f92672">-&gt;</span>height;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// t 不是空指针就返回“height”成员参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div></br>
+<h2 id="通过左右旋转-保持平衡">通过左右<strong>旋转</strong> “保持平衡”</h2>
+<p>如果修改<strong>最深的</strong>出现不平衡的节点，这个节点更高处的不平衡也会解决。在最深不平衡点处，可以通过旋转父子节点改变树高。</p>
+<h3 id="左右旋">左右旋</h3>
+<p><strong>我们把父节点与右子节点交换位置叫做左旋；与左子节点交换位置叫做右旋：</strong>
+<strong>左旋 L</strong> leftRotate(root, root-&gt;right)：父节点<strong>拿走右子节点的左子树</strong> (作为自己的右子树) 并<strong>成为右子节点的左子树</strong>。这降低父节点的左树、升高子节点的右树。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>leftRotate(AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>root) {
+</span></span><span style="display:flex;"><span>	AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>son <span style="color:#f92672">=</span> root<span style="color:#f92672">-&gt;</span>right;
+</span></span><span style="display:flex;"><span>	AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>T <span style="color:#f92672">=</span> son<span style="color:#f92672">-&gt;</span>left;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	son<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> root;
+</span></span><span style="display:flex;"><span>	root<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> T;   <span style="color:#75715e">// 顺序不能反！否则会断
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">// 更新高度参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	root<span style="color:#f92672">-&gt;</span>height <span style="color:#f92672">=</span> height(root);
+</span></span><span style="display:flex;"><span>	son<span style="color:#f92672">-&gt;</span>height <span style="color:#f92672">=</span> height(son); 
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> son;    <span style="color:#75715e">// 返回新的根
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>示意图：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">     root                    son
+    /    \                  /   \
+   A     son        -&gt;    root   Target
+        /   \            /    \
+       T    Target      A      T
+</code></pre><p>这样，右子节点的右子树就被抬高了。</p>
+</br>
+<p><strong>右旋 R</strong> rightRotate(root, root-&gt;left)：父节点<strong>拿走左子节点的右子树</strong> (作为自己的左子树) 并<strong>成为左子节点的右子树</strong>。这降低父节点的右树、升高子节点的左树。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>rightRotate(AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>root) {
+</span></span><span style="display:flex;"><span>	AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>son <span style="color:#f92672">=</span> root<span style="color:#f92672">-&gt;</span>left;
+</span></span><span style="display:flex;"><span>	AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>T <span style="color:#f92672">=</span> son<span style="color:#f92672">-&gt;</span>right; 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	son<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> root;
+</span></span><span style="display:flex;"><span>	root<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> T; 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	root<span style="color:#f92672">-&gt;</span>height <span style="color:#f92672">=</span> height(root);
+</span></span><span style="display:flex;"><span>	son<span style="color:#f92672">-&gt;</span>height <span style="color:#f92672">=</span> height(son);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> son;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>示意图：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">        root                   son
+       /    \                 /   \
+     son     A     -&gt;     Target   root
+    /   \                         /    \
+Target   T                       T      A
+</code></pre><p>这样，左子节点的左子树就被抬高了。</p>
+</br>
+<h3 id="四种情况与-顺反结构">四种情况与 “顺反结构”</h3>
+<p>我们以 “某个子树过长” 为例，一共有四种不平衡可能：</p>
+<ol>
+<li>左子节点的左子树过长：LL 右单旋</li>
+<li>右子节点的右子树过长：RR 左单旋</li>
+<li>左子节点的右子树过长：LR 左右双旋</li>
+<li>右子节点的左子树过长：RL 右左双旋</li>
+</ol>
+<ul>
+<li>
+<p>注意：怎么旋转不是猜出来的，<strong>失衡只可能发生在插/删点到根的路径上</strong>。我们需要一个 LminusR() 函数来记录<strong>平衡系数</strong>，如 <code>height(n-&gt;left) - height(n-&gt;right)</code> ≤ ±1就正常，否则就失衡，需要重平衡。</p>
+<p>从插/删节点往父节点方向检查直到发现第一个“失衡点” n，这个节点 n 的哪个子树过高，其过高侧的子节点又是哪个子树过高？如果 LminusR(n)&gt;1，说明左树过长，检查 LminusR(n-&gt;left) ≥ 0 就说明属于 <strong>LL</strong> 情况，右旋 n；&lt;0 说明属于 LR 情况 先左旋 n-&gt;left <strong>变成 LL</strong> 情况再右旋 n。反之 LminusR(n)&lt;1 也一样分为 <strong>RR</strong> (左旋 n) 和 RL (右旋 n-&gt;right <strong>变成 RR</strong> 再左旋 n) 两种情况</p>
+</li>
+</ul>
+<p>这些情况中，因为 1 与 2 以及 3 与 4 两组分别是对称的，故情况类似。1 和 2 可以通过单此旋转重新平衡，而 3 和 4 需要两次旋转。以 3 为例，gson 树过长，追溯发现属于(Left, Right) 反式情况——需要先左旋(son, gson)，再右旋(root, gson)：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">        root               root             gson
+  (往右)/    \             /    \           /    \
+     son     B   -&gt;     gson    B   -&gt;  son      root
+    /   \(往左)         /    \          /   \    /    \
+   A    gson         son     T2       A     T1 T2     B
+       /    \       /   \
+      T1     T2    A     T1    
+</code></pre><p>所有四种不平衡可能现在都可以统一处理：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">balanceFactor</span>(AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>node) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> height(node<span style="color:#f92672">-&gt;</span>left) <span style="color:#f92672">-</span> height(node<span style="color:#f92672">-&gt;</span>right);
+</span></span><span style="display:flex;"><span>}   <span style="color:#75715e">// 失衡系数，{-1, 0, 1} 属于正常值；大于零说明左子树更高。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>rotateNode(AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>node) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> balance <span style="color:#f92672">=</span> balanceFactor(node);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (balance <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> balanceFactor(node<span style="color:#f92672">-&gt;</span>left) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>)  <span style="color:#75715e">// Case 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">return</span> rightRotate(node);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (balance <span style="color:#f92672">&lt;</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> balanceFactor(node<span style="color:#f92672">-&gt;</span>right) <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>)  <span style="color:#75715e">// Case 2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">return</span> leftRotate(node); 
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (balance <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> balanceFactor(node<span style="color:#f92672">-&gt;</span>left) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) {  <span style="color:#75715e">// Case 3
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		node<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> leftRotate(node<span style="color:#f92672">-&gt;</span>left);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rightRotate</span>(node);
+</span></span><span style="display:flex;"><span>	} 
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (balance <span style="color:#f92672">&lt;</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> balanceFactor(node<span style="color:#f92672">-&gt;</span>right) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {  <span style="color:#75715e">// Case 4
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		node<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> rightRotate(node<span style="color:#f92672">-&gt;</span>right);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">leftRotate</span>(node);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> node;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>核心思想：索引失衡点。用 “左树高与右树高的差” 为标准，判断属于哪种情况。临界情况：<code>balanceFactor(node-&gt;left) = 0</code> 说明<strong>过高那一侧子树的两个子树是等高的</strong>，只需要单次旋转把整个子树抬起来，所以算 1、2 情况。</li>
+</ul>
+</br>
+<h3 id="avl-的插入删除函数">AVL 的插入/删除函数</h3>
+<p>等同于 BST 的插入函数 + 更新高度参数 + 检查是否要重平衡：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>insert(AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>node, T key)
+</span></span><span style="display:flex;"><span>{   <span style="color:#75715e">// 1. 像普通 BST 一样从根开始往下搜索并插入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (node <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> AVLNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(key);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (key <span style="color:#f92672">&lt;</span> node<span style="color:#f92672">-&gt;</span>key) node<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> insert(node<span style="color:#f92672">-&gt;</span>left, key);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (key <span style="color:#f92672">&gt;</span> node<span style="color:#f92672">-&gt;</span>key) node<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> insert(node<span style="color:#f92672">-&gt;</span>right, key);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">return</span> node;  <span style="color:#75715e">// 不插重复值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 2. 更新当前节点高度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    node<span style="color:#f92672">-&gt;</span>height <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> max(height(node<span style="color:#f92672">-&gt;</span>left), height(node<span style="color:#f92672">-&gt;</span>right));
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 3. 计算平衡因子，必要时做旋转
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> balance <span style="color:#f92672">=</span> balanceFactor(node);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (balance <span style="color:#f92672">&lt;</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">||</span> balance <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        node <span style="color:#f92672">=</span> rotateNode(node);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> node;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>删除函数几乎完全一样，直接照抄 BST 的删除函数，并补充更新高度和检查平衡 (照抄插入函数的) 即可。</p>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="九红黑二叉搜索树">九、红黑二叉搜索树</h1>
+</br>
+<h2 id="抽象定义">抽象定义</h2>
+<h3 id="rbtree-和-avl-的关系">RBTree 和 AVL 的关系</h3>
+<ul>
+<li>它也是<strong>有平衡限制的二叉搜索树</strong>；也通过“局部旋转 + 一些规则”来维护 <strong>O(log N)</strong>；</li>
+<li>但它<strong>不要求高度差 ≤ 1</strong>，只用“<strong>颜色规则</strong>”来限制；</li>
+<li>相比 AVL，红黑树插入/删除时旋转次数更少 (平衡要求不那么严格)；因为插删更频繁、代码更“局部”，所以标准库里经常采用红黑树 (如 C++ <strong>std::map/std::set</strong> 的实现)。</li>
+</ul>
+<p>注意：</p>
+<ol>
+<li>红黑树中，一个节点 <strong>“黑” 和 “空” 是几乎等价的</strong>，在判断中可以一起处理。</li>
+<li>红黑树最奇怪的一点是，其对 “<strong>叶子</strong>” 的定义与一般的树是<strong>完全不同的</strong>。在红黑树中，叶子代表 <strong>NIL(空占位节点)</strong>——任意节点<strong>如果没有左或右子节点</strong>就会伸出<strong>空节点</strong>，现在把它们做叶子，因为 <strong>黑 ≡ 空</strong>，<strong>NIL 都是黑的</strong>。以下是一个合法的红黑树，符合五条要求：</li>
+</ol>
+<p><img src="https://i.postimg.cc/DZc9SWxD/jie-ping2025-11-22-13-16-43.png" alt=""></p>
+<h3 id="红黑树的五条性质">红黑树的五条性质</h3>
+<ol>
+<li>Node Color：每个节点<strong>非红即黑</strong>。</li>
+<li>Root Property：整个树的<strong>根节点始终是黑色</strong>。</li>
+<li>所有叶子 (NIL) 视为黑色。</li>
+<li>Red Property：红节点不能有红孩子 (<strong>没有“连续红”</strong>)。</li>
+<li>Black Property：从任何一个节点到所有后代叶子的所有路径上，所经过的“黑节点数量”都相同。称为<strong>相同 “黑高度”</strong> (black height)。</li>
+</ol>
+<p>这些规则保证了：</p>
+<ul>
+<li>
+<p>在最长路径上，红节点的数量 ≤ 黑节点数量；因此总高度 $h ≤ 2\  bh$；</p>
+</li>
+<li>
+<p>结合“给定黑高度时的最少节点数”为 $N ≥ 2^{bh} - 1$ 这一点，可以推出来：</p>
+<p>高度 $h ≤ 2 log_2(N + 1)$。</p>
+</li>
+<li>
+<p>红黑树不可能瘦得像一条链，最多“比完全平衡树高两倍”，所以依然是 O(log N)。</p>
+</li>
+</ul>
+</br>
+<h3 id="红黑树的节点结构">红黑树的节点结构</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">COLOR</span> { RED, BLACK };  <span style="color:#75715e">// 枚举类的索引类似于数组（可以加减自增）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RBNode</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T val;
+</span></span><span style="display:flex;"><span>    COLOR color;  <span style="color:#75715e">// 高度限制变成了颜色限制
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    RBNode <span style="color:#f92672">*</span>left, <span style="color:#f92672">*</span>right, <span style="color:#f92672">*</span>parent;  <span style="color:#75715e">// 双向链表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    RBNode(T val) <span style="color:#f92672">:</span> val(val) {
+</span></span><span style="display:flex;"><span>        parent <span style="color:#f92672">=</span> left <span style="color:#f92672">=</span> right <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>        color <span style="color:#f92672">=</span> RED;    <span style="color:#75715e">// 插入时默认是红色
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><ul>
+<li>多了一个 color 字段；</li>
+<li>保留 parent 指针，便于做旋转时找到父节点。</li>
+</ul>
+</br>
+</br>
+<h2 id="左右旋与-movedown-辅助函数">左右旋与 moveDown 辅助函数</h2>
+<p>首先回忆：左旋 x 代表将 x 与 x-&gt;right 进行位置交换；</p>
+<p>左旋示意（保持中序 xayb）：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">    x                  y
+     \                / \
+      y      -&gt;      x   b
+     / \              \
+    a   b              a
+</code></pre><p>简化代码示意：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> Node<span style="color:#f92672">::</span>isOnLeft() <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span> <span style="color:#f92672">==</span> parent<span style="color:#f92672">-&gt;</span>left;  
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 判断当前 this 节点是 parent 的左孩子还是右孩子
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">moveDown</span>(Node <span style="color:#f92672">*</span>nParent) { <span style="color:#75715e">// 抬高 nParent，与 this 交换位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>parent) {  <span style="color:#75715e">// 如果父节点不为空...nParent 占据 this 原本的位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (isOnLeft()) parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> nParent;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> nParent;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    nParent<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> parent;  <span style="color:#75715e">// 更新：nParent 变成 parent 的子节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> nParent;    <span style="color:#75715e">// 更新：this 变成 nParent 的子节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">leftRotate</span>(Node <span style="color:#f92672">*</span>x) {    <span style="color:#75715e">// x 是父节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Node <span style="color:#f92672">*</span>y <span style="color:#f92672">=</span> x<span style="color:#f92672">-&gt;</span>right;       <span style="color:#75715e">// y 是 x 的右孩子
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">==</span> root) root <span style="color:#f92672">=</span> y;  <span style="color:#75715e">// 如果 x 是整个树的根，根要更新为 y
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    x<span style="color:#f92672">-&gt;</span>moveDown(y);           <span style="color:#75715e">// 把 y 提上来、x 压下去
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    x<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> y<span style="color:#f92672">-&gt;</span>left;       <span style="color:#75715e">// 把 y 的左子树挂到 x 的右边
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (x<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) x<span style="color:#f92672">-&gt;</span>right<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> x; 
+</span></span><span style="display:flex;"><span>    y<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> x;              <span style="color:#75715e">// x 成为 y 的左孩子
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>其实也可以用 BST 的旋转函数，但为 RBTree 的节点有 parent 参数，可以用另一种做法，两者核心思路是一致的。
+右旋类似，只是左右反过来。核心不变：保持 BST 中序顺序不变，只是“翻转父子关系”。</p>
+</br>
+</br>
+<h2 id="插入函数先按-bst-插再修颜色--旋转">插入函数：先按 BST 插，再“修颜色 + 旋转”</h2>
+<p>先像普通 BST 一样<strong>寻找并插入新节点，颜色默认红色</strong>，其他要求先不管。区别是为了保护树根必须是黑色这一条要求，<strong>需要用户传入根指针</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// 先做 BST 插入，返回新插入节点；重复则返回 nullptr
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> bstInsert(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x, RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> <span style="color:#f92672">&amp;</span>p, RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> parent) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>p) {
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(x);
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> parent;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> p;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&lt;</span> p<span style="color:#f92672">-&gt;</span>val) <span style="color:#66d9ef">return</span> bstInsert(x, p<span style="color:#f92672">-&gt;</span>left,  p);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> p<span style="color:#f92672">-&gt;</span>val) <span style="color:#66d9ef">return</span> bstInsert(x, p<span style="color:#f92672">-&gt;</span>right, p);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>; <span style="color:#75715e">// 不插重复
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 对外 insert：只传 root
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> insert(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x, RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> <span style="color:#f92672">&amp;</span>root) {
+</span></span><span style="display:flex;"><span>    RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> node <span style="color:#f92672">=</span> bstInsert(x, root, <span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>node) <span style="color:#66d9ef">return</span> false;   <span style="color:#75715e">// 重复
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    fixColor(root, node);      <span style="color:#75715e">// 这是纠正颜色的函数，后续继续定义
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></br>
+<h3 id="修复颜色冲突-fixcolor">修复颜色冲突 fixColor</h3>
+<p>插入<strong>只可能违反 Red Property 或 Root Property</strong>，需要分情况处理：</p>
+<ol>
+<li>如果新节点的<strong>父亲是黑色</strong>：所有红黑性质都依然满足，不需要调整。所以只需要在函数中加上一个<strong>总条件</strong>：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (node <span style="color:#f92672">!=</span> root <span style="color:#f92672">&amp;&amp;</span> node<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">&amp;&amp;</span> node<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">==</span> RED) {}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 只需处理新节点的父节点不黑也不空的情况
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>root<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">=</span> BLACK; <span style="color:#75715e">// 所有新节点默认是红色，故需要保证根永远黑
+</span></span></span></code></pre></div><ol start="2">
+<li>
+<p>如果<strong>父亲是红色</strong>：必然<strong>违反 Red Property</strong>，需要分情况修复：</p>
+<p>(1) <strong>父亲的兄弟，叔叔 U 也是红</strong>：把父亲和叔叔都染黑，祖父染红；然后<strong>将祖父作为当前节点递归</strong>往上处理直到根。
+<img src="https://i.postimg.cc/L8J5pSx9/jie-ping2025-11-22-14-09-46.png" alt=""></p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (uncle <span style="color:#f92672">&amp;&amp;</span> uncle<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">==</span> RED) {
+</span></span><span style="display:flex;"><span>	parent<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">=</span> uncle<span style="color:#f92672">-&gt;</span>color  <span style="color:#f92672">=</span> BLACK;
+</span></span><span style="display:flex;"><span>	grand<span style="color:#f92672">-&gt;</span>color  <span style="color:#f92672">=</span> RED;
+</span></span><span style="display:flex;"><span>	node <span style="color:#f92672">=</span> grand;
+</span></span><span style="display:flex;"><span>} 
+</span></span></code></pre></div><p>(2) <strong>父亲的兄弟，叔叔 U 是黑 (或空)</strong>：类似于 AVL，有四种左右手情况。观察插入节点以及其父节点、祖父节点，分辨插入节点的<strong>顺反性质</strong>——反式两次旋转 (先旋转父、再交换颜色地旋转祖父)；顺式一次旋转(交换颜色地旋转祖父)，大体与 AVL 类似。
+<img src="https://i.postimg.cc/5NYW9tWh/jie-ping2025-11-22-14-13-10.png" alt=""></p>
+<p>修复颜色的总代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> fixColor(RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> <span style="color:#f92672">&amp;</span>root, RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> node) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (node <span style="color:#f92672">!=</span> root <span style="color:#f92672">&amp;&amp;</span> node<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">&amp;&amp;</span> node<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">==</span> RED) {
+</span></span><span style="display:flex;"><span>        RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> parent <span style="color:#f92672">=</span> node<span style="color:#f92672">-&gt;</span>parent;
+</span></span><span style="display:flex;"><span>        RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> grand  <span style="color:#f92672">=</span> parent<span style="color:#f92672">-&gt;</span>parent;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>grand) <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// parent 是 grand 的左孩子 (L-)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (parent <span style="color:#f92672">==</span> grand<span style="color:#f92672">-&gt;</span>left) {
+</span></span><span style="display:flex;"><span>            RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> uncle <span style="color:#f92672">=</span> grand<span style="color:#f92672">-&gt;</span>right;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Case 1: uncle 红，变色上推
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (uncle <span style="color:#f92672">&amp;&amp;</span> uncle<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">==</span> RED) {
+</span></span><span style="display:flex;"><span>                parent<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">=</span> uncle<span style="color:#f92672">-&gt;</span>color  <span style="color:#f92672">=</span> BLACK;
+</span></span><span style="display:flex;"><span>                grand<span style="color:#f92672">-&gt;</span>color  <span style="color:#f92672">=</span> RED;
+</span></span><span style="display:flex;"><span>                node <span style="color:#f92672">=</span> grand;
+</span></span><span style="display:flex;"><span>            } 
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> {  <span style="color:#75715e">// Case 2: uncle 黑/空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#75715e">// Case 2.1: node 是反式孩子(LR)，左旋 parent 变成 LL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> (node <span style="color:#f92672">==</span> parent<span style="color:#f92672">-&gt;</span>right) {
+</span></span><span style="display:flex;"><span>                    node <span style="color:#f92672">=</span> parent;
+</span></span><span style="display:flex;"><span>                    leftRotate(root, node);
+</span></span><span style="display:flex;"><span>                    parent <span style="color:#f92672">=</span> node<span style="color:#f92672">-&gt;</span>parent;
+</span></span><span style="display:flex;"><span>                    grand  <span style="color:#f92672">=</span> parent<span style="color:#f92672">-&gt;</span>parent;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">//  Case 2.2: node 是顺式孩子(LL)，右旋 grand
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                parent<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">=</span> BLACK;
+</span></span><span style="display:flex;"><span>                grand<span style="color:#f92672">-&gt;</span>color  <span style="color:#f92672">=</span> RED;
+</span></span><span style="display:flex;"><span>                rightRotate(root, grand);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// parent 是 grand 的右孩子(R-)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> {  <span style="color:#75715e">// Case 1: uncle 红，变色上推
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            RBNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> uncle <span style="color:#f92672">=</span> grand<span style="color:#f92672">-&gt;</span>left;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (uncle <span style="color:#f92672">&amp;&amp;</span> uncle<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">==</span> RED) {
+</span></span><span style="display:flex;"><span>                parent<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">=</span> uncle<span style="color:#f92672">-&gt;</span>color  <span style="color:#f92672">=</span> BLACK;
+</span></span><span style="display:flex;"><span>                grand<span style="color:#f92672">-&gt;</span>color  <span style="color:#f92672">=</span> RED;
+</span></span><span style="display:flex;"><span>                node <span style="color:#f92672">=</span> grand;
+</span></span><span style="display:flex;"><span>            } 
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> {  <span style="color:#75715e">// Case 2: uncle 黑/空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#75715e">// Case 2.1: node 是反式孩子(RL)，右旋 parent 变成 LL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> (node <span style="color:#f92672">==</span> parent<span style="color:#f92672">-&gt;</span>left) {
+</span></span><span style="display:flex;"><span>                    node <span style="color:#f92672">=</span> parent;
+</span></span><span style="display:flex;"><span>                    rightRotate(root, node);
+</span></span><span style="display:flex;"><span>                    parent <span style="color:#f92672">=</span> node<span style="color:#f92672">-&gt;</span>parent;
+</span></span><span style="display:flex;"><span>                    grand  <span style="color:#f92672">=</span> parent<span style="color:#f92672">-&gt;</span>parent;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// //  Case 2.2: node 是顺式孩子(RR)，左旋 grand
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                parent<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">=</span> BLACK;
+</span></span><span style="display:flex;"><span>                grand<span style="color:#f92672">-&gt;</span>color  <span style="color:#f92672">=</span> RED;
+</span></span><span style="display:flex;"><span>                leftRotate(root, grand);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    root<span style="color:#f92672">-&gt;</span>color <span style="color:#f92672">=</span> BLACK; <span style="color:#75715e">// 根永远黑
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>整体逻辑如下：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">       / 父黑/空 -&gt; 保持根黑，break。
+Node 〈        / 叔红 -&gt; 叔、父、祖父，颜色反转；并将祖父作为 Node 递归；
+       \ 父红 〈
+               \ 叔黑 -&gt; 从 Node 回溯：XY双旋，Y换色；XX单旋换色。 
+</code></pre></br>
+</br>
+<h2 id="删除函数双黑-double-black-思路">删除函数：双黑 (double black) 思路</h2>
+<p>删除过程也分两步：</p>
+<ol>
+<li>
+<p>按 BST 删除；</p>
+</li>
+<li>
+<p><strong>删红无所谓</strong>，如果删了黑节点，就会造成路径上黑节点缺少 1：用逻辑上“这个位置是 double black”来表示；然后根据“兄弟节点的颜色、兄弟孩子的颜色”分类讨论：</p>
+<p>(1) 兄弟为红：旋转父亲，<strong>交换父亲(B)和兄弟(R)</strong>，并把兄弟涂黑、父亲涂红。因为交换后的新兄弟节点是原本兄弟(R) 的子节点，一定黑或空，进入情况 (2)。</p>
+<p>(2) 兄弟为黑：</p>
+<ul>
+<li>兄弟孩子全黑或空：兄弟涂红，把 double black 上移；</li>
+<li>兄弟存在红孩子：类似于红黑树的插入函数，根据这个红侄子与其父、祖父的关系的<strong>顺反性</strong>，旋转 1/2 次。<strong>酌情调整颜色</strong>，结束。</li>
+</ul>
+</li>
+</ol>
+<p><strong>详细插删不要求完全掌握，理解整体思路即可</strong>：通过局部旋转和颜色翻转，保证那五条红黑性质重新成立。</p>
+</br>
+</br>
+<h2 id="对比-avl-与红黑树">对比 AVL 与红黑树</h2>
+<ul>
+<li>
+<p>AVL：更接近理想平衡，查找更快一些；但插入/删除时旋转更频繁，代码更复杂。</p>
+</li>
+<li>
+<p>红黑树：平衡要求稍弱，<strong>高度最多大约是 AVL 的 2 倍</strong>；插入/删除旋转次数少，实际表现更稳定也<strong>更常用</strong>；对“<strong>更新频繁</strong>的场景”更适合。</p>
+</li>
+</ul>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="十回溯-backtracking-与-隐式树">十、回溯 (Backtracking) 与 “隐式树”</h1>
+</br>
+<p>虽然回溯<strong>不是真正实现“树的结构”</strong>，不需要用树节点这些具象化的树构件，但是整套思想完全是用树解题。</p>
+<ul>
+<li>每个“决策状态”是一个节点；</li>
+<li>每个“选择”生成一个新的状态，是这节点的一个子节点；</li>
+<li>一直到“叶子节点”就是某个完整方案（可能成功，可能失败）。</li>
+</ul>
+<p>递归版泛型回溯伪代码：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">bool solve(Node n) {
+    if (n 是叶子) {
+        return (n 是一个满足条件的解);
+    } else {
+        for (每一个 n 的子节点 c) {
+            if (solve(c)) return true;
+        }
+        return false;
+    }
+}
+</code></pre><p>非递归版用<strong>栈</strong>模拟：</p>
+<ul>
+<li>栈里存的是“当前路径上的节点”；</li>
+<li>当走到一个“没路可走”的叶子，就弹出（回溯），尝试兄弟节点。</li>
+</ul>
+<p>这里的“Node”未必真的是树节点结构体，也可以是：</p>
+<ul>
+<li>一个棋盘状态 (比如 N 皇后里的 <code>x[i] = j</code>)：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">NQueens</span>(<span style="color:#66d9ef">int</span> i, <span style="color:#66d9ef">int</span> n)  <span style="color:#75715e">// 初次调用 NQueens(1, N)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, j<span style="color:#f92672">&lt;=</span>n, j<span style="color:#f92672">++</span>) {  <span style="color:#75715e">// 枚举第 i 行的列
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    <span style="color:#66d9ef">if</span> (isSafe(i, j)) x[i] <span style="color:#f92672">=</span> j;
+</span></span><span style="display:flex;"><span>	        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">==</span> n) printResult(x);  <span style="color:#75715e">// n 行都放好了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	        <span style="color:#66d9ef">else</span> NQueens(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, n);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>一个数组（比如“黑白棋子移动”里的 int board[]）。</li>
+</ul>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="十一堆-heap-优先队列priority-queue">十一、堆 Heap： 优先队列(Priority Queue)</h1>
+</br>
+<h2 id="抽象定义-1">抽象定义</h2>
+<p>堆是 “<strong>按优先级处理</strong>元素”，但<strong>不把所有元素整体排序</strong>的数据类型。典型模式是：不断插入新任务，然后<strong>每次取出当前最小或最大</strong>的任务处理，比如<strong>排序</strong>、打印机队列、操作系统调度、路由计算等。这里讨论的堆<strong>与内存的堆无关</strong>，一般是指<strong>二叉堆 (Binary Heap)</strong>。</p>
+<p>优先队列支持两类核心接口</p>
+<ul>
+<li>insert：插入一个元素</li>
+<li>deleteMin / deleteMax：删除并返回最小/最大元素</li>
+</ul>
+</br>
+</br>
+<h2 id="三种实现的对比">三种实现的对比</h2>
+<p>堆主要有三种实现：链表、BST (AVL/RB)、<strong>二叉堆 (binary heap)</strong>。</p>
+<ul>
+<li>
+<p>链表：不排序插入快 O(1)，但找最值 O(N)；保持排序则插入变 O(N)。</p>
+</li>
+<li>
+<p>BST：平均 O(log N)，最坏 O(N)，自平衡 BST 最坏也能 O(log N)，但 BST 提供了很多优先队列不需要的能力。</p>
+</li>
+<li>
+<p>vector (二叉堆)：<strong>最优解</strong>，insert O(log N)，deleteMin O(log N)，findMin O(1)。</p>
+<p>因此堆是一种专为优先队列设计的结构：只为了最低成本地插、删顶和看顶。</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="二叉堆-binary-heap">二叉堆 (Binary Heap)</h2>
+<ul>
+<li>堆不是“内存里的 heap”，这里专指二叉堆。它有两条性质：<strong>结构性 + 有序性</strong>。</li>
+<li>堆必须是一棵<strong>完全二叉树</strong>（complete binary tree），并<strong>用动态数组形式存储</strong>。复习：完全二叉树是每一层都尽量填满，最后一层从左到右填的二叉树。</li>
+<li>重要结论：<strong>高度 h 约等于 ⌊log N⌋</strong>，所以树高是对数级。这就是堆操作能做到 O(log N) 的根本原因。</li>
+</ul>
+</br>
+<h3 id="结构性数组表示">结构性：数组表示</h3>
+<p>堆<strong>用动态数组存储</strong>，节点 i (从 0 开始) 与父/子的索引下标关系：</p>
+<ul>
+<li><strong>parent(i) = (i−1)/2；left(i) = 2i+1；right(i) = 2i+2</strong></li>
+<li>这样所有节点都可以用 <strong>0～N 的连续整数表示</strong>，其索引逐行从左到右增大。如下图所示，可以轻易完成动态数组与完全二叉树相互转换：
+<img src="https://i.postimg.cc/FKz3Bygn/jie-ping2025-11-23-14-14-26.png" alt="">
+这个关系在类定义中表示为：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MinHeap</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> data_;  <span style="color:#75715e">// 用数组存完全二叉树（层序）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">::</span>size_t parent(std<span style="color:#f92672">::</span>size_t i) { <span style="color:#66d9ef">return</span> (i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">::</span>size_t left  (std<span style="color:#f92672">::</span>size_t i) { <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">::</span>size_t right (std<span style="color:#f92672">::</span>size_t i) { <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>; }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div></br>
+<h3 id="有序性-heap-order-property">有序性 (heap-order property)</h3>
+<ul>
+<li>
+<p>对最小堆（MinHeap）：父亲 ≤ 孩子，往根方向值递减，<strong>最小值永远在根</strong>。</p>
+</li>
+<li>
+<p>对最大堆（MaxHeap）反过来：父亲 ≥ 孩子，<strong>最大值永远在根</strong>。</p>
+<p>注意：堆<strong>只保证 “父子有序”</strong>，不保证整棵树像 BST 那样左右有序，所以<strong>中序遍历不会得到排序序列。</strong></p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="二叉堆类接口">二叉堆类接口</h2>
+<p>一个典型模板是：</p>
+<ul>
+<li>theSize：当前元素数量</li>
+<li>array：vector 存储堆</li>
+<li>findMin：看根 O(1)</li>
+<li>push / deleteMin：核心操作</li>
+<li>buildHeap / percolateDown：内部维护结构</li>
+</ul>
+</br>
+<h3 id="插入-push-与上滤-siftup-函数">插入 (push) 与上滤 (siftUp) 函数</h3>
+<p>插入的想法：</p>
+<p>把新元素先放到数组末尾 (完全二叉树的下一个空位)。如果它比父亲小，就向上交换，一直交换到合适位置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// public：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T <span style="color:#f92672">&amp;</span>value) {
+</span></span><span style="display:flex;"><span>   data_.push_back(value);     <span style="color:#75715e">// vector 成员函数，插入在数组尾部
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   siftUp(data_.size() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">siftUp</span>(std<span style="color:#f92672">::</span>size_t idx) {   <span style="color:#75715e">// 维护元素有序性
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">while</span> (idx <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> data_[idx] <span style="color:#f92672">&lt;</span> data_[parent(idx)]) {
+</span></span><span style="display:flex;"><span>      std<span style="color:#f92672">::</span>swap(data_[idx], data_[parent(idx)]);
+</span></span><span style="display:flex;"><span>      idx <span style="color:#f92672">=</span> parent(idx);  <span style="color:#75715e">// 下标更新，继续往上比
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>siftUp: 当 idx&gt;0 不是根且插入元素“比父亲更小，违反最小堆性质”，交换两个元素，并把 idx 移到父亲位置，再继续比较。</li>
+<li>复杂度 <strong>O(log N)</strong>：每次 up 至少上升一层，最多上升树高 h≈log N。</li>
+</ul>
+</br>
+<h3 id="删最小值与下滤-siftdown-函数">删最小值与下滤 (siftDown) 函数</h3>
+<p>对于最小堆，删最小项的想法：根是最小值，删掉根后根位置出现空值。为了保持完全二叉树，把最后一个元素搬到根，再让它向下交换到合适位置：每次和两个孩子中更小的那个交换</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">deleteMin</span>() {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (empty()) <span style="color:#66d9ef">return</span>;   <span style="color:#75715e">// this-&gt;empty()：vector 判断空数组的成员方法
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   data_[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> data_.back();
+</span></span><span style="display:flex;"><span>   data_.pop_back();  <span style="color:#75715e">// 用末尾项的值覆盖根的值 (最小值)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>empty()) siftDown(<span style="color:#ae81ff">0</span>);  <span style="color:#75715e">// 填到根的值很可能过大，要进行下滤
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">siftDown</span>(std<span style="color:#f92672">::</span>size_t idx) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">while</span> (true) {  <span style="color:#75715e">// 只有左右孩子都大于自己才停止下滤
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      std<span style="color:#f92672">::</span>size_t l <span style="color:#f92672">=</span> left(idx);
+</span></span><span style="display:flex;"><span>      std<span style="color:#f92672">::</span>size_t r <span style="color:#f92672">=</span> right(idx);  <span style="color:#75715e">// 当前节点的左右孩子
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      std<span style="color:#f92672">::</span>size_t smallest <span style="color:#f92672">=</span> idx;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (l <span style="color:#f92672">&lt;</span> size() <span style="color:#f92672">&amp;&amp;</span> data_[l] <span style="color:#f92672">&lt;</span> data_[smallest])  <span style="color:#75715e">// 小心下标越界！！
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          smallest <span style="color:#f92672">=</span> l;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (r <span style="color:#f92672">&lt;</span> size() <span style="color:#f92672">&amp;&amp;</span> data_[r] <span style="color:#f92672">&lt;</span> data_[smallest])
+</span></span><span style="display:flex;"><span>          smallest <span style="color:#f92672">=</span> r;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (smallest <span style="color:#f92672">==</span> idx) <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>      std<span style="color:#f92672">::</span>swap(data_[idx], data_[smallest]);  <span style="color:#75715e">// 交换值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      idx <span style="color:#f92672">=</span> smallest;  <span style="color:#75715e">// 交换位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>deleteMin：把末尾元素挪到根取代最小值，然后删掉末尾，从根向下恢复堆序。</li>
+<li>siftDown：循环<strong>交换自己与左右孩子的较小项</strong>，直到左右孩子都比自己大。注意：每次交换先要确定左右孩子存在 <code>l &lt; size()</code> 防止<strong>下标越界</strong>。</li>
+<li>最多下沉 h 层，因此 O(log N)。</li>
+</ul>
+</br>
+<h3 id="建堆函数-buildheap">建堆函数 (BuildHeap)</h3>
+<p>把 N 个元素建堆有两种办法：</p>
+<ol>
+<li>N 次 insert：每次 O(log N)，总共 O(N log N)。过于复杂，不做演示。</li>
+<li>线性建堆：把数组按层序直接放入堆数组，然后从最后一个非叶子开始做 siftDown，<strong>总共 O(N)</strong>：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">BuildHeap</span>(vector<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>vec) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (vec.empty()) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>   data_.clear();   <span style="color:#75715e">// 清空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> vec.size(); i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>       data_.push_back(vec[i]);    <span style="color:#75715e">// 无序写入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> size() <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; <span style="color:#f92672">--</span>i)  <span style="color:#75715e">// 逆序进行所有父节点的下滤
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#75715e">// 或者 （int i = (size()-1)/2-1;i &gt;= 0;i--)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>       siftDown(i);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>关键在于 <code>i = size()/2 - 1</code>。因为数组末尾在 N−1，它的父亲下标 <code>parent(N−1)=(N−2)/2=N/2−1</code>，所以 N/2−1 正是<strong>最后一个非叶节点</strong>。从这个节点开始，按逆层序 (从下往上、从右往左) 对每个非叶子做 siftDown，就能保证它的子树先成为堆，再把它自己下滤到正确位置，最终全树成堆。</p>
+<p>总成本是 O(N)：底层节点很多，但它们下滤的高度很小；高度大的节点很少。把所有节点下滤的“最大可能移动距离”加起来是线性级。</p>
+</br>
+</br>
+<h2 id="堆排序-heapsort">堆排序 heapsort</h2>
+<p>思路：这里以最大堆为例，优先队列能反复取出最大，因此可以排序：建堆后执行 N 次 deleteMax，堆排序<strong>最坏 O(N log N)</strong>。
+每次 deleteMax 后，把堆顶和当前数组末尾交换，堆规模减 1，下滤恢复最大堆。最后数组就是升序。标准 heapsort 代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> heapsort( vector<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span> a ) {   <span style="color:#75715e">// 输入乱序数组
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span>( <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> a.size() <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>; i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; i<span style="color:#f92672">--</span> )  <span style="color:#75715e">// buildHeap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    percDown( a, i, a.size() );  <span style="color:#75715e">// 最大堆的下滤函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span>( <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> a.size( ) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; j <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>; j<span style="color:#f92672">--</span> ) {
+</span></span><span style="display:flex;"><span>     swap( a[ <span style="color:#ae81ff">0</span> ], a[ j ] );  <span style="color:#75715e">// deleteMax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>     percDown( a, <span style="color:#ae81ff">0</span>, j );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>第一段循环 <code>for i = n/2 ... 0</code>：和 buildHeap 一样，从最后非叶子开始下滤，在线性时间内把 a 变成最大堆。</p>
+</li>
+<li>
+<p>第二段循环 <code>for j = n−1 ... 1</code>：</p>
+<p><code>swap(a[0], a[j])</code>：把当前最大值放到数组尾部的“已排序区”。</p>
+<p><code>percDown(a,0,j)</code>：只在前 j 个元素组成的堆里下滤（堆缩小），恢复最大堆。</p>
+<p>复杂度分析：buildHeap O(N) + N 次 deleteMax O(N log N)，总 O(N log N)。平均性能<strong>一般比快排慢一些，但最坏情况稳定</strong>，不会退化到 O(N<sup>2</sup>)，所以是“保险算法”。</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="注意点">注意点</h2>
+<ol>
+<li>
+<p>下标越界：siftDown 必须先判断 l/r &lt; size()。</p>
+</li>
+<li>
+<p>buildHeap 的起点必须是 size/2 − 1。</p>
+</li>
+<li>
+<p>最小堆/最大堆只差比较符号方向。</p>
+</li>
+<li>
+<p>堆序只保证父子有序，<strong>左右是无序的</strong>。</p>
+</li>
+<li>
+<p>heap vs BST：</p>
+<p>heap <strong>不完全有序</strong>的，更适合“只要不断取最小/最大”的场景；</p>
+<p>BST <strong>完全升序</strong>，更适合需要区间查询、按序遍历、删除任意值等。</p>
+</li>
+<li>
+<p>应用：求数组中 k 个最大元素：</p>
+<p>用最大堆建堆，然后 deleteMax k 次 (O(k log n))，总共 O(n + k log n)。</p>
+<p>这是非常经典的堆应用。</p>
+</li>
+</ol>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="十二图-graph">十二、图 graph</h1>
+</br>
+<p>如果对图不熟悉，请先复习：<a href="https://blog.nero-lithos.com/posts/3001.6/">图论基础</a>。</p>
+<h2 id="抽象定义-2">抽象定义</h2>
+<ol>
+<li>图的定义：图 G = (V, E)，其中 V 是顶点集合，E 是边集合，每条边连接着两个顶点 (v, w)。</li>
+<li>有向图与无向图：</li>
+</ol>
+<ul>
+<li>如果边 (v, w) 是 (前体，后继) 有序对，意味着从 v 指向 w，w is adjacent to v (反之不成立)，这就是 directed graph。</li>
+<li>反之就是 undirected graph，v and w adjacent to each other。<strong>没特别说明时 “graph” 指无向图</strong>。</li>
+</ul>
+<ol start="3">
+<li>路径、环与连通</li>
+</ol>
+<ul>
+<li>路径：顶点序列 w1, w2, …, wN，只要相邻顶点之间都有边。</li>
+<li>简单路径：不重复经过任何顶点。</li>
+<li>环 cycle：起点终点同一个顶点；简单环不重复经过顶点。
+有向图里的这些概念完全类似，只是边必须方向一致。</li>
+<li>连通图：任意两点之间都有路径。</li>
+<li>完全图：任意两点之间直接有边。完全图一定连通，但连通图不一定完全。</li>
+<li>DAG：有向无环图 directed acyclic graph。</li>
+<li>强连通：在有向图中任意两点互相可达。</li>
+<li>弱连通：忽略方向后连通，但考虑方向不一定可达。</li>
+<li>加权图：如果边带权值（距离、成本、容量等等），就是 weighted graph。既可以无向也可以有向。</li>
+</ul>
+</br>
+</br>
+<h2 id="两种实现邻接矩阵和邻接表">两种实现：邻接矩阵和邻接表</h2>
+<p>图只有两个基本功能：<strong>A. 判断一个点的邻接点、B. 判断两点间是否有边</strong>，为了路由和遍历。</p>
+<h3 id="邻接矩阵-adjacency-matrix">邻接矩阵 adjacency matrix</h3>
+<p>n 个点编号 0~n-1，用 n×n 的二维数组 matrix，空间复杂度 O(|V|²)，<strong>适合稠密图 (边多)，擅长 B</strong>：用“表格查字典”的方式 O(1) 判断是否有边：</p>
+<ul>
+<li>普通有向图<code>matrix[i][j] = 1</code> 表示 i 到 j 有边；无边记作 0。</li>
+<li>加权图 <code>matrix[i][j] = 权值</code>；无边记为 ∞。</li>
+<li>无向图矩阵<strong>对角对称</strong>：<code>matrix[i][j] = matrix[j][i]</code>。</li>
+</ul>
+</br>
+<h3 id="邻接表-adjacency-list">邻接表 adjacency list</h3>
+<p>对每个顶点 i 维护一个链表/动态数组，存储所有与 i 相邻的顶点 j，对所有 i 组成一个映射表。空间 O(|V|+|E|)，<strong>适合稀疏图 (边少)，擅长 A</strong>： O(N) 遍历桶找边。无向图每条边会在表中出现两次。</p>
+</br>
+</br>
+<h2 id="图遍历dfs-与-bfs">图遍历：DFS 与 BFS</h2>
+<p>遍历的目标：从起点 v 出发访问所有可达点；如果图不连通，就只得到连通的部分。<strong>遍历要标记访问过的点</strong>，否则遇到环会死循环。</p>
+</br>
+<h3 id="深度优先搜索-depth-first-search">深度优先搜索 Depth First Search</h3>
+<ul>
+<li>思路：从某点开始，标记经过的点防止重复，走到不能走再回溯一步继续走，直到回溯回原点或全部点都走到过。</li>
+<li>DFS 的思路<strong>类似于树的前序遍历</strong> (但没有左右要求)，其<strong>回溯</strong>顺序说明可以用<strong>栈</strong>来实现。(函数递归利用了系统栈)
+递归思路：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> MAXN <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>;  <span style="color:#75715e">// 最大顶点数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> adj[MAXN];  <span style="color:#75715e">// 邻接表：数组套向量，adj[v] 是 v 的邻居
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> visited[MAXN] <span style="color:#f92672">=</span> {false};  <span style="color:#75715e">// 标记是否访问过
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs_recursive</span>(<span style="color:#66d9ef">int</span> v) {  <span style="color:#75715e">// 从顶点 v 开始做 DFS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    visited[v] <span style="color:#f92672">=</span> true;              <span style="color:#75715e">// 标记 v 已访问
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 这里可以做“访问动作”，例如 printf(&#34;Visit %d\n&#34;, v);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> u : adj[v]) {  <span style="color:#75715e">// 遍历 v 的所有邻居 u
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>visited[u]) {
+</span></span><span style="display:flex;"><span>            dfs_recursive(u);  <span style="color:#75715e">// 对没访问过的邻居递归 DFS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>栈迭代思路：栈保证 LIFO，因此搜索波推到底后按层回溯。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> MAXN <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>;
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> adj[MAXN];  <span style="color:#75715e">// 邻接表：数组套向量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> visited[MAXN];          <span style="color:#75715e">// 是否访问过
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs_iterative</span>(<span style="color:#66d9ef">int</span> start, <span style="color:#66d9ef">int</span> n) { <span style="color:#75715e">// n 是顶点个数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	visited[MAXN] <span style="color:#f92672">=</span> {false};
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// “手写”一个栈：用数组 + top 指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> st[MAXN];  <span style="color:#75715e">// 栈数组
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> top <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// 栈空时 top = -1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> nextChild[MAXN] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>};  <span style="color:#75715e">// “游标数组”，记录对每个顶点的邻接表扫描到哪
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 把 start 压栈，并标记访问
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    st[<span style="color:#f92672">++</span>top] <span style="color:#f92672">=</span> start;
+</span></span><span style="display:flex;"><span>    visited[start] <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (top <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>) {   <span style="color:#75715e">// 主循环：只要栈不空，就一直搜索
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> st[top];   <span style="color:#75715e">// 栈顶点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> <span style="color:#f92672">&amp;</span>idx <span style="color:#f92672">=</span> nextChild[v];    <span style="color:#75715e">// 引用：记录当前扫描到第几号邻居
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> deg <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)adj[v].size();   <span style="color:#75715e">// v 的度数 = 邻居个数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// 跳过已经访问过的邻居
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> (idx <span style="color:#f92672">&lt;</span> deg <span style="color:#f92672">&amp;&amp;</span> visited[adj[v][idx]]) <span style="color:#f92672">++</span>idx;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (idx <span style="color:#f92672">==</span> deg) {  <span style="color:#75715e">// 没有未访问邻居，回溯
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">--</span>top;  <span style="color:#75715e">// 对应 s.pop()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        } <span style="color:#66d9ef">else</span> {  <span style="color:#75715e">// 找到了一个未访问的邻居 u
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> u <span style="color:#f92672">=</span> adj[v][idx];
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">++</span>idx;  <span style="color:#75715e">// 下次从下一个邻居开始查
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            st[<span style="color:#f92672">++</span>top] <span style="color:#f92672">=</span> u;
+</span></span><span style="display:flex;"><span>            visited[u] <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// std::cout &lt;&lt; &#34;Visit &#34; &lt;&lt; u &lt;&lt; &#34;\n&#34;;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>想象一张六点有向图：a 作为 start，连接着 b、c、d，而 c 连着 e、f。栈 (左底右顶) 的逐步变化如下：<strong>a → ab → a → ac → ace → ac → acf → ac → a → ad → a → NULL</strong> ，出栈顺序为：b, e, f, c, d, a ，忽略 a 的话可以看出递归遍历</p>
+</br>
+<h3 id="广度优先搜索-breadth-first-search">广度优先搜索 Breadth First Search</h3>
+<ul>
+<li>思路：从某点开始，一层层扩展，先访问所有距离 1 的点，再访问距离 2 的点……由近到远地遍历。</li>
+<li>BFS 的思路<strong>类似于堆数组的遍历</strong>，其按层推进竖屏可以用<strong>队列</strong>来实现。
+队列迭代思路：队列保证 FIFO，因此搜索波前按层推进。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;queue&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bfs</span>(<span style="color:#66d9ef">int</span> start, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">&amp;</span>adj) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> adj.size();
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span> visited(n, false);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> q;
+</span></span><span style="display:flex;"><span>    visited[start] <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>    q.push(start);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>q.empty()) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> q.front(); 
+</span></span><span style="display:flex;"><span>        q.pop();
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Visit &#34;</span> <span style="color:#f92672">&lt;&lt;</span> w <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;   <span style="color:#75715e">// 访问动作
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> u : adj[w]) {               <span style="color:#75715e">// 枚举 w 的所有邻居 u
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>visited[u]) {
+</span></span><span style="display:flex;"><span>                visited[u] <span style="color:#f92672">=</span> true;           <span style="color:#75715e">// 标记
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                q.push(u);                   <span style="color:#75715e">// 入队
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>想象一张六点有向图：a 作为 start，连接着 b、c、d，而 c 连着 e、f。队列 (左头右尾) 的逐步变化如下：<strong>a → NULL → b → bc → bcd → cd → d → de → def → ef → f → NULL</strong> ，出队顺序为：a, b, c, d, e, f ，可以看出明显是逐层遍历</p>
+<p>DFS 和 BFS 具体程序写法不必完全掌握，但要会理解遍历顺序，例如下图：
+<img src="https://i.postimg.cc/653JhsPw/jie-ping2025-11-26-12-01-25.png" alt="">
+a) <code>[a, c, f, e, b, d, h, g]</code> 或 <code>[a, b, d, c, g, f, e, h]</code> 等等</p>
+<p>b) <code>[a, b, c, d, f, g, e, h]</code> 或 <code>[a, c, b, g, f, e, h, b]</code> 等等</p>
+</br>
+</br>
+<h2 id="路由最短路问题">路由：最短路问题</h2>
+<h3 id="无权最短路">无权最短路</h3>
+<p>从起点 s 到所有点的最短路径，度量是边数，算法本质就是 BFS ——层数就是“最少边数”：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// include &lt;...&gt;   using std::...;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">unweighed_router</span>(<span style="color:#66d9ef">int</span> s, <span style="color:#66d9ef">const</span> vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">&amp;</span>adj, vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>dist, vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>prev) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)adj.size();
+</span></span><span style="display:flex;"><span>    dist.assign(n, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);  <span style="color:#75715e">// 长度设为 n，所有元素初始化为 -1：“未知/不可达”
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    prev.assign(n, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> q;
+</span></span><span style="display:flex;"><span>    dist[s] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;         <span style="color:#75715e">// s 到自己的距离是 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    q.push(s);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>q.empty()) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> q.front();   <span style="color:#75715e">// first in
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        q.pop();             <span style="color:#75715e">// first out
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> w : adj[v]) {           <span style="color:#75715e">// 扫描 v 的邻居 w
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (dist[w] <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {         <span style="color:#75715e">// 如果第一次到达 w
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                dist[w] <span style="color:#f92672">=</span> dist[v] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;   <span style="color:#75715e">// 最少边数 = 父节点 + 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                prev[w] <span style="color:#f92672">=</span> v;             <span style="color:#75715e">// 记录前驱，用于回溯路径
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                q.push(w);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></br>
+<h3 id="有权最短路dijkstra-算法">有权最短路：Dijkstra 算法</h3>
+<p>边权非负的前提下，尽量<strong>贪心</strong>。从 s 开始，对所有相邻点，如果当<strong>前点的距离+边权重</strong>比记录值更小，就更新距离，跳过未到达过的点和距离记录不是最小的情况：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// 省略 include ..., using ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 邻接表：adj[v] = { {neighbour, weight}, ... }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> Graph <span style="color:#f92672">=</span> vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>,<span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&gt;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dijkstra</span>(<span style="color:#66d9ef">int</span> s, <span style="color:#66d9ef">const</span> Graph <span style="color:#f92672">&amp;</span>adj, vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>dist, vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>prev) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)adj.size();
+</span></span><span style="display:flex;"><span>    dist.assign(n, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);   <span style="color:#75715e">// -1 表示“未知/不可达”
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    prev.assign(n, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">using</span> P <span style="color:#f92672">=</span> pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>,<span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>; <span style="color:#75715e">// {当前距离, 顶点}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    priority_queue<span style="color:#f92672">&lt;</span>P, vector<span style="color:#f92672">&lt;</span>P<span style="color:#f92672">&gt;</span>, std<span style="color:#f92672">::</span>greater<span style="color:#f92672">&lt;</span>P<span style="color:#f92672">&gt;&gt;</span> pq;
+</span></span><span style="display:flex;"><span>    dist[s] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    pq.push({<span style="color:#ae81ff">0</span>, s});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>pq.empty()) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">auto</span> [d, v] <span style="color:#f92672">=</span> pq.top();
+</span></span><span style="display:flex;"><span>        pq.pop();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (d <span style="color:#f92672">!=</span> dist[v]) <span style="color:#66d9ef">continue</span>;  <span style="color:#75715e">// 如果队列里的是旧距离，就跳过
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> [w, wgt] <span style="color:#f92672">:</span> adj[v]) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (dist[v] <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">continue</span>;  <span style="color:#75715e">// 如果 v 本身不可达就跳过
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> alt <span style="color:#f92672">=</span> dist[v] <span style="color:#f92672">+</span> wgt;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// w 还没到过 || 找到更短的距离 alt
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (dist[w] <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">||</span> alt <span style="color:#f92672">&lt;</span> dist[w]) {
+</span></span><span style="display:flex;"><span>                dist[w] <span style="color:#f92672">=</span> alt;
+</span></span><span style="display:flex;"><span>                prev[w] <span style="color:#f92672">=</span> v;
+</span></span><span style="display:flex;"><span>                pq.push({alt, w});
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>复杂度：</p>
+<ul>
+<li>用普通数组找最小 dist，O(|V|²)。</li>
+<li>用优先队列，O(|E| log|V|)。</li>
+</ul>
+</br>
+</br>
+<h2 id="拓扑排序-topological-sort">拓扑排序 Topological Sort</h2>
+<p>对于 DAG，输出一个线性序列，使得每条边 u→v 都满足 u 在 v 前面。DFS 版本：</p>
+<ol>
+<li>对图做 DFS，记录每个点的“完成时间 finishing time”（某点所有后继都 DFS 完才算完成）。</li>
+<li>每当一个点完成，就把它插到链表头部。</li>
+<li>最终链表顺序就是拓扑序。
+在 DAG 中，若有 u→v，那么 DFS 中 v 的完成时间一定早于 u（v 要么被 u 深入时访问完成，要么先前完成），因此把完成晚的放前面，保证 u 在 v 前。<strong>复杂度 O(|V|+|E|)</strong>。</li>
+</ol>
+</br>
+</br>
+<h2 id="注意点-1">注意点</h2>
+<p>搜索和路径问题通用的常用成员：</p>
+<ul>
+<li>visited：<code>vector&lt;bool&gt; visited(n,false);</code></li>
+<li>dist：<code>vector&lt;int&gt; dist(n, -1);</code> (也可以用 INFINITY)</li>
+<li>path / predecessor：<code>vector&lt;int&gt; prev(n, -1);</code>
+邻接表常用结构：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>,<span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&gt;</span> adj; 
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// adj[v] = {(w, weight), ...}
+</span></span></span></code></pre></div><ul>
+<li>“对 w 所有邻接点 v” 就是：<code>for (auto [w, wt] : adj[v]) { ... }</code></li>
+<li>BFS 用 <code>queue&lt;int&gt;</code>；DFS 用 <code>stack&lt;int&gt;</code>；Dijkstra 用 <code>priority_queue</code></li>
+</ul>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="小练习">小练习</h1>
+<ol>
+<li>
+<p>请用二叉搜索树证明：${17\over 7} &lt; log_27$。</p>
+<p>→ 构建一个 7 节点 AVT 并使每个节点距离根的遍历距离的和为 17，根据遍历时间复杂度复杂度 O(logN) 得到答案</p>
+</li>
+<li>
+<p>请把 std::vector 的用法 <code>array[index]=value</code> 写成操作符形式。</p>
+<p>→ <code>array.operator[](index) = value</code></p>
+</li>
+<li>
+<p>请推导用  minimum heapsort 排序 N 个元素的时间复杂度 O 以及最小复杂度 Ω，它会向冒泡排序或树排序那样 “退化” 吗？</p>
+<p>→ <code>&lt;buildHeap&gt;</code> O(N) + N x <code>&lt;deleteMin&gt;</code> O(log N) = O(N + NlogN) = O(NlogN)；最小复杂度也一样；不会退化，因为输入数据的有序性没有影响。</p>
+</li>
+<li>
+<p>所有的平衡 BST 设计方案的根本目的是什么？</p>
+<p>→ 防止树退化为链表导致 (除了遍历) 时间复杂度从 O(logN) 降为 O(N)。</p>
+</li>
+<li>
+<p>请推导 N 节点的 RBTree 高度取值范围。</p>
+<p>→ 红黑树高度、节点数与黑高的关系： $h ≤ 2\  bh\ ,\ N ≥ 2^{bh} - 1\ \to\ h ≤ 2 log_2(N + 1)$；同时，所有树高度与节点都有以下关系：$N≤ 2^{h+1}-1\ \to\ h≥log_2(N+1)-1$。所以红黑树高度关于 N 的取值范围为：$h∈[⌈log_2(N+1) - 1⌉,\ ⌊2 log_2(N + 1)⌋]$</p>
+</li>
+<li>
+<p>DFS 的遍历顺序可以是三种树遍历中的哪一个？DFS 可以直接用递归实现说明递归和哪种数据结构逻辑相同？</p>
+<p>→ 前序；递归本质上是在使用计算机 (内存) 的栈。</p>
+</li>
+<li>
+<p>请找错：</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e"> &lt;queue&gt;     </span><span style="color:#75715e">// 不能一行写两个 std 引用
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 漏写了 using std::vector; 和 using std::queue; 或者 using namespace std;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bfs</span>(<span style="color:#66d9ef">int</span> start, <span style="color:#66d9ef">const</span> vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">&amp;</span>adj) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> adj.size();    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// vector 的 .size() 返回数据是 size_t 类，需要强制 (int)adj.size();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span> visited[n] <span style="color:#f92672">=</span> {false};
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 这个用法在只对初始化数组才有用，改成 vector&lt;bool&gt; visited(n, false);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> q;
+</span></span><span style="display:flex;"><span>    visited[start] <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>    q.push_back(start);   
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 栈、队列、优先队列的插入末尾的函数名字是 .push()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">/*......*/</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ol start="8">
+<li>一个红黑树的部分结构如下，现在要在 (1) 插入 5，插在哪里，如何调整？要在 (2) 删除 5，如何调整？</li>
+</ol>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode"> (1)      7(B)       (2)          4(B)
+         /    \                  /   \ 
+      6(B)   10(B)             2(B)   6(B)  
+      /     /    \             /     /   \
+    4(R)   8(R)   12(R)     1(B)   5(B)   9(B)
+                                         /
+                                       8(R) 
+</code></pre><p>(1) 作为 4 的右孩子；先左旋 4 然后右旋 6 并反转 5 和 6 的颜色。</p>
+<p>(2)  右旋 9 然后 左旋 6 并涂黑 8。</p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3200/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3200</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3200.f1/">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

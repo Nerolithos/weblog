@@ -6,13 +6,27 @@
     <description>Recent content in Categories on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 31 Aug 2025 11:29:34 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 22 Jan 2026 16:30:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DDA</title>
+      <link>http://localhost:1313/categories/dda/</link>
+      <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/categories/dda/</guid>
+      <description></description>
+    </item>
     <item>
       <title>SDS</title>
       <link>http://localhost:1313/categories/sds/</link>
-      <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
+      <pubDate>Tue, 20 Jan 2026 10:30:34 +0800</pubDate>
       <guid>http://localhost:1313/categories/sds/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SSE</title>
+      <link>http://localhost:1313/categories/sse/</link>
+      <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/categories/sse/</guid>
       <description></description>
     </item>
     <item>
