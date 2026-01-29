@@ -33,6 +33,17 @@
       opacity: 0.8;
       font-size: 0.95rem;
     }
+    .d3-demo-layout {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-top: 1.5rem;
+    }
+    .d3-demo-left,
+    .d3-demo-right {
+      flex: 1 1 50%;
+      min-width: 0;
+    }
     .d3-demo-canvas-wrapper {
       margin-top: 1.5rem;
       background: radial-gradient(circle at top, #1b2735 0, #090a0f 60%, #020308 100%);
@@ -85,9 +96,42 @@
     .d3-demo-backlink a:hover {
       text-decoration: underline;
     }
+    .d3-demo-globe-wrapper {
+      margin-top: 1.5rem;
+      background: radial-gradient(circle at top, #050818 0, #020308 60%, #000000 100%);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.65);
+    }
+    .d3-demo-globe-svg {
+      width: 100%;
+      height: 480px;
+      display: block;
+    }
+    .d3-demo-globe-sphere {
+      fill: #021019;
+      stroke: #0b3d91;
+      stroke-width: 1.2px;
+    }
+    .d3-demo-globe-graticule {
+      fill: none;
+      stroke: rgba(180, 210, 255, 0.18);
+      stroke-width: 0.6px;
+      stroke-dasharray: 2 2;
+    }
+    .d3-demo-globe-country {
+      stroke: rgba(0, 0, 0, 0.55);
+      stroke-width: 0.4px;
+    }
     @media (max-width: 640px) {
-      .d3-demo-svg {
+      .d3-demo-svg,
+      .d3-demo-globe-svg {
         height: 360px;
+      }
+    }
+    @media (max-width: 960px) {
+      .d3-demo-layout {
+        flex-direction: column;
       }
     }
   </style>
@@ -96,13 +140,25 @@
   <main class="d3-demo-page">
     <header class="d3-demo-header">
       <h1>D3.js 小实验：力导向图</h1>
-      <p>简单演示 D3 的 <code>forceSimulation</code>，节点可以用鼠标拖拽。</p>
+      <p>左侧：简单演示 D3 的 <code>forceSimulation</code>；右侧：<code>geoOrthographic</code> 旋转地球。</p>
     </header>
 
-    <section class="d3-demo-canvas-wrapper">
-      <svg id="d3-demo-svg" class="d3-demo-svg"></svg>
-      <div class="d3-demo-legend">
-        提示：拖拽节点观察布局变化；双击空白区域可轻微“摇一摇”重排。
+    <section class="d3-demo-layout">
+      <div class="d3-demo-left">
+        <div class="d3-demo-canvas-wrapper">
+          <svg id="d3-demo-svg" class="d3-demo-svg"></svg>
+          <div class="d3-demo-legend">
+            左侧：拖拽节点观察布局变化；双击空白区域可轻微“摇一摇”重排。
+          </div>
+        </div>
+      </div>
+      <div class="d3-demo-right">
+        <div class="d3-demo-globe-wrapper">
+          <svg id="d3-globe-svg" class="d3-demo-globe-svg"></svg>
+          <div class="d3-demo-legend">
+            右侧：自动旋转的地球，可通过拖拽改变视角。
+          </div>
+        </div>
       </div>
     </section>
 
@@ -112,31 +168,32 @@
   </main>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
   <script>
     const svg = d3.select("#d3-demo-svg");
     const width = parseInt(svg.style("width"));
     const height = parseInt(svg.style("height"));
 
     const nodes = [
-      { id: "D3", group: 1 },
-      { id: "数据", group: 2 },
-      { id: "可视化", group: 2 },
-      { id: "力导向", group: 3 },
-      { id: "SVG", group: 3 },
-      { id: "交互", group: 4 },
-      { id: "缩放", group: 4 },
-      { id: "拖拽", group: 4 }
+      { id: "1", group: 1 },
+      { id: "2", group: 2 },
+      { id: "3", group: 2 },
+      { id: "4", group: 3 },
+      { id: "5", group: 3 },
+      { id: "6", group: 4 },
+      { id: "7", group: 4 },
+      { id: "8", group: 4 }
     ];
 
     const links = [
-      { source: "D3", target: "数据" },
-      { source: "D3", target: "可视化" },
-      { source: "D3", target: "力导向" },
-      { source: "D3", target: "SVG" },
-      { source: "交互", target: "拖拽" },
-      { source: "交互", target: "缩放" },
-      { source: "可视化", target: "交互" },
-      { source: "数据", target: "可视化" }
+      { source: "1", target: "2" },
+      { source: "1", target: "3" },
+      { source: "1", target: "4" },
+      { source: "1", target: "5" },
+      { source: "6", target: "7" },
+      { source: "6", target: "8" },
+      { source: "3", target: "6" },
+      { source: "2", target: "3" }
     ];
 
     const color = d3.scaleOrdinal()
@@ -224,6 +281,108 @@
         .attr("x", d => d.x)
         .attr("y", d => d.y);
     }
+
+    // ==========================
+    // 右侧：旋转地球 geoOrthographic
+    // ==========================
+    const globeSvg = d3.select("#d3-globe-svg");
+    const globeWidth = parseInt(globeSvg.style("width"));
+    const globeHeight = parseInt(globeSvg.style("height"));
+
+    const projection = d3.geoOrthographic()
+      .scale(Math.min(globeWidth, globeHeight) / 2.1)
+      .translate([globeWidth / 2, globeHeight / 2])
+      .clipAngle(90);
+
+    const geoPath = d3.geoPath(projection);
+    const graticule = d3.geoGraticule();
+
+    const globeGroup = globeSvg.append("g");
+
+    const sphere = globeGroup.append("path")
+      .datum({ type: "Sphere" })
+      .attr("class", "d3-demo-globe-sphere");
+
+    const grat = globeGroup.append("path")
+      .datum(graticule())
+      .attr("class", "d3-demo-globe-graticule");
+
+    let countryPaths = null;
+
+    const continentColor = d3.scaleOrdinal()
+      .range([
+        "#5fb0ff", // 海洋蓝系
+        "#8bc34a", // 绿色
+        "#ffb74d", // 橙色
+        "#ce93d8", // 紫色
+        "#ff8a80", // 红橙
+        "#80cbc4"  // 青绿
+      ]);
+
+    function renderGlobe() {
+      sphere.attr("d", geoPath);
+      grat.attr("d", geoPath);
+      if (countryPaths) {
+        countryPaths.attr("d", geoPath);
+      }
+    }
+
+    d3.json("https://unpkg.com/world-atlas@2/world/110m.json").then(worldData => {
+      const countries = topojson.feature(worldData, worldData.objects.countries).features;
+
+      countryPaths = globeGroup.append("g")
+        .selectAll("path")
+        .data(countries)
+        .enter()
+        .append("path")
+        .attr("class", "d3-demo-globe-country")
+        .attr("fill", d => continentColor(+d.id % 6));
+
+      renderGlobe();
+    });
+
+    let isDraggingGlobe = false;
+    let lastRotation = projection.rotate();
+    let lastPos = null;
+
+    function updateRotation(lambda, phi) {
+      projection.rotate([lambda, phi]);
+      renderGlobe();
+    }
+
+    let baseLambda = 0;
+    let basePhi = -15;
+    updateRotation(baseLambda, basePhi);
+
+    const rotationInterval = d3.interval(() => {
+      if (isDraggingGlobe) return;
+      baseLambda = (baseLambda + 0.4) % 360;
+      updateRotation(baseLambda, basePhi);
+    }, 40);
+
+    const globeDrag = d3.drag()
+      .on("start", (event) => {
+        isDraggingGlobe = true;
+        lastRotation = projection.rotate();
+        lastPos = [event.x, event.y];
+      })
+      .on("drag", (event) => {
+        if (!lastPos) return;
+        const dx = event.x - lastPos[0];
+        const dy = event.y - lastPos[1];
+        const sensitivity = 0.25;
+        const lambda = lastRotation[0] + dx * sensitivity;
+        const phi = Math.max(-80, Math.min(80, lastRotation[1] - dy * sensitivity));
+        baseLambda = lambda;
+        basePhi = phi;
+        updateRotation(lambda, phi);
+      })
+      .on("end", () => {
+        isDraggingGlobe = false;
+        lastPos = null;
+      });
+
+    globeSvg.call(globeDrag);
   </script>
 </body>
 </html>
