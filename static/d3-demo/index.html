@@ -102,7 +102,7 @@
       background: #ffffff;
       border-radius: 14px;
       padding: 1.25rem;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
       border: 1px solid rgba(0,0,0,0.06);
     }
     .d3-demo-globe-svg {
@@ -142,7 +142,7 @@
   <main class="d3-demo-page">
     <header class="d3-demo-header">
       <h1>D3.js 小实验：力导向图</h1>
-      <p>左侧：简单演示 D3 的 <code>forceSimulation</code>；右侧：<code>geoOrthographic</code> 旋转地球。</p>
+      <p>左侧： <code>forceSimulation</code>；右侧：<code>geoOrthographic</code> </p>
     </header>
 
     <section class="d3-demo-layout">
@@ -150,7 +150,7 @@
         <div class="d3-demo-canvas-wrapper">
           <svg id="d3-demo-svg" class="d3-demo-svg"></svg>
           <div class="d3-demo-legend">
-            左侧：拖拽节点观察布局变化；双击空白区域可轻微“摇一摇”重排。
+            拖拽节点观察力的效果，双击放大，可拖动。
           </div>
         </div>
       </div>
@@ -158,7 +158,7 @@
         <div class="d3-demo-globe-wrapper">
           <svg id="d3-globe-svg" class="d3-demo-globe-svg"></svg>
           <div class="d3-demo-legend">
-            右侧：自动旋转的地球，可通过拖拽改变视角。
+            自动旋转的地球，可通过拖拽改变视角。
           </div>
         </div>
       </div>
@@ -311,6 +311,8 @@
 
     let countryPaths = null;
 
+    const specialChinaColor = "#ce4242"; // 中国 & 台湾 统一颜色
+
     const continentColor = d3.scaleOrdinal()
       .range([
         "#5fb0ff", // 海洋蓝系
@@ -343,7 +345,15 @@
         .enter()
         .append("path")
         .attr("class", "d3-demo-globe-country")
-        .attr("fill", (d, i) => continentColor(i % 6));
+        .attr("fill", (d, i) => {
+          const id = +d.id;
+          const name = d.properties && d.properties.name;
+          // world-atlas 中，China 通常 id=156，Taiwan id=158
+          if (id === 156 || id === 158 || name === "China" || name === "Taiwan") {
+            return specialChinaColor;
+          }
+          return continentColor(i % 6);
+        });
 
       renderGlobe();
     });
