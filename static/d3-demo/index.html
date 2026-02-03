@@ -329,7 +329,12 @@
       }
     }
 
-    d3.json("https://unpkg.com/world-atlas@2/world/110m.json").then(worldData => {
+    d3.json("https://unpkg.com/world-atlas@2/countries-110m.json").then(worldData => {
+      if (!worldData.objects || !worldData.objects.countries) {
+        console.error("world-atlas 数据格式不符合预期", worldData);
+        return;
+      }
+
       const countries = topojson.feature(worldData, worldData.objects.countries).features;
 
       countryPaths = globeGroup.append("g")
@@ -338,7 +343,7 @@
         .enter()
         .append("path")
         .attr("class", "d3-demo-globe-country")
-        .attr("fill", d => continentColor(+d.id % 6));
+        .attr("fill", (d, i) => continentColor(i % 6));
 
       renderGlobe();
     });
