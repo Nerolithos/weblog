@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dual Pets MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      /* 画布外统一使用纯浅黑色背景 */
+      background: #181818;
+      color: #eee;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #matrix-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    #pet-container {
+      position: relative;
+      z-index: 1; /* 让人物画布覆盖在字符雨上方 */
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      border-radius: 12px;
+      overflow: hidden;
+      /* 使用 Resources/background.png 作为当前画布的背景 */
+      background: url('Resources/background.png') center center / cover no-repeat;
+    }
+    canvas {
+      display: block;
+    }
+    #hint {
+      position: fixed;
+      z-index: 2;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ccc;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <!-- 背景 Matrix 字符雨画布（在宠物 canvas 之外，不影响交互） -->
+  <canvas id="matrix-bg"></canvas>
+
+  <div id="pet-container">
+    <canvas id="dual-pets" width="960" height="640"></canvas>
+  </div>
+  <div id="hint">----- ArkPets ... Try clicking and dragging! -----</div>
+
+  <!-- Spine webgl runtime built locally from Spine 3.8 runtimes (spine-ts/build/spine-webgl.js) -->
+  <script src="spine-webgl-3.8.js"></script>
+
+  <!-- Dual pets logic (already in this folder) -->
+  <script src="dual-pets.js"></script>
+  <script>
+    (function () {
+      function start() {
+        var canvas = document.getElementById('dual-pets');
+        if (!canvas) {
+          console.error('[DualPets] canvas #dual-pets not found');
+          return;
+        }
+        if (!window.spine) {
+          console.error('[DualPets] global `spine` not found. Make sure spine-webgl.js is present and loaded successfully.');
+          return;
+        }
+        if (!window.DualPets || !window.DualPets.initDualPets) {
+          console.error('[DualPets] initDualPets not available; ensure dual-pets.js is present.');
+          return;
+        }
+        window.DualPets.initDualPets({
+          canvas: canvas,
+          assetBaseUrl: 'Resources'
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+      } else {
+        start();
+      }
+    })();
+  </script>
+    <script>
+      // Matrix rain 背景效果，仅绘制在页面背景 canvas，上层宠物 canvas 不受影响
+      (function () {
+        var bg = document.getElementById('matrix-bg');
+        if (!bg || !bg.getContext) return;
+        var ctx = bg.getContext('2d');
+
+        var FONT_SIZE = 18;
+        var SPEED_MIN = 6;
+        var SPEED_MAX = 16;
+        var TAIL_LEN = 14;
+        var REFRESH_MS = 33; // ~30 FPS
+        var CHARS = "アイウエオカキクケコサシスセソタチツテトナニヌネノ" +
+                    "ハヒフヘホマミムメモヤユヨラリルレロワヲン" +
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+
+        function greenShades(n) {
+          var shades = [];
+          for (var i = 0; i < n; i++) {
+            var t = n <= 1 ? 0 : i / (n - 1);
+            var g = Math.floor(255 * (0.30 + 0.55 * (1 - t))); // 整体稍暗
+            var r = Math.floor(20 * (1 - t));
+            var b = Math.floor(20 * (1 - t));
+            // 使用半透明绿色，让背景整体更暗一些
+            shades.push('rgba(' + r + ',' + g + ',' + b + ',0.55)');
+          }
+          return shades;
+        }
+
+        var shades = greenShades(TAIL_LEN);
+
+        var columns = [];
+        var width = 0;
+        var height = 0;
+
+        function randInt(a, b) {
+          return Math.floor(Math.random() * (b - a + 1)) + a;
+        }
+
+        function resetColumn(col) {
+          col.y = randInt(-height, 0);
+          col.speed = randInt(SPEED_MIN, SPEED_MAX);
+          col.tail = new Array(TAIL_LEN).fill(' ');
+        }
+
+        function rebuildColumns() {
+          width = window.innerWidth || document.documentElement.clientWidth || bg.width;
+          height = window.innerHeight || document.documentElement.clientHeight || bg.height;
+          bg.width = width;
+          bg.height = height;
+
+          columns = [];
+          var colCount = Math.floor(width / FONT_SIZE);
+          for (var c = 0; c < colCount; c++) {
+            if (Math.random() < 0.15) continue; // 留一些空列
+            var col = {
+              x: c * FONT_SIZE,
+              y: randInt(-height, 0),
+              speed: randInt(SPEED_MIN, SPEED_MAX),
+              tail: new Array(TAIL_LEN).fill(' ')
+            };
+            columns.push(col);
+          }
+        }
+
+        function stepColumn(col) {
+          var head = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+          col.tail.unshift(head);
+          col.tail.length = TAIL_LEN;
+          col.y += col.speed;
+
+          for (var i = 0; i < col.tail.length; i++) {
+            var ch = col.tail[i];
+            if (ch === ' ') continue;
+            var yPos = col.y - i * FONT_SIZE;
+            if (yPos < -FONT_SIZE || yPos > height + FONT_SIZE) continue;
+            ctx.fillStyle = i === 0 ? 'rgba(204,255,204,0.75)' : shades[i];
+            ctx.fillText(ch, col.x, yPos);
+          }
+
+          if (col.y - TAIL_LEN * FONT_SIZE > height + FONT_SIZE) {
+            resetColumn(col);
+          }
+        }
+
+        function animate() {
+          // 加深背景清除，用更高的不透明度让整体更暗
+          ctx.fillStyle = 'rgba(0,0,0,0.8)';
+          ctx.fillRect(0, 0, width, height);
+          ctx.font = FONT_SIZE + 'px "Courier New", monospace';
+          ctx.textBaseline = 'top';
+          ctx.textAlign = 'left';
+
+          for (var i = 0; i < columns.length; i++) {
+            stepColumn(columns[i]);
+          }
+        }
+
+        function startMatrix() {
+          rebuildColumns();
+          setInterval(animate, REFRESH_MS);
+        }
+
+        window.addEventListener('resize', rebuildColumns);
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', startMatrix);
+        } else {
+          startMatrix();
+        }
+      })();
+    </script>
+</body>
+</html>
