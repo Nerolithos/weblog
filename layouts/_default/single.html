@@ -6,6 +6,19 @@
   {{ $section := .Site.GetPage "section" .Section }}
   <article class="flex-l flex-wrap justify-between mw8 center ph3">
 
+    {{ with .Params.redirect }}
+      <script>
+        if (typeof window !== 'undefined') {
+          window.location.href = "{{ . }}";
+        }
+      </script>
+      <p>
+        正在跳转到
+        <a href="{{ . }}">{{ . }}</a>
+        …
+      </p>
+    {{ end }}
+
     <header class="mt4 w-100">
       <aside class="instapaper_ignoref b helvetica tracked ttu">
         {{ .CurrentSection.Title }}
