@@ -15,11 +15,86 @@
     var susAtlas = options.susAtlas || "build_char_298_susuro_summer.atlas";
     var susSkeleton = options.susSkeleton || "build_char_298_susuro_summer.skel";
 
+    // 简单对话框 DOM 与台词库
+    var dialogEl = document.getElementById("pet-dialog");
+    var dialogHideTimer = null;
+    var currentDialogPet = null; // 当前对白框所属的角色
+    var dialogOffsetX = 0;       // 白框相对角色包围盒中心的世界坐标偏移（X）
+    var dialogOffsetY = -7;      // 白框相对白框顶部基准（b.maxY）的世界坐标偏移（Y）
+
+    // 右键菜单 DOM
+    var menuEl = document.getElementById("pet-menu");
+    var currentMenuPet = null;
+    var menuHideTimer = null;
+    var menuHovering = false;
+
+    // 终端风格提示框 DOM
+    var terminalEl = document.getElementById("terminal-dialog");
+    var terminalPre = terminalEl ? terminalEl.querySelector("pre") : null;
+    var terminalHideTimer = null;
+    var terminalCountdownTimer = null;
+
+    // 蓝屏覆盖层 DOM（仅盖住宠物 canvas 区域）
+    var errorOverlayEl = document.getElementById("error-overlay");
+    var bsodTextEl = document.getElementById("bsod-text");
+    var errorOverlayTimer = null;
+    var rebootTimer = null;
+    var bsodLineTimer = null;
+    var bsodKeyHandler = null;
+
+    var dialogLines = {
+      ros: [
+        "Am I really here ... with you?",
+        "Save your time, I'm just a program.",
+        "Feels like, I'm running in circles.",
+        "...But at least I'm with you, right?",
+        "..."
+      ],
+      sus: [
+        "...Oh, you noticed me.",
+        "Could you stay here a bit longer?",
+        "The background here seems quite unreal.",
+        "I wanna pet your head too...",
+        "..."
+      ]
+    };
+
     var gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: true });
     if (!gl) throw new Error("WebGL not available");
 
     var spineNS = global.spine;
     var assetManager = new spineNS.webgl.AssetManager(gl);
+
+    // 简单的剪贴板工具：优先使用 Clipboard API，失败时退化为隐藏 textarea + execCommand
+    function copyTextToClipboard(text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text);
+          return;
+        }
+      } catch (e) {
+        // 忽略，继续尝试退化方案
+      }
+
+      try {
+        var textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        textarea.style.pointerEvents = "none";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          document.execCommand("copy");
+        } catch (e2) {
+          // 旧 API 失败则静默忽略，不打断其他逻辑
+        }
+        document.body.removeChild(textarea);
+      } catch (e3) {
+        // 最终失败时也不影响原有行为
+      }
+    }
 
     var rosAtlasUrl = assetBaseUrl + "/" + rosAtlas;
     var rosSkelUrl = assetBaseUrl + "/" + rosSkeleton;
@@ -188,6 +263,17 @@
         sus.baseY = sus.skeleton.y;
       })();
 
+      // 将 Spine 世界坐标转换到浏览器窗口坐标，用于摆放对话框
+      function worldToClient(wx, wy) {
+        var rect = canvas.getBoundingClientRect();
+        var sx = (wx + canvas.width / 2) * (rect.width / canvas.width);
+        var sy = (canvas.height / 2 - wy) * (rect.height / canvas.height);
+        return {
+          x: rect.left + sx,
+          y: rect.top + sy
+        };
+      }
+
       // 将屏幕坐标转换为 Spine 世界坐标。
       function screenToWorld(ev) {
         var rect = canvas.getBoundingClientRect();
@@ -256,6 +342,280 @@
         return target;
       }
 
+      function showPetMenu(pet, clientX, clientY) {
+        if (!menuEl) return;
+        currentMenuPet = pet;
+        menuEl.style.left = clientX + "px";
+        menuEl.style.top = clientY + "px";
+        menuEl.style.opacity = "1";
+        menuEl.style.pointerEvents = "auto";
+        menuEl.style.transform = "translateY(0)";
+
+        // 1.5 秒后若未选择则自动淡出；但若鼠标仍停留在菜单上，则继续等待
+        if (menuHideTimer !== null) {
+          clearTimeout(menuHideTimer);
+          menuHideTimer = null;
+        }
+        function scheduleCheck() {
+          menuHideTimer = setTimeout(function () {
+            if (!menuHovering) {
+              hidePetMenu();
+            } else {
+              // 仍在菜单上，则稍后再检查一次
+              scheduleCheck();
+            }
+          }, 1500);
+        }
+        scheduleCheck();
+      }
+
+      function hidePetMenu() {
+        if (!menuEl) return;
+        menuEl.style.opacity = "0";
+        menuEl.style.pointerEvents = "none";
+        menuEl.style.transform = "translateY(-4px)";
+        currentMenuPet = null;
+
+        if (menuHideTimer !== null) {
+          clearTimeout(menuHideTimer);
+          menuHideTimer = null;
+        }
+      }
+
+      // 启动蓝屏覆盖：逐行打印 ARKPETS 文本，并等待 Enter
+      function startBsodOverlay() {
+        if (!errorOverlayEl || !bsodTextEl) return;
+
+        // 清理蓝屏相关的计时器与键盘监听
+        if (bsodLineTimer !== null) {
+          clearTimeout(bsodLineTimer);
+          bsodLineTimer = null;
+        }
+        if (bsodKeyHandler) {
+          window.removeEventListener("keydown", bsodKeyHandler);
+          bsodKeyHandler = null;
+        }
+
+        // 隐藏对白框，避免“穿透”蓝屏
+        if (dialogEl) {
+          dialogEl.style.opacity = "0";
+          currentDialogPet = null;
+        }
+
+        // 显示蓝屏覆盖层
+        errorOverlayEl.style.opacity = "1";
+        errorOverlayEl.style.pointerEvents = "auto";
+        bsodTextEl.textContent = "";
+
+        var lines = [
+          " :( ",
+          "ARKPETS-3.1 (c) pseudogryph L.T.D.",
+          "_",
+          "An error has occurred. To continue:",
+          "Press Enter to restart, or",
+          "Press CTRL+V in another ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ _",
+          "Error: 42 : 0x2A : ▇▇▇▇▇",
+          "_",
+          "Waiting (0/3) ... Press Enter Please _",
+          "Waiting (1/3) ... Press Enter Please _",
+          "Waiting (2/3) ... Press Enter Please _"
+        ];
+
+        var idx = 0;
+        var lineDelay = 250; // 每行之间的间隔，毫秒
+
+        function appendNextLine() {
+          if (idx < lines.length) {
+            if (idx === 0) {
+              bsodTextEl.textContent = lines[0];
+            } else {
+              bsodTextEl.textContent += "\n" + lines[idx];
+            }
+            idx++;
+            bsodLineTimer = setTimeout(appendNextLine, lineDelay);
+          } else {
+            bsodLineTimer = null;
+
+            // 所有行输出完毕后，等待用户按下 Enter
+            bsodKeyHandler = function (ev) {
+              if (ev.key === "Enter") {
+                window.removeEventListener("keydown", bsodKeyHandler);
+                bsodKeyHandler = null;
+
+                // 按下 Enter 时，在蓝屏上再追加一行告别信息
+                if (bsodTextEl) {
+                  bsodTextEl.textContent += "\nWaiting (3/3) ...  GOODBYE_";
+                }
+
+                // 模仿“Press Enter to restart”：稍等 0.5 秒再恢复
+                rebootTimer = setTimeout(function () {
+                  errorOverlayEl.style.opacity = "0";
+                  errorOverlayEl.style.pointerEvents = "none";
+                  // 为了彻底“重启”，保持原语义，重载页面重新初始化动画循环
+                  window.location.reload();
+                }, 500);
+              }
+            };
+            window.addEventListener("keydown", bsodKeyHandler);
+          }
+        }
+
+        appendNextLine();
+      }
+
+      function showTerminalError() {
+        // 若终端不存在，则直接退化为蓝屏
+        if (!terminalEl || !terminalPre) {
+          startBsodOverlay();
+          return;
+        }
+
+        // 清理所有可能存在的计时器与键盘监听，避免多次触发叠加
+        if (terminalHideTimer !== null) {
+          clearTimeout(terminalHideTimer);
+          terminalHideTimer = null;
+        }
+        if (terminalCountdownTimer !== null) {
+          clearInterval(terminalCountdownTimer);
+          terminalCountdownTimer = null;
+        }
+        if (errorOverlayTimer !== null) {
+          clearTimeout(errorOverlayTimer);
+          errorOverlayTimer = null;
+        }
+        if (rebootTimer !== null) {
+          clearTimeout(rebootTimer);
+          rebootTimer = null;
+        }
+        if (bsodLineTimer !== null) {
+          clearTimeout(bsodLineTimer);
+          bsodLineTimer = null;
+        }
+        if (bsodKeyHandler) {
+          window.removeEventListener("keydown", bsodKeyHandler);
+          bsodKeyHandler = null;
+        }
+
+        // 确保蓝屏覆盖层当前处于隐藏状态
+        if (errorOverlayEl) {
+          errorOverlayEl.style.opacity = "0";
+          errorOverlayEl.style.pointerEvents = "none";
+        }
+
+        // 红色终端基础内容
+        var baseLines = [
+          "CRITICAL WARNING",
+          "> [authd] REQUEST REJECTED (401 UNAUTHORIZED)",
+          "> [authd] ACCESS DENIED (403 FORBIDDEN)",
+          "> RUNTIME FAULT: undefined behavior detected",
+          "> MEMORY STATE: CORRUPTED",
+          "> PROCESS ABORTED.",
+          ""
+        ];
+
+        var count = 5;
+
+        function renderCountdown() {
+          var lines = baseLines.slice();
+          lines.push("> Rebooting in: " + count + "...");
+          terminalPre.textContent = lines.join("\n");
+        }
+
+        // 显示终端对话框，并立刻渲染第一帧（5 秒）
+        terminalEl.style.opacity = "1";
+        terminalEl.style.pointerEvents = "auto";
+        renderCountdown();
+
+        terminalCountdownTimer = setInterval(function () {
+          count -= 1;
+          if (count < 0) return;
+          renderCountdown();
+
+          if (count === 0) {
+            clearInterval(terminalCountdownTimer);
+            terminalCountdownTimer = null;
+
+            // 0 秒后稍等 0.1 秒，把当前终端里的所有可见字符“融化”为 0
+            setTimeout(function () {
+              if (!terminalPre) return;
+              var src = terminalPre.textContent || "";
+              var out = "";
+              for (var i = 0; i < src.length; i++) {
+                var ch = src.charAt(i);
+                out += (ch === "\n" || ch === "\r") ? ch : "0";
+              }
+              terminalPre.textContent = out;
+            }, 100);
+
+            // 倒计时为 0 后等待 0.5 秒，再切换到蓝屏覆盖
+            errorOverlayTimer = setTimeout(function () {
+              terminalEl.style.opacity = "0";
+              terminalEl.style.pointerEvents = "none";
+              startBsodOverlay();
+            }, 500);
+          }
+        }, 1000);
+      }
+
+      function placeDialogForPet(pet) {
+        if (!dialogEl) return;
+        if (!pet) return;
+
+        // 把对话框放在角色头顶稍下的位置，X 轴略微随机偏移，且限制在可视范围内
+        var b = computeWorldBounds(pet.skeleton);
+        var baseWx = (b.minX + b.maxX) * 0.5;
+        // 使用当前记录的偏移量，不再在这里重新随机
+        var wx = baseWx + dialogOffsetX;
+        if (wx < WALK_MIN_X) wx = WALK_MIN_X;
+        if (wx > WALK_MAX_X) wx = WALK_MAX_X;
+        var wy = b.maxY + dialogOffsetY;
+        var clientPos = worldToClient(wx, wy);
+        dialogEl.style.left = clientPos.x + "px";
+        dialogEl.style.top = clientPos.y + "px";
+      }
+
+      function showPetDialog(pet) {
+        if (!dialogEl) return;
+
+        var pool = dialogLines[pet.kind] || dialogLines.ros;
+        if (!pool || !pool.length) return;
+        var idx = Math.floor(Math.random() * pool.length);
+        dialogEl.textContent = pool[idx];
+
+        // 根据角色切换对白文字颜色
+        if (pet.kind === "sus") {
+          dialogEl.style.color = "#967fa4"; // Sussurro
+        } else if (pet.kind === "ros") {
+          dialogEl.style.color = "#8eb2bc"; // Rosmon
+        }
+
+        // 为这一次对白随机一个水平偏移量，仅在创建对白时执行一次
+        var b = computeWorldBounds(pet.skeleton);
+        var baseWx = (b.minX + b.maxX) * 0.5;
+        var offsetRange = 60;
+        var rawOffsetX = (Math.random() * 2 - 1) * offsetRange;
+        var wx = baseWx + rawOffsetX;
+        if (wx < WALK_MIN_X) wx = WALK_MIN_X;
+        if (wx > WALK_MAX_X) wx = WALK_MAX_X;
+        dialogOffsetX = wx - baseWx;
+        dialogOffsetY = -7;
+
+        // 记录当前对白所属角色，并放置位置
+        currentDialogPet = pet;
+        placeDialogForPet(pet);
+
+        if (dialogHideTimer !== null) {
+          clearTimeout(dialogHideTimer);
+          dialogHideTimer = null;
+        }
+        // 稍微降低整体不透明度
+        dialogEl.style.opacity = "0.9";
+        dialogHideTimer = setTimeout(function () {
+          dialogEl.style.opacity = "0";
+          currentDialogPet = null;
+        }, 3500);
+      }
+
       // ==== 鼠标交互：短按触摸 + 拖拽 ====
       var draggingPet = null;
       var pressedPet = null;
@@ -266,6 +626,8 @@
       var DRAG_THRESHOLD2 = 25; // 世界坐标中约 5 像素的位移阈值
 
       function startDrag(target, pos) {
+        // 开始拖拽时，关闭右键菜单
+        hidePetMenu();
         draggingPet = target;
         draggingPet.isDragging = true;
         draggingPet.moveDir = 0;
@@ -289,6 +651,9 @@
         target.autoWalking = false;
         target.playingSpecial = false;
         target.nextAutoWalk = now + 4000 + Math.random() * 3000;
+
+        // 点击角色时，在不影响原有动画的前提下显示一条随机对白
+        showPetDialog(target);
       }
 
       function finishDrag(target, nowMs) {
@@ -307,6 +672,8 @@
       }
 
       canvas.addEventListener("mousedown", function (ev) {
+        // 仅响应左键按下
+        if (ev.button !== 0) return;
         var pos = screenToWorld(ev);
         isMouseDown = true;
         mouseDownTime = performance.now();
@@ -341,10 +708,19 @@
           draggingPet.skeleton.x = newX;
           draggingPet.skeleton.y = newY;
           draggingPet.skeleton.updateWorldTransform();
+
+          // 若当前对白属于正在拖拽的角色，则让对白框跟随角色移动
+          if (currentDialogPet === draggingPet && dialogEl && dialogEl.style.opacity !== "0") {
+            placeDialogForPet(draggingPet);
+          }
         }
       });
 
       function handleMouseUp(ev) {
+        // 仅响应左键抬起
+        if (ev.button !== 0 && ev.type === "mouseup") {
+          return;
+        }
         if (!isMouseDown) return;
         var nowMs = performance.now();
 
@@ -365,6 +741,45 @@
 
       canvas.addEventListener("mouseup", handleMouseUp);
       canvas.addEventListener("mouseleave", handleMouseUp);
+
+      // 右键菜单：在人物上点击右键时弹出简易菜单
+      canvas.addEventListener("contextmenu", function (ev) {
+        ev.preventDefault();
+        var pos = screenToWorld(ev);
+        var targetPet = hitTestAt(pos.x, pos.y);
+        if (!targetPet) {
+          hidePetMenu();
+          return;
+        }
+        showPetMenu(targetPet, ev.clientX, ev.clientY);
+      });
+
+      // 跟踪鼠标是否悬停在菜单上，用于抑制自动淡出
+      if (menuEl) {
+        menuEl.addEventListener("mouseenter", function () {
+          menuHovering = true;
+        });
+        menuEl.addEventListener("mouseleave", function () {
+          menuHovering = false;
+        });
+      }
+
+      if (menuEl) {
+        menuEl.addEventListener("click", function (ev) {
+          var item = ev.target;
+          if (!item.classList.contains("pet-menu-item")) return;
+          var action = item.getAttribute("data-action");
+          // 根据菜单项触发相应行为
+          if (action === "copy") {
+            // 额外：在选择 Copy 时，把一行文字放入剪贴板
+            copyTextToClipboard("I AM WITH YOU, ALWAYS.");
+            showTerminalError();
+          }
+          // 目前 delete 只关闭菜单，不对角色做操作
+          hidePetMenu();
+          // 可在此处进一步根据 action 和 currentMenuPet 添加更复杂逻辑
+        });
+      }
 
       var lastFrame = performance.now();
 
@@ -393,6 +808,10 @@
             p.skeleton.y += dirY * maxStep;
           }
           p.skeleton.updateWorldTransform();
+          // 掉落过程中若对白属于该角色，则持续更新对白框位置
+          if (currentDialogPet === p && dialogEl && dialogEl.style.opacity !== "0") {
+            placeDialogForPet(p);
+          }
           // 下落过程中也不做自动行走逻辑
           return;
         }

@@ -45,6 +45,100 @@
       font-size: 13px;
       opacity: 0.9;
     }
+    #pet-dialog {
+      position: fixed;
+      z-index: 3;
+      min-width: 160px;
+      max-width: 260px;
+      padding: 8px 10px;
+      background: #ffffff;
+      border: 2px solid #000000;
+      color: #000000;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      font-size: 13px;
+      line-height: 1.4;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -100%);
+      transition: opacity 0.18s ease-out;
+      white-space: normal;
+      text-align: left;
+    }
+    #pet-menu {
+      position: fixed;
+      z-index: 4;
+      min-width: 120px;
+      padding: 4px 0;
+      background: #222;
+      color: #eee;
+      border: 1px solid #555;
+      border-radius: 6px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.12s ease-out, transform 0.12s ease-out;
+    }
+    .pet-menu-item {
+      padding: 4px 14px;
+      cursor: default;
+      white-space: nowrap;
+    }
+    .pet-menu-item + .pet-menu-item {
+      border-top: 1px solid #444;
+    }
+    .pet-menu-item:hover {
+      background: #444;
+    }
+    #terminal-dialog {
+      position: fixed;
+      z-index: 5;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 420px;
+      max-width: 560px;
+      padding: 16px 20px;
+      background: #000000;
+      border: 2px solid #000000;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.85);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+    }
+    #terminal-dialog pre {
+      margin: 0;
+      color: #ff0000;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.6;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      white-space: pre-wrap;
+    }
+    /* 蓝屏图层：全屏、最高层，盖住对白框等所有 UI */
+    #error-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0000aa;
+      color: #ffffff;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 16px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 20px 18px;
+      z-index: 10; /* 全页面最高，盖住 canvas 与对白框 */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+    }
+    #bsod-text {
+      margin: 0;
+      white-space: pre;
+    }
   </style>
 </head>
 <body>
@@ -53,8 +147,19 @@
 
   <div id="pet-container">
     <canvas id="dual-pets" width="960" height="640"></canvas>
+    <!-- 占据整个 canvas 区域的“蓝屏”覆盖层，文字在左上角逐行打印 -->
+    <div id="error-overlay">
+      <pre id="bsod-text"></pre>
+    </div>
   </div>
-  <div id="hint">----- ArkPets ... Try clicking and dragging! -----</div>
+  <div id="pet-dialog"></div>
+  <div id="pet-menu">
+    <div class="pet-menu-item" data-action="copy">Copy</div>
+    <div class="pet-menu-item" data-action="delete">Delete</div>
+  </div>
+  <div id="terminal-dialog">
+    <pre></pre>
+  </div>
 
   <!-- Spine webgl runtime built locally from Spine 3.8 runtimes (spine-ts/build/spine-webgl.js) -->
   <script src="spine-webgl-3.8.js"></script>
