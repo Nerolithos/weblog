@@ -15,6 +15,9 @@
     var susAtlas = options.susAtlas || "build_char_298_susuro_summer.atlas";
     var susSkeleton = options.susSkeleton || "build_char_298_susuro_summer.skel";
 
+    // 主布局容器（用于整体缩放以适配不同屏幕尺寸）
+    var mainRowEl = document.getElementById("main-row");
+
     // 简单对话框 DOM 与台词库
     var dialogEl = document.getElementById("pet-dialog");
     var dialogHideTimer = null;
@@ -41,6 +44,11 @@
     var rebootTimer = null;
     var bsodLineTimer = null;
     var bsodKeyHandler = null;
+
+    // 侧边终端 DOM
+    var arkTermOutput = document.getElementById("ark-terminal-output");
+    var arkTermInput = document.getElementById("ark-terminal-input");
+    var arkTermBody = document.getElementById("ark-terminal-body");
 
     var dialogLines = {
       ros: [
@@ -95,6 +103,126 @@
         // 最终失败时也不影响原有行为
       }
     }
+
+    // 侧边终端初始化
+    function initArkTerminal() {
+      if (!arkTermOutput || !arkTermInput) return;
+
+      var PROMPT = "(base) ➜ Arkpets git:(main) ✗ ";
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function promptHtml() {
+        return "(base) ➜ " +
+          '<span class="ark-prompt-project">Arkpets</span> ' +
+          '<span class="ark-prompt-git">git:(</span>' +
+          '<span class="ark-prompt-main">main</span>' +
+          '<span class="ark-prompt-git">)</span> ' +
+          '<span class="ark-prompt-x">✗</span> ';
+      }
+
+      function htmlLine(text) {
+        return escapeHtml(text) + "<br>";
+      }
+
+      function pad2(n) {
+        return (n < 10 ? "0" : "" ) + n;
+      }
+
+      function formatLoginTime() {
+        var d = new Date();
+        var yy = (d.getFullYear() % 100);
+        var MM = d.getMonth() + 1;
+        var DD = d.getDate();
+        var hh = d.getHours();
+        var mm = d.getMinutes();
+        var ss = d.getSeconds();
+        return pad2(yy) + pad2(MM) + pad2(DD) + " " + pad2(hh) + ":" + pad2(mm) + ":" + pad2(ss);
+      }
+
+      var headerHtml = htmlLine("Last login: " + formatLoginTime() + " on ttys000") + "<br>";
+      var bodyHtml = "" +
+        promptHtml() + escapeHtml("python run ArkPets") + "<br>" +
+        htmlLine("ArkPets daemon starting... ") +
+        htmlLine("(c) pseudogryph L.T.D.") + "<br>" +
+        htmlLine("input interface ready:") +
+        htmlLine("--left click") +
+        htmlLine("--right click") +
+        htmlLine("--drag") + "<br>" +
+        htmlLine("stdin stream interrupted") +
+        htmlLine("tty reassigned") +
+        htmlLine("process id: unknown") + "<br>" +
+        htmlLine("For more help on ArkPets, head to ▇▇▇▇▇▇▇▇, or run 'AP COMMAND --help'.");
+
+      arkTermOutput.innerHTML = headerHtml + bodyHtml;
+      arkTermInput.value = "";
+
+      function appendHtml(html) {
+        arkTermOutput.innerHTML += html;
+        if (arkTermBody) {
+          arkTermBody.scrollTop = arkTermBody.scrollHeight;
+        }
+      }
+
+      arkTermInput.addEventListener("keydown", function (ev) {
+        if (ev.key !== "Enter") return;
+        ev.preventDefault();
+        var cmd = arkTermInput.value || "";
+        arkTermInput.value = "";
+
+        // 历史区记录完整的一行带颜色的提示符 + 命令文本
+        var html = "<br>" + promptHtml() + escapeHtml(cmd) + "<br>";
+
+        if (cmd === "AP COMMAND --help") {
+          // 帮助信息：第一行使用纯红色 (255,0,0)，其余保持默认文字颜色
+          html += '<span style="color:#ff0000">WARNING SOURCE CODE CORRUPTED</span><br>';
+          html += htmlLine('usage: ap [option (e.g. "-c")] [arg]');
+          html += htmlLine('Options (and corresponding environment variables):');
+          html += htmlLine('-c    : to answer the 3 questions given by the pets, use one word as arg.');
+          html += htmlLine('-e    : enlarge lower-cases , decode: +3, then use as arg.');
+        } else if (cmd === "python run ArkPets") {
+          // python run ArkPets 的固定回复，其中 ALWAYS 使用纯红色 (255,0,0)
+          html += escapeHtml("ArkPets is ") + '<span style="color:#ff0000">ALWAYS</span>' + escapeHtml(" running...") + "<br>";
+        } else if (cmd === "ls") {
+          // 模拟 ls，两行输出，第二行 Resources 使用与 ArkPets 相同的青蓝色
+          html += "pets.js       index.html         SoulContainer4.8.js<br>";
+          html += 'pets.ts       <span class="ark-prompt-project">Resources</span><br>';
+        } else if (cmd === "pwd") {
+          // 模拟 pwd 输出当前目录
+          html += escapeHtml("/Users/Admin/Projects/SoulContainCorp/ArkPets") + "<br>";
+        } else if (cmd.trim() !== "") {
+          // 其他未定义命令：模仿 zsh 的 command not found 提示
+          html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
+        }
+
+        // 当前输入行的提示符保留在最底部，形成新的一行等待输入
+        appendHtml(html);
+      });
+    }
+
+    // 整体缩放以适配屏幕尺寸
+    function applyLayoutScale() {
+      if (!mainRowEl) return;
+      var BASE_WIDTH = 960 + 24 + 420; // 画布 + 间距 + 侧边终端
+      var BASE_HEIGHT = 640;           // 以画布高度为基准
+      var vw = window.innerWidth || document.documentElement.clientWidth || BASE_WIDTH;
+      var vh = window.innerHeight || document.documentElement.clientHeight || BASE_HEIGHT;
+      var scale = Math.min(vw / BASE_WIDTH, vh / BASE_HEIGHT, 1);
+      mainRowEl.style.transformOrigin = "center center";
+      mainRowEl.style.transform = "scale(" + scale + ")";
+    }
+
+    // 在 Spine 初始化前先把终端与布局缩放设置好
+    initArkTerminal();
+    applyLayoutScale();
+    window.addEventListener("resize", applyLayoutScale);
 
     var rosAtlasUrl = assetBaseUrl + "/" + rosAtlas;
     var rosSkelUrl = assetBaseUrl + "/" + rosSkeleton;
@@ -772,7 +900,7 @@
           // 根据菜单项触发相应行为
           if (action === "copy") {
             // 额外：在选择 Copy 时，把一行文字放入剪贴板
-            copyTextToClipboard("I AM WITH YOU, ALWAYS.");
+            copyTextToClipboard("i WIlL ALWAYs bE HERE FOR YOU.");
             showTerminalError();
           }
           // 目前 delete 只关闭菜单，不对角色做操作

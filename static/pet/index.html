@@ -23,14 +23,120 @@
       z-index: 0;
       pointer-events: none;
     }
+    #main-row {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
     #pet-container {
       position: relative;
-      z-index: 1; /* 让人物画布覆盖在字符雨上方 */
       box-shadow: 0 12px 30px rgba(0,0,0,0.6);
       border-radius: 12px;
       overflow: hidden;
       /* 使用 Resources/background.png 作为当前画布的背景 */
       background: url('Resources/background.png') center center / cover no-repeat;
+    }
+    #side-terminal {
+      width: 420px;
+      height: 430px; /* 缩短为原来的大约 2/3 高度 */
+      background: #323434; /* 再稍微亮一点，和背景拉开 */
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      overflow: hidden;
+      color: #f8f8f8;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+    }
+    .ark-term-titlebar {
+      height: 26px;
+      background: linear-gradient(to bottom, #2d2d30, #1e1e1e);
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+    }
+    .ark-term-title-buttons {
+      display: flex;
+      gap: 6px;
+      margin-right: 8px;
+    }
+    .ark-term-btn {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff5f57;
+    }
+    .ark-term-btn.min {
+      background: #febc2e;
+    }
+    .ark-term-title-text {
+      font-size: 12px;
+      color: #cccccc;
+      user-select: none;
+      flex: 1;
+      text-align: center;
+      margin-right: 24px; /* 让文字在视觉上更居中 */
+    }
+    #ark-terminal-body {
+      background: #151515;
+      padding: 10px 12px 8px;
+      box-sizing: border-box;
+      height: 404px;  /* 与窗口高度匹配，留出标题栏与内边距 */
+      overflow-y: scroll; /* 始终保留可见垂直滚动条，便于上下拖动 */
+      overflow-x: hidden; /* 不再显示水平滚动条，内容改为自动换行 */
+    }
+    /* 自定义终端内容区域滚动条样式 */
+    #ark-terminal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+    #ark-terminal-body::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+    #ark-terminal-body::-webkit-scrollbar-thumb {
+      background: #555555;
+      border-radius: 4px;
+    }
+    #ark-terminal-body::-webkit-scrollbar-thumb:hover {
+      background: #777777;
+    }
+    #ark-terminal-output {
+      margin: 0;
+      white-space: pre-wrap; /* 保留换行与缩进，但允许内容在容器内自动换行 */
+      word-break: break-word; /* 超长单词在宽度不足时也可以折行，避免溢出 */
+    }
+    .ark-term-input-row {
+      display: flex;
+      align-items: center;
+      margin-top: 6px;
+      font-family: inherit;
+    }
+    .ark-term-prompt {
+      white-space: pre;
+    }
+    .ark-prompt-project {
+      color: #21d6e6; /* Arkpets 青蓝色 */
+    }
+    .ark-prompt-git {
+      color: #365ce6; /* git:( ) 深蓝色 */
+    }
+    .ark-prompt-main {
+      color: #fb4a4a; /* main 红色 */
+    }
+    .ark-prompt-x {
+      color: #f7e452; /* ✗ 黄色 */
+    }
+    #ark-terminal-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 0;
+      margin: 0;
     }
     canvas {
       display: block;
@@ -144,13 +250,30 @@
 <body>
   <!-- 背景 Matrix 字符雨画布（在宠物 canvas 之外，不影响交互） -->
   <canvas id="matrix-bg"></canvas>
-
-  <div id="pet-container">
-    <canvas id="dual-pets" width="960" height="640"></canvas>
-    <!-- 占据整个 canvas 区域的“蓝屏”覆盖层，文字在左上角逐行打印 -->
-    <div id="error-overlay">
-      <pre id="bsod-text"></pre>
+  <div id="main-row">
+    <div id="pet-container">
+      <canvas id="dual-pets" width="960" height="640"></canvas>
     </div>
+    <div id="side-terminal">
+      <div class="ark-term-titlebar">
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn"></div>
+          <div class="ark-term-btn min"></div>
+        </div>
+        <div class="ark-term-title-text">Untitled</div>
+      </div>
+      <div id="ark-terminal-body">
+        <pre id="ark-terminal-output"></pre>
+        <div class="ark-term-input-row">
+          <span class="ark-term-prompt">(base) ➜ <span class="ark-prompt-project">Arkpets</span> <span class="ark-prompt-git">git:(</span><span class="ark-prompt-main">main</span><span class="ark-prompt-git">)</span> <span class="ark-prompt-x">✗</span> </span>
+          <input id="ark-terminal-input" autocomplete="off" spellcheck="false" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 占据整个页面的“蓝屏”覆盖层，文字在左上角逐行打印 -->
+  <div id="error-overlay">
+    <pre id="bsod-text"></pre>
   </div>
   <div id="pet-dialog"></div>
   <div id="pet-menu">
