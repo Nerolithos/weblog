@@ -685,7 +685,7 @@
         'cd : change directory, "cd .." to exit; "cd xxx" to enter xxx.\n' +
         'pwd : show path to current location.\n' +
         'ls : list the files and directories within a specified location.\n\n' +
-        'Remeber, password for ArkPets/Resources is ▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands it.\n';
+        'Remeber, password for ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it.\n';
       // 每次刷新都使用默认说明文本；下面的内容区供玩家自由记录，默认留空
       headerEl.textContent = defaultText;
 
