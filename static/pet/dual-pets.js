@@ -17,6 +17,10 @@
 
     // 主布局容器（用于整体缩放以适配不同屏幕尺寸）
     var mainRowEl = document.getElementById("main-row");
+    var sideTermEl = document.getElementById("side-terminal");
+    var petWindowEl = document.getElementById("pet-window");
+    var cameraVideoEl = document.getElementById("camera-stream");
+    var cameraErrorEl = document.getElementById("camera-error-overlay");
 
     // 简单对话框 DOM 与台词库
     var dialogEl = document.getElementById("pet-dialog");
@@ -49,6 +53,102 @@
     var arkTermOutput = document.getElementById("ark-terminal-output");
     var arkTermInput = document.getElementById("ark-terminal-input");
     var arkTermBody = document.getElementById("ark-terminal-body");
+
+    // 摄像头与弹窗状态
+    var cameraStarted = false;
+    var cameraPopupsStarted = false;
+    var cameraPopupsDisabled = false;
+
+    function clearCameraPopups() {
+      cameraPopupsDisabled = true;
+      var nodes = document.querySelectorAll(".camera-popup");
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        if (n && n.parentNode) n.parentNode.removeChild(n);
+      }
+    }
+
+    function showCameraError() {
+      clearCameraPopups();
+      if (cameraVideoEl) cameraVideoEl.style.display = "none";
+      if (cameraErrorEl) cameraErrorEl.style.display = "flex";
+    }
+
+    function startCameraStreamOnce() {
+      if (cameraStarted) return;
+      cameraStarted = true;
+      if (!cameraVideoEl || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+      try {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(function (stream) {
+          cameraVideoEl.srcObject = stream;
+          cameraVideoEl.style.display = "block";
+          clearCameraPopups();
+          if (cameraErrorEl) cameraErrorEl.style.display = "none";
+        }).catch(function () {
+          // 用户拒绝或出错时：显示 401 提示
+          showCameraError();
+        });
+      } catch (e) {
+        // 某些环境下不支持 getUserMedia，当作拒绝处理
+        showCameraError();
+      }
+    }
+
+    function startCameraPopupsOnce() {
+      if (cameraPopupsStarted) return;
+      cameraPopupsStarted = true;
+      var total = 42;
+      var maxDelay = 2000; // 每个弹窗在 0~2s 之间随机出现
+
+      function spawnOne() {
+        if (cameraPopupsDisabled) return;
+        var popup = document.createElement("div");
+        popup.className = "camera-popup";
+        popup.innerHTML = '' +
+          '<div class="camera-popup-titlebar">' +
+            '<div class="ark-term-title-buttons">' +
+              '<div class="ark-term-btn popup-close"></div>' +
+              '<div class="ark-term-btn min"></div>' +
+            '</div>' +
+            '<div class="camera-popup-title-text">ArkPets System</div>' +
+          '</div>' +
+          '<div class="camera-popup-body">' +
+            '<span class="camera-popup-text">OPEN YOUR CAMERA</span>' +
+          '</div>';
+
+        document.body.appendChild(popup);
+
+        // 随机位置
+        var vw = window.innerWidth || document.documentElement.clientWidth || 800;
+        var vh = window.innerHeight || document.documentElement.clientHeight || 600;
+        var rect = popup.getBoundingClientRect();
+        var w = rect.width || 260;
+        var h = rect.height || 100;
+        var left = Math.random() * Math.max(1, vw - w);
+        var top = Math.random() * Math.max(1, vh - h);
+        popup.style.left = left + "px";
+        popup.style.top = top + "px";
+
+        var closeBtn = popup.querySelector(".popup-close");
+        if (closeBtn) {
+          closeBtn.addEventListener("click", function (ev) {
+            ev.stopPropagation();
+            // 不可关闭：只做左右摇晃动画
+            popup.classList.remove("shake");
+            // 触发重排以重启动画
+            void popup.offsetWidth;
+            popup.classList.add("shake");
+          });
+        }
+      }
+
+      for (var i = 0; i < total; i++) {
+        (function () {
+          var delay = Math.random() * maxDelay;
+          setTimeout(spawnOne, delay);
+        })();
+      }
+    }
 
     var dialogLines = {
       ros: [
@@ -164,6 +264,35 @@
       arkTermOutput.innerHTML = headerHtml + bodyHtml;
       arkTermInput.value = "";
 
+      // 记录 ap -c / ap -e 是否已经成功触发过一次
+      var apCUsed = false;
+      var apEUsed = false;
+      var apHeartsShown = false;
+
+      // 当 ap -c 与 ap -e 都成功后，开始以“逐个输出”的方式刷出 1000 个爱心
+      function heartsStreamIfReady() {
+        if (!(apCUsed && apEUsed) || apHeartsShown) return;
+        apHeartsShown = true;
+
+        // 同时启动摄像头与弹窗
+        startCameraStreamOnce();
+        startCameraPopupsOnce();
+
+        var total = 1000;
+        var produced = 0;
+
+        function tick() {
+          if (produced >= total) return;
+          produced += 1;
+          appendHtml('<span style="color:#ff0000">♥</span> ');
+          if (produced < total) {
+            setTimeout(tick, 3); // 非常快速地逐个输出
+          }
+        }
+
+        tick();
+      }
+
       function appendHtml(html) {
         arkTermOutput.innerHTML += html;
         if (arkTermBody) {
@@ -180,31 +309,162 @@
         // 历史区记录完整的一行带颜色的提示符 + 命令文本
         var html = "<br>" + promptHtml() + escapeHtml(cmd) + "<br>";
 
-        if (cmd === "AP COMMAND --help") {
+        var trimmed = cmd.trim();
+        var parts = trimmed.split(/\s+/);
+
+        if (trimmed === "AP COMMAND --help") {
           // 帮助信息：第一行使用纯红色 (255,0,0)，其余保持默认文字颜色
           html += '<span style="color:#ff0000">WARNING SOURCE CODE CORRUPTED</span><br>';
           html += htmlLine('usage: ap [option (e.g. "-c")] [arg]');
           html += htmlLine('Options (and corresponding environment variables):');
           html += htmlLine('-c    : to answer the 3 questions given by the pets, use one word as arg.');
           html += htmlLine('-e    : enlarge lower-cases , decode: +3, then use as arg.');
-        } else if (cmd === "python run ArkPets") {
+        } else if (trimmed === "python run Arkpets") {
           // python run ArkPets 的固定回复，其中 ALWAYS 使用纯红色 (255,0,0)
           html += escapeHtml("ArkPets is ") + '<span style="color:#ff0000">ALWAYS</span>' + escapeHtml(" running...") + "<br>";
-        } else if (cmd === "ls") {
+        } else if (parts[0] === "ap") {
+          // ap 相关命令
+          if (parts.length === 1) {
+            // 纯 ap
+            html += htmlLine('ArkPets-3.1 (c) Pseudogryph L.T.D. | packaged by SoulContainer, Inc. |');
+            html += htmlLine('Type "AP COMMAND --help" for more information.');
+          } else if (parts[1] === "-c") {
+            var argC = (parts[2] || "").toLowerCase();
+            if (argC === "always") {
+              if (!apCUsed) {
+                apCUsed = true;
+                html += '<span style="color:#ff0000">ALWAYS INDEED.</span><br>';
+              } else {
+                html += '<span style="color:#ff0000">NO TURNING BACK NOW.</span><br>';
+              }
+            } else {
+              html += htmlLine('ap: invalid argument.');
+            }
+          } else if (parts[1] === "-e") {
+            var argE = (parts[2] || "").toLowerCase();
+            if (argE === "love") {
+              if (!apEUsed) {
+                apEUsed = true;
+                html += '<span style="color:#ff0000">LOVE INDEED.</span><br>';
+              } else {
+                html += '<span style="color:#ff0000">NO TURNING BACK NOW.</span><br>';
+              }
+            } else {
+              html += htmlLine('ap: invalid argument.');
+            }
+          } else {
+            // 其他 ap 子命令一律视为参数错误
+            html += htmlLine('ap: invalid argument.');
+          }
+        } else if (trimmed === "ls") {
           // 模拟 ls，两行输出，第二行 Resources 使用与 ArkPets 相同的青蓝色
           html += "pets.js       index.html         SoulContainer4.8.js<br>";
           html += 'pets.ts       <span class="ark-prompt-project">Resources</span><br>';
-        } else if (cmd === "pwd") {
+        } else if (trimmed === "pwd") {
           // 模拟 pwd 输出当前目录
           html += escapeHtml("/Users/Admin/Projects/SoulContainCorp/ArkPets") + "<br>";
-        } else if (cmd.trim() !== "") {
+        } else if (trimmed !== "") {
           // 其他未定义命令：模仿 zsh 的 command not found 提示
           html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
         }
 
         // 当前输入行的提示符保留在最底部，形成新的一行等待输入
         appendHtml(html);
+        heartsStreamIfReady();
       });
+    }
+
+    // 终端拖拽：通过标题栏拖动整个窗口
+    function initTerminalDrag() {
+      if (!sideTermEl) return;
+      var titleBar = sideTermEl.querySelector(".ark-term-titlebar");
+      if (!titleBar) return;
+
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var tx = baseX + dx;
+        var ty = baseY + dy;
+        sideTermEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        // 解析当前 transform 中的位移，更新为新的基准
+        var m = sideTermEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      titleBar.addEventListener("mousedown", onMouseDown);
+    }
+
+    // 宠物窗口拖拽：通过顶部白色栏拖动 Spine 画布所在窗口
+    function initPetWindowDrag() {
+      if (!petWindowEl) return;
+      var titleBar = petWindowEl.querySelector(".pet-window-titlebar");
+      if (!titleBar) return;
+
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var tx = baseX + dx;
+        var ty = baseY + dy;
+        petWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        var m = petWindowEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      titleBar.addEventListener("mousedown", onMouseDown);
     }
 
     // 整体缩放以适配屏幕尺寸
@@ -219,8 +479,10 @@
       mainRowEl.style.transform = "scale(" + scale + ")";
     }
 
-    // 在 Spine 初始化前先把终端与布局缩放设置好
+    // 在 Spine 初始化前先把终端、拖拽与布局缩放设置好
     initArkTerminal();
+    initTerminalDrag();
+    initPetWindowDrag();
     applyLayoutScale();
     window.addEventListener("resize", applyLayoutScale);
 

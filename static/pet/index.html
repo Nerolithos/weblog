@@ -32,13 +32,39 @@
     }
     #pet-container {
       position: relative;
+      z-index: 2;
+    }
+    #pet-window {
+      position: relative;
+      width: 960px;
+      height: 640px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.6);
       border-radius: 12px;
       overflow: hidden;
       /* 使用 Resources/background.png 作为当前画布的背景 */
       background: url('Resources/background.png') center center / cover no-repeat;
     }
+    .pet-window-titlebar {
+      height: 26px;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+      cursor: move;
+      user-select: none;
+    }
+    .pet-window-title-text {
+      font-size: 12px;
+      color: #444444;
+      flex: 1;
+      text-align: center;
+      margin-right: 24px;
+      user-select: none;
+    }
     #side-terminal {
+      position: relative; /* 便于在自身坐标系内通过 transform 拖动 */
+      z-index: 3;         /* 确保在 canvas 之上 */
       width: 420px;
       height: 430px; /* 缩短为原来的大约 2/3 高度 */
       background: #323434; /* 再稍微亮一点，和背景拉开 */
@@ -56,6 +82,8 @@
       align-items: center;
       padding: 0 8px;
       box-sizing: border-box;
+      cursor: move;       /* 通过标题栏拖动终端窗口 */
+      user-select: none;
     }
     .ark-term-title-buttons {
       display: flex;
@@ -245,6 +273,81 @@
       margin: 0;
       white-space: pre;
     }
+
+    /* 摄像头视频覆盖层：盖住宠物 canvas 与其他内容 */
+    #camera-stream {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 11; /* 高于蓝屏以外的所有内容 */
+      display: none;
+      background: #000;
+    }
+
+    /* "OPEN YOUR CAMERA" 弹窗样式 */
+    .camera-popup {
+      position: fixed;
+      width: 260px;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.65);
+      border: 1px solid #000000;
+      z-index: 12; /* 高于终端与 canvas，但低于摄像头视频层 */
+      overflow: hidden;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    .camera-popup-titlebar {
+      height: 24px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+    }
+    .camera-popup-title-text {
+      font-size: 11px;
+      color: #444444;
+      margin-left: 6px;
+      user-select: none;
+    }
+    .camera-popup-body {
+      padding: 14px 16px 16px;
+      text-align: center;
+    }
+    .camera-popup-text {
+      font-weight: 700;
+      color: #ff0000;
+      font-size: 16px;
+    }
+    .camera-popup.shake {
+      animation: camera-popup-shake 0.35s ease-in-out;
+    }
+    @keyframes camera-popup-shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    /* 摄像头拒绝授权时的全屏白底提示 */
+    #camera-error-overlay {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      color: #ff0000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 28px;
+      text-align: center;
+      white-space: pre-line;
+    }
   </style>
 </head>
 <body>
@@ -252,7 +355,16 @@
   <canvas id="matrix-bg"></canvas>
   <div id="main-row">
     <div id="pet-container">
-      <canvas id="dual-pets" width="960" height="640"></canvas>
+      <div id="pet-window">
+        <div class="pet-window-titlebar">
+          <div class="ark-term-title-buttons">
+            <div class="ark-term-btn"></div>
+            <div class="ark-term-btn min"></div>
+          </div>
+          <div class="pet-window-title-text">ArkPets</div>
+        </div>
+        <canvas id="dual-pets" width="960" height="640"></canvas>
+      </div>
     </div>
     <div id="side-terminal">
       <div class="ark-term-titlebar">
@@ -275,6 +387,13 @@
   <div id="error-overlay">
     <pre id="bsod-text"></pre>
   </div>
+  <!-- 摄像头视频覆盖层 -->
+  <video id="camera-stream" autoplay playsinline muted></video>
+  <!-- 摄像头错误覆盖层：拒绝授权时使用 -->
+  <div id="camera-error-overlay">
+    <div>401 - UNAUTHORIZED
+WHY DID YOU DENIED？</div>
+  </div>
   <div id="pet-dialog"></div>
   <div id="pet-menu">
     <div class="pet-menu-item" data-action="copy">Copy</div>
@@ -288,7 +407,7 @@
   <script src="spine-webgl-3.8.js"></script>
 
   <!-- Dual pets logic (already in this folder) -->
-  <script src="dual-pets.js"></script>
+  <script src="dual-pets.js?v=20260308"></script>
   <script>
     (function () {
       function start() {
