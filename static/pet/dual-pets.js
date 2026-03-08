@@ -21,6 +21,18 @@
     var petWindowEl = document.getElementById("pet-window");
     var cameraVideoEl = document.getElementById("camera-stream");
     var cameraErrorEl = document.getElementById("camera-error-overlay");
+    var notesWindowEl = document.getElementById("notes-window");
+
+    // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
+    var BASE_Z = 20;
+    var MAX_Z = 80;
+    var zCounter = BASE_Z;
+    function bringToFront(el) {
+      if (!el) return;
+      zCounter += 1;
+      if (zCounter > MAX_Z) zCounter = BASE_Z;
+      el.style.zIndex = String(zCounter);
+    }
 
     // 简单对话框 DOM 与台词库
     var dialogEl = document.getElementById("pet-dialog");
@@ -58,6 +70,8 @@
     var cameraStarted = false;
     var cameraPopupsStarted = false;
     var cameraPopupsDisabled = false;
+    var cameraStreamObj = null;
+    var loveDialogShown = false;
 
     function clearCameraPopups() {
       cameraPopupsDisabled = true;
@@ -80,10 +94,14 @@
       if (!cameraVideoEl || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
       try {
         navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(function (stream) {
+          cameraStreamObj = stream;
           cameraVideoEl.srcObject = stream;
           cameraVideoEl.style.display = "block";
+          // 摄像头开启时隐藏记事本窗口
+          if (notesWindowEl) notesWindowEl.style.display = "none";
           clearCameraPopups();
           if (cameraErrorEl) cameraErrorEl.style.display = "none";
+          showLoveDialogOnce();
         }).catch(function () {
           // 用户拒绝或出错时：显示 401 提示
           showCameraError();
@@ -150,6 +168,57 @@
       }
     }
 
+    function stopCameraStream() {
+      if (cameraStreamObj && cameraStreamObj.getTracks) {
+        var tracks = cameraStreamObj.getTracks();
+        for (var i = 0; i < tracks.length; i++) {
+          try { tracks[i].stop(); } catch (e) {}
+        }
+      }
+      cameraStreamObj = null;
+    }
+
+    function revealResourcesPasswordInNotes() {
+      if (!notesWindowEl) return;
+      var header = notesWindowEl.querySelector(".notes-header");
+      if (!header) return;
+      var text = header.textContent || "";
+      var pattern = /Remeber, password for ArkPets\/Resources is[^.]*\./;
+      var replacement = 'Remeber, password for ArkPets/Resources is (hexadecimal) "Answer to the Ultimate Question of Life, The Universe, and Everything".';
+      if (pattern.test(text)) {
+        text = text.replace(pattern, replacement);
+      } else {
+        if (text && !/\n$/.test(text)) text += "\n\n";
+        text += replacement;
+      }
+      header.textContent = text;
+    }
+
+    function showLoveDialogOnce() {
+      if (loveDialogShown) return;
+      loveDialogShown = true;
+      setTimeout(function () {
+        if (cameraVideoEl) {
+          cameraVideoEl.style.display = "none";
+        }
+        stopCameraStream();
+
+        var dlg = document.getElementById("love-dialog");
+        if (dlg) {
+          dlg.style.display = "flex";
+          dlg.style.opacity = "1";
+          setTimeout(function () {
+            dlg.style.opacity = "0";
+            setTimeout(function () {
+              dlg.style.display = "none";
+            }, 400);
+          }, 5500);
+        }
+
+        revealResourcesPasswordInNotes();
+      }, 5000);
+    }
+
     var dialogLines = {
       ros: [
         "Am I really here ... with you?",
@@ -209,6 +278,12 @@
       if (!arkTermOutput || !arkTermInput) return;
 
       var PROMPT = "(base) ➜ Arkpets git:(main) ✗ ";
+      var cwd = "ArkPets"; // "ArkPets" 或 "Resources"
+      var inPasswordMode = false;
+      var passwordBuffer = "";
+      var pendingCdTarget = null; // 目前仅支持 "Resources"
+
+      var livePromptSpan = document.querySelector(".ark-term-prompt");
 
       function escapeHtml(str) {
         return String(str)
@@ -220,12 +295,18 @@
       }
 
       function promptHtml() {
+        var project = (cwd === "Resources") ? "Resources" : "Arkpets";
         return "(base) ➜ " +
-          '<span class="ark-prompt-project">Arkpets</span> ' +
+          '<span class="ark-prompt-project">' + escapeHtml(project) + '</span> ' +
           '<span class="ark-prompt-git">git:(</span>' +
           '<span class="ark-prompt-main">main</span>' +
           '<span class="ark-prompt-git">)</span> ' +
           '<span class="ark-prompt-x">✗</span> ';
+      }
+
+      function updateLivePrompt() {
+        if (!livePromptSpan) return;
+        livePromptSpan.innerHTML = promptHtml();
       }
 
       function htmlLine(text) {
@@ -263,6 +344,7 @@
 
       arkTermOutput.innerHTML = headerHtml + bodyHtml;
       arkTermInput.value = "";
+      updateLivePrompt();
 
       // 记录 ap -c / ap -e 是否已经成功触发过一次
       var apCUsed = false;
@@ -301,6 +383,26 @@
       }
 
       arkTermInput.addEventListener("keydown", function (ev) {
+        // 密码模式：拦截输入，仅在 Enter 时处理
+        if (inPasswordMode) {
+          ev.preventDefault();
+          if (ev.key === "Enter") {
+            var pwd = passwordBuffer;
+            passwordBuffer = "";
+            arkTermInput.value = "";
+            inPasswordMode = false;
+
+            if (pendingCdTarget === "Resources" && pwd === "0x2A") {
+              cwd = "Resources";
+              updateLivePrompt();
+            }
+            pendingCdTarget = null;
+          } else if (ev.key.length === 1) {
+            passwordBuffer += ev.key;
+          }
+          return;
+        }
+
         if (ev.key !== "Enter") return;
         ev.preventDefault();
         var cmd = arkTermInput.value || "";
@@ -356,13 +458,38 @@
             // 其他 ap 子命令一律视为参数错误
             html += htmlLine('ap: invalid argument.');
           }
+        } else if (trimmed === "cd ..") {
+          if (cwd === "ArkPets") {
+            html += "zsh: to prevent LEAK OF SOUL this option is prohibited." + "<br>";
+          } else if (cwd === "Resources") {
+            cwd = "ArkPets";
+            updateLivePrompt();
+            appendHtml(html);
+            heartsStreamIfReady();
+            return;
+          }
+        } else if (trimmed === "cd Resources") {
+          if (cwd === "ArkPets") {
+            html += "Enter Password : ꄗ ";
+            inPasswordMode = true;
+            passwordBuffer = "";
+            pendingCdTarget = "Resources";
+          }
         } else if (trimmed === "ls") {
-          // 模拟 ls，两行输出，第二行 Resources 使用与 ArkPets 相同的青蓝色
-          html += "pets.js       index.html         SoulContainer4.8.js<br>";
-          html += 'pets.ts       <span class="ark-prompt-project">Resources</span><br>';
+          if (cwd === "Resources") {
+            html += '<span style="color:#ff0000">SoulContainer.exe</span><br>';
+          } else {
+            // ArkPets 目录下的 ls
+            html += "pets.js       index.html         SoulContainer4.8.js<br>";
+            html += 'pets.ts       <span class="ark-prompt-project">Resources</span><br>';
+          }
         } else if (trimmed === "pwd") {
           // 模拟 pwd 输出当前目录
-          html += escapeHtml("/Users/Admin/Projects/SoulContainCorp/ArkPets") + "<br>";
+          if (cwd === "Resources") {
+            html += escapeHtml("/Users/Admin/Projects/SoulContainCorp/ArkPets/Resources") + "<br>";
+          } else {
+            html += escapeHtml("/Users/Admin/Projects/SoulContainCorp/ArkPets") + "<br>";
+          }
         } else if (trimmed !== "") {
           // 其他未定义命令：模仿 zsh 的 command not found 提示
           html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
@@ -378,6 +505,7 @@
     function initTerminalDrag() {
       if (!sideTermEl) return;
       var titleBar = sideTermEl.querySelector(".ark-term-titlebar");
+      var minBtn = sideTermEl.querySelector(".ark-term-title-buttons .ark-term-btn.min");
       if (!titleBar) return;
 
       var dragging = false;
@@ -388,6 +516,7 @@
 
       function onMouseDown(ev) {
         if (ev.button !== 0) return;
+        bringToFront(sideTermEl);
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
@@ -419,12 +548,20 @@
       }
 
       titleBar.addEventListener("mousedown", onMouseDown);
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          sideTermEl.style.display = "none";
+        });
+      }
     }
 
     // 宠物窗口拖拽：通过顶部白色栏拖动 Spine 画布所在窗口
     function initPetWindowDrag() {
       if (!petWindowEl) return;
       var titleBar = petWindowEl.querySelector(".pet-window-titlebar");
+      var minBtn = petWindowEl.querySelector(".pet-window-titlebar .ark-term-btn.min");
       if (!titleBar) return;
 
       var dragging = false;
@@ -435,6 +572,7 @@
 
       function onMouseDown(ev) {
         if (ev.button !== 0) return;
+        bringToFront(petWindowEl);
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
@@ -465,6 +603,133 @@
       }
 
       titleBar.addEventListener("mousedown", onMouseDown);
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          petWindowEl.style.display = "none";
+        });
+      }
+    }
+
+    function initDesktopIcons() {
+      var desktop = document.getElementById("desktop-area");
+      if (!desktop) return;
+      var icons = desktop.querySelectorAll(".desktop-icon");
+
+      function openApp(app) {
+        if (app === "pets" && petWindowEl) {
+          petWindowEl.style.display = "block";
+          bringToFront(petWindowEl);
+        } else if (app === "terminal" && sideTermEl) {
+          sideTermEl.style.display = "block";
+          bringToFront(sideTermEl);
+        } else if (app === "notes" && notesWindowEl) {
+          notesWindowEl.style.display = "flex";
+          bringToFront(notesWindowEl);
+        }
+      }
+
+      // 普通情况下（窗口没有遮挡时）点击图标
+      desktop.addEventListener("click", function (ev) {
+        var icon = ev.target.closest(".desktop-icon");
+        if (!icon) return;
+        var app = icon.getAttribute("data-app");
+        openApp(app);
+      });
+
+      // 当图标被窗口遮住时：通过全局捕获点击坐标判断是否落在图标矩形内
+      document.addEventListener("click", function (ev) {
+        var x = ev.clientX;
+        var y = ev.clientY;
+        for (var i = 0; i < icons.length; i++) {
+          var icon = icons[i];
+          var rect = icon.getBoundingClientRect();
+          if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+            var app = icon.getAttribute("data-app");
+            openApp(app);
+            break;
+          }
+        }
+      }, true);
+
+      if (notesWindowEl) {
+        var minBtn = notesWindowEl.querySelector(".notes-min");
+        var closeBtn = notesWindowEl.querySelector(".notes-close");
+        if (minBtn) {
+          minBtn.addEventListener("click", function (ev) {
+            ev.stopPropagation();
+            notesWindowEl.style.display = "none";
+          });
+        }
+        if (closeBtn) {
+          closeBtn.addEventListener("click", function (ev) {
+            ev.stopPropagation();
+            notesWindowEl.style.display = "none";
+          });
+        }
+      }
+    }
+
+    function initNotesWindow() {
+      if (!notesWindowEl) return;
+      var headerEl = notesWindowEl.querySelector(".notes-header");
+      var contentEl = notesWindowEl.querySelector(".notes-content");
+      var titleBar = notesWindowEl.querySelector(".notes-titlebar");
+      if (!headerEl || !contentEl) return;
+
+      contentEl.setAttribute("contenteditable", "true");
+
+      var defaultText = '' +
+        'Terminal (Shell) Language:\n' +
+        'cd : change directory, "cd .." to exit; "cd xxx" to enter xxx.\n' +
+        'pwd : show path to current location.\n' +
+        'ls : list the files and directories within a specified location.\n\n' +
+        'Remeber, password for ArkPets/Resources is ▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands it.\n';
+      // 每次刷新都使用默认说明文本；下面的内容区供玩家自由记录，默认留空
+      headerEl.textContent = defaultText;
+
+      if (titleBar) {
+        var dragging = false;
+        var startX = 0;
+        var startY = 0;
+        var baseX = 0;
+        var baseY = 0;
+
+        function onMouseDown(ev) {
+          if (ev.button !== 0) return;
+          bringToFront(notesWindowEl);
+          dragging = true;
+          startX = ev.clientX;
+          startY = ev.clientY;
+          ev.preventDefault();
+          document.addEventListener("mousemove", onMouseMove);
+          document.addEventListener("mouseup", onMouseUp);
+        }
+
+        function onMouseMove(ev) {
+          if (!dragging) return;
+          var dx = ev.clientX - startX;
+          var dy = ev.clientY - startY;
+          var tx = baseX + dx;
+          var ty = baseY + dy;
+          notesWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        }
+
+        function onMouseUp() {
+          if (!dragging) return;
+          dragging = false;
+          var m = notesWindowEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+          if (m) {
+            baseX = parseFloat(m[1]) || 0;
+            baseY = parseFloat(m[2]) || 0;
+          }
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+        }
+
+        titleBar.addEventListener("mousedown", onMouseDown);
+      }
     }
 
     // 整体缩放以适配屏幕尺寸
@@ -483,6 +748,8 @@
     initArkTerminal();
     initTerminalDrag();
     initPetWindowDrag();
+    initDesktopIcons();
+    initNotesWindow();
     applyLayoutScale();
     window.addEventListener("resize", applyLayoutScale);
 

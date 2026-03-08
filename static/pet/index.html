@@ -75,6 +75,36 @@
       font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size: 13px;
     }
+    /* 桌面区与图标 */
+    #desktop-area {
+      position: fixed;
+      left: 16px;
+      top: 16px;
+      z-index: 0; /* 在主要窗口之下，像桌面图标一样 */
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .desktop-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 64px; /* 固定宽度，三枚图标垂直对齐 */
+      cursor: pointer;
+      user-select: none;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+    .desktop-icon .icon-emoji {
+      font-size: 40px;
+      line-height: 1;
+    }
+    .desktop-icon .icon-label {
+      margin-top: 4px;
+      font-size: 12px;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
     .ark-term-titlebar {
       height: 26px;
       background: linear-gradient(to bottom, #2d2d30, #1e1e1e);
@@ -281,7 +311,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      z-index: 11; /* 高于蓝屏以外的所有内容 */
+      z-index: 100; /* 高于普通窗口与桌面 */
       display: none;
       background: #000;
     }
@@ -348,11 +378,86 @@
       text-align: center;
       white-space: pre-line;
     }
+    /* 简易记事本窗口 */
+    #notes-window {
+      position: fixed;
+      right: 32px;
+      bottom: 32px;
+      width: 300px;
+      height: 280px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      border: 1px solid #000000;
+      z-index: 3;
+      overflow: hidden;
+      display: none;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    #notes-window .notes-titlebar {
+      height: 24px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+      user-select: none;
+    }
+    #notes-window .notes-title-text {
+      font-size: 11px;
+      color: #444444;
+      margin-left: 6px;
+      flex: 1;
+      text-align: center;
+    }
+    #notes-window .notes-body {
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #222222;
+      line-height: 1.4;
+      box-sizing: border-box;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #notes-window .notes-header {
+      white-space: pre-wrap;
+      margin-bottom: 8px;
+    }
+    #notes-window .notes-content {
+      flex: 1;
+      white-space: pre-wrap;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+    /* 自定义记事本垂直滚动条样式（作用于可滚动内容区域） */
+    #notes-window .notes-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    #notes-window .notes-content::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+    #notes-window .notes-content::-webkit-scrollbar-thumb {
+      background: #bbbbbb;
+      border-radius: 4px;
+    }
+    #notes-window .notes-content::-webkit-scrollbar-thumb:hover {
+      background: #999999;
+    }
   </style>
 </head>
 <body>
   <!-- 背景 Matrix 字符雨画布（在宠物 canvas 之外，不影响交互） -->
   <canvas id="matrix-bg"></canvas>
+  <div id="desktop-area">
+    <div class="desktop-icon" data-app="pets"><span class="icon-emoji">🐱</span><span class="icon-label">ArkPets</span></div>
+    <div class="desktop-icon" data-app="terminal"><span class="icon-emoji">⌨</span><span class="icon-label">Terminal</span></div>
+    <div class="desktop-icon" data-app="notes"><span class="icon-emoji">📝</span><span class="icon-label">Notes</span></div>
+  </div>
   <div id="main-row">
     <div id="pet-container">
       <div id="pet-window">
@@ -389,6 +494,27 @@
   </div>
   <!-- 摄像头视频覆盖层 -->
   <video id="camera-stream" autoplay playsinline muted></video>
+  <!-- LOVE 提示对话框 -->
+  <div id="love-dialog" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:19;opacity:0;transition:opacity 0.3s ease-out;">
+    <div style="background:#ffffff;border-radius:8px;border:1px solid #000;padding:16px 22px;box-shadow:0 10px 30px rgba(0,0,0,0.7);font-family:'SF Mono',Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:14px;text-align:center;white-space:pre-line;color:#ff0000;font-weight:700;">
+Thank you, for your LOVE :)
+The password to Resources is available.
+    </div>
+  </div>
+  <!-- 简易记事本窗口 -->
+  <div id="notes-window">
+    <div class="notes-titlebar">
+      <div class="ark-term-title-buttons">
+        <div class="ark-term-btn notes-close"></div>
+        <div class="ark-term-btn min notes-min"></div>
+      </div>
+      <div class="notes-title-text">Notes</div>
+    </div>
+    <div class="notes-body">
+      <div class="notes-header"></div>
+      <div class="notes-content"></div>
+    </div>
+  </div>
   <!-- 摄像头错误覆盖层：拒绝授权时使用 -->
   <div id="camera-error-overlay">
     <div>401 - UNAUTHORIZED
