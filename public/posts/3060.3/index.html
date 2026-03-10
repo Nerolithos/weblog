@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 5 Continuation of Machine Level Programming | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="https://blog.nero-lithos.com/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://blog.nero-lithos.com/posts/3060.3/">
+    <meta property="og:url" content="https://blog.nero-lithos.com/posts/3060.3/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 5 Continuation of Machine Level Programming">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-03T20:37:34+08:00">
+    <meta property="article:modified_time" content="2026-02-03T20:37:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 5 Continuation of Machine Level Programming">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器">
+  <meta itemprop="datePublished" content="2026-02-03T20:37:34+08:00">
+  <meta itemprop="dateModified" content="2026-02-03T20:37:34+08:00">
+  <meta itemprop="wordCount" content="984">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 5 Continuation of Machine Level Programming">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器">
+
+
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
+
+<style>
+   
+  #reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 160, 200, 0.08);
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    width: 100%;
+    height: 100%;
+    background: #00a0c8;
+    box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform 0.08s linear;
+  }
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('https://blog.nero-lithos.com/images/30603.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="https://blog.nero-lithos.com/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/" title="">
+              🏠 Home
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://ai.nero-lithos.com" title="">
+              🤖 CUHKSZ AI
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 5 Continuation of Machine Level Programming</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 5 Continuation of Machine Level Programming</h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked" datetime="2026-02-03T20:37:34+08:00">February 3, 2026</time>
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>其它学生：学者引用文献需要遵守 APA/MPA/Chicago 等引用格式，否则会爽吃 Fail。</p>
+<p>SDS 学生：计算机调用需要根据 Calling Convention，不然你们写论文的计算机爽吃 UB 原地升天，<del>你们签名承诺不用但还是偷偷用的互联网大模型爽吃 504 Error</del>。</p>
+</br>
+<h1 id="week-5--calling-convention-and-its-registers">Week 5  Calling convention and Its Registers</h1>
+<p>Calling Convention 包括：参数、返回值/地址、传参、出入栈、fp 的建立和还原、调用方/被调用方保存的寄存器。</p>
+<h2 id="调用的约定">调用的约定</h2>
+<h3 id="在机器的宏观视角下函数过程调用的流水线">在机器的宏观视角下，函数/过程调用的流水线：</h3>
+<p>从调用方 (Caller) 开始&hellip;</p>
+<ol>
+<li><strong>准备参数</strong>（寄存器不够/需要按约定放栈时就放栈上）</li>
+<li><strong>保存返回地址</strong>（ret）</li>
+<li><strong>跳转到被调函数</strong></li>
+</ol>
+<p>工作移交到被调用方 (Callee)&hellip;</p>
+<ol start="4">
+<li>
+<p><strong>建立栈帧 (Stack frame)</strong>：栈指针下移，<u>给调用方的栈帧/局部变量/保存寄存器留空间</u>（sp -= stackFrame）</p>
+</li>
+<li>
+<p><strong>保存需要保存的寄存器</strong></p>
+</li>
+<li>
+<p><strong>执行函数主体</strong></p>
+</li>
+<li>
+<p><strong>准备返回值</strong>（可能放寄存器 a0/a1，也可能放栈）</p>
+</li>
+<li>
+<p>**恢复保存的寄存器 **并 <strong>返回调用方位置</strong></p>
+</li>
+</ol>
+<ul>
+<li>⚠️ <strong>“栈帧”</strong> 是栈上分配给函数的私有区域，每个函数有自己独立的一段帧 (向下分配)；<strong>&ldquo;帧指针 fp&rdquo;</strong> 是函数栈帧的寻址基点，这里用于<u>返回后将栈变回调用前的原样</u>。</li>
+</ul>
+</br>
+<h3 id="meanwhile栈身上发生了什么">Meanwhile，栈身上发生了什么？</h3>
+<ol>
+<li>第 1～3 步 (处于调用方) 时，调用者<strong>建立自己的栈帧</strong><u>将参数 (如果 a0~a7 放满了) 和返回地址入栈</u>；</li>
+<li>第 4～7 步 (处于被调用方) 时，被调用者<strong>建立新栈帧</strong>，<u>将局部变量、要保存的寄存器 (saved regs)、动态对象入栈到这个帧中</u>；</li>
+<li>第 8 步 (回到调用方) 后，<strong>被调用者的栈帧被出栈</strong>，栈回到第 1 步之前的样子，fp/sp 指向原先位置。</li>
+</ol>
+<p><img src="https://i.postimg.cc/65wQwHbW/jie-ping2026-02-04-13-18-29.png" alt=""></p>
+</br>
+<h3 id="saved-regs">&ldquo;Saved Regs&rdquo;</h3>
+<p>ABI 规定了一些需要分工在栈中保存下来的寄存器。防止连环调用时关系混乱导致变量覆盖或生命周期错误。逻辑上类似于——</p>
+<p><em>“单位的电脑属于信息部 (Caller)，但所有电脑都有信息/公关两部门的账号。公关部 (Callee) 帮信息部的忙，借用电脑后要负责把账号切回信息部 (Callee-saved)；而信息部负责留档自己电脑上的重要文件 (Caller-saved)。”</em></p>
+<p><strong>A) Callee-saved (被调用者必须保存)</strong></p>
+<ul>
+<li>s0–s11 (saved regs)、 (old) <strong>fp —— 常用 s0 (即 x8) 充当 fp</strong>、<strong>CSEs</strong>。</li>
+</ul>
+<p>规则：<strong>B 如果要用/改这些寄存器，必须先保存旧值，返回前恢复</strong>。</p>
+<p>→ 这些被调用者存到栈里的备份，就属于 <strong>saved regs</strong>，一般生命周期较长。</p>
+<p><strong>B) Caller-saved (调用者必须保存)</strong></p>
+<ul>
+<li>t0–t6 (临时变量)、a0–a7 (参数)、<strong>ra</strong> (返回地址)。</li>
+</ul>
+<p>规则：<strong>B 可以随便改</strong>。A 如果在 call 之后还要用，就必须自己先存起来。</p>
+<p>→ 一般生命周期较短。</p>
+<p><img src="https://i.postimg.cc/PJ5qjJKp/jie-ping2026-02-04-12-46-58.png" alt=""></p>
+</br>
+<p><del>还学啥，过年去了</del></p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="https://blog.nero-lithos.com/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="https://blog.nero-lithos.com/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="https://blog.nero-lithos.com/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/" target="_blank" rel="noopener noreferrer">🏠 Home</a></li>
+      
+        <li><a href="https://futuregate.streamlit.app/" target="_blank" rel="noopener noreferrer">🤖 CUHKSZ AI</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

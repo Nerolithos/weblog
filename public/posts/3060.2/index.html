@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
     <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals | Lithos&#39; Blog</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)">
     <meta name="generator" content="Hugo 0.134.1">
     
     
@@ -17,16 +17,16 @@
     
 
     
-<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+<link rel="stylesheet" href="https://blog.nero-lithos.com/ananke/css/main.min.css" >
 
 
 
   
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
   
 
     
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
     
 
     
@@ -37,30 +37,94 @@
     
 
     
-      <link rel="canonical" href="http://localhost:1313/posts/3060.2/">
-    <meta property="og:url" content="http://localhost:1313/posts/3060.2/">
+      <link rel="canonical" href="https://blog.nero-lithos.com/posts/3060.2/">
+    <meta property="og:url" content="https://blog.nero-lithos.com/posts/3060.2/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
   <meta property="og:title" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
-  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-01-20T10:30:34+08:00">
-    <meta property="article:modified_time" content="2026-01-20T10:30:34+08:00">
+    <meta property="article:published_time" content="2026-01-24T10:30:34+08:00">
+    <meta property="article:modified_time" content="2026-01-24T10:30:34+08:00">
     <meta property="article:tag" content="CSC3060">
 
   <meta itemprop="name" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
-  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算">
-  <meta itemprop="datePublished" content="2026-01-20T10:30:34+08:00">
-  <meta itemprop="dateModified" content="2026-01-20T10:30:34+08:00">
-  <meta itemprop="wordCount" content="4811">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)">
+  <meta itemprop="datePublished" content="2026-01-24T10:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-01-24T10:30:34+08:00">
+  <meta itemprop="wordCount" content="6789">
   <meta itemprop="keywords" content="CSC3060">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
-  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件————各种数据类型的运算">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)">
 
 
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
+
+<style>
+   
+  #reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 160, 200, 0.08);
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    width: 100%;
+    height: 100%;
+    background: #00a0c8;
+    box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform 0.08s linear;
+  }
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
 
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
@@ -85,14 +149,20 @@
   <body class="ma0 avenir bg-near-white">
 
     
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    
+
+    
   
 
   
-  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30602.jpg');">
+  <header class="cover bg-top" style="background-image: url('https://blog.nero-lithos.com/images/30602.jpg');">
     <div class="bg-black-60">
       <nav class="pv3 ph3 ph4-ns" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+    <a href="https://blog.nero-lithos.com/" class="f3 fw2 hover-white no-underline white-90 dib">
       
         Lithos&#39; Blog
       
@@ -116,7 +186,7 @@
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/" title="">
               🏠 Home
             </a>
           </li>
@@ -154,6 +224,8 @@
   
   <article class="flex-l flex-wrap justify-between mw8 center ph3">
 
+    
+
     <header class="mt4 w-100">
       <aside class="instapaper_ignoref b helvetica tracked ttu">
         Posts
@@ -179,13 +251,16 @@
       
 
       
-      <time class="f6 mv4 dib tracked" datetime="2026-01-20T10:30:34+08:00">January 20, 2026</time>
+      <time class="f6 mv4 dib tracked" datetime="2026-01-24T10:30:34+08:00">January 24, 2026</time>
       
 
       
     </header>
 
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="week-3--process-of-data">Week 3  Process of Data</h1>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>程序员：→ &ldquo;距离上一次发生整数溢出已经有&rdquo; 4294967295 &ldquo;天啦 😊&rdquo;</p>
+<p><del>(绝对不是没检测下界所以对 0u 自减了呢)</del></p>
+</br>
+<h1 id="week-3--process-of-data">Week 3  Process of Data</h1>
 <h2 id="整数运算-integer-arithmetics">整数运算 (Integer Arithmetics)</h2>
 <p>由于 C 语言家族的时代和奠基性，其数据类型不是 Python 那样动态存储的，由于运算 “溢出” 导致的严重问题层出不穷。</p>
 <p>⚠️ n-bit <strong>有符号数</strong>的溢出：<strong>&ldquo;wraparound&rdquo;</strong>——$u = (a + b)\bmod 2^n \quad$</p>
@@ -315,7 +390,7 @@
 </ul>
 </br>
 </br>
-<h2 id="x86-64">x86-64</h2>
+<h2 id="x86-64-可选">x86-64 (可选)</h2>
 <h3 id="访问信息寄存器">访问信息——寄存器</h3>
 <p>64 位 CPU 有 1 个指令寄存器 PC (%rip) 和 16 个通用寄存器(%rax, %rbx&hellip;)。每个通用寄存器有灵活的用途，最特殊的是 <strong>%rsp</strong> 固定为栈指针。</p>
 <ul>
@@ -375,11 +450,19 @@
 </br>
 </br>
 <h2 id="risc-v">RISC-V</h2>
+<p><del>x86 ISA 实在是太邪门了，就像一群计算机学生中混了个既不玩明日方舟也不是男娘的家伙，还是来看看我们的 RISC 吧</del>。</p>
+<p><img src="https://i.postimg.cc/0yY00fbv/huby59vy6kja1.png" alt=""></p>
 <p>RV32I (RISC-V32I) 是 RISC-V 架构中最基础、强制性的 32 位整数指令集。它采用 Load/Store 架构，拥有 32 个 32-bit 通用寄存器 (x0~x31，x0 强制固定为 0) 、个 32-bit PC 以及一些 CSR (控制状态寄存器)，是所有 RISC-V 处理器实现的基础。</p>
 <p><strong>RV32I 的关键特性与组成：</strong></p>
 <ul>
 <li>
 <p>RV32I 中 的 “I” 是基础整数指令集 (base integer)，此外有另一种实现 E：嵌入式裁剪版 (例如只有 16 个寄存器) 。以及更多的扩展，M：乘除扩展 (mul/div) 、A：原子内存指令、C：压缩扩展 (16 位指令)、F/D：单/双精度浮点、V：向量扩展…… 可以组合出比如 “RV64EMAFDCV” 这样的复杂 ISA。</p>
+</li>
+<li>
+<p>在非扩展机器上运行扩展命令 (如在 RV32I 运行 mul) 会报 <code>illegal instruction exception</code>。</p>
+</li>
+<li>
+<p>扩展 RV32I 时，<strong>FMA</strong> 对 F/D 扩展很重要，它一反 RISC 的 3-operand 常态，是 4-操作数运算。优点：聚合加法与乘法，方便非常常见的矩阵/向量乘法运算。</p>
 </li>
 <li>
 <p><strong>指令分类：</strong> 包含 R型 (寄存器-寄存器)、I型 (立即数/Load)、S型 (Store)、B型 (分支)、U型 (长立即数)、J型 (跳转) 共 6 种指令格式。</p>
@@ -405,8 +488,8 @@
 <h4 id="按功能分类">按功能分类：</h4>
 <ul>
 <li>ALU（寄存器-寄存器、寄存器-立即数）</li>
-<li>控制流（分支 B、跳转 J）</li>
-<li>内存访问（load/store）</li>
+<li>Control-Flow 控制流（分支 B、跳转 J）</li>
+<li>内存访问（Load &amp; Store）</li>
 <li>CSR 指令（与特权/异常相关，常是 read-modify-write）</li>
 <li>特权指令（操作系统/内核态才能执行）</li>
 </ul>
@@ -426,11 +509,11 @@
 <li><strong>I</strong>：12 位立即数，比如各种<u>寄存器-立即数运算</u> (0010011)：<code>addi</code>, <code>andi</code>&hellip; 以及 ⚠️ <strong>所有</strong> <u>Load 命令 </u> (0000011)：<code>lw</code>, <code>lb</code>, <code>lh</code>&hellip;</li>
 <li><strong>B</strong>：12 位立即数，分支类命令，<strong>没有 rd</strong>，比如 <code>beq</code> (相等跳转), <code>bne </code>(不等跳转)&hellip;</li>
 <li><strong>J</strong>：20 位立即数，比如 <code>jal</code> (跳转并链接)&hellip;</li>
-<li><strong>S</strong>：储存到内存，比如 <code>sw</code>, <code>sb</code>, <code>sh</code>&hellip;</li>
+<li><strong>S</strong>：储存到内存，<strong>没有 rd</strong>，比如 <code>sw</code>, <code>sb</code>, <code>sh</code>&hellip;</li>
 </ul>
 </br>
 <h3 id="alu-指令">ALU 指令</h3>
-<p>R-type：对两个寄存器数据进行计算并返回到寄存器—— <code>OP: rd ← rs1 (funct3, funct7) rs2</code></p>
+<p><strong>R-type</strong>：对两个寄存器数据进行计算并返回到寄存器—— <code>OP: rd ← rs1 (funct3, funct7) rs2</code></p>
 <ul>
 <li>
 <p>比如 sub: <code>0100000 00000 00110 000 00110 0110011</code> 表示将 x6 的值变成其相反数然后存回 x6；</p>
@@ -439,30 +522,148 @@
 <p>add: <code>0000000 00000 00110 000 00111 0110011</code> 表示将 x6 的值复制到 x7。</p>
 </li>
 </ul>
-<p>I-type：对一个寄存器和 12-bit 立即数计算并返回到寄存器—— <code>OP-IMM: rd ← rs1 (funct3) I-imm </code></p>
+<p><strong>I-type</strong>：对一个寄存器和 <strong>12-bit</strong> 立即数计算并返回到寄存器—— <code>OP-IMM: rd ← rs1 (funct3) I-imm </code></p>
 <ul>
 <li>比如 addi: <code>010000000000 00110 000 00111 0010011</code> 表示将 x6 加上 1024 后存到 x7。</li>
 <li>移位立即数指令也是 I-type，但为了区分逻辑/算数， <strong>imm 不再是一个 12 位有符号数</strong>；它的低位是 <strong>&ldquo;shamt&rdquo;</strong> (RV32I: 5b, RV64I: 6b)，高位 (含一个标记位 inst[30]) 用来区分 SRLI (0) 和 SRAI (1)。<code>OP-IMM: rd ← rs1 (funct3, inst[30]) I-imm[4:0]</code></li>
+<li>再比如 “取非 x1” 就是 <code>xori x1, x1, -1</code> 。</li>
 </ul>
 </br>
 <h3 id="load-指令">Load 指令</h3>
-<p>I-type：用寄存器表示基值+立即数表示偏移，表示内存地址，并将其取出到寄存器—— <code>LOAD: rd ← memory[rs1 + I-imm]</code></p>
+<p><strong>I-type</strong>：用寄存器表示基值+立即数表示偏移，表示内存地址，并将其取出到寄存器—— <code>LOAD: rd ← memory[rs1 + I-imm]</code></p>
 <ul>
-<li>比如 lw: <code>111111111001 00110 010 00111 0000011</code> 表示从地址为 [x6]-7 的内存取 4 个字节到 x7。12 位<strong>有符号</strong> IMM 可以表示偏移量 [-2048, +2047]。</li>
+<li>比如 lw: <code>111111111001 00110 010 00111 0000011</code> 表示从地址为 [x6]-7 的内存取 4 个字节到 x7。12 位<strong>有符号</strong> IMM 可以表示偏移量 [-2048, +2047]。偏差 I-imm 常用于访问数组 (或其它容器类) 的某一位。</li>
+<li>更具体的，假设一个图片的像素数组：<code>Struct Color {int r, int g, int b} pixelArray[]</code>，若数组基地址存储在 x1，访问其第 100 位的绿值就是 <code>lb x2, 1204(x1)</code>。</li>
 <li>lb 读 1 字节，lh 读 2 字节；RV64I 还有 ld 读 8 字节。</li>
 </ul>
 </br>
 <h3 id="store-指令">Store 指令</h3>
-<p>S-type：将一个寄存器的值存到 (寄存器+立即数表示地址) 内存中—— <code>STORE: mem[rs1 + S-imm] ← rs2</code></p>
+<p><strong>S-type</strong>：将一个寄存器的值存到 (寄存器+立即数表示地址) 内存中—— <code>STORE: mem[rs1 + S-imm] ← rs2</code></p>
 <ul>
 <li>比如 sw: <code>0011111 00110 00111 010 00001 0100011</code> 表示将 x6 的全部字存到地址为 [x7]+1 的内存中。<strong>S 类的立即数只有 5-bit</strong>。</li>
 </ul>
-<p><strong>数据对齐</strong>：Store n 字节的数据时，地址一定是 n 的倍数，比如 <code>sw</code> / <code>lw</code> 的操作地址一定是 4 的倍数。RISC-V 本身并不强制数据对齐，但编译器会，故大部分 RISC 机，比如 ARM 都是数据对齐的。数据对齐可以防止超出 “页”、“cache line” 或者其他存储单位。</p>
+<p>⚠️ 坑 —— <strong>数据对齐</strong>：Store n 字节的数据时，地址一定是 n 的倍数，比如 <code>sw</code> / <code>lw</code> 的操作地址一定是 4 的倍数。RISC-V 本身并不强制数据对齐，但编译器会，故大部分 RISC 机，比如 ARM 都是数据对齐的。数据对齐可以防止超出 “页”、“cache line” 或者其他存储单位。</p>
+<p>例题：</p>
+<p><img src="https://i.postimg.cc/k4ctS35r/jie-ping2026-02-03-10-28-05.png" alt=""></p>
+<ul>
+<li>各元素分别要对齐：<code>4, 8, 1, 4, 4</code>，所以 <code>count</code> 之前需要 padding(空余) 4B，<code>red</code> 之前需要空余 3B，<strong>结构体整体对齐 = 最大字段对齐 = 8B</strong>。故每个结构体内存开销为：<code>white, 4, count, c, 3, red, blue, 4</code> 共 32b，第 100 个 <code>red</code> 的偏差就是 <code>32x100+4+4+8+1+3 = 3220</code>。</li>
+</ul>
 </br>
+<h3 id="branch-指令"><strong>Branch</strong> 指令</h3>
+<p>S<strong>B-type</strong>：比较两个寄存器数据，判断并选择其中一个执行，比如 beq。</p>
+<ul>
+<li>
+<p>在 S-type 中, 偏差是相对于基地址的，以 B 计量；在 SB-type 中, 偏差相对于 PC，以 half word (2B) 计量。两者都是用 S-Imm 表示偏差，但 SB-type 的前 7 位也属于偏差，故可以表示 ±2<sup>11</sup> 范围的偏差。总而言之，branch 可以“够到” ±2<sup>10</sup>x32b (<strong>±4 KB</strong>) 的指令。</p>
+</li>
+<li>
+<p>至于无条件的跳转，就用 J-type 的 jal，可以延展到 ±2<sup>19</sup> (±1 MB) 的指令，或者 I-type 的 jalr (<strong>4 GB</strong>)。(Jump 指令后续展开讲)</p>
+</li>
+<li>
+<p>RV32I 有 ≥ 和 &lt; (<code>bge</code>、 <code>blt</code>)，没有 &gt; 和 ≤ (<code>bgt</code>、<code>ble</code>)，同时也有 <code>bgeu</code> 和<code>bltu</code> (无符号比较)。特殊的，对于越界检测，如 <code>0 &lt;= x &lt; y</code> 可以把 x 视为无符号，用一次 <code>bgeu x, y</code> 就能同时排除负数与上界越界。</p>
+</li>
+</ul>
+<p>那么，Branch 被执行：<code>PC += imm x 4</code>；未被执行：<code>PC += 4</code></p>
+</br>
+<h3 id="lui--auipc-指令">LUI &amp; AUIPC 指令</h3>
+<p><strong>U-type</strong>：用超大立即数访问更远的内存地址。(超出 ±1MB)</p>
+<p>LUI：将 <strong>20-bit</strong> U-imm 放在寄存器中，然后左移 12 位并低位补零：<code>rd = U-imm &lt;&lt; 12</code></p>
+<p>AUIPC：构造<strong>相对 PC</strong> 的大范围地址基址：<code>rd = PC + (U-imm &lt;&lt; 12)</code></p>
+<ul>
+<li>
+<p>比如：将 32 位整数 0x12345 放进进存器：<code>lui x1, 0x12345</code>，然后 <code>addi x1, x1, 0x678</code>。</p>
+<p>⚠️ <strong>坑</strong> —— 当你要拼的 32 位常数的 <strong>低 12 位 ≥ 0x800</strong> 时，用 LUI + ADDI(低12位) 会出错，因为 ADDI 的 12 位立即数是<strong>有符号数</strong>，会发生<strong>符号扩展</strong>。(这时需要改为减去低 12 位)</p>
+</li>
+<li>
+<p>可以直接用伪指令 <code>li x0 0x12345800</code>，交给汇编器处理。</p>
+</li>
+</ul>
+</br>
+<h3 id="jump-指令">Jump 指令</h3>
+<p>Jump 在逻辑上近似于 “没有条件的 Branch”。</p>
+<p><strong>J-type</strong>：特指无条件跳转并连接 jal —— <code>JAL: rd ← pc + 4; pc ← pc + J-Imm</code></p>
+<ul>
+<li>J-type 完全没用到 <code>rd</code>，但并未改利用为 Imm 域，这是因为这么做需要新增一种指令格式，解码/ISA 更复杂，违背了 “R”ISC 的初衷。如果要跳更远，完全可以用下面的 JALR。</li>
+</ul>
+<p><strong>I-type</strong>：特指无条件间接跳转 jalr —— <code>JALR: rd ← pc + 4; pc ← (rs1 + I-Imm) &amp; ~0x01</code></p>
+<ul>
+<li>
+<p>⚠️ 对于 return：<code>rd ← pc + 4; pc ← (rs1) &amp; ~0x01</code>。判断某行是返回：如果看到 <strong>JALR 的基址寄存器是 x1，并且偏移是 0 或很小，可以猜它是 return，比如 <code>jalr x0, 0(x1)</code></strong>。⚠️ 这个猜测有可能错误，因为 x1 功能不是固定用于返回的！</p>
+</li>
+<li>
+<p>两者的最低位都是 0 (偶数化)，为了支持 16-bit 指令对齐。</p>
+</li>
+<li>
+<p>JALR 的本质是先用 Register <strong>AUIPC</strong> 组装出基址，然后借助其间接跳转，可以覆盖全部 32 位虚拟地址空间—— 0x00000000 ～ 0xFFFFFFFF (4GB)。</p>
+</li>
+</ul>
+</br>
+<h3 id="csr-指令">CSR 指令</h3>
+<p>系统指令，使用特殊寄存器 CSR，管理程序运行（异常、中断、性能计算、定时器等）</p>
+<p><img src="https://i.postimg.cc/qRBmf0s9/jie-ping2026-02-03-16-22-32.png" alt=""></p>
+</br>
+<h3 id="exception-handling"><strong>Exception Handling</strong></h3>
+<h4 id="硬件的两件事情">硬件的两件事情：</h4>
+<ol>
+<li>记录异常，比如三个最重要的 CSR 信息：</li>
+</ol>
+<ul>
+<li>
+<p><code>mepc</code> – PC 上异常的指令</p>
+</li>
+<li>
+<p><code>mcause</code> – 异常原因</p>
+</li>
+<li>
+<p><code>mstatus.mpp</code> – 异常时处于哪个 privilege mode (特权级)，用于事后恢复</p>
+</li>
+</ul>
+<ol start="2">
+<li>交给软件处理：CPU 读 <strong>mtvec</strong> (trap handler)，把 PC 设置到那里，并切换到更高特权级。</li>
+</ol>
+<h4 id="软件-exception-handler">软件 (Exception Handler)</h4>
+<p>一般设计为：<strong>Common Handler (CH)</strong> + 多个 <strong>Interrupt/Exception Handler (IH)</strong></p>
+<p><strong>CH (通用入口)</strong>：用汇编写，负责“脏活累活”</p>
+<ol>
+<li>保存所有 GPR（通用寄存器）</li>
+<li>准备好参数，调用某个 C 函数 IH</li>
+<li>IH 返回后决定 mepc 怎么改（+4 或 +2）</li>
+<li>恢复所有 GPR</li>
+<li>执行 ERET（在 RISC-V 里通常叫 mret）</li>
+</ol>
+<p><strong>IH (具体处理)</strong>：用 C 写，按 mcause 分发：</p>
+<ul>
+<li>
+<p>illegal instruction → illegal_inst_ih</p>
+</li>
+<li>
+<p>timer interrupt → timer_ih</p>
+</li>
+<li>
+<p>external interrupt → ext_ih</p>
+</li>
+<li>
+<p>&hellip;&hellip;</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="rv32i-abi">RV32I ABI</h2>
+<p><strong>ABI = Application Binary Interface</strong> (应用二进制接口)，它规定<strong>编译出来的二进制程序之间如何协作</strong>。</p>
+<p>如果不同汇编器对于寄存器有不同使用规则，必然乱套。故，以 RISC-V ABI (ILP32) 为例：</p>
+<p><img src="https://i.postimg.cc/8CT5Vn7v/jie-ping2026-02-03-16-42-03.png" alt=""></p>
+<p>寄存器基本没有硬件层强制限制，但在 ABI 协议上指定其用途。</p>
+<ul>
+<li>
+<p><strong>Caller-saved</strong> (调用者保存)：t0–t6、a0–a7、ra。意思是：caller 如果在调用函数前还想保留这些寄存器的值，你自己先存栈里；被调用函数（callee）可以随便改它们，常拿来当“<u>临时/传参</u>”。<strong>a0/a1 还常用于保存函数返回值</strong>。</p>
+</li>
+<li>
+<p><strong>Callee-saved</strong> (被调用者保存)：s0–s11 (特殊的， sp 必须隔离维护)。**callee 如果要用这些寄存器，必须先保存旧值，返回前恢复。**这样 caller 可以放心把 “长期变量” 放在 s 寄存器里跨函数调用保持不变。</p>
+</li>
+</ul>
 <ul class="pa0">
   
    <li class="list di">
-     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+     <a href="https://blog.nero-lithos.com/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
    </li>
   
 </ul>
@@ -502,7 +703,7 @@
     <ul class="pa0 list">
 	   
 	     <li  class="mb2">
-          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Introduction to Computer System</a>
+          <a href="https://blog.nero-lithos.com/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
         </li>
 	    
     </ul>

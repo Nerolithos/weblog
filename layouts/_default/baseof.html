@@ -80,6 +80,12 @@
 
   <body class="ma0 {{ $.Param "body_classes"  | default "avenir bg-near-white"}}{{ with getenv "HUGO_ENV" }} {{ . }}{{ end }}">
 
+    {{ if eq .Section "posts" }}
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    {{ end }}
+
     {{ block "header" . }}{{ partial "site-header.html" .}}{{ end }}
     <main class="pb7" role="main">
       {{ block "main" . }}{{ end }}

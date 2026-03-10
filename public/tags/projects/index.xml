@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects on Lithos&#39; Blog</title>
+    <link>https://blog.nero-lithos.com/tags/projects/</link>
+    <description>Recent content in Projects on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 06 Mar 2026 13:57:34 +0800</lastBuildDate>
+    <atom:link href="https://blog.nero-lithos.com/tags/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🐈 ArkPets</title>
+      <link>https://blog.nero-lithos.com/posts/pet/</link>
+      <pubDate>Fri, 06 Mar 2026 13:57:34 +0800</pubDate>
+      <guid>https://blog.nero-lithos.com/posts/pet/</guid>
+      <description>Proof of Work of a spine-ts + html + js exercise</description>
+    </item>
+  </channel>
+</rss>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title>💻 CSC3060 Introduction to Computer System | Lithos&#39; Blog</title>
+    <title>💻 CSC3060 Week 1-2 Introduction to Computer System | Lithos&#39; Blog</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识">
     <meta name="generator" content="Hugo 0.134.1">
@@ -17,16 +17,16 @@
     
 
     
-<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+<link rel="stylesheet" href="https://blog.nero-lithos.com/ananke/css/main.min.css" >
 
 
 
   
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
   
 
     
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
     
 
     
@@ -37,10 +37,10 @@
     
 
     
-      <link rel="canonical" href="http://localhost:1313/posts/3060.1/">
-    <meta property="og:url" content="http://localhost:1313/posts/3060.1/">
+      <link rel="canonical" href="https://blog.nero-lithos.com/posts/3060.1/">
+    <meta property="og:url" content="https://blog.nero-lithos.com/posts/3060.1/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
-  <meta property="og:title" content="💻 CSC3060 Introduction to Computer System">
+  <meta property="og:title" content="💻 CSC3060 Week 1-2 Introduction to Computer System">
   <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="article">
@@ -49,18 +49,82 @@
     <meta property="article:modified_time" content="2026-01-06T10:30:34+08:00">
     <meta property="article:tag" content="CSC3060">
 
-  <meta itemprop="name" content="💻 CSC3060 Introduction to Computer System">
+  <meta itemprop="name" content="💻 CSC3060 Week 1-2 Introduction to Computer System">
   <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识">
   <meta itemprop="datePublished" content="2026-01-06T10:30:34+08:00">
   <meta itemprop="dateModified" content="2026-01-06T10:30:34+08:00">
-  <meta itemprop="wordCount" content="8565">
+  <meta itemprop="wordCount" content="8619">
   <meta itemprop="keywords" content="CSC3060">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="💻 CSC3060 Introduction to Computer System">
+  <meta name="twitter:title" content="💻 CSC3060 Week 1-2 Introduction to Computer System">
   <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识">
 
 
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
+
+<style>
+   
+  #reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 160, 200, 0.08);
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    width: 100%;
+    height: 100%;
+    background: #00a0c8;
+    box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform 0.08s linear;
+  }
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
 
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
@@ -85,14 +149,20 @@
   <body class="ma0 avenir bg-near-white">
 
     
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    
+
+    
   
 
   
-  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30601.jpg');">
+  <header class="cover bg-top" style="background-image: url('https://blog.nero-lithos.com/images/30601.jpg');">
     <div class="bg-black-60">
       <nav class="pv3 ph3 ph4-ns" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+    <a href="https://blog.nero-lithos.com/" class="f3 fw2 hover-white no-underline white-90 dib">
       
         Lithos&#39; Blog
       
@@ -116,7 +186,7 @@
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="http://localhost:1313/" title="">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/" title="">
               🏠 Home
             </a>
           </li>
@@ -140,7 +210,7 @@
 
       <div class="tc-l pv6 ph3 ph4-ns">
         
-          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Introduction to Computer System</div>
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 1-2 Introduction to Computer System</div>
           
         
       </div>
@@ -153,6 +223,8 @@
       
   
   <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
 
     <header class="mt4 w-100">
       <aside class="instapaper_ignoref b helvetica tracked ttu">
@@ -174,7 +246,7 @@
   </div>
 
 
-      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Introduction to Computer System</h1>
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 1-2 Introduction to Computer System</h1>
 
       
 
@@ -185,7 +257,9 @@
       
     </header>
 
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="week-1--introduction">Week 1  Introduction</h1>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>有一位伟人曾经说过：<del>“学计算机的有三类人：图灵 (你知道我指的是什么)、冯诺依曼、以及明日方舟玩家/管人痴。”</del></p>
+</br>
+<h1 id="week-1--introduction">Week 1  Introduction</h1>
 <p>Computer System = <strong>Hardware + System Software</strong></p>
 <p>We want computers to &hellip;</p>
 <ol>
@@ -719,7 +793,7 @@ W 眼中：10.0.0.0/8      → 方向 A
 <ul class="pa0">
   
    <li class="list di">
-     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+     <a href="https://blog.nero-lithos.com/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
    </li>
   
 </ul>

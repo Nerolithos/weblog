@@ -1,1 +1,65 @@
 <link rel="stylesheet" href="{{ "/css/custom.css" | relURL }}">
+
+<style>
+  /* 阅读进度条样式：独立于主题 CSS，避免缓存问题 */
+  #reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 160, 200, 0.08);
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    width: 100%;
+    height: 100%;
+    background: #00a0c8;
+    box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform 0.08s linear;
+  }
+</style>
+
+{{/* 阅读进度条逻辑：在有对应 DOM 时才生效，避免干扰其它页面 */}}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		// 初始计算一次
+		updateProgress();
+	});
+</script>

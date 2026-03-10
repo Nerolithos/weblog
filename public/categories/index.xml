@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Lithos&#39; Blog</title>
-    <link>http://localhost:1313/categories/</link>
+    <link>https://blog.nero-lithos.com/categories/</link>
     <description>Recent content in Categories on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 22 Jan 2026 16:30:34 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Mar 2026 13:57:34 +0800</lastBuildDate>
+    <atom:link href="https://blog.nero-lithos.com/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>DDA</title>
-      <link>http://localhost:1313/categories/dda/</link>
-      <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/categories/dda/</guid>
+      <title>SDS</title>
+      <link>https://blog.nero-lithos.com/categories/sds/</link>
+      <pubDate>Fri, 06 Mar 2026 13:57:34 +0800</pubDate>
+      <guid>https://blog.nero-lithos.com/categories/sds/</guid>
       <description></description>
     </item>
     <item>
-      <title>SDS</title>
-      <link>http://localhost:1313/categories/sds/</link>
-      <pubDate>Tue, 20 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/categories/sds/</guid>
+      <title>DDA</title>
+      <link>https://blog.nero-lithos.com/categories/dda/</link>
+      <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
+      <guid>https://blog.nero-lithos.com/categories/dda/</guid>
       <description></description>
     </item>
     <item>
       <title>SSE</title>
-      <link>http://localhost:1313/categories/sse/</link>
+      <link>https://blog.nero-lithos.com/categories/sse/</link>
       <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/categories/sse/</guid>
+      <guid>https://blog.nero-lithos.com/categories/sse/</guid>
       <description></description>
     </item>
     <item>
       <title>帮助</title>
-      <link>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</link>
+      <link>https://blog.nero-lithos.com/categories/%E5%B8%AE%E5%8A%A9/</link>
       <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</guid>
+      <guid>https://blog.nero-lithos.com/categories/%E5%B8%AE%E5%8A%A9/</guid>
       <description></description>
     </item>
   </channel>
