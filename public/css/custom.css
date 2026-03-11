@@ -92,3 +92,30 @@
   max-width: 960px;
   margin: 0 auto;
 }
+
+/* 首页文章卡片悬浮特效 */
+.home-post-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 8px;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, background 0.15s ease-out;
+}
+
+.home-post-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  background: #ffffff;
+  z-index: 2;
+}
+
+/* 预览：默认适度裁剪，悬浮时展开更多 */
+.home-post-preview {
+  max-height: 4.5em; /* 大约 3 行 */
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.2s ease-out;
+}
+
+.home-post-card:hover .home-post-preview {
+  max-height: 12em; /* 悬浮时展示更多文字作为预览 */
+}

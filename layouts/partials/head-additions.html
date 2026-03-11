@@ -1,27 +1,56 @@
 <link rel="stylesheet" href="{{ "/css/custom.css" | relURL }}">
 
 <style>
-  /* 阅读进度条样式：独立于主题 CSS，避免缓存问题 */
-  #reading-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background: rgba(0, 160, 200, 0.08);
-    z-index: 9999;
-    pointer-events: none;
-  }
+	/* 阅读进度条样式：独立于主题 CSS，避免缓存问题 */
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
 
-  #reading-progress-bar {
-    width: 100%;
-    height: 100%;
-    background: #00a0c8;
-    box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
-    transform-origin: left center;
-    transform: scaleX(0);
-    transition: transform 0.08s linear;
-  }
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	/* 首页文章卡片悬浮特效：保证本地/线上都可见 */
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem; /* 增加左右留白，让文字不贴边 */
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em; /* 默认约 3 行 */
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em; /* 悬浮时展开更多文字作为预览 */
+	}
 </style>
 
 {{/* 阅读进度条逻辑：在有对应 DOM 时才生效，避免干扰其它页面 */}}

@@ -1,6 +1,6 @@
 {{ define "main" }}
 <div class="pa4">
-  <h1 class="f2">📚 最新文章</h1>
+  <h1 class="f2">📚 Recent Blogs</h1>
 
   {{ with .Content }}
   <section class="mb4">
@@ -9,7 +9,7 @@
   {{ end }}
 
   {{ range .Site.RegularPages }}
-  <article class="cf pv4 bb b--black-10 flex-l items-start">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
     <!-- 左侧：标题 / 元信息 / 摘要 -->
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -18,7 +18,7 @@
       <p class="gray f6 mb2">
         {{ .Date.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
       </p>
-      <div class="lh-copy mid-gray">
+      <div class="lh-copy mid-gray home-post-preview">
         {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
       </div>
       <p class="mt3">
