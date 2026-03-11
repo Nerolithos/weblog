@@ -29,6 +29,7 @@
 		background: rgba(255, 255, 255, 0.96);
 		border-radius: 8px;
 		padding: 0.75rem 1.5rem; /* 增加左右留白，让文字不贴边 */
+		cursor: pointer;
 		transition: transform 0.15s ease-out,
 								box-shadow 0.15s ease-out,
 								background 0.15s ease-out;
@@ -90,5 +91,28 @@
 
 		// 初始计算一次
 		updateProgress();
+	});
+</script>
+
+{{/* 首页卡片点击整块跳转到对应文章 */}}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				// 如果点击的是内部已有的 <a>，沿用原生行为
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
 	});
 </script>

@@ -9,7 +9,7 @@
   {{ end }}
 
   {{ range .Site.RegularPages }}
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ .RelPermalink }}">
     <!-- 左侧：标题 / 元信息 / 摘要 -->
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -21,9 +21,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
       </div>
-      <p class="mt3">
-        <a class="link dim" href="{{ .RelPermalink }}">阅读全文 →</a>
-      </p>
+      
     </div>
 
     <!-- 右侧：featured_image（有才显示） -->

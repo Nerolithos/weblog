@@ -90,6 +90,7 @@
 		background: rgba(255, 255, 255, 0.96);
 		border-radius: 8px;
 		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
 		transition: transform 0.15s ease-out,
 								box-shadow 0.15s ease-out,
 								background 0.15s ease-out;
@@ -151,6 +152,29 @@
 
 		
 		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
 	});
 </script>
 
@@ -248,12 +272,12 @@
     <main class="pb7" role="main">
       
 <div class="pa4">
-  <h1 class="f2">📚 最新文章</h1>
+  <h1 class="f2">📚 Recent Blogs</h1>
 
   
 
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/pet/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -265,9 +289,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         Proof of Work of a spine-ts + html + js exercise
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/pet/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -283,7 +305,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3060.4/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -295,9 +317,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3060.4/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -313,7 +333,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3060.3/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -325,9 +345,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3060.3/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -343,7 +361,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3060.2/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -355,9 +373,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3060.2/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -373,7 +389,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3003.1/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -385,9 +401,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 选修课程 DDA3003 Visualization，介绍 D3.js ——— 一种 HTML 可视化工具
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3003.1/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -403,7 +417,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3060.1/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -415,9 +429,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3060.1/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -433,7 +445,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3200.f3/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -445,9 +457,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3200 是新课，我们用 3002 真卷作复习参考
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3200.f3/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -463,7 +473,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3200.f2/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -475,9 +485,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3200.f2/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -493,7 +501,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3200.f1/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -505,9 +513,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3200.f1/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -523,7 +529,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3001.8/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -535,9 +541,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3001.8/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -553,7 +557,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3001.7/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -565,9 +569,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3001.7/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -583,7 +585,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/phy2/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -595,9 +597,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大一/大二课程 PHY1001 绕轴运动 important takeaway
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/phy2/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -613,7 +613,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3001.6/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -625,9 +625,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ CSC3001 图论
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3001.6/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -643,7 +641,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3001.5/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -655,9 +653,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ CSC3001 最大公因数问题与模问题
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3001.5/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -673,7 +669,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3001.4/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -685,9 +681,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ CSC3001 从数学证明法到递归思想，以及解递归式
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3001.4/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -703,7 +697,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/phy1/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -715,9 +709,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/phy1/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -733,7 +725,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3200.2/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -745,9 +737,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3200 关于 C/C++ 中数组、指针和流操作
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3200.2/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -763,7 +753,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3001.3/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -775,9 +765,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ CSC3001 更多数学证明法
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3001.3/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -793,7 +781,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3001.2/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -805,9 +793,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3001.2/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -823,7 +809,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3200.1/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -835,9 +821,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3200 关于 C++ 基础语法和 OOP 的介绍
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3200.1/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -853,7 +837,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/3001.1/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -865,9 +849,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大二课程 CSC3001 的入门指导
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/3001.1/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -883,7 +865,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/streamliturl/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -895,9 +877,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/streamliturl/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -913,7 +893,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/autorelease/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -925,16 +905,14 @@
       <div class="lh-copy mid-gray home-post-preview">
         SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/autorelease/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/brainstorm/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -946,16 +924,14 @@
       <div class="lh-copy mid-gray home-post-preview">
         从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/brainstorm/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/lgu/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -967,9 +943,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         龙大人自己的生存指南，绝赞创作中
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/lgu/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -985,7 +959,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/1003.6/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -997,16 +971,14 @@
       <div class="lh-copy mid-gray home-post-preview">
         总结 Java 中好用的语句和易错的用法
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/1003.6/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/assignment2/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1021,16 +993,14 @@
 <p>编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。
 比如：</p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/assignment2/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/sheperd/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1042,9 +1012,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         <p>牧羊人是个精明人，他总是能从羊群身上获得最多价值。冬天，羊长出很多毛，他就把大半的毛都剃掉，薄利多销地卖与人。因为价格实惠，人们都赞不绝口，经常从他那里进货。但牧羊人告诉羊群这些毛是为了实现羊群富足的必要牺牲，他永远以羊群利益至上。之所以要把毛交给牧羊人是因为他是羊群的主心骨，带领羊群走向温饱。</p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/sheperd/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -1060,7 +1028,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/1003.5/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1072,9 +1040,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         介绍递归，栈与堆，以及栈溢出
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/1003.5/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -1090,7 +1056,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/whisper/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1103,16 +1069,14 @@
         <h1 id="whisper-模型">Whisper 模型</h1>
 <p>事情的起因是龙大 ENG1001 课程需要就 TedTalk 视频进行 Reflection Presentation。但我懒得边听边记，实时转录文字太慢又不太准确。</p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/whisper/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/1003.4/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1124,16 +1088,14 @@
       <div class="lh-copy mid-gray home-post-preview">
         期中考试复习与模拟题
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/1003.4/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/assignment1/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1145,9 +1107,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/assignment1/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -1163,7 +1123,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/oop/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1181,9 +1141,7 @@
 <li>
 <p><strong>对象(Object) ≈ 实例(Instance)</strong></p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/oop/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -1199,7 +1157,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/1003.2/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1213,9 +1171,7 @@
 <h2 id="网络与计算机的历史">网络与计算机的历史</h2>
 <p>20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。</p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/1003.2/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -1231,7 +1187,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/1003.1/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1243,9 +1199,7 @@
       <div class="lh-copy mid-gray home-post-preview">
         CUHKSZ 大一课程 CSC1003（Java） 的入门
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/1003.1/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
@@ -1261,7 +1215,7 @@
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/web/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1273,16 +1227,14 @@
       <div class="lh-copy mid-gray home-post-preview">
         <p>240822，有几位同学在龙大的选课培训直播间提出几个网络问题 (见下图)。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。</p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/web/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/outlook/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1296,16 +1248,14 @@
 <p><strong>注意，如果您第一次使用 exchangelib 模块，请勿直接使用单位或学校账号！请另外测试，确保安全。</strong></p>
 <p>本议题起源于我试图为我的龙大邮箱编一个 Python 代码，实现用 OpenAI 自动分析总结邮件，生成日志摘要。但由于我是个初学者，在第一步(从 Outlook 上把邮件弄下来)时就卡壳了。是否有人可以长期用基础认证方法(输入账号密码)实现这一功能？OAuth 申请桌面应用程序时如何赋权？难搞。</p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/outlook/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/weblog_deploy/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1317,16 +1267,14 @@
       <div class="lh-copy mid-gray home-post-preview">
         一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/weblog_deploy/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/river_town/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1338,16 +1286,14 @@
       <div class="lh-copy mid-gray home-post-preview">
         <p>In Chapter six of River Town, the metaphor of &ldquo;storm&rdquo; is incredibly ingenious, much like the line from <em>Border Town</em>: &ldquo;The heavy rain washed everything, yet it washed away nothing.&rdquo; True, storms rinsed both HongKong and Fuling the night of HongKong’s handover to China. Yet only when people, like Andy in <em>The Shawshank Redemption</em>, allow the rain to cleanse the blockages and stubbornness deep within their souls, and reach their arms out to the sky, can they attain true liberation.</p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/river_town/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     
     
   </article>
   
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="https://blog.nero-lithos.com/posts/yaumatei/">
     
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
@@ -1360,9 +1306,7 @@
         <p>What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.</p>
 <p>I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.</p>
       </div>
-      <p class="mt3">
-        <a class="link dim" href="https://blog.nero-lithos.com/posts/yaumatei/">阅读全文 →</a>
-      </p>
+      
     </div>
 
     

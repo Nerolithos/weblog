@@ -91,6 +91,7 @@
 		background: rgba(255, 255, 255, 0.96);
 		border-radius: 8px;
 		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
 		transition: transform 0.15s ease-out,
 								box-shadow 0.15s ease-out,
 								background 0.15s ease-out;
@@ -152,6 +153,29 @@
 
 		
 		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
 	});
 </script>
 
