@@ -38,10 +38,16 @@
       </p>
       {{ end }}
 
-      {{ if not .Date.IsZero }}
-      <time class="f6 mv4 dib tracked" {{ printf `datetime="%s"` (.Date.Format "2006-01-02T15:04:05Z07:00") | safeHTMLAttr }}>
-        {{- .Date | time.Format (default "January 2, 2006" .Site.Params.date_format) -}}
-      </time>
+      {{ $dateFormat := default "January 2, 2006" .Site.Params.date_format }}
+      {{ if eq .File.BaseFileName "history-today" }}
+        {{ $d := now }}
+        <time class="f6 mv4 dib tracked" {{ printf `datetime="%s"` ($d.Format "2006-01-02T15:04:05Z07:00") | safeHTMLAttr }}>
+          {{- $d | time.Format $dateFormat -}}
+        </time>
+      {{ else if not .Date.IsZero }}
+        <time class="f6 mv4 dib tracked" {{ printf `datetime="%s"` (.Date.Format "2006-01-02T15:04:05Z07:00") | safeHTMLAttr }}>
+          {{- .Date | time.Format $dateFormat -}}
+        </time>
       {{ end }}
 
       {{ if (or (eq (.Param "show_reading_time") true) (eq $section.Params.show_reading_time true) )}}

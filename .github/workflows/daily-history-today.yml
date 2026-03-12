@@ -1,0 +1,40 @@
+name: Daily History Today Build
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # 每天 00:00 UTC 触发（相当于北京时间早上 8 点）
+  workflow_dispatch: {}
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.134.1'
+          extended: true
+
+      - name: Build site
+        run: hugo --config hugo.toml
+
+      - name: Commit updated history data and public files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git status
+          if [ -n "$(git status --porcelain)" ]; then
+            git add content/posts/history-today-data.json public
+            git commit -m "chore: daily history-today update" || echo "Nothing to commit"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
