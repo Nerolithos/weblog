@@ -2,16 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://blog.nero-lithos.com/</loc>
+    <lastmod>2026-03-12T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nero-lithos.com/posts/</loc>
+    <lastmod>2026-03-12T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nero-lithos.com/posts/history-today/</loc>
+    <lastmod>2026-03-12T00:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://blog.nero-lithos.com/posts/pet/</loc>
     <lastmod>2026-03-06T13:57:34+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/categories/</loc>
-    <lastmod>2026-03-06T13:57:34+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.nero-lithos.com/</loc>
-    <lastmod>2026-03-06T13:57:34+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.nero-lithos.com/posts/</loc>
     <lastmod>2026-03-06T13:57:34+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/tags/projects/</loc>
@@ -68,13 +71,13 @@
     <loc>https://blog.nero-lithos.com/posts/3001.7/</loc>
     <lastmod>2025-11-13T09:24:24+08:00</lastmod>
   </url><url>
+    <loc>https://blog.nero-lithos.com/posts/phy2/</loc>
+    <lastmod>2025-11-06T14:29:34+08:00</lastmod>
+  </url><url>
     <loc>https://blog.nero-lithos.com/tags/phy1001/</loc>
     <lastmod>2025-11-06T14:29:34+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/categories/sse/</loc>
-    <lastmod>2025-11-06T14:29:34+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.nero-lithos.com/posts/phy2/</loc>
     <lastmod>2025-11-06T14:29:34+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/posts/3001.6/</loc>
@@ -134,12 +137,6 @@
     <loc>https://blog.nero-lithos.com/tags/%E7%BB%83%E4%B9%A0/</loc>
     <lastmod>2024-10-31T14:49:58+08:00</lastmod>
   </url><url>
-    <loc>https://blog.nero-lithos.com/posts/sheperd/</loc>
-    <lastmod>2024-10-30T13:49:58+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.nero-lithos.com/tags/diary/</loc>
-    <lastmod>2024-10-30T13:49:58+08:00</lastmod>
-  </url><url>
     <loc>https://blog.nero-lithos.com/posts/1003.5/</loc>
     <lastmod>2024-10-22T17:23:58+08:00</lastmod>
   </url><url>
@@ -177,6 +174,9 @@
     <lastmod>2024-09-10T23:34:08+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/posts/river_town/</loc>
+    <lastmod>2024-09-10T15:49:58+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nero-lithos.com/tags/diary/</loc>
     <lastmod>2024-09-10T15:49:58+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/posts/yaumatei/</loc>

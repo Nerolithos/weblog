@@ -1,0 +1,17 @@
+{{/* Show "History Today" events based on history-today-data.json */}}
+{{ $raw := readFile "content/posts/history-today-data.json" }}
+{{ $data := $raw | transform.Unmarshal }}
+{{ $key := now.Format "01-02" }}
+{{ $events := index $data $key }}
+<div class="history-today">
+  <h2>历史上的今天 ({{ $key }})</h2>
+  {{ if not $events }}
+    <p>今天暂时没有事件数据。</p>
+  {{ else }}
+    <ul class="history-today-list">
+      {{ range $events }}
+        <li><strong>{{ .year }}</strong> — {{ .summary }}</li>
+      {{ end }}
+    </ul>
+  {{ end }}
+</div>

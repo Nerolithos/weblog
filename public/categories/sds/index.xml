@@ -16,7 +16,7 @@
       <description>Proof of Work of a spine-ts + html + js exercise</description>
     </item>
     <item>
-      <title>💻 CSC3060 Week 6 Processor SW and HW</title>
+      <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
       <link>https://blog.nero-lithos.com/posts/3060.4/</link>
       <pubDate>Tue, 03 Mar 2026 10:37:34 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/3060.4/</guid>
@@ -135,14 +135,14 @@
       <description>CUHKSZ 大二课程 CSC3001 的入门指导</description>
     </item>
     <item>
-      <title>How to personalize Streamlit URL?</title>
+      <title>🌐 How to personalize Streamlit URL?</title>
       <link>https://blog.nero-lithos.com/posts/streamliturl/</link>
       <pubDate>Sun, 31 Aug 2025 10:50:30 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/streamliturl/</guid>
       <description>一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试</description>
     </item>
     <item>
-      <title>Automation of Ssg Post Release</title>
+      <title>🌐 Automation of Ssg Post Release</title>
       <link>https://blog.nero-lithos.com/posts/autorelease/</link>
       <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/autorelease/</guid>
@@ -156,49 +156,49 @@
       <description>从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…</description>
     </item>
     <item>
-      <title># CSC1003 期末总结</title>
+      <title>💻 CSC1003 期末总结</title>
       <link>https://blog.nero-lithos.com/posts/1003.6/</link>
       <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/1003.6/</guid>
       <description>总结 Java 中好用的语句和易错的用法</description>
     </item>
     <item>
-      <title># CSC1003 Assignment2 二维数组</title>
+      <title>💻 CSC1003 Assignment2 二维数组</title>
       <link>https://blog.nero-lithos.com/posts/assignment2/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/assignment2/</guid>
       <description>&lt;h1 id=&#34;二维数组&#34;&gt;二维数组&lt;/h1&gt;&#xA;&lt;h3 id=&#34;例题一easy&#34;&gt;例题一(easy)：&lt;/h3&gt;&#xA;&lt;p&gt;编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。&#xA;比如：&lt;/p&gt;</description>
     </item>
     <item>
-      <title># CSC1003 LEC13-15 递归</title>
+      <title>💻 CSC1003 LEC13-15 递归</title>
       <link>https://blog.nero-lithos.com/posts/1003.5/</link>
       <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/1003.5/</guid>
       <description>介绍递归，栈与堆，以及栈溢出</description>
     </item>
     <item>
-      <title># CSC1003 LEC10-12 Midterm Revision</title>
+      <title>💻 CSC1003 LEC10-12 Midterm Revision</title>
       <link>https://blog.nero-lithos.com/posts/1003.4/</link>
       <pubDate>Sat, 19 Oct 2024 23:56:58 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/1003.4/</guid>
       <description>期中考试复习与模拟题</description>
     </item>
     <item>
-      <title># CSC1003 Assignment1 OJPractice</title>
+      <title>💻 CSC1003 Assignment1 OJPractice</title>
       <link>https://blog.nero-lithos.com/posts/assignment1/</link>
       <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/assignment1/</guid>
       <description>CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践</description>
     </item>
     <item>
-      <title># CSC1003 TBL1 网络与计算机史</title>
+      <title>💻 CSC1003 TBL1 网络与计算机史</title>
       <link>https://blog.nero-lithos.com/posts/1003.2/</link>
       <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/1003.2/</guid>
       <description>&lt;p&gt;TBL = Things Beyond Lecture。是讲座跳过的 PPT 内容，你可以在Chat.1里找到这些内容的简略版。&lt;/p&gt;&#xA;&lt;h2 id=&#34;网络与计算机的历史&#34;&gt;网络与计算机的历史&lt;/h2&gt;&#xA;&lt;p&gt;20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。&lt;/p&gt;</description>
     </item>
     <item>
-      <title># CSC1003 LEC1~3 函数、数据类型与计算</title>
+      <title>💻 CSC1003 LEC1~3 函数、数据类型与计算</title>
       <link>https://blog.nero-lithos.com/posts/1003.1/</link>
       <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/1003.1/</guid>

@@ -1,7 +1,7 @@
 ---
 title: "# 《牧羊人》"
 date: 2024-10-30T13:49:58+08:00
-draft: false
+draft: true
 tags: 
 - Diary
 featured_image: "/images/them.jpg"

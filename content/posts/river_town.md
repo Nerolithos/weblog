@@ -1,5 +1,5 @@
 ---
-title: "# River Town: the Metaphor of Chapter VI. ‘Storm’"
+title: "📝 River Town: the Metaphor of Chapter VI. ‘Storm’"
 date: 2024-09-10T15:49:58+08:00
 draft: false
 tags: 

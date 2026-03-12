@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dual Pets MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      /* 画布外统一使用纯浅黑色背景 */
+      background: #181818;
+      color: #eee;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #matrix-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    #main-row {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    #pet-container {
+      position: relative;
+      z-index: 2;
+    }
+    #pet-window {
+      position: relative;
+      width: 960px;
+      height: 640px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      border-radius: 12px;
+      overflow: hidden;
+      /* 使用 Resources/background.png 作为当前画布的背景 */
+      background: url('Resources/background.png') center center / cover no-repeat;
+    }
+    .pet-window-titlebar {
+      height: 26px;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+      cursor: move;
+      user-select: none;
+    }
+    .pet-window-title-text {
+      font-size: 12px;
+      color: #444444;
+      flex: 1;
+      text-align: center;
+      margin-right: 24px;
+      user-select: none;
+    }
+    #side-terminal {
+      position: relative; /* 便于在自身坐标系内通过 transform 拖动 */
+      z-index: 3;         /* 确保在 canvas 之上 */
+      width: 420px;
+      height: 430px; /* 缩短为原来的大约 2/3 高度 */
+      background: #323434; /* 再稍微亮一点，和背景拉开 */
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      overflow: hidden;
+      color: #f8f8f8;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+    }
+    /* 桌面区与图标 */
+    #desktop-area {
+      position: fixed;
+      left: 16px;
+      top: 16px;
+      z-index: 0; /* 在主要窗口之下，像桌面图标一样 */
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .desktop-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 64px; /* 固定宽度，三枚图标垂直对齐 */
+      cursor: pointer;
+      user-select: none;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+    .desktop-icon .icon-emoji {
+      font-size: 40px;
+      line-height: 1;
+    }
+    .desktop-icon .icon-label {
+      margin-top: 4px;
+      font-size: 12px;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    .ark-term-titlebar {
+      height: 26px;
+      background: linear-gradient(to bottom, #2d2d30, #1e1e1e);
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+      cursor: move;       /* 通过标题栏拖动终端窗口 */
+      user-select: none;
+    }
+    .ark-term-title-buttons {
+      display: flex;
+      gap: 6px;
+      margin-right: 8px;
+    }
+    .ark-term-btn {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff5f57;
+    }
+    .ark-term-btn.min {
+      background: #febc2e;
+    }
+    .ark-term-title-text {
+      font-size: 12px;
+      color: #cccccc;
+      user-select: none;
+      flex: 1;
+      text-align: center;
+      margin-right: 24px; /* 让文字在视觉上更居中 */
+    }
+    #ark-terminal-body {
+      background: #151515;
+      padding: 10px 12px 8px;
+      box-sizing: border-box;
+      height: 404px;  /* 与窗口高度匹配，留出标题栏与内边距 */
+      overflow-y: scroll; /* 始终保留可见垂直滚动条，便于上下拖动 */
+      overflow-x: hidden; /* 不再显示水平滚动条，内容改为自动换行 */
+    }
+    /* 自定义终端内容区域滚动条样式 */
+    #ark-terminal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+    #ark-terminal-body::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+    #ark-terminal-body::-webkit-scrollbar-thumb {
+      background: #555555;
+      border-radius: 4px;
+    }
+    #ark-terminal-body::-webkit-scrollbar-thumb:hover {
+      background: #777777;
+    }
+    #ark-terminal-output {
+      margin: 0;
+      white-space: pre-wrap; /* 保留换行与缩进，但允许内容在容器内自动换行 */
+      word-break: break-word; /* 超长单词在宽度不足时也可以折行，避免溢出 */
+    }
+    .ark-term-input-row {
+      display: flex;
+      align-items: center;
+      margin-top: 6px;
+      font-family: inherit;
+    }
+    .ark-term-prompt {
+      white-space: pre;
+    }
+    .ark-prompt-project {
+      color: #21d6e6; /* Arkpets 青蓝色 */
+    }
+    .ark-prompt-git {
+      color: #365ce6; /* git:( ) 深蓝色 */
+    }
+    .ark-prompt-main {
+      color: #fb4a4a; /* main 红色 */
+    }
+    .ark-prompt-x {
+      color: #f7e452; /* ✗ 黄色 */
+    }
+    #ark-terminal-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 0;
+      margin: 0;
+    }
+    canvas {
+      display: block;
+    }
+    #hint {
+      position: fixed;
+      z-index: 2;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ccc;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    #pet-dialog {
+      position: fixed;
+      z-index: 3;
+      min-width: 160px;
+      max-width: 260px;
+      padding: 8px 10px;
+      background: #ffffff;
+      border: 2px solid #000000;
+      color: #000000;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      font-size: 13px;
+      line-height: 1.4;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -100%);
+      transition: opacity 0.18s ease-out;
+      white-space: normal;
+      text-align: left;
+    }
+    #pet-menu {
+      position: fixed;
+      z-index: 4;
+      min-width: 120px;
+      padding: 4px 0;
+      background: #222;
+      color: #eee;
+      border: 1px solid #555;
+      border-radius: 6px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.12s ease-out, transform 0.12s ease-out;
+    }
+    .pet-menu-item {
+      padding: 4px 14px;
+      cursor: default;
+      white-space: nowrap;
+    }
+    .pet-menu-item + .pet-menu-item {
+      border-top: 1px solid #444;
+    }
+    .pet-menu-item:hover {
+      background: #444;
+    }
+    #terminal-dialog {
+      position: fixed;
+      z-index: 5;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 420px;
+      max-width: 560px;
+      padding: 16px 20px;
+      background: #000000;
+      border: 2px solid #000000;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.85);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+    }
+    #terminal-dialog pre {
+      margin: 0;
+      color: #ff0000;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.6;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      white-space: pre-wrap;
+    }
+    /* 蓝屏图层：全屏、最高层，盖住对白框等所有 UI */
+    #error-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0000aa;
+      color: #ffffff;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 16px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 20px 18px;
+      z-index: 10; /* 全页面最高，盖住 canvas 与对白框 */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+    }
+    #bsod-text {
+      margin: 0;
+      white-space: pre;
+    }
+
+    /* 摄像头视频覆盖层：盖住宠物 canvas 与其他内容 */
+    #camera-stream {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 100; /* 高于普通窗口与桌面 */
+      display: none;
+      background: #000;
+    }
+
+    /* "OPEN YOUR CAMERA" 弹窗样式 */
+    .camera-popup {
+      position: fixed;
+      width: 260px;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.65);
+      border: 1px solid #000000;
+      z-index: 12; /* 高于终端与 canvas，但低于摄像头视频层 */
+      overflow: hidden;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    .camera-popup-titlebar {
+      height: 24px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+    }
+    .camera-popup-title-text {
+      font-size: 11px;
+      color: #444444;
+      margin-left: 6px;
+      user-select: none;
+    }
+    .camera-popup-body {
+      padding: 14px 16px 16px;
+      text-align: center;
+    }
+    .camera-popup-text {
+      font-weight: 700;
+      color: #ff0000;
+      font-size: 16px;
+    }
+    .camera-popup.shake {
+      animation: camera-popup-shake 0.35s ease-in-out;
+    }
+    @keyframes camera-popup-shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    /* 摄像头拒绝授权时的全屏白底提示 */
+    #camera-error-overlay {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      color: #ff0000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 28px;
+      text-align: center;
+      white-space: pre-line;
+    }
+    /* 简易记事本窗口 */
+    #notes-window {
+      position: fixed;
+      right: 32px;
+      bottom: 32px;
+      width: 300px;
+      height: 280px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      border: 1px solid #000000;
+      z-index: 3;
+      overflow: hidden;
+      display: none;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    #notes-window .notes-titlebar {
+      height: 24px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+      user-select: none;
+    }
+    #notes-window .notes-title-text {
+      font-size: 11px;
+      color: #444444;
+      margin-left: 6px;
+      flex: 1;
+      text-align: center;
+    }
+    #notes-window .notes-body {
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #222222;
+      line-height: 1.4;
+      box-sizing: border-box;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #notes-window .notes-header {
+      white-space: pre-wrap;
+      margin-bottom: 8px;
+    }
+    #notes-window .notes-content {
+      flex: 1;
+      white-space: pre-wrap;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+    /* 自定义记事本垂直滚动条样式（作用于可滚动内容区域） */
+    #notes-window .notes-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    #notes-window .notes-content::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+    #notes-window .notes-content::-webkit-scrollbar-thumb {
+      background: #bbbbbb;
+      border-radius: 4px;
+    }
+    #notes-window .notes-content::-webkit-scrollbar-thumb:hover {
+      background: #999999;
+    }
+  </style>
+</head>
+<body>
+  <!-- 背景 Matrix 字符雨画布（在宠物 canvas 之外，不影响交互） -->
+  <canvas id="matrix-bg"></canvas>
+  <div id="desktop-area">
+    <div class="desktop-icon" data-app="pets"><span class="icon-emoji">🐱</span><span class="icon-label">ArkPets</span></div>
+    <div class="desktop-icon" data-app="terminal"><span class="icon-emoji">⌨</span><span class="icon-label">Terminal</span></div>
+    <div class="desktop-icon" data-app="notes"><span class="icon-emoji">📝</span><span class="icon-label">Notes</span></div>
+  </div>
+  <div id="main-row">
+    <div id="pet-container">
+      <div id="pet-window">
+        <div class="pet-window-titlebar">
+          <div class="ark-term-title-buttons">
+            <div class="ark-term-btn"></div>
+            <div class="ark-term-btn min"></div>
+          </div>
+          <div class="pet-window-title-text">ArkPets</div>
+        </div>
+        <canvas id="dual-pets" width="960" height="640"></canvas>
+      </div>
+    </div>
+    <div id="side-terminal">
+      <div class="ark-term-titlebar">
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn"></div>
+          <div class="ark-term-btn min"></div>
+        </div>
+        <div class="ark-term-title-text">Untitled</div>
+      </div>
+      <div id="ark-terminal-body">
+        <pre id="ark-terminal-output"></pre>
+        <div class="ark-term-input-row">
+          <span class="ark-term-prompt">(base) ➜ <span class="ark-prompt-project">Arkpets</span> <span class="ark-prompt-git">git:(</span><span class="ark-prompt-main">main</span><span class="ark-prompt-git">)</span> <span class="ark-prompt-x">✗</span> </span>
+          <input id="ark-terminal-input" autocomplete="off" spellcheck="false" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 占据整个页面的“蓝屏”覆盖层，文字在左上角逐行打印 -->
+  <div id="error-overlay">
+    <pre id="bsod-text"></pre>
+  </div>
+  <!-- 摄像头视频覆盖层 -->
+  <video id="camera-stream" autoplay playsinline muted></video>
+  <!-- LOVE 提示对话框 -->
+  <div id="love-dialog" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:19;opacity:0;transition:opacity 0.3s ease-out;">
+    <div style="background:#ffffff;border-radius:8px;border:1px solid #000;padding:16px 22px;box-shadow:0 10px 30px rgba(0,0,0,0.7);font-family:'SF Mono',Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:14px;text-align:center;white-space:pre-line;color:#ff0000;font-weight:700;">
+Thank you, for your LOVE :)
+The password to Resources is available.
+    </div>
+  </div>
+  <!-- 简易记事本窗口 -->
+  <div id="notes-window">
+    <div class="notes-titlebar">
+      <div class="ark-term-title-buttons">
+        <div class="ark-term-btn notes-close"></div>
+        <div class="ark-term-btn min notes-min"></div>
+      </div>
+      <div class="notes-title-text">Notes</div>
+    </div>
+    <div class="notes-body">
+      <div class="notes-header"></div>
+      <div class="notes-content"></div>
+    </div>
+  </div>
+  <!-- 摄像头错误覆盖层：拒绝授权时使用 -->
+  <div id="camera-error-overlay">
+    <div>401 - UNAUTHORIZED
+WHY DID YOU DENIED？</div>
+  </div>
+  <div id="pet-dialog"></div>
+  <div id="pet-menu">
+    <div class="pet-menu-item" data-action="copy">Copy</div>
+    <div class="pet-menu-item" data-action="delete">Delete</div>
+  </div>
+  <div id="terminal-dialog">
+    <pre></pre>
+  </div>
+
+  <!-- Spine webgl runtime built locally from Spine 3.8 runtimes (spine-ts/build/spine-webgl.js) -->
+  <script src="spine-webgl-3.8.js"></script>
+
+  <!-- Dual pets logic (already in this folder) -->
+  <script src="dual-pets.js?v=20260308"></script>
+  <script>
+    (function () {
+      function start() {
+        var canvas = document.getElementById('dual-pets');
+        if (!canvas) {
+          console.error('[DualPets] canvas #dual-pets not found');
+          return;
+        }
+        if (!window.spine) {
+          console.error('[DualPets] global `spine` not found. Make sure spine-webgl.js is present and loaded successfully.');
+          return;
+        }
+        if (!window.DualPets || !window.DualPets.initDualPets) {
+          console.error('[DualPets] initDualPets not available; ensure dual-pets.js is present.');
+          return;
+        }
+        window.DualPets.initDualPets({
+          canvas: canvas,
+          assetBaseUrl: 'Resources'
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+      } else {
+        start();
+      }
+    })();
+  </script>
+    <script>
+      // Matrix rain 背景效果，仅绘制在页面背景 canvas，上层宠物 canvas 不受影响
+      (function () {
+        var bg = document.getElementById('matrix-bg');
+        if (!bg || !bg.getContext) return;
+        var ctx = bg.getContext('2d');
+
+        var FONT_SIZE = 18;
+        var SPEED_MIN = 6;
+        var SPEED_MAX = 16;
+        var TAIL_LEN = 14;
+        var REFRESH_MS = 33; // ~30 FPS
+        var CHARS = "アイウエオカキクケコサシスセソタチツテトナニヌネノ" +
+                    "ハヒフヘホマミムメモヤユヨラリルレロワヲン" +
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+
+        function greenShades(n) {
+          var shades = [];
+          for (var i = 0; i < n; i++) {
+            var t = n <= 1 ? 0 : i / (n - 1);
+            var g = Math.floor(255 * (0.30 + 0.55 * (1 - t))); // 整体稍暗
+            var r = Math.floor(20 * (1 - t));
+            var b = Math.floor(20 * (1 - t));
+            // 使用半透明绿色，让背景整体更暗一些
+            shades.push('rgba(' + r + ',' + g + ',' + b + ',0.55)');
+          }
+          return shades;
+        }
+
+        var shades = greenShades(TAIL_LEN);
+
+        var columns = [];
+        var width = 0;
+        var height = 0;
+
+        function randInt(a, b) {
+          return Math.floor(Math.random() * (b - a + 1)) + a;
+        }
+
+        function resetColumn(col) {
+          col.y = randInt(-height, 0);
+          col.speed = randInt(SPEED_MIN, SPEED_MAX);
+          col.tail = new Array(TAIL_LEN).fill(' ');
+        }
+
+        function rebuildColumns() {
+          width = window.innerWidth || document.documentElement.clientWidth || bg.width;
+          height = window.innerHeight || document.documentElement.clientHeight || bg.height;
+          bg.width = width;
+          bg.height = height;
+
+          columns = [];
+          var colCount = Math.floor(width / FONT_SIZE);
+          for (var c = 0; c < colCount; c++) {
+            if (Math.random() < 0.15) continue; // 留一些空列
+            var col = {
+              x: c * FONT_SIZE,
+              y: randInt(-height, 0),
+              speed: randInt(SPEED_MIN, SPEED_MAX),
+              tail: new Array(TAIL_LEN).fill(' ')
+            };
+            columns.push(col);
+          }
+        }
+
+        function stepColumn(col) {
+          var head = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+          col.tail.unshift(head);
+          col.tail.length = TAIL_LEN;
+          col.y += col.speed;
+
+          for (var i = 0; i < col.tail.length; i++) {
+            var ch = col.tail[i];
+            if (ch === ' ') continue;
+            var yPos = col.y - i * FONT_SIZE;
+            if (yPos < -FONT_SIZE || yPos > height + FONT_SIZE) continue;
+            ctx.fillStyle = i === 0 ? 'rgba(204,255,204,0.75)' : shades[i];
+            ctx.fillText(ch, col.x, yPos);
+          }
+
+          if (col.y - TAIL_LEN * FONT_SIZE > height + FONT_SIZE) {
+            resetColumn(col);
+          }
+        }
+
+        function animate() {
+          // 加深背景清除，用更高的不透明度让整体更暗
+          ctx.fillStyle = 'rgba(0,0,0,0.8)';
+          ctx.fillRect(0, 0, width, height);
+          ctx.font = FONT_SIZE + 'px "Courier New", monospace';
+          ctx.textBaseline = 'top';
+          ctx.textAlign = 'left';
+
+          for (var i = 0; i < columns.length; i++) {
+            stepColumn(columns[i]);
+          }
+        }
+
+        function startMatrix() {
+          rebuildColumns();
+          setInterval(animate, REFRESH_MS);
+        }
+
+        window.addEventListener('resize', rebuildColumns);
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', startMatrix);
+        } else {
+          startMatrix();
+        }
+      })();
+    </script>
+</body>
+</html>

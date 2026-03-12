@@ -9,14 +9,14 @@
     <lastBuildDate>Sun, 31 Aug 2025 10:50:30 +0800</lastBuildDate>
     <atom:link href="https://blog.nero-lithos.com/tags/%E5%B8%AE%E5%8A%A9/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>How to personalize Streamlit URL?</title>
+      <title>🌐 How to personalize Streamlit URL?</title>
       <link>https://blog.nero-lithos.com/posts/streamliturl/</link>
       <pubDate>Sun, 31 Aug 2025 10:50:30 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/streamliturl/</guid>
       <description>一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试</description>
     </item>
     <item>
-      <title>Automation of Ssg Post Release</title>
+      <title>🌐 Automation of Ssg Post Release</title>
       <link>https://blog.nero-lithos.com/posts/autorelease/</link>
       <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/autorelease/</guid>

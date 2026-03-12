@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8" />
+  <title>D3 小实验 · 力导向图</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/custom.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #ffffff;
+      color: #222222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .d3-demo-page {
+      flex: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem;
+    }
+    .d3-demo-header {
+      margin-bottom: 1.5rem;
+    }
+    .d3-demo-header h1 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+    }
+    .d3-demo-header p {
+      margin: 0;
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+    .d3-demo-layout {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-top: 1.5rem;
+    }
+    .d3-demo-left,
+    .d3-demo-right {
+      flex: 1 1 50%;
+      min-width: 0;
+    }
+    .d3-demo-canvas-wrapper {
+      margin-top: 1.5rem;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .d3-demo-svg {
+      width: 100%;
+      height: 480px;
+      display: block;
+    }
+    .d3-demo-node {
+      stroke: #111;
+      stroke-width: 1.2px;
+      cursor: grab;
+    }
+    .d3-demo-node:active {
+      cursor: grabbing;
+    }
+    .d3-demo-link {
+      stroke: rgba(120, 140, 180, 0.55);
+      stroke-width: 1.4px;
+    }
+    .d3-demo-label {
+      fill: #222222;
+      font-size: 11px;
+      pointer-events: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+    .d3-demo-legend {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+    .d3-demo-legend code {
+      background: rgba(0,0,0,0.04);
+      padding: 0.12rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+    .d3-demo-backlink {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+    }
+    .d3-demo-backlink a {
+      color: #8ab4ff;
+      text-decoration: none;
+    }
+    .d3-demo-backlink a:hover {
+      text-decoration: underline;
+    }
+    .d3-demo-globe-wrapper {
+      margin-top: 1.5rem;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .d3-demo-globe-svg {
+      width: 100%;
+      height: 480px;
+      display: block;
+    }
+    .d3-demo-globe-sphere {
+      fill: #e6f2ff;
+      stroke: #4f83cc;
+      stroke-width: 1.2px;
+    }
+    .d3-demo-globe-graticule {
+      fill: none;
+      stroke: rgba(120, 150, 200, 0.4);
+      stroke-width: 0.6px;
+      stroke-dasharray: 2 2;
+    }
+    .d3-demo-globe-country {
+      stroke: rgba(255, 255, 255, 0.8);
+      stroke-width: 0.5px;
+    }
+    @media (max-width: 640px) {
+      .d3-demo-svg,
+      .d3-demo-globe-svg {
+        height: 360px;
+      }
+    }
+    @media (max-width: 960px) {
+      .d3-demo-layout {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="d3-demo-page">
+    <header class="d3-demo-header">
+      <h1>D3.js 交互展示</h1>
+      <p>左侧： <code>forceSimulation</code>；右侧：<code>geoOrthographic</code> </p>
+    </header>
+
+    <section class="d3-demo-layout">
+      <div class="d3-demo-left">
+        <div class="d3-demo-canvas-wrapper">
+          <svg id="d3-demo-svg" class="d3-demo-svg"></svg>
+          <div class="d3-demo-legend">
+            拖拽节点观察力的效果，双击放大，可拖动。
+          </div>
+        </div>
+      </div>
+      <div class="d3-demo-right">
+        <div class="d3-demo-globe-wrapper">
+          <svg id="d3-globe-svg" class="d3-demo-globe-svg"></svg>
+          <div class="d3-demo-legend">
+            自动旋转的地球，可通过拖拽改变视角。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="d3-demo-backlink">
+      <a href="/">← 返回博客首页</a>
+    </div>
+  </main>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
+  <script>
+    const svg = d3.select("#d3-demo-svg");
+    const width = parseInt(svg.style("width"));
+    const height = parseInt(svg.style("height"));
+
+    const nodes = [
+      { id: "1", group: 1 },
+      { id: "2", group: 2 },
+      { id: "3", group: 2 },
+      { id: "4", group: 3 },
+      { id: "5", group: 3 },
+      { id: "6", group: 4 },
+      { id: "7", group: 4 },
+      { id: "8", group: 4 }
+    ];
+
+    const links = [
+      { source: "1", target: "2" },
+      { source: "1", target: "3" },
+      { source: "1", target: "4" },
+      { source: "1", target: "5" },
+      { source: "6", target: "7" },
+      { source: "6", target: "8" },
+      { source: "3", target: "6" },
+      { source: "2", target: "3" }
+    ];
+
+    const color = d3.scaleOrdinal()
+      .domain([1, 2, 3, 4])
+      .range(["#ffb347", "#8fd3f4", "#b19cd9", "#90ee90"]);
+
+    const zoomLayer = svg.append("g");
+
+    const link = zoomLayer.append("g")
+      .attr("stroke-linecap", "round")
+      .selectAll("line")
+      .data(links)
+      .enter()
+      .append("line")
+      .attr("class", "d3-demo-link");
+
+    const node = zoomLayer.append("g")
+      .selectAll("circle")
+      .data(nodes)
+      .enter()
+      .append("circle")
+      .attr("class", "d3-demo-node")
+      .attr("r", 16)
+      .attr("fill", d => color(d.group));
+
+    const label = zoomLayer.append("g")
+      .selectAll("text")
+      .data(nodes)
+      .enter()
+      .append("text")
+      .attr("class", "d3-demo-label")
+      .attr("text-anchor", "middle")
+      .attr("dy", 4)
+      .text(d => d.id);
+
+    const simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(links).id(d => d.id).distance(120).strength(0.6))
+      .force("charge", d3.forceManyBody().strength(-280))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(28))
+      .on("tick", ticked);
+
+    const drag = d3.drag()
+      .on("start", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on("drag", (event, d) => {
+        d.fx = event.x;
+        d.fy = event.y;
+      })
+      .on("end", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      });
+
+    node.call(drag);
+
+    svg.on("dblclick", () => {
+      simulation.alpha(0.6).restart();
+    });
+
+    svg.call(
+      d3.zoom()
+        .scaleExtent([0.5, 2.5])
+        .on("zoom", (event) => {
+          zoomLayer.attr("transform", event.transform);
+        })
+    );
+
+    function ticked() {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      node
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+
+      label
+        .attr("x", d => d.x)
+        .attr("y", d => d.y);
+    }
+
+    // ==========================
+    // 右侧：旋转地球 geoOrthographic
+    // ==========================
+    const globeSvg = d3.select("#d3-globe-svg");
+    const globeWidth = parseInt(globeSvg.style("width"));
+    const globeHeight = parseInt(globeSvg.style("height"));
+
+    const projection = d3.geoOrthographic()
+      .scale(Math.min(globeWidth, globeHeight) / 2.1)
+      .translate([globeWidth / 2, globeHeight / 2])
+      .clipAngle(90);
+
+    const geoPath = d3.geoPath(projection);
+    const graticule = d3.geoGraticule();
+
+    const globeGroup = globeSvg.append("g");
+
+    const sphere = globeGroup.append("path")
+      .datum({ type: "Sphere" })
+      .attr("class", "d3-demo-globe-sphere");
+
+    const grat = globeGroup.append("path")
+      .datum(graticule())
+      .attr("class", "d3-demo-globe-graticule");
+
+    let countryPaths = null;
+
+    const specialChinaColor = "#ce4242"; // 中国 & 台湾 统一颜色
+
+    const continentColor = d3.scaleOrdinal()
+      .range([
+        "#5fb0ff", // 海洋蓝系
+        "#8bc34a", // 绿色
+        "#ffb74d", // 橙色
+        "#ce93d8", // 紫色
+        "#ff8a80", // 红橙
+        "#80cbc4"  // 青绿
+      ]);
+
+    function renderGlobe() {
+      sphere.attr("d", geoPath);
+      grat.attr("d", geoPath);
+      if (countryPaths) {
+        countryPaths.attr("d", geoPath);
+      }
+    }
+
+    d3.json("https://unpkg.com/world-atlas@2/countries-110m.json").then(worldData => {
+      if (!worldData.objects || !worldData.objects.countries) {
+        console.error("world-atlas 数据格式不符合预期", worldData);
+        return;
+      }
+
+      const countries = topojson.feature(worldData, worldData.objects.countries).features;
+
+      countryPaths = globeGroup.append("g")
+        .selectAll("path")
+        .data(countries)
+        .enter()
+        .append("path")
+        .attr("class", "d3-demo-globe-country")
+        .attr("fill", (d, i) => {
+          const id = +d.id;
+          const name = d.properties && d.properties.name;
+          // world-atlas 中，China 通常 id=156，Taiwan id=158
+          if (id === 156 || id === 158 || name === "China" || name === "Taiwan") {
+            return specialChinaColor;
+          }
+          return continentColor(i % 6);
+        });
+
+      renderGlobe();
+    });
+
+    let isDraggingGlobe = false;
+    let lastRotation = projection.rotate();
+    let lastPos = null;
+
+    function updateRotation(lambda, phi) {
+      projection.rotate([lambda, phi]);
+      renderGlobe();
+    }
+
+    let baseLambda = 0;
+    let basePhi = -15;
+    updateRotation(baseLambda, basePhi);
+
+    const rotationInterval = d3.interval(() => {
+      if (isDraggingGlobe) return;
+      baseLambda = (baseLambda + 0.4) % 360;
+      updateRotation(baseLambda, basePhi);
+    }, 40);
+
+    const globeDrag = d3.drag()
+      .on("start", (event) => {
+        isDraggingGlobe = true;
+        lastRotation = projection.rotate();
+        lastPos = [event.x, event.y];
+      })
+      .on("drag", (event) => {
+        if (!lastPos) return;
+        const dx = event.x - lastPos[0];
+        const dy = event.y - lastPos[1];
+        const sensitivity = 0.25;
+        const lambda = lastRotation[0] + dx * sensitivity;
+        const phi = Math.max(-80, Math.min(80, lastRotation[1] - dy * sensitivity));
+        baseLambda = lambda;
+        basePhi = phi;
+        updateRotation(lambda, phi);
+      })
+      .on("end", () => {
+        isDraggingGlobe = false;
+        lastPos = null;
+      });
+
+    globeSvg.call(globeDrag);
+  </script>
+</body>
+</html>
