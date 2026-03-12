@@ -1,5 +1,5 @@
 ---
-title: '在 cloudflare 部署 Hugo 构架博客的 manual'
+title: '🌐 在 cloudflare 部署 Hugo 构架博客的 manual'
 date: 2024-09-10T23:34:08+08:00
 summary: '一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。'
 tags: 

@@ -1,5 +1,5 @@
 ---
-title: "🧮 PHY1001 LEC10-15 旋转运动学"
+title: "⚛️ PHY1001 LEC10-15 旋转运动学"
 date: 2025-11-06T14:29:34+08:00
 draft: false
 summary: "CUHKSZ 大一/大二课程 PHY1001 绕轴运动 important takeaway"

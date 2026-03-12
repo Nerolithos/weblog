@@ -1,5 +1,5 @@
 ---
-title:     "How to personalize Streamlit URL?"
+title:     "🌐 How to personalize Streamlit URL?"
 date:      2025-08-31T10:50:30+08:00
 draft:     false
 summary:   "一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试"

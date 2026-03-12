@@ -1,5 +1,5 @@
 ---
-title: "🧮 PHY1001 LEC1-5 基础运动学与牛顿力学"
+title: "⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学"
 date: 2025-09-16T11:29:34+08:00
 draft: false
 summary: "CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway"
