@@ -19,7 +19,20 @@
         {{ .Date.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
       </p>
       <div class="lh-copy mid-gray home-post-preview">
-        {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
+        {{ if eq .File.BaseFileName "history-today" }}
+          {{ $raw := readFile "content/posts/history-today-data.json" }}
+          {{ $data := $raw | transform.Unmarshal }}
+          {{ $key := now.Format "01-02" }}
+          {{ $events := index $data $key }}
+          {{ if $events }}
+            {{ $first := index $events 0 }}
+            <p>历史上的今天 ({{ $key }}) <strong>{{ $first.year }}</strong> — {{ $first.summary }} ……</p>
+          {{ else }}
+            <p>历史上的今天 ({{ $key }}) 今天暂时没有事件数据……</p>
+          {{ end }}
+        {{ else }}
+          {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
+        {{ end }}
       </div>
       
     </div>

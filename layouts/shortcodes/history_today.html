@@ -1,17 +1,38 @@
-{{/* Show "History Today" events based on history-today-data.json */}}
+{{/* Show "History Today" events based on history-today-data.json.
+     Optional param:
+       mode="summary"  -> 输出一条事件 + 省略号，用于首页摘要
+       默认(full)        -> 输出完整列表 + 来源说明
+*/}}
+{{ $mode := .Get "mode" | default "full" }}
 {{ $raw := readFile "content/posts/history-today-data.json" }}
 {{ $data := $raw | transform.Unmarshal }}
 {{ $key := now.Format "01-02" }}
 {{ $events := index $data $key }}
-<div class="history-today">
-  <h2>历史上的今天 ({{ $key }})</h2>
-  {{ if not $events }}
-    <p>今天暂时没有事件数据。</p>
+
+{{ if not $events }}
+  {{ if eq $mode "summary" }}
+    <p>历史上的今天 ({{ $key }}) 今天暂时没有事件数据……</p>
   {{ else }}
-    <ul class="history-today-list">
-      {{ range $events }}
-        <li><strong>{{ .year }}</strong> — {{ .summary }}</li>
-      {{ end }}
-    </ul>
+    <div class="history-today">
+      <h2>历史上的今天 ({{ $key }})</h2>
+      <p>今天暂时没有事件数据。</p>
+    </div>
   {{ end }}
-</div>
+{{ else }}
+  {{ if eq $mode "summary" }}
+    {{ $first := index $events 0 }}
+    <p>历史上的今天 ({{ $key }}) <strong>{{ $first.year }}</strong> — {{ $first.summary }} ……</p>
+  {{ else }}
+    <div class="history-today">
+      <h2>历史上的今天 ({{ $key }})</h2>
+      <ul class="history-today-list">
+        {{ range $events }}
+          <li style="margin-bottom: 1em;"><strong>{{ .year }}</strong> — {{ .summary }}</li>
+        {{ end }}
+      </ul>
+      <p style="margin-top: 2em; font-size: 0.9rem; color: #666;">
+        数据来源：Wikipedia On This Day
+      </p>
+    </div>
+  {{ end }}
+{{ end }}
