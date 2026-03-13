@@ -8,7 +8,9 @@
   </section>
   {{ end }}
 
-  {{ range .Site.RegularPages }}
+  {{/* 先渲染「历史上的今天」，保证置顶 */}}
+  {{ $all := .Site.RegularPages }}
+  {{ range where $all "File.BaseFileName" "history-today" }}
   <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ .RelPermalink }}">
     <!-- 左侧：标题 / 元信息 / 摘要 -->
     <div class="w-100 w-two-thirds-l pr3">
@@ -16,7 +18,59 @@
         <a class="link dark-gray dim" href="{{ .RelPermalink }}">{{ .Title }}</a>
       </h2>
       <p class="gray f6 mb2">
-        {{ .Date.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
+        {{ if eq .File.BaseFileName "history-today" }}
+          {{ now.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
+        {{ else }}
+          {{ .Date.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
+        {{ end }}
+      </p>
+      <div class="lh-copy mid-gray home-post-preview">
+        {{ if eq .File.BaseFileName "history-today" }}
+          {{ $raw := readFile "content/posts/history-today-data.json" }}
+          {{ $data := $raw | transform.Unmarshal }}
+          {{ $key := now.Format "01-02" }}
+          {{ $events := index $data $key }}
+          {{ if $events }}
+            {{ $first := index $events 0 }}
+            <p>历史上的今天 ({{ $key }}) <strong>{{ $first.year }}</strong> — {{ $first.summary }} ……</p>
+          {{ else }}
+            <p>历史上的今天 ({{ $key }}) 今天暂时没有事件数据……</p>
+          {{ end }}
+        {{ else }}
+          {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
+        {{ end }}
+      </div>
+      
+    </div>
+
+    <!-- 右侧：featured_image（有才显示） -->
+    {{ with .Params.featured_image }}
+      {{ $img := . }}
+      {{ if reflect.IsMap . }}{{ $img = .src }}{{ end }}
+      {{ with $img }}
+        <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
+          <img src="{{ . | relURL }}" alt="{{ $.Title }}"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      {{ end }}
+    {{ end }}
+  </article>
+  {{ end }}
+
+  {{/* 再渲染其它文章 */}}
+  {{ range where $all "File.BaseFileName" "ne" "history-today" }}
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ .RelPermalink }}">
+    <!-- 左侧：标题 / 元信息 / 摘要 -->
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      </h2>
+      <p class="gray f6 mb2">
+        {{ if eq .File.BaseFileName "history-today" }}
+          {{ now.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
+        {{ else }}
+          {{ .Date.Format "2006-01-02" }} · {{ .ReadingTime }} 分钟阅读
+        {{ end }}
       </p>
       <div class="lh-copy mid-gray home-post-preview">
         {{ if eq .File.BaseFileName "history-today" }}

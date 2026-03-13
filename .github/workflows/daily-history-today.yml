@@ -28,13 +28,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git status
-          if [ -n "$(git status --porcelain)" ]; then
-            git add content/posts/history-today-data.json public
-            git commit -m "chore: daily history-today update" || echo "Nothing to commit"
-            git push
-          else
-            echo "No changes to commit"
-          fi
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .history-today-build-stamp
+          git add .history-today-build-stamp content/posts/history-today-data.json public || true
+          git commit -m "chore: daily history-today auto-update" || echo "Nothing to commit"
+          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
