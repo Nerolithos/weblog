@@ -5,9 +5,14 @@ on:
     - cron: "0 16 * * *"  # 每天 16:00 UTC 触发（相当于北京时间次日 00:00）
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repo
@@ -32,5 +37,3 @@ jobs:
           git add .history-today-build-stamp content/posts/history-today-data.json public || true
           git commit -m "chore: daily history-today auto-update" || echo "Nothing to commit"
           git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
