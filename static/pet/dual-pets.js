@@ -206,8 +206,8 @@
       var header = notesWindowEl.querySelector(".notes-header");
       if (!header) return;
       var text = header.textContent || "";
-      var pattern = /Remeber, password for ArkPets\/Resources is[^.]*\./;
-      var replacement = 'Remeber, password for ArkPets/Resources is (hexadecimal) "Answer to the Ultimate Question of Life, The Universe, and Everything".';
+      var pattern = /Remember, password for ArkPets\/Resources is[^.]*\./;
+      var replacement = 'Remember, password for ArkPets/Resources is (hexadecimal) "Answer to the Ultimate Question of Life, The Universe, and Everything".';
       if (pattern.test(text)) {
         text = text.replace(pattern, replacement);
       } else {
@@ -1046,6 +1046,9 @@
         if (!idle && anims.length > 0) idle = anims[0];
         if (idle) state.setAnimation(0, idle, true);
 
+        // 记录每个角色的基础颜色，用于 jeb/unjeb 与淡出效果
+        var baseColor = skeleton.color || { r: 1, g: 1, b: 1, a: 1 };
+
         return {
           kind: kind,
           skeleton: skeleton,
@@ -1073,7 +1076,20 @@
           dropStartTime: 0,
           // 下落速度（单位：每毫秒多少坐标单位），可自行微调；
           // 例如 0.8 ≈ 每秒 800 像素左右。
-          dropSpeedPerMs: 0.9
+          dropSpeedPerMs: 0.9,
+          // 临时“删除”与淡出效果
+          currentAlpha: 1,
+          deleting: false,
+          isDeleted: false,
+          fadeStartTime: 0,
+          fadeDuration: 3000,
+          // jeb/unjeb 彩虹特效开关
+          jebEnabled: false,
+          jebStartTime: 0,
+          baseColorR: baseColor.r,
+          baseColorG: baseColor.g,
+          baseColorB: baseColor.b,
+          baseColorA: baseColor.a
         };
       }
 
@@ -1183,6 +1199,7 @@
 
       function hitTestAt(worldX, worldY) {
         function hit(p) {
+          if (p.isDeleted || p.currentAlpha <= 0) return false;
           var b = computeWorldBounds(p.skeleton);
           return worldX >= b.minX && worldX <= b.maxX && worldY >= b.minY && worldY <= b.maxY;
         }
@@ -1622,6 +1639,21 @@
             // 额外：在选择 Copy 时，把一行文字放入剪贴板
             copyTextToClipboard("i WIlL ALWAYs bE HERE FOR YOU.");
             showTerminalError();
+          } else if (action === "delete") {
+            if (currentMenuPet && !currentMenuPet.deleting && !currentMenuPet.isDeleted) {
+              currentMenuPet.deleting = true;
+              currentMenuPet.fadeStartTime = performance.now();
+              currentMenuPet.currentAlpha = 1;
+            }
+          } else if (action === "jeb_") {
+            if (currentMenuPet) {
+              currentMenuPet.jebEnabled = true;
+              currentMenuPet.jebStartTime = performance.now();
+            }
+          } else if (action === "unjeb_") {
+            if (currentMenuPet) {
+              currentMenuPet.jebEnabled = false;
+            }
           }
           // 目前 delete 只关闭菜单，不对角色做操作
           hidePetMenu();
@@ -1631,7 +1663,68 @@
 
       var lastFrame = performance.now();
 
+      // 将 HSV (0-1) 转换为 RGB (0-1)，用于彩虹特效
+      function hsvToRgb01(h, s, v) {
+        var r = 0, g = 0, b = 0;
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+        switch (i % 6) {
+          case 0: r = v; g = t; b = p; break;
+          case 1: r = q; g = v; b = p; break;
+          case 2: r = p; g = v; b = t; break;
+          case 3: r = p; g = q; b = v; break;
+          case 4: r = t; g = p; b = v; break;
+          case 5: r = v; g = p; b = q; break;
+        }
+        return { r: r, g: g, b: b };
+      }
+
+      function applyVisualEffects(p, now) {
+        var color = p.skeleton.color;
+        if (!color) return;
+
+        // 淡出删除：3 秒内从 1 线性降到 0
+        if (p.deleting && !p.isDeleted) {
+          var t = (now - p.fadeStartTime) / p.fadeDuration;
+          if (t >= 1) {
+            t = 1;
+            p.deleting = false;
+            p.isDeleted = true;
+          }
+          p.currentAlpha = 1 - t;
+        }
+
+        if (p.isDeleted) {
+          p.currentAlpha = 0;
+        }
+
+        // jeb 彩虹特效
+        if (p.jebEnabled) {
+          var cycleMs = 4000; // 4 秒走完一圈
+          var phase = ((now - p.jebStartTime) % cycleMs) / cycleMs;
+          // 使用略低的饱和度与亮度，让彩虹效果柔和一些
+          var rgb = hsvToRgb01(phase, 0.65, 0.9);
+          color.r = rgb.r;
+          color.g = rgb.g;
+          color.b = rgb.b;
+        } else {
+          color.r = p.baseColorR;
+          color.g = p.baseColorG;
+          color.b = p.baseColorB;
+        }
+
+        color.a = p.baseColorA * p.currentAlpha;
+      }
+
       function updatePet(p, now, dt) {
+        // 若已被删除且不在淡出过程，则保持静止，仅维持视觉状态
+        if (p.isDeleted && !p.deleting) {
+          applyVisualEffects(p, now);
+          return;
+        }
         p.state.update(dt / 1000);
         p.state.apply(p.skeleton);
 
@@ -1750,9 +1843,13 @@
         }
 
         p.skeleton.updateWorldTransform();
+        applyVisualEffects(p, now);
       }
 
-      function renderPet(p) {
+      function renderPet(p, now) {
+        // 在渲染前应用最新的视觉效果（以防某些状态未通过 updatePet 刷新）
+        applyVisualEffects(p, now);
+        if (p.currentAlpha <= 0) return;
         renderer.drawSkeleton(p.skeleton, true);
       }
 
@@ -1767,8 +1864,8 @@
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         renderer.begin();
-        renderPet(ros);
-        renderPet(sus);
+        renderPet(ros, now);
+        renderPet(sus, now);
         renderer.end();
 
         requestAnimationFrame(frame);
