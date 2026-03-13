@@ -23,19 +23,24 @@
       z-index: 0;
       pointer-events: none;
     }
-    #main-row {
+    #window-layer {
       position: relative;
       z-index: 1;
+    }
+    #main-row {
+      position: relative;
       display: flex;
       align-items: flex-start;
       gap: 24px;
+      width: 1404px; /* 960 + 24 + 420，与布局缩放的 BASE_WIDTH 保持一致，避免打开/关闭窗口时整体重新居中导致“旧窗口移动” */
     }
     #pet-container {
-      position: relative;
-      z-index: 2;
+      position: absolute;
+      left: 0;
+      top: 0;
     }
     #pet-window {
-      position: relative;
+      position: absolute;
       width: 960px;
       height: 640px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.6);
@@ -63,8 +68,9 @@
       user-select: none;
     }
     #side-terminal {
-      position: relative; /* 便于在自身坐标系内通过 transform 拖动 */
-      z-index: 3;         /* 确保在 canvas 之上 */
+      position: absolute; /* 独立悬浮窗口，由 JS 控制层级与拖动 */
+      left: 984px; /* 960 + 24，与 main-row 的 gap 保持一致 */
+      top: 100px;
       width: 420px;
       height: 430px; /* 缩短为原来的大约 2/3 高度 */
       background: #323434; /* 再稍微亮一点，和背景拉开 */
@@ -355,6 +361,10 @@
     .camera-popup.shake {
       animation: camera-popup-shake 0.35s ease-in-out;
     }
+    /* 通用窗口左右摇晃动画（桌宠窗口 / 终端 / 记事本） */
+    .window-shake {
+      animation: camera-popup-shake 0.35s ease-in-out;
+    }
     @keyframes camera-popup-shake {
       0%, 100% { transform: translateX(0); }
       20% { transform: translateX(-6px); }
@@ -378,9 +388,9 @@
       text-align: center;
       white-space: pre-line;
     }
-    /* 简易记事本窗口 */
+    /* 简易记事本窗口（同样作为悬浮窗口） */
     #notes-window {
-      position: fixed;
+      position: absolute;
       right: 32px;
       bottom: 32px;
       width: 300px;
@@ -389,7 +399,7 @@
       border-radius: 8px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.6);
       border: 1px solid #000000;
-      z-index: 3;
+      z-index: 0;
       overflow: hidden;
       display: none;
       font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -422,7 +432,8 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      overflow-y: scroll;   /* 整个记事本正文区域统一滚动，效仿终端 */
+      overflow-x: hidden;
     }
     #notes-window .notes-header {
       white-space: pre-wrap;
@@ -431,22 +442,41 @@
     #notes-window .notes-content {
       flex: 1;
       white-space: pre-wrap;
-      overflow-y: scroll;
-      overflow-x: hidden;
     }
-    /* 自定义记事本垂直滚动条样式（作用于可滚动内容区域） */
-    #notes-window .notes-content::-webkit-scrollbar {
+    #notes-window .notes-content:focus {
+      outline: none; /* 取消默认的蓝色聚焦高亮边框 */
+    }
+    /* 自定义记事本垂直滚动条样式（作用于可滚动内容区域），与终端保持一致 */
+    #notes-window .notes-body::-webkit-scrollbar {
       width: 8px;
     }
-    #notes-window .notes-content::-webkit-scrollbar-track {
+    #notes-window .notes-body::-webkit-scrollbar-track {
       background: #f0f0f0;
     }
-    #notes-window .notes-content::-webkit-scrollbar-thumb {
+    #notes-window .notes-body::-webkit-scrollbar-thumb {
       background: #bbbbbb;
       border-radius: 4px;
     }
-    #notes-window .notes-content::-webkit-scrollbar-thumb:hover {
+    #notes-window .notes-body::-webkit-scrollbar-thumb:hover {
       background: #999999;
+    }
+
+    /* 桌面图标单击选中高亮：模仿 Windows 的浅蓝色矩形 */
+    .desktop-icon {
+      position: relative;
+    }
+    .desktop-icon::before {
+      content: "";
+      position: absolute;
+      inset: -4px -10px;
+      background: rgba(120, 170, 255, 0.35);
+      border-radius: 4px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.08s ease-out;
+    }
+    .desktop-icon.selected::before {
+      opacity: 1;
     }
   </style>
 </head>
@@ -458,33 +488,49 @@
     <div class="desktop-icon" data-app="terminal"><span class="icon-emoji">⌨</span><span class="icon-label">Terminal</span></div>
     <div class="desktop-icon" data-app="notes"><span class="icon-emoji">📝</span><span class="icon-label">Notes</span></div>
   </div>
-  <div id="main-row">
-    <div id="pet-container">
-      <div id="pet-window">
-        <div class="pet-window-titlebar">
+  <div id="window-layer">
+    <div id="main-row">
+      <div id="pet-container">
+        <div id="pet-window">
+          <div class="pet-window-titlebar">
+            <div class="ark-term-title-buttons">
+              <div class="ark-term-btn"></div>
+              <div class="ark-term-btn min"></div>
+            </div>
+            <div class="pet-window-title-text">ArkPets</div>
+          </div>
+          <canvas id="dual-pets" width="960" height="640"></canvas>
+        </div>
+      </div>
+      <div id="side-terminal">
+        <div class="ark-term-titlebar">
           <div class="ark-term-title-buttons">
             <div class="ark-term-btn"></div>
             <div class="ark-term-btn min"></div>
           </div>
-          <div class="pet-window-title-text">ArkPets</div>
+          <div class="ark-term-title-text">Untitled</div>
         </div>
-        <canvas id="dual-pets" width="960" height="640"></canvas>
+        <div id="ark-terminal-body">
+          <pre id="ark-terminal-output"></pre>
+          <div class="ark-term-input-row">
+            <span class="ark-term-prompt">(base) ➜ <span class="ark-prompt-project">Arkpets</span> <span class="ark-prompt-git">git:(</span><span class="ark-prompt-main">main</span><span class="ark-prompt-git">)</span> <span class="ark-prompt-x">✗</span> </span>
+            <input id="ark-terminal-input" autocomplete="off" spellcheck="false" />
+          </div>
+        </div>
       </div>
     </div>
-    <div id="side-terminal">
-      <div class="ark-term-titlebar">
+    <!-- 简易记事本窗口 -->
+    <div id="notes-window">
+      <div class="notes-titlebar">
         <div class="ark-term-title-buttons">
-          <div class="ark-term-btn"></div>
-          <div class="ark-term-btn min"></div>
+          <div class="ark-term-btn notes-close"></div>
+          <div class="ark-term-btn min notes-min"></div>
         </div>
-        <div class="ark-term-title-text">Untitled</div>
+        <div class="notes-title-text">Notes</div>
       </div>
-      <div id="ark-terminal-body">
-        <pre id="ark-terminal-output"></pre>
-        <div class="ark-term-input-row">
-          <span class="ark-term-prompt">(base) ➜ <span class="ark-prompt-project">Arkpets</span> <span class="ark-prompt-git">git:(</span><span class="ark-prompt-main">main</span><span class="ark-prompt-git">)</span> <span class="ark-prompt-x">✗</span> </span>
-          <input id="ark-terminal-input" autocomplete="off" spellcheck="false" />
-        </div>
+      <div class="notes-body">
+        <div class="notes-header"></div>
+        <div class="notes-content"></div>
       </div>
     </div>
   </div>
@@ -499,20 +545,6 @@
     <div style="background:#ffffff;border-radius:8px;border:1px solid #000;padding:16px 22px;box-shadow:0 10px 30px rgba(0,0,0,0.7);font-family:'SF Mono',Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:14px;text-align:center;white-space:pre-line;color:#ff0000;font-weight:700;">
 Thank you, for your LOVE :)
 The password to Resources is available.
-    </div>
-  </div>
-  <!-- 简易记事本窗口 -->
-  <div id="notes-window">
-    <div class="notes-titlebar">
-      <div class="ark-term-title-buttons">
-        <div class="ark-term-btn notes-close"></div>
-        <div class="ark-term-btn min notes-min"></div>
-      </div>
-      <div class="notes-title-text">Notes</div>
-    </div>
-    <div class="notes-body">
-      <div class="notes-header"></div>
-      <div class="notes-content"></div>
     </div>
   </div>
   <!-- 摄像头错误覆盖层：拒绝授权时使用 -->

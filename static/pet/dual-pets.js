@@ -16,12 +16,17 @@
     var susSkeleton = options.susSkeleton || "build_char_298_susuro_summer.skel";
 
     // 主布局容器（用于整体缩放以适配不同屏幕尺寸）
-    var mainRowEl = document.getElementById("main-row");
+    var mainRowEl = document.getElementById("window-layer");
     var sideTermEl = document.getElementById("side-terminal");
     var petWindowEl = document.getElementById("pet-window");
     var cameraVideoEl = document.getElementById("camera-stream");
     var cameraErrorEl = document.getElementById("camera-error-overlay");
     var notesWindowEl = document.getElementById("notes-window");
+
+    // 记录三个窗口的默认 transform，用于重新打开时回到初始位置
+    var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
+    var termDefaultTransform = sideTermEl ? (sideTermEl.style.transform || "") : "";
+    var notesDefaultTransform = notesWindowEl ? (notesWindowEl.style.transform || "") : "";
 
     // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
     var BASE_Z = 20;
@@ -72,6 +77,24 @@
     var cameraPopupsDisabled = false;
     var cameraStreamObj = null;
     var loveDialogShown = false;
+
+    // 通用窗口“左右摇晃一下”效果：在当前拖拽位置附近小幅度平移
+    function shakeWindowElement(el) {
+      if (!el) return;
+      var m = (el.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+      var baseX = m ? (parseFloat(m[1]) || 0) : 0;
+      var baseY = m ? (parseFloat(m[2]) || 0) : 0;
+      var offsets = [0, -6, 6, -4, 4, 0];
+      var i = 0;
+      function step() {
+        el.style.transform = "translate(" + (baseX + offsets[i]) + "px," + baseY + "px)";
+        i++;
+        if (i < offsets.length) {
+          setTimeout(step, 40);
+        }
+      }
+      step();
+    }
 
     function clearCameraPopups() {
       cameraPopupsDisabled = true;
@@ -506,6 +529,7 @@
       if (!sideTermEl) return;
       var titleBar = sideTermEl.querySelector(".ark-term-titlebar");
       var minBtn = sideTermEl.querySelector(".ark-term-title-buttons .ark-term-btn.min");
+      var closeBtn = sideTermEl.querySelector(".ark-term-title-buttons .ark-term-btn:not(.min)");
       if (!titleBar) return;
 
       var dragging = false;
@@ -549,10 +573,22 @@
 
       titleBar.addEventListener("mousedown", onMouseDown);
 
+      // 点击终端任意区域都应将其置于最上层
+      sideTermEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(sideTermEl);
+      });
+
       if (minBtn) {
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           sideTermEl.style.display = "none";
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          shakeWindowElement(sideTermEl);
         });
       }
     }
@@ -562,6 +598,7 @@
       if (!petWindowEl) return;
       var titleBar = petWindowEl.querySelector(".pet-window-titlebar");
       var minBtn = petWindowEl.querySelector(".pet-window-titlebar .ark-term-btn.min");
+      var closeBtn = petWindowEl.querySelector(".pet-window-titlebar .ark-term-btn:not(.min)");
       if (!titleBar) return;
 
       var dragging = false;
@@ -604,10 +641,22 @@
 
       titleBar.addEventListener("mousedown", onMouseDown);
 
+      // 点击宠物窗口任意区域都应将其置于最上层
+      petWindowEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(petWindowEl);
+      });
+
       if (minBtn) {
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           petWindowEl.style.display = "none";
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          shakeWindowElement(petWindowEl);
         });
       }
     }
@@ -617,29 +666,156 @@
       if (!desktop) return;
       var icons = desktop.querySelectorAll(".desktop-icon");
 
+      // 记录当前选中的桌面图标，用于高亮与拖动
+      var selectedIcon = null;
+      var draggingIcon = null;
+      var dragStartX = 0;
+      var dragStartY = 0;
+      var dragBaseX = 0;
+      var dragBaseY = 0;
+
+      function isWindowOpen(el) {
+        if (!el) return false;
+        var style = window.getComputedStyle(el);
+        return style && style.display !== "none";
+      }
+
       function openApp(app) {
-        if (app === "pets" && petWindowEl) {
-          petWindowEl.style.display = "block";
-          bringToFront(petWindowEl);
-        } else if (app === "terminal" && sideTermEl) {
-          sideTermEl.style.display = "block";
-          bringToFront(sideTermEl);
-        } else if (app === "notes" && notesWindowEl) {
-          notesWindowEl.style.display = "flex";
-          bringToFront(notesWindowEl);
+        var win = null;
+        var displayMode = "block";
+        var defaultTransform = "";
+        if (app === "pets") {
+          win = petWindowEl;
+          displayMode = "block";
+          defaultTransform = petDefaultTransform;
+        } else if (app === "terminal") {
+          win = sideTermEl;
+          displayMode = "block";
+          defaultTransform = termDefaultTransform;
+        } else if (app === "notes") {
+          win = notesWindowEl;
+          displayMode = "flex";
+          defaultTransform = notesDefaultTransform;
+        }
+        if (!win) return;
+
+        if (isWindowOpen(win)) {
+          // 如果窗口已经开着：只抖动并置顶
+          bringToFront(win);
+          shakeWindowElement(win);
+        } else {
+          // 窗口未开：回到默认位置后再打开
+          win.style.transform = defaultTransform;
+          win.style.display = displayMode;
+          bringToFront(win);
         }
       }
 
-      // 普通情况下（窗口没有遮挡时）点击图标
-      desktop.addEventListener("click", function (ev) {
+      function setSelected(icon) {
+        // 先清空所有图标的选中状态，确保只高亮一个
+        for (var i = 0; i < icons.length; i++) {
+          icons[i].classList.remove("selected");
+        }
+        selectedIcon = icon;
+        if (icon) icon.classList.add("selected");
+      }
+
+      function getIconBaseTransform(icon) {
+        var m = (icon.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        return {
+          x: m ? (parseFloat(m[1]) || 0) : 0,
+          y: m ? (parseFloat(m[2]) || 0) : 0
+        };
+      }
+
+      // 左键按下：选中并开始拖动
+      desktop.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        var icon = ev.target.closest(".desktop-icon");
+        if (!icon) return;
+        ev.preventDefault();
+        setSelected(icon);
+        draggingIcon = icon;
+        var base = getIconBaseTransform(icon);
+        dragBaseX = base.x;
+        dragBaseY = base.y;
+        dragStartX = ev.clientX;
+        dragStartY = ev.clientY;
+
+        function onMove(moveEv) {
+          if (!draggingIcon) return;
+          var dx = moveEv.clientX - dragStartX;
+          var dy = moveEv.clientY - dragStartY;
+          var tx = dragBaseX + dx;
+          var ty = dragBaseY + dy;
+          draggingIcon.style.transform = "translate(" + tx + "px," + ty + "px)";
+        }
+
+        function onUp() {
+          draggingIcon = null;
+          document.removeEventListener("mousemove", onMove);
+          document.removeEventListener("mouseup", onUp);
+        }
+
+        document.addEventListener("mousemove", onMove);
+        document.addEventListener("mouseup", onUp);
+      });
+
+      // 当图标被窗口遮住时，单击桌面区域对应图标：根据坐标命中并切换高亮 / 启动拖动
+      document.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        // 如果本来就是点在桌面区域，让 desktop 的监听来处理，避免重复
+        if (desktop.contains(ev.target)) return;
+        var x = ev.clientX;
+        var y = ev.clientY;
+        for (var i = 0; i < icons.length; i++) {
+          var icon = icons[i];
+          var rect = icon.getBoundingClientRect();
+          if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+            setSelected(icon);
+            // 允许拖动：以当前点击位置作为起点
+            draggingIcon = icon;
+            var base = getIconBaseTransform(icon);
+            dragBaseX = base.x;
+            dragBaseY = base.y;
+            dragStartX = x;
+            dragStartY = y;
+
+            function onMove(moveEv) {
+              if (!draggingIcon) return;
+              var dx = moveEv.clientX - dragStartX;
+              var dy = moveEv.clientY - dragStartY;
+              var tx = dragBaseX + dx;
+              var ty = dragBaseY + dy;
+              draggingIcon.style.transform = "translate(" + tx + "px," + ty + "px)";
+            }
+
+            function onUp() {
+              draggingIcon = null;
+              document.removeEventListener("mousemove", onMove);
+              document.removeEventListener("mouseup", onUp);
+            }
+
+            document.addEventListener("mousemove", onMove);
+            document.addEventListener("mouseup", onUp);
+            break;
+          }
+        }
+      }, true);
+
+      // 双击图标：打开应用（窗口未遮挡时）
+      desktop.addEventListener("dblclick", function (ev) {
         var icon = ev.target.closest(".desktop-icon");
         if (!icon) return;
         var app = icon.getAttribute("data-app");
         openApp(app);
       });
 
-      // 当图标被窗口遮住时：通过全局捕获点击坐标判断是否落在图标矩形内
-      document.addEventListener("click", function (ev) {
+      // 当图标被窗口遮住时：通过全局捕获“双击”坐标判断是否落在图标矩形内
+      document.addEventListener("dblclick", function (ev) {
+        // 如果这次双击发生在桌面区域内，则交给上面的 desktop.dblclick 处理，
+        // 避免触发两次 openApp 导致“刚打开就抖动”。
+        if (desktop.contains(ev.target)) return;
         var x = ev.clientX;
         var y = ev.clientY;
         for (var i = 0; i < icons.length; i++) {
@@ -665,7 +841,7 @@
         if (closeBtn) {
           closeBtn.addEventListener("click", function (ev) {
             ev.stopPropagation();
-            notesWindowEl.style.display = "none";
+            shakeWindowElement(notesWindowEl);
           });
         }
       }
@@ -684,10 +860,19 @@
         'Terminal (Shell) Language:\n' +
         'cd : change directory, "cd .." to exit; "cd xxx" to enter xxx.\n' +
         'pwd : show path to current location.\n' +
+        'start : start an application, "start xxx.exe".\n' +
         'ls : list the files and directories within a specified location.\n\n' +
         'Remeber, password for ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it.\n';
       // 每次刷新都使用默认说明文本；下面的内容区供玩家自由记录，默认留空
       headerEl.textContent = defaultText;
+      // 为玩家预留数行“空白稿纸”，让可编辑区域在初始状态下就是可见的
+      var blankLines = '';
+      for (var i = 0; i < 10; i++) {
+        blankLines += '\n';
+      }
+      contentEl.textContent = blankLines;
+
+      // Notes 内容区域直接使用原生滚动条（样式与终端类似），无需单独 JS 控制
 
       if (titleBar) {
         var dragging = false;
@@ -730,6 +915,12 @@
 
         titleBar.addEventListener("mousedown", onMouseDown);
       }
+
+      // 点击记事本任意区域：视为一次交互，置于最上层
+      notesWindowEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(notesWindowEl);
+      });
     }
 
     // 整体缩放以适配屏幕尺寸
