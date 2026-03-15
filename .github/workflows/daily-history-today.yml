@@ -2,7 +2,7 @@ name: Daily History Today Build
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # 每天 00:00 UTC 触发（相当于北京时间 08:00）
+    - cron: "0 0,1,2 * * *"   # 每天 00/01/02 点 UTC 触发，多次保障
   workflow_dispatch: {}
 
 permissions:
