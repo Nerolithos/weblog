@@ -6,14 +6,21 @@
     <description>Recent content on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 12 Mar 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 14 Mar 2026 10:37:34 +0800</lastBuildDate>
     <atom:link href="https://blog.nero-lithos.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC3060 Project: Code Scheduling</title>
+      <link>https://blog.nero-lithos.com/posts/3060p3/</link>
+      <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
+      <guid>https://blog.nero-lithos.com/posts/3060p3/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等</description>
+    </item>
     <item>
       <title>🕰️ 历史上的今天</title>
       <link>https://blog.nero-lithos.com/posts/history-today/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/history-today/</guid>
-      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (03-14)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;1997&lt;/strong&gt; — Establishment of the Chongqing Municipality in China, the largest &amp;#39;city&amp;#39; in the world by area.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2019&lt;/strong&gt; — Cyclone Idai makes landfall near Beira, Mozambique, causing devastating floods and over 1,000 deaths.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2017&lt;/strong&gt; — A naming ceremony for the chemical element nihonium takes place in Tokyo, with then Crown Prince Naruhito in attendance.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2008&lt;/strong&gt; — A series of riots, protests, and demonstrations erupt in Lhasa and subsequently spread elsewhere in Tibet.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2007&lt;/strong&gt; — The Nandigram violence in Nandigram, West Bengal, results in the deaths of at least 14 people.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day&#xA;      &lt;/p&gt;</description>
+      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (03-15)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2022&lt;/strong&gt; — The 2022 Sri Lankan protests begins amidst Sri Lanka&amp;#39;s economic collapse.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2019&lt;/strong&gt; — Fifty-one people are killed in the Christchurch mosque shootings.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2019&lt;/strong&gt; — Beginning of the 2019–20 Hong Kong protests.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2019&lt;/strong&gt; — Approximately 1.4 million young people in 123 countries go on strike to protest climate change.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2011&lt;/strong&gt; — Beginning of the Syrian revolution.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day&#xA;      &lt;/p&gt;</description>
     </item>
     <item>
       <title>🐈 ArkPets</title>
@@ -69,7 +76,7 @@
       <link>https://blog.nero-lithos.com/posts/3200.f2/</link>
       <pubDate>Thu, 27 Nov 2025 13:33:34 +0800</pubDate>
       <guid>https://blog.nero-lithos.com/posts/3200.f2/</guid>
-      <description>CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构</description>
+      <description>CUHKSZ 大二课程 CSC3200 关于树、堆、图的相关知识期末总结</description>
     </item>
     <item>
       <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</title>

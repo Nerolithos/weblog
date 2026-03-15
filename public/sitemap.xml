@@ -2,11 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://blog.nero-lithos.com/posts/3060p3/</loc>
+    <lastmod>2026-03-14T10:37:34+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nero-lithos.com/categories/</loc>
+    <lastmod>2026-03-14T10:37:34+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nero-lithos.com/tags/csc3060/</loc>
+    <lastmod>2026-03-14T10:37:34+08:00</lastmod>
+  </url><url>
     <loc>https://blog.nero-lithos.com/</loc>
-    <lastmod>2026-03-12T00:00:00+08:00</lastmod>
+    <lastmod>2026-03-14T10:37:34+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/posts/</loc>
-    <lastmod>2026-03-12T00:00:00+08:00</lastmod>
+    <lastmod>2026-03-14T10:37:34+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nero-lithos.com/categories/sds/</loc>
+    <lastmod>2026-03-14T10:37:34+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nero-lithos.com/tags/</loc>
+    <lastmod>2026-03-14T10:37:34+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/posts/history-today/</loc>
     <lastmod>2026-03-12T00:00:00+08:00</lastmod>
@@ -14,22 +29,10 @@
     <loc>https://blog.nero-lithos.com/posts/pet/</loc>
     <lastmod>2026-03-06T13:57:34+08:00</lastmod>
   </url><url>
-    <loc>https://blog.nero-lithos.com/categories/</loc>
-    <lastmod>2026-03-06T13:57:34+08:00</lastmod>
-  </url><url>
     <loc>https://blog.nero-lithos.com/tags/projects/</loc>
     <lastmod>2026-03-06T13:57:34+08:00</lastmod>
   </url><url>
-    <loc>https://blog.nero-lithos.com/categories/sds/</loc>
-    <lastmod>2026-03-06T13:57:34+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.nero-lithos.com/tags/</loc>
-    <lastmod>2026-03-06T13:57:34+08:00</lastmod>
-  </url><url>
     <loc>https://blog.nero-lithos.com/posts/3060.4/</loc>
-    <lastmod>2026-03-03T10:37:34+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.nero-lithos.com/tags/csc3060/</loc>
     <lastmod>2026-03-03T10:37:34+08:00</lastmod>
   </url><url>
     <loc>https://blog.nero-lithos.com/posts/3060.3/</loc>
