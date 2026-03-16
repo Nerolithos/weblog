@@ -20,7 +20,7 @@
       <link>http://localhost:1313/posts/assignment2/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/assignment2/</guid>
-      <description>&lt;h1 id=&#34;二维数组&#34;&gt;二维数组&lt;/h1&gt;&#xA;&lt;h3 id=&#34;例题一easy&#34;&gt;例题一(easy)：&lt;/h3&gt;&#xA;&lt;p&gt;编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。&#xA;比如：&lt;/p&gt;</description>
+      <description>CSC1003-JAVA 的第二份作业例题讲解。</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC13-15 递归</title>
@@ -48,7 +48,7 @@
       <link>http://localhost:1313/posts/1003.2/</link>
       <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/1003.2/</guid>
-      <description>&lt;p&gt;TBL = Things Beyond Lecture。是讲座跳过的 PPT 内容，你可以在Chat.1里找到这些内容的简略版。&lt;/p&gt;&#xA;&lt;h2 id=&#34;网络与计算机的历史&#34;&gt;网络与计算机的历史&lt;/h2&gt;&#xA;&lt;p&gt;20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。&lt;/p&gt;</description>
+      <description>讲座直接略过的互联网基础 —— LGU 完全没有网络相关的基础课，导致大家的相关知识储备薄弱。</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC1~3 函数、数据类型与计算</title>

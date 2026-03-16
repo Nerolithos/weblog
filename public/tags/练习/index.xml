@@ -13,7 +13,7 @@
       <link>http://localhost:1313/posts/assignment2/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/assignment2/</guid>
-      <description>&lt;h1 id=&#34;二维数组&#34;&gt;二维数组&lt;/h1&gt;&#xA;&lt;h3 id=&#34;例题一easy&#34;&gt;例题一(easy)：&lt;/h3&gt;&#xA;&lt;p&gt;编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。&#xA;比如：&lt;/p&gt;</description>
+      <description>CSC1003-JAVA 的第二份作业例题讲解。</description>
     </item>
     <item>
       <title>💻 CSC1003 Assignment1 OJPractice</title>
