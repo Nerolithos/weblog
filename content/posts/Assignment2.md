@@ -2,6 +2,7 @@
 title: "💻 CSC1003 Assignment2 二维数组"
 date: 2024-10-31T14:49:58+08:00
 draft: false
+summary: "CSC1003-JAVA 的第二份作业例题讲解。"
 categories: 
 - SDS
 tags: 

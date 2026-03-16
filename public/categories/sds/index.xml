@@ -2,213 +2,213 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>SDS on Lithos&#39; Blog</title>
-    <link>https://blog.nero-lithos.com/categories/sds/</link>
+    <link>http://localhost:1313/categories/sds/</link>
     <description>Recent content in SDS on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 14 Mar 2026 10:37:34 +0800</lastBuildDate>
-    <atom:link href="https://blog.nero-lithos.com/categories/sds/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/categories/sds/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>💻 CSC3060 Project: Code Scheduling</title>
-      <link>https://blog.nero-lithos.com/posts/3060p3/</link>
+      <link>http://localhost:1313/posts/3060p3/</link>
       <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060p3/</guid>
+      <guid>http://localhost:1313/posts/3060p3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等</description>
     </item>
     <item>
       <title>🐈 ArkPets</title>
-      <link>https://blog.nero-lithos.com/posts/pet/</link>
+      <link>http://localhost:1313/posts/pet/</link>
       <pubDate>Fri, 06 Mar 2026 13:57:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/pet/</guid>
+      <guid>http://localhost:1313/posts/pet/</guid>
       <description>Proof of Work of a spine-ts + html + js exercise</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
-      <link>https://blog.nero-lithos.com/posts/3060.4/</link>
+      <link>http://localhost:1313/posts/3060.4/</link>
       <pubDate>Tue, 03 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060.4/</guid>
+      <guid>http://localhost:1313/posts/3060.4/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 5 Continuation of Machine Level Programming</title>
-      <link>https://blog.nero-lithos.com/posts/3060.3/</link>
+      <link>http://localhost:1313/posts/3060.3/</link>
       <pubDate>Tue, 03 Feb 2026 20:37:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060.3/</guid>
+      <guid>http://localhost:1313/posts/3060.3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
-      <link>https://blog.nero-lithos.com/posts/3060.2/</link>
+      <link>http://localhost:1313/posts/3060.2/</link>
       <pubDate>Sat, 24 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060.2/</guid>
+      <guid>http://localhost:1313/posts/3060.2/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 1-2 Introduction to Computer System</title>
-      <link>https://blog.nero-lithos.com/posts/3060.1/</link>
+      <link>http://localhost:1313/posts/3060.1/</link>
       <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060.1/</guid>
+      <guid>http://localhost:1313/posts/3060.1/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
     </item>
     <item>
       <title>💻 CSC3200 Final Revision C&#43;&#43; 期末样卷</title>
-      <link>https://blog.nero-lithos.com/posts/3200.f3/</link>
+      <link>http://localhost:1313/posts/3200.f3/</link>
       <pubDate>Thu, 11 Dec 2025 07:07:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3200.f3/</guid>
+      <guid>http://localhost:1313/posts/3200.f3/</guid>
       <description>CUHKSZ 大二课程 CSC3200 是新课，我们用 3002 真卷作复习参考</description>
     </item>
     <item>
       <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)</title>
-      <link>https://blog.nero-lithos.com/posts/3200.f2/</link>
+      <link>http://localhost:1313/posts/3200.f2/</link>
       <pubDate>Thu, 27 Nov 2025 13:33:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3200.f2/</guid>
+      <guid>http://localhost:1313/posts/3200.f2/</guid>
       <description>CUHKSZ 大二课程 CSC3200 关于树、堆、图的相关知识期末总结</description>
     </item>
     <item>
       <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</title>
-      <link>https://blog.nero-lithos.com/posts/3200.f1/</link>
+      <link>http://localhost:1313/posts/3200.f1/</link>
       <pubDate>Fri, 21 Nov 2025 13:29:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3200.f1/</guid>
+      <guid>http://localhost:1313/posts/3200.f1/</guid>
       <description>CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC17-19 function mapping</title>
-      <link>https://blog.nero-lithos.com/posts/3001.8/</link>
+      <link>http://localhost:1313/posts/3001.8/</link>
       <pubDate>Mon, 17 Nov 2025 12:19:24 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3001.8/</guid>
+      <guid>http://localhost:1313/posts/3001.8/</guid>
       <description>CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</title>
-      <link>https://blog.nero-lithos.com/posts/3001.7/</link>
+      <link>http://localhost:1313/posts/3001.7/</link>
       <pubDate>Thu, 13 Nov 2025 09:24:24 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3001.7/</guid>
+      <guid>http://localhost:1313/posts/3001.7/</guid>
       <description>CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC14-16 Graph</title>
-      <link>https://blog.nero-lithos.com/posts/3001.6/</link>
+      <link>http://localhost:1313/posts/3001.6/</link>
       <pubDate>Tue, 28 Oct 2025 17:30:24 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3001.6/</guid>
+      <guid>http://localhost:1313/posts/3001.6/</guid>
       <description>CUHKSZ CSC3001 图论</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC11-13 GCD and Mod</title>
-      <link>https://blog.nero-lithos.com/posts/3001.5/</link>
+      <link>http://localhost:1313/posts/3001.5/</link>
       <pubDate>Tue, 14 Oct 2025 12:30:24 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3001.5/</guid>
+      <guid>http://localhost:1313/posts/3001.5/</guid>
       <description>CUHKSZ CSC3001 最大公因数问题与模问题</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC8-10 递归</title>
-      <link>https://blog.nero-lithos.com/posts/3001.4/</link>
+      <link>http://localhost:1313/posts/3001.4/</link>
       <pubDate>Sat, 11 Oct 2025 12:16:24 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3001.4/</guid>
+      <guid>http://localhost:1313/posts/3001.4/</guid>
       <description>CUHKSZ CSC3001 从数学证明法到递归思想，以及解递归式</description>
     </item>
     <item>
       <title>💻 CSC3200 LEC3-5 C&#43;&#43;进阶</title>
-      <link>https://blog.nero-lithos.com/posts/3200.2/</link>
+      <link>http://localhost:1313/posts/3200.2/</link>
       <pubDate>Mon, 15 Sep 2025 18:29:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3200.2/</guid>
+      <guid>http://localhost:1313/posts/3200.2/</guid>
       <description>CUHKSZ 大二课程 CSC3200 关于 C/C++ 中数组、指针和流操作</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC6-7 数学归纳法</title>
-      <link>https://blog.nero-lithos.com/posts/3001.3/</link>
+      <link>http://localhost:1313/posts/3001.3/</link>
       <pubDate>Thu, 11 Sep 2025 11:31:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3001.3/</guid>
+      <guid>http://localhost:1313/posts/3001.3/</guid>
       <description>CUHKSZ CSC3001 更多数学证明法</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</title>
-      <link>https://blog.nero-lithos.com/posts/3001.2/</link>
+      <link>http://localhost:1313/posts/3001.2/</link>
       <pubDate>Tue, 02 Sep 2025 13:31:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3001.2/</guid>
+      <guid>http://localhost:1313/posts/3001.2/</guid>
       <description>CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑</description>
     </item>
     <item>
       <title>💻 CSC3200 LEC1-2 C&#43;&#43;入门</title>
-      <link>https://blog.nero-lithos.com/posts/3200.1/</link>
+      <link>http://localhost:1313/posts/3200.1/</link>
       <pubDate>Mon, 01 Sep 2025 18:29:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3200.1/</guid>
+      <guid>http://localhost:1313/posts/3200.1/</guid>
       <description>CUHKSZ 大二课程 CSC3200 关于 C++ 基础语法和 OOP 的介绍</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC1-2 离散数学入门</title>
-      <link>https://blog.nero-lithos.com/posts/3001.1/</link>
+      <link>http://localhost:1313/posts/3001.1/</link>
       <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3001.1/</guid>
+      <guid>http://localhost:1313/posts/3001.1/</guid>
       <description>CUHKSZ 大二课程 CSC3001 的入门指导</description>
     </item>
     <item>
       <title>🌐 How to personalize Streamlit URL?</title>
-      <link>https://blog.nero-lithos.com/posts/streamliturl/</link>
+      <link>http://localhost:1313/posts/streamliturl/</link>
       <pubDate>Sun, 31 Aug 2025 10:50:30 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/streamliturl/</guid>
+      <guid>http://localhost:1313/posts/streamliturl/</guid>
       <description>一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试</description>
     </item>
     <item>
       <title>🌐 Automation of Ssg Post Release</title>
-      <link>https://blog.nero-lithos.com/posts/autorelease/</link>
+      <link>http://localhost:1313/posts/autorelease/</link>
       <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/autorelease/</guid>
+      <guid>http://localhost:1313/posts/autorelease/</guid>
       <description>SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？</description>
     </item>
     <item>
       <title>🧠 Brainstorming</title>
-      <link>https://blog.nero-lithos.com/posts/brainstorm/</link>
+      <link>http://localhost:1313/posts/brainstorm/</link>
       <pubDate>Thu, 10 Apr 2025 17:15:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/brainstorm/</guid>
+      <guid>http://localhost:1313/posts/brainstorm/</guid>
       <description>从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…</description>
     </item>
     <item>
       <title>💻 CSC1003 期末总结</title>
-      <link>https://blog.nero-lithos.com/posts/1003.6/</link>
+      <link>http://localhost:1313/posts/1003.6/</link>
       <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/1003.6/</guid>
+      <guid>http://localhost:1313/posts/1003.6/</guid>
       <description>总结 Java 中好用的语句和易错的用法</description>
     </item>
     <item>
       <title>💻 CSC1003 Assignment2 二维数组</title>
-      <link>https://blog.nero-lithos.com/posts/assignment2/</link>
+      <link>http://localhost:1313/posts/assignment2/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/assignment2/</guid>
+      <guid>http://localhost:1313/posts/assignment2/</guid>
       <description>&lt;h1 id=&#34;二维数组&#34;&gt;二维数组&lt;/h1&gt;&#xA;&lt;h3 id=&#34;例题一easy&#34;&gt;例题一(easy)：&lt;/h3&gt;&#xA;&lt;p&gt;编写一段代码，定义 Rotate 类，输入两个 整形数据 r 和 c，以及一个 r 行 c 列的二维数组，输出这个数组向右旋转 90° 的结果。&#xA;比如：&lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC13-15 递归</title>
-      <link>https://blog.nero-lithos.com/posts/1003.5/</link>
+      <link>http://localhost:1313/posts/1003.5/</link>
       <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/1003.5/</guid>
+      <guid>http://localhost:1313/posts/1003.5/</guid>
       <description>介绍递归，栈与堆，以及栈溢出</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC10-12 Midterm Revision</title>
-      <link>https://blog.nero-lithos.com/posts/1003.4/</link>
+      <link>http://localhost:1313/posts/1003.4/</link>
       <pubDate>Sat, 19 Oct 2024 23:56:58 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/1003.4/</guid>
+      <guid>http://localhost:1313/posts/1003.4/</guid>
       <description>期中考试复习与模拟题</description>
     </item>
     <item>
       <title>💻 CSC1003 Assignment1 OJPractice</title>
-      <link>https://blog.nero-lithos.com/posts/assignment1/</link>
+      <link>http://localhost:1313/posts/assignment1/</link>
       <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/assignment1/</guid>
+      <guid>http://localhost:1313/posts/assignment1/</guid>
       <description>CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践</description>
     </item>
     <item>
       <title>💻 CSC1003 TBL1 网络与计算机史</title>
-      <link>https://blog.nero-lithos.com/posts/1003.2/</link>
+      <link>http://localhost:1313/posts/1003.2/</link>
       <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/1003.2/</guid>
+      <guid>http://localhost:1313/posts/1003.2/</guid>
       <description>&lt;p&gt;TBL = Things Beyond Lecture。是讲座跳过的 PPT 内容，你可以在Chat.1里找到这些内容的简略版。&lt;/p&gt;&#xA;&lt;h2 id=&#34;网络与计算机的历史&#34;&gt;网络与计算机的历史&lt;/h2&gt;&#xA;&lt;p&gt;20世纪40年代，是命令行时代。第一台全电子通用计算机 ENIAC 于45年诞生于美国宾州大学。当时人们输入一行命令，计算机执行一行。&lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC1~3 函数、数据类型与计算</title>
-      <link>https://blog.nero-lithos.com/posts/1003.1/</link>
+      <link>http://localhost:1313/posts/1003.1/</link>
       <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/1003.1/</guid>
+      <guid>http://localhost:1313/posts/1003.1/</guid>
       <description>CUHKSZ 大一课程 CSC1003（Java） 的入门</description>
     </item>
   </channel>

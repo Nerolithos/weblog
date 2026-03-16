@@ -2,45 +2,45 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>CSC3060 on Lithos&#39; Blog</title>
-    <link>https://blog.nero-lithos.com/tags/csc3060/</link>
+    <link>http://localhost:1313/tags/csc3060/</link>
     <description>Recent content in CSC3060 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 14 Mar 2026 10:37:34 +0800</lastBuildDate>
-    <atom:link href="https://blog.nero-lithos.com/tags/csc3060/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/csc3060/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>💻 CSC3060 Project: Code Scheduling</title>
-      <link>https://blog.nero-lithos.com/posts/3060p3/</link>
+      <link>http://localhost:1313/posts/3060p3/</link>
       <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060p3/</guid>
+      <guid>http://localhost:1313/posts/3060p3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
-      <link>https://blog.nero-lithos.com/posts/3060.4/</link>
+      <link>http://localhost:1313/posts/3060.4/</link>
       <pubDate>Tue, 03 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060.4/</guid>
+      <guid>http://localhost:1313/posts/3060.4/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 5 Continuation of Machine Level Programming</title>
-      <link>https://blog.nero-lithos.com/posts/3060.3/</link>
+      <link>http://localhost:1313/posts/3060.3/</link>
       <pubDate>Tue, 03 Feb 2026 20:37:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060.3/</guid>
+      <guid>http://localhost:1313/posts/3060.3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
-      <link>https://blog.nero-lithos.com/posts/3060.2/</link>
+      <link>http://localhost:1313/posts/3060.2/</link>
       <pubDate>Sat, 24 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060.2/</guid>
+      <guid>http://localhost:1313/posts/3060.2/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 1-2 Introduction to Computer System</title>
-      <link>https://blog.nero-lithos.com/posts/3060.1/</link>
+      <link>http://localhost:1313/posts/3060.1/</link>
       <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/posts/3060.1/</guid>
+      <guid>http://localhost:1313/posts/3060.1/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
     </item>
   </channel>

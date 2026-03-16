@@ -1,6 +1,7 @@
 ---
 title: "🌐 龙大邮箱抓取尝试"
 date: 2024-09-11T09:26:58+08:00
+summary: "未解决的 LGU 邮箱自动化尝试思路分享。"
 categories: 
   - 帮助
 tags: 
