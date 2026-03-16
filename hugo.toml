@@ -23,8 +23,8 @@ enableRobotsTXT = true
   footer_links = [
     { name = "💻 GitHub", url = "https://github.com/Nerolithos" },
     { name = "🎨 Pixiv", url = "https://www.pixiv.net/users/107379421" },
-    { name = "🏠 Home",  url = "https://blog.nero-lithos.com/" },
-    { name = "🤖 CUHKSZ AI", url = "https://futuregate.streamlit.app/" }
+    { name = "🎮 EmojiGame",  url = "https://blog.nero-lithos.com/emoji" },
+    { name = "🐈 ArkPet", url = "https://blog.nero-lithos.com/pet" }
   ]
 
 # 顶部导航菜单（Ananke 会在 header 渲染 .Site.Menus.main）
@@ -38,12 +38,12 @@ enableRobotsTXT = true
     url  = "https://www.pixiv.net/users/107379421"
     weight = 2
   [[menu.main]]
-    name = "🏠 Home"
-    url  = "/"
+    name = "🎮 EmojiGame"
+    url  = "https://blog.nero-lithos.com/emoji"
     weight = 3
   [[menu.main]]
-    name = "🤖 CUHKSZ AI"
-    url  = "https://ai.nero-lithos.com"
+    name = "🐈 ArkPet"
+    url  = "https://blog.nero-lithos.com/pet"
     weight = 4
 
 [services]

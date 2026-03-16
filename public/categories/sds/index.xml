@@ -6,8 +6,15 @@
     <description>Recent content in SDS on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 14 Mar 2026 10:37:34 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 16 Mar 2026 14:57:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/sds/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🎮 Super &#39;Emojio&#39;</title>
+      <link>http://localhost:1313/posts/emoji/</link>
+      <pubDate>Mon, 16 Mar 2026 14:57:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/emoji/</guid>
+      <description>Proof of Work of a html + js Super-Mario-type, rough-like game</description>
+    </item>
     <item>
       <title>💻 CSC3060 Project: Code Scheduling</title>
       <link>http://localhost:1313/posts/3060p3/</link>

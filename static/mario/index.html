@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8" />
+  <title>Super 'Emojio'</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #020617;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.12);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.12);
+      --text-main: #e5e7eb;
+      --text-sub: #9ca3af;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #bae6fd 0, #7dd3fc 40%, #e0f2fe 100%);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem 0 2rem;
+    }
+    .game-shell {
+      width: min(100vw - 2rem, 960px);
+    }
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+    .game-header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+    .game-header small {
+      color: var(--text-sub);
+      font-size: 0.8rem;
+    }
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+    }
+    .hud-left,
+    .hud-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .hud-badge {
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+    }
+    .hud-badge strong {
+      color: var(--accent);
+      margin-left: 0.15rem;
+    }
+    .hud-hearts span {
+      margin-right: 0.1rem;
+    }
+    .game-frame {
+      position: relative;
+      background: #bae6fd; /* 浅天蓝色背景 */
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .sky-bg {
+      fill: #bde0fe;
+    }
+    svg#game {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, rgba(15,23,42,0.92), rgba(15,23,42,0.96));
+      color: var(--text-main);
+      text-align: center;
+      padding: 1.75rem 1.5rem 1.5rem;
+      backdrop-filter: blur(8px);
+    }
+    .overlay.hidden { display: none; }
+    .overlay h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.4rem;
+    }
+    .overlay p {
+      margin: 0.15rem 0;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+    }
+    .overlay-key-hints {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+    .overlay-key-hints code {
+      padding: 0.05rem 0.35rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.78rem;
+    }
+    .btn-row {
+      margin-top: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+    .btn {
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .btn-primary {
+      border-color: rgba(34, 197, 94, 0.7);
+      background: var(--accent-soft);
+      color: #bbf7d0;
+    }
+    .btn:hover {
+      border-color: rgba(148, 163, 184, 0.9);
+    }
+    .btn-primary:hover {
+      background: rgba(34, 197, 94, 0.22);
+    }
+    .rogue-title {
+      margin-bottom: 0.5rem;
+    }
+    .rogue-options {
+      margin-top: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: min(420px, 100%);
+      text-align: left;
+    }
+    .rogue-option {
+      padding: 0.45rem 0.7rem;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .rogue-option:hover {
+      border-color: rgba(34, 197, 94, 0.7);
+      background: rgba(15, 23, 42, 1);
+    }
+    .rogue-option strong { color: var(--accent); }
+    .rogue-option small { color: var(--text-sub); }
+    .game-over-title { color: var(--danger); }
+    @media (max-width: 720px) {
+      .game-header h1 { font-size: 1.1rem; }
+      .hud { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-shell">
+    <div class="game-header">
+      <h1>🍄 Super Emojio</h1>
+      <small>HTML + JS + D3 + 状态机 · 无尽模式</small>
+    </div>
+    <div class="hud" id="hud">
+      <div class="hud-left">
+        <div class="hud-badge hud-hearts" id="hud-lives">❤❤❤</div>
+        <div class="hud-badge" id="hud-shield">🛡 x0</div>
+        <div class="hud-badge" id="hud-time">⏱ 0.0 s</div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-badge" id="hud-speed">🏃 移速 x1.0</div>
+        <div class="hud-badge" id="hud-atk">⚔ 攻速 x1.0</div>
+        <div class="hud-badge" id="hud-dodge">💫 闪避 0%</div>
+      </div>
+    </div>
+
+    <div class="game-frame">
+      <svg id="game" viewBox="0 0 960 480" preserveAspectRatio="xMidYMid slice"></svg>
+
+      <div class="overlay" id="overlay-start">
+        <h2>按 <code>Enter</code> 或 <code>Space</code> 开始游戏</h2>
+        <p>使用 <code>A / D</code> 移动，<code>Space</code> 跳跃，<code>J</code> 攻击，<code>K</code> 冲刺。</p>
+        <p>🍄 蘑菇会让你变大，并提升攻击速度；❓ 问号箱会触发 Roguelike 选项；💨 冲刺可以短时间无视碰撞并高速位移。</p>
+        <div class="overlay-key-hints">
+          <p><code>A / D</code> 移动 · <code>Space</code> 跳跃 · <code>J</code> 攻击 · <code>K</code> 冲刺</p>
+          <p>游戏没有终点，死亡时会显示总生存时间。</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-start">开始游戏</button>
+        </div>
+      </div>
+
+      <div class="overlay hidden" id="overlay-rogue">
+        <h2 class="rogue-title">❓ 问号箱 · Roguelike 强化</h2>
+        <p>选择一项效果（其余将消失）。</p>
+        <div class="rogue-options" id="rogue-options"></div>
+      </div>
+
+      <div class="overlay hidden" id="overlay-gameover">
+        <h2 class="game-over-title">💀 Game Over</h2>
+        <p id="gameover-time">本次生存时间：0.0 秒</p>
+        <p class="overlay-key-hints">按 <code>R</code> 或点击下方按钮重新开始。</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-restart">再来一局</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // =====================
+    // 基本常量 & 工具
+    // =====================
+    const WIDTH = 960;
+    const HEIGHT = 480;
+    const GROUND_MIN = 260;
+    const GROUND_MAX = 360;
+    const TILE_W = 144; // 平台加宽，便于落脚
+    const GRAVITY = 1800; // px/s^2
+    const JUMP_V = 720;
+
+    const EMOJI_PLAYER = '🙂';
+    const EMOJI_PLAYER_BIG = '😎';
+    const EMOJI_MUSHROOM = '🍄';
+    const EMOJI_ENEMY = '👾';
+    const EMOJI_ENEMY_ELITE = '👽';
+    const EMOJI_ENEMY_UFO = '🛸';
+    const EMOJI_ENEMY_BOSS = '👹';
+    const EMOJI_BULLET_HUNTER = '➢';
+    const EMOJI_BULLET_DOG = '💦';
+    const EMOJI_DOG = '🐶';
+    const EMOJI_BOX = '❓';
+    const EMOJI_BULLET = '💥';
+    const EMOJI_ENEMY_BULLET = '🔹';
+    const EMOJI_ENEMY_SNIPER_BULLET = '🔺';
+
+    const game = {
+      state: 'menu', // 'menu' | 'playing' | 'rogue' | 'gameover'
+      lastTime: null,
+      startTime: null,
+      runTime: 0,
+      terrain: [],
+      entities: {
+        mushrooms: [],
+        enemies: [],
+        boxes: [],
+        bullets: [],
+        enemyBullets: []
+      },
+      player: null,
+      cameraX: 0,
+      stats: null,
+      clouds: [],
+      platformsCreated: 0,
+      enemyShootFactor: 1.0,
+      enemyDensityFactor: 1.0,
+      allyDog: null
+    };
+
+    function randBetween(a, b) {
+      return a + Math.random() * (b - a);
+    }
+
+    function sample(array, n) {
+      const c = array.slice();
+      const res = [];
+      for (let i = 0; i < n && c.length; i++) {
+        const idx = Math.floor(Math.random() * c.length);
+        res.push(c[idx]);
+        c.splice(idx, 1);
+      }
+      return res;
+    }
+
+    // =====================
+    // 初始化 SVG
+    // =====================
+    const svg = d3.select('#game');
+    const skyRect = svg.append('rect')
+      .attr('class', 'sky-bg')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', WIDTH)
+      .attr('height', HEIGHT);
+
+    const defs = svg.append('defs');
+    const terrainGradient = defs.append('linearGradient')
+      .attr('id', 'terrainGradient')
+      .attr('x1', '0%').attr('y1', '0%')
+      .attr('x2', '0%').attr('y2', '100%');
+    terrainGradient.append('stop').attr('offset', '0%').attr('stop-color', '#4ade80');
+    terrainGradient.append('stop').attr('offset', '10%').attr('stop-color', '#4ade80');
+    terrainGradient.append('stop').attr('offset', '12%').attr('stop-color', '#a16207');
+    terrainGradient.append('stop').attr('offset', '70%').attr('stop-color', '#a16207');
+    terrainGradient.append('stop').attr('offset', '72%').attr('stop-color', '#4b5563');
+    terrainGradient.append('stop').attr('offset', '100%').attr('stop-color', '#111827');
+
+    const layerClouds = svg.append('g');
+    const layerTerrain = svg.append('g');
+    const layerItems = svg.append('g');
+    const layerEnemies = svg.append('g');
+    const layerBullets = svg.append('g');
+    const layerEnemyBullets = svg.append('g');
+    const layerPlayer = svg.append('g');
+
+    const hudLives = document.getElementById('hud-lives');
+    const hudShield = document.getElementById('hud-shield');
+    const hudTime = document.getElementById('hud-time');
+    const hudSpeed = document.getElementById('hud-speed');
+    const hudAtk = document.getElementById('hud-atk');
+    const hudDodge = document.getElementById('hud-dodge');
+
+    const overlayStart = document.getElementById('overlay-start');
+    const overlayRogue = document.getElementById('overlay-rogue');
+    const overlayGameover = document.getElementById('overlay-gameover');
+    const btnStart = document.getElementById('btn-start');
+    const btnRestart = document.getElementById('btn-restart');
+    const rogueOptionsEl = document.getElementById('rogue-options');
+    const gameoverTimeEl = document.getElementById('gameover-time');
+    const rogueTitleEl = overlayRogue.querySelector('.rogue-title');
+    const rogueDescEl = overlayRogue.querySelector('p');
+
+    // =====================
+    // 状态 & 初始化
+    // =====================
+    function createInitialStats() {
+      return {
+        hearts: 3,
+        maxHearts: 3,
+        moveSpeed: 260,
+        attackCooldown: 0.55,
+        attackTimer: 0,
+        attackPower: 1,
+        dodge: 0.0,
+        shield: 0,
+        bigModeUntil: 0,
+        bigUses: 0,
+        hunterLevel: 0,
+        hunterTimer: 0,
+        dogUnlocked: false,
+        hasDoubleJump: false,
+        dashLevel: 0
+      };
+    }
+
+    function initTerrain() {
+      game.terrain = [];
+      game.platformsCreated = 0;
+      let x = -WIDTH; // 提前一屏，避免开局空白
+      let h = 320;
+      while (x < WIDTH * 3) {
+        h += randBetween(-55, 55); // 起伏略大，但仍可跳上
+        h = Math.max(GROUND_MIN, Math.min(GROUND_MAX, h));
+        game.terrain.push({ x, w: TILE_W, h });
+        game.platformsCreated += 1;
+        x += TILE_W;
+      }
+    }
+
+    function spawnBossAt(x, h) {
+      const bossY = h - 50;
+      game.entities.enemies.push({
+        type: Math.random() < 0.5 ? 'bossA' : 'bossB',
+        x,
+        y: bossY,
+        dir: 0,
+        speed: 0,
+        range: 0,
+        originX: x,
+        originY: bossY,
+        dead: false,
+        elite: false,
+        hp: 10,
+        maxHp: 10,
+        shootTimer: 1.2,
+        phase: 0,
+        movePhase: 0
+      });
+    }
+
+    function extendTerrainIfNeeded() {
+      if (!game.terrain.length) return;
+      let maxX = game.terrain[game.terrain.length - 1].x + TILE_W;
+      while (maxX < game.cameraX + WIDTH * 3) {
+        const last = game.terrain[game.terrain.length - 1];
+        let h = last.h + randBetween(-55, 55);
+        h = Math.max(GROUND_MIN, Math.min(GROUND_MAX, h));
+        const x = last.x + TILE_W;
+        game.terrain.push({ x, w: TILE_W, h });
+        game.platformsCreated += 1;
+        maxX += TILE_W;
+
+        // 随机生成物体（统一用一个随机数，增加一种空中 UFO 敌人）
+        const centerX = x + TILE_W / 2;
+        const r = Math.random();
+
+        // 每经过 60 块平台强制刷新一个 Boss
+        if (game.platformsCreated > 0 && game.platformsCreated % 60 === 0) {
+          spawnBossAt(centerX, h);
+          continue;
+        }
+
+        if (r < 0.16 * 0.9) { // 略微降低蘑菇出现概率（约减少 10%）
+          game.entities.mushrooms.push({ x: centerX, y: h - 36, collected: false });
+        } else if (r < 0.30 * game.enemyDensityFactor) {
+          const isElite = Math.random() < 0.35;
+          game.entities.enemies.push({
+            type: 'ground',
+            x: centerX,
+            y: h - 30,
+            dir: Math.random() < 0.5 ? -1 : 1,
+            speed: 70 + Math.random() * 50,
+            range: 40 + Math.random() * 80,
+            originX: centerX,
+            dead: false,
+            elite: isElite,
+            shootTimer: (1.5 + Math.random() * 2.5) * game.enemyShootFactor
+          });
+        } else if (r < 0.38 * game.enemyDensityFactor) {
+          // 空中 UFO 敌人，在空中巡逻并发射水平弹幕
+          const flyY = h - 140;
+          game.entities.enemies.push({
+            type: 'ufo',
+            x: centerX,
+            y: Math.max(80, flyY),
+            dir: Math.random() < 0.5 ? -1 : 1,
+            speed: 90 + Math.random() * 40,
+            range: 80 + Math.random() * 80,
+            originX: centerX,
+            dead: false,
+            elite: false,
+            shootTimer: (1.2 + Math.random() * 2.0) * game.enemyShootFactor
+          });
+        } else if (r < 0.54) { // 再次提高问号箱概率
+          game.entities.boxes.push({ x: centerX, y: h - 80, used: false });
+        }
+      }
+    }
+
+    function initPlayer() {
+      game.stats = createInitialStats();
+      game.player = {
+        x: 100,
+        y: 260,
+        vx: 0,
+        vy: 0,
+        onGround: false,
+        facing: 1,
+        airJumpsUsed: 0,
+        dashCharges: 0,
+        dashTimeLeft: 0,
+        dashCooldown: 0,
+        dashChainRemaining: 0
+      };
+      // 初始冲刺次数与等级同步
+      game.player.dashCharges = game.stats.dashLevel;
+      game.cameraX = 0;
+      game.entities.mushrooms = [];
+      game.entities.enemies = [];
+      game.entities.boxes = [];
+      game.entities.bullets = [];
+      game.entities.enemyBullets = [];
+      game.allyDog = null;
+      initTerrain();
+      initClouds();
+    }
+
+    function initClouds() {
+      game.clouds = [];
+      for (let i = 0; i < 14; i++) {
+        game.clouds.push({
+          x: randBetween(-WIDTH, WIDTH * 4),
+          y: randBetween(60, 170),
+          size: randBetween(26, 40),
+          speed: randBetween(8, 22)
+        });
+      }
+    }
+
+    function updateClouds(dt) {
+      if (!game.clouds) return;
+      const cam = game.cameraX;
+      for (const c of game.clouds) {
+        // 云朵缓慢向右飘动，带一点视差
+        c.x += c.speed * dt * 0.4;
+        // 当云远离相机过多时，在前方重新生成，避免“天空空了”
+        if (c.x < cam - WIDTH * 1.5 || c.x > cam + WIDTH * 3) {
+          c.x = cam + randBetween(WIDTH * 0.5, WIDTH * 2.5);
+          c.y = randBetween(60, 170);
+          c.size = randBetween(26, 40);
+        }
+      }
+    }
+
+    // =====================
+    // 输入处理
+    // =====================
+    const keys = {};
+    let prevJumpKey = false;
+    let prevDashKey = false;
+    window.addEventListener('keydown', (e) => {
+      keys[e.key] = true;
+      if (game.state === 'menu' && (e.key === 'Enter' || e.key === ' ')) {
+        startGame();
+      }
+      if (game.state === 'gameover' && (e.key === 'r' || e.key === 'R')) {
+        restartGame();
+      }
+    });
+    window.addEventListener('keyup', (e) => {
+      keys[e.key] = false;
+    });
+
+    btnStart.addEventListener('click', startGame);
+    btnRestart.addEventListener('click', restartGame);
+
+    function startGame() {
+      overlayStart.classList.add('hidden');
+      overlayGameover.classList.add('hidden');
+      overlayRogue.classList.add('hidden');
+      initPlayer();
+      game.state = 'playing';
+      const now = performance.now();
+      game.lastTime = now;
+      game.startTime = now;
+      game.runTime = 0;
+      requestAnimationFrame(loop);
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    // =====================
+    // 物理 & 碰撞
+    // =====================
+    function groundHeightAt(x) {
+      const t = game.terrain;
+      for (let i = 0; i < t.length; i++) {
+        if (x >= t[i].x && x < t[i].x + t[i].w) return t[i].h;
+      }
+      return 340;
+    }
+
+    function updatePlayer(dt) {
+      const p = game.player;
+      const s = game.stats;
+      const speed = s.moveSpeed;
+
+      let input = 0;
+      if (keys['a'] || keys['A']) input -= 1;
+      if (keys['d'] || keys['D']) input += 1;
+      p.vx = input * speed;
+      if (input !== 0) p.facing = input;
+
+      // 跳跃 & 双连跳（按键沿用 Space / W / ↑）
+      const jumpKey = (keys[' '] || keys['ArrowUp'] || keys['w']);
+      if (jumpKey && !prevJumpKey) {
+        if (p.onGround) {
+          // 地面起跳
+          p.vy = -JUMP_V;
+          p.onGround = false;
+          p.airJumpsUsed = 0;
+        } else if (s.hasDoubleJump && p.airJumpsUsed < 1) {
+          // 空中二段跳
+          p.vy = -JUMP_V;
+          p.airJumpsUsed += 1;
+        }
+      }
+      prevJumpKey = jumpKey;
+
+      // 记录本帧开始移动前是否在地面（在处理完跳跃状态之后）
+      const wasOnGround = p.onGround;
+
+      // 冲刺：使用 K 键，携带 1/2/3 连续冲刺次数
+      const dashKey = (keys['k'] || keys['K']);
+      if (dashKey && !prevDashKey && s.dashLevel > 0 && p.dashTimeLeft <= 0 && p.dashCooldown <= 0) {
+        // 开始一轮冲刺链：根据等级决定最多连冲次数
+        p.dashTimeLeft = 0.3;
+        p.dashChainRemaining = Math.max(0, s.dashLevel - 1);
+        const nowDash = performance.now();
+        p.invUntil = Math.max(p.invUntil || 0, nowDash + 320);
+      }
+      prevDashKey = dashKey;
+
+      const prevX = p.x;
+      const prevY = p.y;
+      const prevFeet = prevY + 24;
+
+      p.vy += GRAVITY * dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+
+      // 冲刺期间水平速度大幅提升
+      if (p.dashTimeLeft > 0) {
+        p.dashTimeLeft -= dt;
+        const dashSpeed = s.moveSpeed * 3.0;
+        const dir = p.facing >= 0 ? 1 : -1;
+        p.vx = dir * dashSpeed;
+        p.x = prevX + p.vx * dt;
+
+        // 单段冲刺结束时，如果还有剩余次数且仍按住 K，则立即接下一段；否则进入后摇
+        if (p.dashTimeLeft <= 0) {
+          if (p.dashChainRemaining > 0 && dashKey) {
+            p.dashChainRemaining -= 1;
+            p.dashTimeLeft = 0.3;
+            const nowDash2 = performance.now();
+            p.invUntil = Math.max(p.invUntil || 0, nowDash2 + 320);
+          } else {
+            p.dashTimeLeft = 0;
+            p.dashChainRemaining = 0;
+            p.dashCooldown = 0.7; // 整个冲刺技能结束后 0.7s 内不能再次使用
+          }
+        }
+      }
+
+      const gh = groundHeightAt(p.x);
+      const feet = p.y + 24;
+      if (feet >= gh) {
+        const prevGround = groundHeightAt(prevX);
+        const heightDiff = gh - prevGround; // 正数：地面下降；负数：前方平台更高
+        const MAX_STEP = 26; // 允许平缓坡度，小于此高度差可以“走上去”
+        if (wasOnGround && heightDiff < -MAX_STEP) {
+          // 从低平台走向明显更高的平台：当作墙，必须跳跃
+          p.x = prevX;
+          p.y = prevY;
+          p.vx = 0;
+        } else {
+          // 正常落地或小高度差
+          p.y = gh - 24;
+          p.vy = 0;
+          p.onGround = true;
+          p.airJumpsUsed = 0;
+        }
+      } else {
+        p.onGround = false;
+      }
+
+      // 边界
+      if (p.x < game.cameraX - 80) p.x = game.cameraX - 80;
+
+      // 相机跟随
+      game.cameraX = p.x - WIDTH * 0.35;
+      if (game.cameraX < 0) game.cameraX = 0;
+
+      // 冲刺技能整体冷却：结束后 0.7s 内无法重新起跳一轮冲刺链
+      if (p.dashCooldown > 0) {
+        p.dashCooldown -= dt;
+      }
+
+      // 攻击
+      s.attackTimer -= dt;
+      if ((keys['j'] || keys['J']) && s.attackTimer <= 0) {
+        shootBullet();
+        s.attackTimer = s.attackCooldown;
+      }
+
+      // 大蘑菇 buff 到期
+      const now = performance.now();
+      if (s.bigModeUntil && now > s.bigModeUntil) {
+        s.bigModeUntil = 0;
+        // 恢复到稍慢一点的攻速
+        s.attackCooldown = Math.max(0.4, s.attackCooldown * 1.15);
+        triggerPlayerFlash();
+      }
+    }
+
+    function shootBullet() {
+      const p = game.player;
+      const speed = 520;
+      game.entities.bullets.push({
+        x: p.x + (p.facing > 0 ? 26 : -26),
+        y: p.y - 10,
+        vx: p.facing * speed,
+        vy: 0,
+        life: 1.2,
+        kind: 'normal'
+      });
+    }
+
+    function updateBullets(dt) {
+      const arr = game.entities.bullets;
+      for (let i = arr.length - 1; i >= 0; i--) {
+        const b = arr[i];
+        if (b.kind === 'hunter') {
+          // 简单追踪：每帧朝最近敌人修正速度
+          const enemies = game.entities.enemies.filter(e => !e.dead);
+          if (enemies.length) {
+            let best = enemies[0];
+            let bestD2 = (best.x - b.x) ** 2 + (best.y - b.y) ** 2;
+            for (let j = 1; j < enemies.length; j++) {
+              const e = enemies[j];
+              const d2 = (e.x - b.x) ** 2 + (e.y - b.y) ** 2;
+              if (d2 < bestD2) { best = e; bestD2 = d2; }
+            }
+            const dx = best.x - b.x;
+            const dy = (best.y - 10) - b.y;
+            const len = Math.hypot(dx, dy) || 1;
+            const speed = 420;
+            b.vx = (dx / len) * speed;
+            b.vy = (dy / len) * speed;
+          }
+        }
+        b.x += b.vx * dt;
+        b.y += (b.vy || 0) * dt;
+        b.life -= dt;
+        if (b.life <= 0 || b.x < game.cameraX - 200 || b.x > game.cameraX + WIDTH + 200) {
+          arr.splice(i, 1);
+        }
+      }
+    }
+
+    function updateEnemies(dt) {
+      const p = game.player;
+      const s = game.stats;
+      let bossDied = false;
+      for (const e of game.entities.enemies) {
+        if (e.dead) continue;
+        if (e.type === 'bossA' || e.type === 'bossB') {
+          // Boss 在小范围内缓慢上下左右移动
+          e.movePhase = (e.movePhase || 0) + dt;
+          const offsetX = Math.sin(e.movePhase * 0.7) * 20;
+          const offsetY = Math.cos(e.movePhase * 0.9) * 12;
+          e.x = e.originX + offsetX;
+          e.y = e.originY + offsetY;
+        } else {
+          e.x += e.dir * e.speed * dt;
+          if (e.x < e.originX - e.range) { e.x = e.originX - e.range; e.dir *= -1; }
+          if (e.x > e.originX + e.range) { e.x = e.originX + e.range; e.dir *= -1; }
+        }
+      }
+
+      // 敌人发射弹幕：精英地面敌人、UFO 和 Boss
+      for (const e of game.entities.enemies) {
+        if (e.dead) continue;
+        const canShoot = (e.type === 'ground' && e.elite) || e.type === 'ufo' || e.type === 'bossA' || e.type === 'bossB';
+        if (!canShoot) continue;
+        e.shootTimer -= dt;
+        if (e.shootTimer <= 0) {
+          if (e.type === 'bossA') {
+            // BossA: 环形华丽弹幕
+            const count = 18;
+            e.phase = (e.phase || 0) + 0.4;
+            for (let i = 0; i < count; i++) {
+              const angle = e.phase + (i / count) * Math.PI * 2;
+              const speed = 150;
+              game.entities.enemyBullets.push({
+                x: e.x,
+                y: e.y - 20,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 5
+              });
+            }
+            e.shootTimer = 1.4 * game.enemyShootFactor;
+          } else if (e.type === 'bossB') {
+            // BossB: 扇形“团簇”弹幕（每次 7 发）+ 额外一发狙击弹
+            const bullets = 7;
+            const sweep = Math.PI / 3; // 总扫射角度 ~60°，更集中成一团
+            const speed = 210;
+            const dx = game.player.x - e.x;
+            const dy = (game.player.y - 10) - (e.y - 20);
+            const baseDir = Math.atan2(dy, dx) || 0;
+            e.phase = (e.phase || 0) + 0.7;
+            const offset = Math.sin(e.phase) * (Math.PI / 10); // 轻微摆动，避免每团完全重合
+            const start = baseDir - sweep / 2 + offset;
+            const step = sweep / (bullets - 1);
+            for (let i = 0; i < bullets; i++) {
+              const ang = start + step * i;
+              game.entities.enemyBullets.push({
+                x: e.x,
+                y: e.y - 20,
+                vx: Math.cos(ang) * speed,
+                vy: Math.sin(ang) * speed,
+                life: 4.5
+              });
+            }
+            // 额外一发颜色不同的狙击弹，直接瞄准玩家当前位置
+            const sdx = game.player.x - e.x;
+            const sdy = (game.player.y - 10) - (e.y - 20);
+            const slen = Math.hypot(sdx, sdy) || 1;
+            const sspeed = 260;
+            game.entities.enemyBullets.push({
+              x: e.x,
+              y: e.y - 22,
+              vx: (sdx / slen) * sspeed,
+              vy: (sdy / slen) * sspeed,
+              life: 5.2,
+              kind: 'sniper'
+            });
+            // 团簇之间间隔更久一点，避免太密集
+            e.shootTimer = 2.3 * game.enemyShootFactor;
+          } else if (e.type === 'ufo') {
+            // UFO 狙击弹：发射时直接瞄准玩家当前位置
+            const dx = game.player.x - e.x;
+            const dy = (game.player.y - 10) - (e.y - 10);
+            const len = Math.hypot(dx, dy) || 1;
+            const speed = 190;
+            game.entities.enemyBullets.push({
+              x: e.x,
+              y: e.y - 10,
+              vx: (dx / len) * speed,
+              vy: (dy / len) * speed,
+              life: 5
+            });
+            e.shootTimer = (2 + Math.random() * 2.2) * game.enemyShootFactor;
+          } else {
+            // 精英地面敌人：水平弹幕
+            const dir = (game.player.x >= e.x) ? 1 : -1;
+            game.entities.enemyBullets.push({
+              x: e.x,
+              y: e.y - 10,
+              vx: dir * 140,
+              vy: 0,
+              life: 4
+            });
+            e.shootTimer = (2 + Math.random() * 2.5) * game.enemyShootFactor;
+          }
+        }
+      }
+
+      // 子弹击中敌人或 Boss
+      for (const b of game.entities.bullets) {
+        for (const e of game.entities.enemies) {
+          if (e.dead) continue;
+          if (Math.abs(b.x - e.x) < 22 && Math.abs(b.y - e.y) < 22) {
+            if (e.type === 'bossA' || e.type === 'bossB') {
+              e.hp -= 1;
+              if (e.hp <= 0) {
+                e.dead = true;
+                bossDied = true;
+              }
+            } else {
+              e.dead = true;
+            }
+            b.life = 0;
+          }
+        }
+      }
+
+      // 敌人撞到玩家（Boss 会把玩家弹回去）
+      for (const e of game.entities.enemies) {
+        if (e.dead) continue;
+        if (Math.abs(e.x - p.x) < 26 && Math.abs(e.y - p.y) < 24 && (!p.dashTimeLeft || p.dashTimeLeft <= 0)) {
+          if (e.type === 'bossA' || e.type === 'bossB') {
+            // 弹回去并阻挡前进
+            if (p.x <= e.x) {
+              p.x = e.x - 60;
+              p.vx = Math.min(p.vx, -80);
+            } else {
+              p.x = e.x + 60;
+              p.vx = Math.max(p.vx, 80);
+            }
+          }
+          onPlayerHit();
+        }
+        if (game.allyDog) {
+          const d = game.allyDog;
+          if (Math.abs(e.x - d.x) < 26 && Math.abs(e.y - d.y) < 24) {
+            // 狗与敌人相撞：双方同时受损
+            if (e.type === 'bossA' || e.type === 'bossB') {
+              e.hp -= 3;
+              if (e.hp <= 0) {
+                e.dead = true;
+                bossDied = true;
+              }
+            } else {
+              e.dead = true;
+            }
+            d.hearts -= 1;
+            if (d.hearts <= 0) game.allyDog = null;
+          }
+        }
+      }
+
+      // 清理死亡敌人
+      game.entities.enemies = game.entities.enemies.filter(e => !e.dead);
+
+      // 如有 Boss 被击杀，且仍在游戏中，则弹出战利品正面增益选择
+      if (bossDied && game.state === 'playing') {
+        triggerBossLoot();
+      }
+    }
+
+    function updateMushrooms(dt) {
+      const p = game.player;
+      const s = game.stats;
+      for (const m of game.entities.mushrooms) {
+        if (m.collected) continue;
+        if (Math.abs(m.x - p.x) < 26 && Math.abs(m.y - p.y) < 26) {
+          m.collected = true;
+          // 蘑菇效果：变大 + 提升攻速（可多次刷新持续时间）
+          s.bigUses += 1;
+          s.attackCooldown = Math.max(0.25, s.attackCooldown * 0.7);
+          s.bigModeUntil = performance.now() + 10000; // 10 秒
+          triggerPlayerFlash();
+        }
+      }
+    }
+
+    function triggerPlayerFlash() {
+      if (!game.player) return;
+      const now = performance.now();
+      // 约 3 次快速闪烁
+      game.player.flashUntil = now + 360;
+    }
+
+    function updateBoxes(dt) {
+      const p = game.player;
+      for (const box of game.entities.boxes) {
+        if (box.used) continue;
+        if (Math.abs(box.x - p.x) < 26 && p.y + 24 >= box.y && p.y - 24 <= box.y + 24) {
+          box.used = true;
+          triggerRogueBox();
+          break;
+        }
+      }
+    }
+
+    function updateHunter(dt) {
+      const s = game.stats;
+      if (!s || !game.player || !s.hunterLevel) return;
+      s.hunterTimer -= dt;
+      if (s.hunterTimer > 0) return;
+      const enemies = game.entities.enemies.filter(e => !e.dead);
+      if (!enemies.length) {
+        s.hunterTimer = 1.5;
+        return;
+      }
+      // 找最近敌人并按等级发射多支追踪箭
+      let best = enemies[0];
+      let bestD2 = (best.x - game.player.x) ** 2 + (best.y - game.player.y) ** 2;
+      for (let i = 1; i < enemies.length; i++) {
+        const e = enemies[i];
+        const d2 = (e.x - game.player.x) ** 2 + (e.y - game.player.y) ** 2;
+        if (d2 < bestD2) { best = e; bestD2 = d2; }
+      }
+      const p = game.player;
+      const dx = best.x - p.x;
+      const dy = (best.y - 10) - (p.y - 12);
+      const len = Math.hypot(dx, dy) || 1;
+      const speed = 420;
+      const baseAngle = Math.atan2(dy, dx);
+      const shots = Math.max(1, Math.min(3, s.hunterLevel));
+      const spread = 1.0; // 再次放大扇形角度，让箭矢距离更大
+      for (let i = 0; i < shots; i++) {
+        const offset = (i - (shots - 1) / 2) * spread;
+        const ang = baseAngle + offset;
+        const vx = Math.cos(ang) * speed;
+        const vy = Math.sin(ang) * speed;
+        game.entities.bullets.push({
+          x: p.x + (i - (shots - 1) / 2) * 24,
+          y: p.y - 12,
+          vx,
+          vy,
+          life: 2.5,
+          kind: 'hunter'
+        });
+      }
+      // 固定发射节奏，不受攻速影响
+      s.hunterTimer = 2.0;
+    }
+
+    function updateDog(dt) {
+      if (!game.allyDog || !game.player) return;
+      const d = game.allyDog;
+      const p = game.player;
+      // 跟随在玩家前方，主动与敌人碰撞
+      const targetX = p.x + 40;
+      d.x += (targetX - d.x) * Math.min(1, dt * 6);
+      const gh = groundHeightAt(d.x);
+      d.y = gh - 24;
+
+      // 小狗口水远程攻击：定期向前方喷射一小扇形水弹
+      if (d.spitCooldown == null) d.spitCooldown = 0;
+      d.spitCooldown -= dt;
+      if (d.spitCooldown <= 0) {
+        d.spitCooldown = 1.8; // 发射间隔固定，不受攻速影响
+        const dir = p.facing >= 0 ? 1 : -1;
+        const speed = 260;
+        const spread = Math.PI / 18; // 轻微散射
+        const shots = 3;
+        const baseAngle = dir > 0 ? 0 : Math.PI; // 中间那发水平，左右略微偏移
+        for (let i = 0; i < shots; i++) {
+          const offset = (i - (shots - 1) / 2) * spread;
+          const ang = baseAngle + offset;
+          game.entities.bullets.push({
+            x: d.x,
+            y: d.y - 20,
+            vx: Math.cos(ang) * speed,
+            vy: Math.sin(ang) * speed,
+            life: 2.4,
+            kind: 'dog'
+          });
+        }
+      }
+    }
+
+    function updateEnemyBullets(dt) {
+      const arr = game.entities.enemyBullets;
+      const p = game.player;
+      for (let i = arr.length - 1; i >= 0; i--) {
+        const b = arr[i];
+        b.x += b.vx * dt;
+        b.y += b.vy * dt;
+        b.life -= dt;
+        if (b.life <= 0 || b.x < game.cameraX - 200 || b.x > game.cameraX + WIDTH + 200) {
+          arr.splice(i, 1);
+          continue;
+        }
+        if (Math.abs(b.x - p.x) < 20 && Math.abs(b.y - p.y) < 20) {
+          onPlayerHit();
+          arr.splice(i, 1);
+          continue;
+        }
+        if (game.allyDog) {
+          const d = game.allyDog;
+          if (Math.abs(b.x - d.x) < 20 && Math.abs(b.y - d.y) < 20) {
+            d.hearts -= 1;
+            if (d.hearts <= 0) game.allyDog = null;
+            arr.splice(i, 1);
+          }
+        }
+      }
+    }
+
+    function onPlayerHit() {
+      const s = game.stats;
+      const now = performance.now();
+      if (game.player && game.player.invUntil && now < game.player.invUntil) {
+        return; // 处于短暂无敌时间内
+      }
+      if (s.shield > 0) {
+        s.shield -= 1;
+        if (game.player) game.player.invUntil = now + 800; // 护盾抵消后也给短暂无敌
+        return;
+      }
+      if (Math.random() < s.dodge) {
+        return; // 闪避成功
+      }
+      s.hearts -= 1;
+      if (s.hearts <= 0) {
+        // Game Over：没有爱心了
+        s.hearts = 0;
+        game.state = 'gameover';
+        showGameOver();
+      } else if (game.player) {
+        // 受伤但还没死：给一小段无敌时间
+        game.player.invUntil = now + 800;
+      }
+    }
+
+    // =====================
+    // Roguelike 选项
+    // =====================
+    const POSITIVE_ROGUE_OPTIONS = [
+      {
+        id: 'heal1',
+        label: '💖 恢复 1 点生命',
+        desc: '如果已满则提升最大生命上限。',
+        apply(s) {
+          if (s.hearts < s.maxHearts) s.hearts = Math.min(s.maxHearts, s.hearts + 1);
+          else { s.maxHearts += 1; s.hearts = s.maxHearts; }
+        }
+      },
+      {
+        id: 'maxhp',
+        label: '💝 最大生命 +1',
+        desc: '增加最大生命上限并立即完全恢复。',
+        apply(s) { s.maxHearts += 1; s.hearts = s.maxHearts; }
+      },
+      {
+        id: 'speed',
+        label: '🏃‍♂️ 移动速度 +25%',
+        desc: '跑得更快，更容易风筝敌人。',
+        apply(s) { s.moveSpeed *= 1.25; }
+      },
+      {
+        id: 'atkSpeed',
+        label: '⚔ 攻击速度 +30%',
+        desc: '降低攻击冷却时间。',
+        apply(s) { s.attackCooldown = Math.max(0.2, s.attackCooldown * 0.7); }
+      },
+      {
+        id: 'dodge',
+        label: '💫 闪避率 +10%',
+        desc: '有概率完全闪避敌人伤害。',
+        apply(s) { s.dodge = Math.min(0.6, s.dodge + 0.10); }
+      },
+      {
+        id: 'shield',
+        label: '🛡 护盾 +2',
+        desc: '护盾会先替你抵消伤害。',
+        apply(s) { s.shield += 2; }
+      },
+      {
+        id: 'double_jump',
+        label: '🕊 双连跳',
+        desc: '可以在空中额外再跳一次，仅能获得一次。',
+        apply(s) {
+          if (!s.hasDoubleJump) {
+            s.hasDoubleJump = true;
+          }
+        }
+      },
+      {
+        id: 'hunter',
+        label: '🏹 猎手本性',
+        desc: '每隔一段时间自动发射追踪箭。',
+        apply(s) {
+          if (s.hunterLevel >= 3) return;
+          s.hunterLevel += 1;
+          if (s.hunterLevel === 1) {
+            s.hunterTimer = 0.2;
+          }
+        }
+      },
+      {
+        id: 'dash',
+        label: '💨 冲刺',
+        desc: '解锁 K 键冲刺，可连续冲刺多次并短暂无敌。',
+        apply(s) {
+          if (s.dashLevel >= 3) return;
+          s.dashLevel += 1;
+          if (game.player) {
+            game.player.dashCharges = s.dashLevel;
+          }
+        }
+      },
+      {
+        id: 'dog',
+        label: '🐶 雇佣兵',
+        desc: '身边出现一只自动攻击敌人的小狗，拥有 3 条命。',
+        apply(s) {
+          s.dogUnlocked = true;
+          if (!game.allyDog) {
+            const px = game.player ? game.player.x - 40 : game.cameraX + 80;
+            const gh = groundHeightAt(px);
+            game.allyDog = { x: px, y: gh - 24, hearts: 3, spitCooldown: 0 };
+          } else {
+            game.allyDog.hearts = Math.min(5, (game.allyDog.hearts || 3) + 1);
+          }
+        }
+      }
+    ];
+
+    // 负面效果选项
+    const NEGATIVE_ROGUE_OPTIONS = [
+      {
+        id: 'enemy_atk_up',
+        label: '☠ 敌人攻速提升',
+        desc: '敌人的弹幕频率提高，战斗更危险。',
+        apply(s) { game.enemyShootFactor = Math.max(0.4, game.enemyShootFactor * 0.8); }
+      },
+      {
+        id: 'enemy_more',
+        label: '👿 敌人数量增加',
+        desc: '后续路上的敌人会变多。',
+        apply(s) { game.enemyDensityFactor = Math.min(2.0, game.enemyDensityFactor * 1.3); }
+      },
+      {
+        id: 'slow_self',
+        label: '🐌 自身移速降低',
+        desc: '移动速度 -20%，更难躲避攻击。',
+        apply(s) { s.moveSpeed *= 0.8; }
+      },
+      {
+        id: 'spawn_boss',
+        label: '👹 立刻刷新 Boss',
+        desc: '在前方不远处出现一名强力 Boss。',
+        apply(s) {
+          const px = game.player ? game.player.x + WIDTH * 0.6 : game.cameraX + WIDTH * 0.6;
+          const gh = groundHeightAt(px);
+          spawnBossAt(px, gh);
+        }
+      }
+    ];
+
+    function triggerRogueBox() {
+      if (game.state !== 'playing') return;
+      game.state = 'rogue';
+      overlayRogue.classList.remove('hidden');
+      rogueOptionsEl.innerHTML = '';
+      const usePositive = Math.random() < 0.7;
+      const basePool = usePositive ? POSITIVE_ROGUE_OPTIONS : NEGATIVE_ROGUE_OPTIONS;
+      const pool = basePool.filter(opt => {
+        if (opt.id === 'hunter') {
+          return !game.stats || game.stats.hunterLevel < 3;
+        }
+        if (opt.id === 'double_jump') {
+          return game.stats && !game.stats.hasDoubleJump && Math.random() < 0.4; // 概率略低
+        }
+        if (opt.id === 'dash') {
+          return !game.stats || game.stats.dashLevel < 3;
+        }
+        return true;
+      });
+      if (rogueTitleEl && rogueDescEl) {
+        if (usePositive) {
+          rogueTitleEl.textContent = '💰 你遇到了藏宝箱';
+          rogueDescEl.textContent = '请选择一项增益（其余将消失）。';
+        } else {
+          rogueTitleEl.textContent = '☠ 你受到了诅咒';
+          rogueDescEl.textContent = '请选择一项处罚（无论如何都得选一个）。';
+        }
+      }
+      const picks = sample(pool, Math.min(3, pool.length));
+      picks.forEach(opt => {
+        const div = document.createElement('button');
+        div.className = 'rogue-option';
+        let label = opt.label;
+        if (opt.id === 'hunter') {
+          const lvl = (game.stats && game.stats.hunterLevel) || 0;
+          const numerals = ['I', 'II', 'III'];
+          const next = Math.min(2, lvl);
+          label = `🏹 猎手本性 ${numerals[next]}`;
+        } else if (opt.id === 'dash') {
+          const lvl = (game.stats && game.stats.dashLevel) || 0;
+          const numerals = ['I', 'II', 'III'];
+          const next = Math.min(2, lvl);
+          label = `💨 冲刺 ${numerals[next]}`;
+        }
+        div.innerHTML = `<strong>${label}</strong><br/><small>${opt.desc}</small>`;
+        div.addEventListener('click', () => {
+          opt.apply(game.stats);
+          overlayRogue.classList.add('hidden');
+          game.state = 'playing';
+        });
+        rogueOptionsEl.appendChild(div);
+      });
+    }
+
+    function triggerBossLoot() {
+      if (game.state !== 'playing') return;
+      game.state = 'rogue';
+      overlayRogue.classList.remove('hidden');
+      rogueOptionsEl.innerHTML = '';
+      if (rogueTitleEl && rogueDescEl) {
+        rogueTitleEl.textContent = '🎁 战利品';
+        rogueDescEl.textContent = '战胜 Boss！请选择一项增益。';
+      }
+      const pool = POSITIVE_ROGUE_OPTIONS.filter(opt => {
+        if (opt.id === 'hunter') {
+          return !game.stats || game.stats.hunterLevel < 3;
+        }
+        if (opt.id === 'double_jump') {
+          return game.stats && !game.stats.hasDoubleJump;
+        }
+        if (opt.id === 'dash') {
+          return !game.stats || game.stats.dashLevel < 3;
+        }
+        return true;
+      });
+      const picks = sample(pool, Math.min(3, pool.length));
+      picks.forEach(opt => {
+        const div = document.createElement('button');
+        div.className = 'rogue-option';
+        let label = opt.label;
+        if (opt.id === 'hunter') {
+          const lvl = (game.stats && game.stats.hunterLevel) || 0;
+          const numerals = ['I', 'II', 'III'];
+          const next = Math.min(2, lvl);
+          label = `🏹 猎手本性 ${numerals[next]}`;
+        } else if (opt.id === 'dash') {
+          const lvl = (game.stats && game.stats.dashLevel) || 0;
+          const numerals = ['I', 'II', 'III'];
+          const next = Math.min(2, lvl);
+          label = `💨 冲刺 ${numerals[next]}`;
+        }
+        div.innerHTML = `<strong>${label}</strong><br/><small>${opt.desc}</small>`;
+        div.addEventListener('click', () => {
+          opt.apply(game.stats);
+          overlayRogue.classList.add('hidden');
+          game.state = 'playing';
+        });
+        rogueOptionsEl.appendChild(div);
+      });
+    }
+
+    // =====================
+    // 渲染
+    // =====================
+    function render(dt) {
+      const cam = game.cameraX;
+      const p = game.player;
+      const s = game.stats;
+
+      // 云朵（天空中，随相机缓动）
+      const clouds = game.clouds || [];
+      const cloudsVis = clouds.filter(c => c.x > cam - WIDTH && c.x < cam + WIDTH * 2.5);
+      const cloudSel = layerClouds.selectAll('text.cloud').data(cloudsVis, d => d.x + ':' + d.y);
+      cloudSel.enter().append('text')
+        .attr('class', 'cloud')
+        .attr('text-anchor', 'middle')
+        .text('☁️')
+        .merge(cloudSel)
+        .attr('font-size', d => d.size)
+        .attr('x', d => d.x - cam * 0.4)
+        .attr('y', d => d.y);
+      cloudSel.exit().remove();
+
+      // 地形
+      const visibleTerrain = game.terrain.filter(t => t.x + t.w > cam - 60 && t.x < cam + WIDTH + 60);
+      const terrainSel = layerTerrain.selectAll('rect.terrain').data(visibleTerrain, d => d.x);
+      terrainSel.enter().append('rect')
+        .attr('class', 'terrain')
+        .attr('fill', 'url(#terrainGradient)')
+        .attr('stroke', '#1f2937')
+        .attr('stroke-width', 1)
+        .merge(terrainSel)
+        .attr('x', d => d.x - cam)
+        .attr('y', d => d.h)
+        .attr('width', d => d.w + 1)
+        .attr('height', d => HEIGHT - d.h + 40);
+      terrainSel.exit().remove();
+
+      // 蘑菇
+      const mushrooms = game.entities.mushrooms.filter(m => !m.collected && m.x > cam - 60 && m.x < cam + WIDTH + 60);
+      const mushSel = layerItems.selectAll('text.mushroom').data(mushrooms, d => d.x + ':' + d.y);
+      mushSel.enter().append('text')
+        .attr('class', 'mushroom')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 28)
+        .text(EMOJI_MUSHROOM)
+        .merge(mushSel)
+        .attr('x', d => d.x - cam)
+        .attr('y', d => d.y);
+      mushSel.exit().remove();
+
+      // 问号箱
+      const boxes = game.entities.boxes.filter(b => !b.used && b.x > cam - 60 && b.x < cam + WIDTH + 60);
+      const boxSel = layerItems.selectAll('text.box').data(boxes, d => d.x + ':' + d.y);
+      boxSel.enter().append('text')
+        .attr('class', 'box')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 28)
+        .text(EMOJI_BOX)
+        .merge(boxSel)
+        .attr('x', d => d.x - cam)
+        .attr('y', d => d.y);
+      boxSel.exit().remove();
+
+      // 敌人
+      const enemies = game.entities.enemies.filter(e => !e.dead && e.x > cam - 80 && e.x < cam + WIDTH + 80);
+      const enemySel = layerEnemies.selectAll('text.enemy').data(enemies, d => d.x + ':' + d.y);
+      enemySel.enter().append('text')
+        .attr('class', 'enemy')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 30)
+        .text(d => {
+          if (d.type === 'bossA' || d.type === 'bossB') return EMOJI_ENEMY_BOSS;
+          if (d.type === 'ufo') return EMOJI_ENEMY_UFO;
+          return d.elite ? EMOJI_ENEMY_ELITE : EMOJI_ENEMY;
+        })
+        .merge(enemySel)
+        .attr('x', d => d.x - cam)
+        .attr('y', d => d.y);
+      enemySel.exit().remove();
+
+      // Boss 血条（两种 Boss 共用同一 UI）
+      const bosses = enemies.filter(e => e.type === 'bossA' || e.type === 'bossB');
+      const bossBars = layerEnemies.selectAll('rect.boss-hp-bg').data(bosses, d => 'bg-' + d.x + ':' + d.y);
+      bossBars.enter().append('rect')
+        .attr('class', 'boss-hp-bg')
+        .attr('height', 6)
+        .attr('rx', 3)
+        .attr('ry', 3)
+        .attr('fill', 'rgba(15,23,42,0.85)')
+        .merge(bossBars)
+        .attr('x', d => d.x - cam - 40)
+        .attr('y', d => d.y - 60)
+        .attr('width', 80);
+      bossBars.exit().remove();
+
+      const bossHp = layerEnemies.selectAll('rect.boss-hp-fill').data(bosses, d => 'hp-' + d.x + ':' + d.y);
+      bossHp.enter().append('rect')
+        .attr('class', 'boss-hp-fill')
+        .attr('height', 4)
+        .attr('rx', 2)
+        .attr('ry', 2)
+        .merge(bossHp)
+        .attr('x', d => d.x - cam - 38)
+        .attr('y', d => d.y - 59)
+        .attr('width', d => 76 * Math.max(0, d.hp) / (d.maxHp || 100))
+        .attr('fill', '#22c55e');
+      bossHp.exit().remove();
+
+      // 子弹
+      const bullets = game.entities.bullets.filter(b => b.x > cam - 40 && b.x < cam + WIDTH + 40);
+      const bulletSel = layerBullets.selectAll('text.bullet').data(bullets, d => d.x + ':' + d.y + ':' + d.life);
+      bulletSel.enter().append('text')
+        .attr('class', 'bullet')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 22)
+        .text(d => d.kind === 'hunter' ? EMOJI_BULLET_HUNTER : (d.kind === 'dog' ? EMOJI_BULLET_DOG : EMOJI_BULLET))
+        .merge(bulletSel)
+        .attr('x', d => d.x - cam)
+        .attr('y', d => d.y);
+      bulletSel.exit().remove();
+
+      // 敌方弹幕
+      const enemyBullets = game.entities.enemyBullets.filter(b => b.x > cam - 40 && b.x < cam + WIDTH + 40);
+      const enemyBulletSel = layerEnemyBullets.selectAll('text.enemy-bullet').data(enemyBullets, d => d.x + ':' + d.y + ':' + d.life);
+      enemyBulletSel.enter().append('text')
+        .attr('class', 'enemy-bullet')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 20)
+        .text(d => d.kind === 'sniper' ? EMOJI_ENEMY_SNIPER_BULLET : EMOJI_ENEMY_BULLET)
+        .merge(enemyBulletSel)
+        .attr('x', d => d.x - cam)
+        .attr('y', d => d.y);
+      enemyBulletSel.exit().remove();
+
+      // 玩家
+      const playerSel = layerPlayer.selectAll('text.player').data([p]);
+      const now = performance.now();
+      const isBig = game.stats.bigModeUntil && now < game.stats.bigModeUntil;
+      const flashingBuff = p.flashUntil && now < p.flashUntil && (Math.floor(now / 120) % 2 === 0);
+      const flashingHit = p.invUntil && now < p.invUntil && (Math.floor(now / 120) % 2 === 0);
+      const flashing = flashingBuff || flashingHit;
+      playerSel.enter().append('text')
+        .attr('class', 'player')
+        .attr('text-anchor', 'middle')
+        .merge(playerSel)
+        .text(isBig ? EMOJI_PLAYER_BIG : EMOJI_PLAYER)
+        .attr('font-size', isBig ? 40 : 32)
+        .attr('x', p.x - cam)
+        .attr('y', p.y)
+        .attr('opacity', flashing ? 0.25 : 1);
+      playerSel.exit().remove();
+
+      // 小狗（雇佣兵）
+      if (game.allyDog) {
+        const d = game.allyDog;
+        const dogSel = layerPlayer.selectAll('text.dog').data([d]);
+        dogSel.enter().append('text')
+          .attr('class', 'dog')
+          .attr('text-anchor', 'middle')
+          .merge(dogSel)
+          .text(EMOJI_DOG)
+          .attr('font-size', 28)
+          .attr('x', d.x - cam)
+          .attr('y', d.y);
+        dogSel.exit().remove();
+
+        const dogHpSel = layerPlayer.selectAll('text.dog-hearts').data([d]);
+        dogHpSel.enter().append('text')
+          .attr('class', 'dog-hearts')
+          .attr('text-anchor', 'middle')
+          .attr('font-size', 12)
+          .merge(dogHpSel)
+          .text('❤'.repeat(Math.max(0, d.hearts)))
+          .attr('x', d.x - cam)
+          .attr('y', d.y - 22);
+        dogHpSel.exit().remove();
+      } else {
+        layerPlayer.selectAll('text.dog').remove();
+        layerPlayer.selectAll('text.dog-hearts').remove();
+      }
+
+      // HUD
+      if (s) {
+        const full = '❤'.repeat(Math.max(0, s.hearts));
+        const empty = '♡'.repeat(Math.max(0, s.maxHearts - s.hearts));
+        hudLives.textContent = (full + empty) || '☠';
+        hudShield.textContent = `🛡 x${s.shield}`;
+        const t = game.runTime.toFixed(1);
+        hudTime.textContent = `⏱ ${t} s`;
+        hudSpeed.textContent = `🏃 移速 x${(s.moveSpeed / 260).toFixed(2)}`;
+        hudAtk.textContent = `⚔ 攻速 x${(0.55 / s.attackCooldown).toFixed(2)}`;
+        hudDodge.textContent = `💫 闪避 ${(s.dodge * 100).toFixed(0)}%`;
+      }
+    }
+
+    function showGameOver() {
+      overlayGameover.classList.remove('hidden');
+      const t = game.runTime.toFixed(1);
+      gameoverTimeEl.textContent = `本次生存时间：${t} 秒`;
+    }
+
+    // =====================
+    // 主循环
+    // =====================
+    function loop(timestamp) {
+      if (game.state === 'menu') return;
+      if (game.lastTime == null) game.lastTime = timestamp;
+      const dt = Math.min(0.033, (timestamp - game.lastTime) / 1000);
+      game.lastTime = timestamp;
+
+      if (game.state === 'playing') {
+        game.runTime = (timestamp - game.startTime) / 1000;
+        extendTerrainIfNeeded();
+        updatePlayer(dt);
+        updateBullets(dt);
+        updateEnemies(dt);
+        updateEnemyBullets(dt);
+        updateMushrooms(dt);
+        updateBoxes(dt);
+        updateDog(dt);
+        updateHunter(dt);
+        if (typeof updateClouds === 'function') {
+          updateClouds(dt);
+        }
+      }
+
+      render(dt);
+
+      if (game.state !== 'gameover') {
+        requestAnimationFrame(loop);
+      }
+    }
+  </script>
+</body>
+</html>
