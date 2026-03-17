@@ -52,8 +52,8 @@
 
   <meta itemprop="name" content="Lithos&#39; Blog">
   <meta itemprop="description" content="a CUHKSZ survival documentation">
-  <meta itemprop="datePublished" content="2026-03-16T14:57:34+08:00">
-  <meta itemprop="dateModified" content="2026-03-16T14:57:34+08:00">
+  <meta itemprop="datePublished" content="2026-03-17T10:37:34+08:00">
+  <meta itemprop="dateModified" content="2026-03-17T10:37:34+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Lithos&#39; Blog">
   <meta name="twitter:description" content="a CUHKSZ survival documentation">
@@ -288,7 +288,7 @@
       </h2>
       <p class="gray f6 mb2">
         
-          2026-03-16 · 1 分钟阅读
+          2026-03-17 · 1 分钟阅读
         
       </p>
       <div class="lh-copy mid-gray home-post-preview">
@@ -299,7 +299,7 @@
           
           
             
-            <p>历史上的今天 (03-16) <strong>2025</strong> — A fire breaks out in a nightclub in Kočani, North Macedonia, killing at least 59 people and injuring 155 others. ……</p>
+            <p>历史上的今天 (03-17) <strong>2016</strong> — Rojava conflict: At a conference in Rmelan, the Movement for a Democratic Society declares the establishment of the Democratic Federation of Northern Syria. ……</p>
           
         
       </div>
@@ -322,6 +322,54 @@
   
 
   
+  
+  
+  
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="http://localhost:1313/posts/3060.5/">
+    
+    <div class="w-100 w-two-thirds-l pr3">
+      <h2 class="f3 fw6 mt0 mb2">
+        <a class="link dark-gray dim" href="http://localhost:1313/posts/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+      </h2>
+      <p class="gray f6 mb2">
+        
+          2026-03-17 · 5 分钟阅读
+        
+      </p>
+      <div class="lh-copy mid-gray home-post-preview">
+        
+          CUHKSZ 大二课程 CSC3060 的 Week 8-9 PMA Pipeline 的实现和潜在问题
+        
+      </div>
+      
+      <div class="mt3">
+        <a class="home-post-download-btn" href="https://raw.githubusercontent.com/Nerolithos/weblog/main/content/posts/3060.5.md" data-md-b64="LS0tCnRpdGxlOiAi8J&#43;SuyBDU0MzMDYwIFdlZWsgOC05IFBpcGVsaW5lIGFuZCBQaXBlbGluZSBIYXphcmRzIgpkYXRlOiAyMDI2LTAzLTE3VDEwOjM3OjM0KzA4OjAwCmRyYWZ0OiBmYWxzZQpzdW1tYXJ5OiAiQ1VIS1NaIOWkp&#43;S6jOivvueoiyBDU0MzMDYwIOeahCBXZWVrIDgtOSBQTUEgUGlwZWxpbmUg55qE5a6e546w5ZKM5r2c5Zyo6Zeu6aKYIgpjYXRlZ29yaWVzOiAKLSBTRFMKdGFnczogCi0gQ1NDMzA2MApmZWF0dXJlZF9pbWFnZTogIi9pbWFnZXMvMzA2MDUuanBnIgotLS0KCgoKPC9icj4KCiMgV2VlayA4ICBQaXBlbGluZWQgSW1wbGVtZW50YXRpb24KCgoKPiDmtYHmsLTnur8gKHBpcGVsaW5pbmcpIOeahOaguOW/g&#43;aAneaDs&#43;WNsyoq6K6p5aSa5p2h5oyH5Luk55qE5LiN5ZCM6Zi25q614oCc6YeN5Y&#43;g5omn6KGM4oCdKirjgILnkIbmg7PmtYHmsLTnur/mmK8g4oCc5Y2V5Y&#43;R5bCE4oCdIOeahOKAlOKAlOWNsyoq5q&#43;P5LiqIHNob3J0IGN5Y2xlIOW8gOWniyAxIOadoeaMh&#43;S7pCoq44CCCgrln7rnoYDmpoLlv7XvvJoKCi0g5ZCe5ZCQ6YePIChUaHJvdWdocHV0Ke&#43;8muW5s&#43;Wdh&#43;WkmuWwkeWRqOacn&#43;WujOaIkOS4gOS4quaMh&#43;S7pO&#43;8nwotIOaMh&#43;S7pOW7tui/nyAoTGF0ZW5jeSnvvJrljZXmnaHmjIfku6Tku47lj5HlsITlvIDlp4vpnIDopoHlpJrlsJHml7bpl7TlrozmiJDvvJ8KLSDpmLbmrrUgKFN0YWdlKe&#43;8muaJgOacieaMh&#43;S7pOWPr&#43;S7peiiq&#43;WIhuS4uuWkmuS4quS6kuebuOehrOS7tueLrOeri&#43;eahOmYtuauteOAggoKCgrimqDvuI8gKipSSVNDLVYgSVNBIOWkqeeEtumAguWQiOa1geawtOe6vyoq77yaCgotICoq5oyH5Luk6ZW/5bqm5Zu65a6aIDMyLWJpdCoqICjpmaTkuoYgIkMtRXh0ZW50aW9uIinvvIzmm7TmmJPlsIbmjIfku6TliJLliIbmiJDop4TlvovnmoTpmLbmrrUgKOiAjCB4ODYg5Y&#43;v5Y&#43;Y6ZW/IDHigJMxN0Ip44CCCi0gKirmjIfku6TmoLzlvI/lsJHkuJTop4TliJkqKu&#43;8muivkeeggSArIOivu&#43;WvhOWtmOWZqOiDveWcqOWQjOS4gOatpeWujOaIkOOAggotICoqTC9TIOaetuaehCoq77ya5Y&#43;q5pyJIGxvYWQvc3RvcmUg6K6/5a2Y77yb5Zyw5Z2A6K6h566X5ZyoIEVY77yM6K6/5a2Y5ZyoIE1FTe&#43;8jOWIhuW3pea4heaZsOOAggoKPC9icj4KCiMjIOS6lOe6p&#43;a1geawtOOAgeWQnuWQkOS4juiAl&#43;aXtuiuoeeulwoK57uP5YW4IDUg57qn5rWB5rC077ya5bCG5oyH5Luk5YiS5Li65LqU5Liq6Zi25q6177yM5YiG5Yir5Y2g55So5aSE55CG5Zmo5LiN5ZCM55qE5Yy65Z2XCgoxLiAqKklGKirvvJrlj5bmjIfvvIhJbnN0cnVjdGlvbiBGZXRjaO&#43;8ie&#43;8jOWMheaLrCBQQyjlhoXlkKsgQ2xrKeOAgUFERDTjgIFJTUVN77ybCjIuICoqSUQqKu&#43;8muivkeeggSArIOivu&#43;WvhOWtmOWZqO&#43;8iEluc3RydWN0aW9uIERlY29kZSAmIFJlZ2lzdGVyIFJlYWTvvInvvIzljIXmi6wgUmVnc&#43;OAgUltbUdlbihTaWduLUV4dGVuZCnvvJsKMy4gKipFWCoq77ya5omn6KGML&#43;eul&#43;WcsOWdgO&#43;8iEV4ZWN1dGUgLyBBZGRyZXNzIENhbGN1bGF0Ze&#43;8ie&#43;8jOWMheaLrCBBTFXvvIzlj4rlhbYgQXNlbOOAgUJzZWzvvJsKNC4gKipNRU0qKu&#43;8muiuv&#43;mXruaVsOaNruWtmOWCqOWZqO&#43;8iE1lbW9yeSBBY2Nlc3PvvInvvIzljIXmi6wgRE1FTe&#43;8mwo1LiAqKldCKirvvJrlhpnlm57lr4TlrZjlmajvvIhXcml0ZSBCYWNr77yJ77yM5YyF5ous5Zub5YWD6K6h566X5ZmoIFdCc2Vs44CCCgrljZXlkajmnJ/mnLrmnIDlsI/lkajmnJ/kuLo8dT7mnIDmhaLmjIfku6QgbHcg55qE5oC75pe26ZW/PC91PiAoImxvbmcgY3ljbGUiKe&#43;8m&#43;WkmuWRqOacn&#43;acuuWSjOa1geawtOe6v&#43;acuuacgOWwj&#43;WRqOacn&#43;S4ujx1PuacgOaFoumYtuauteaXtumVvzwvdT4gKCJzaG9ydCBjeWNsZSIp77yM5q&#43;U5aaCIE1FTS9FWOOAguWRqOacnyAocHMpIOeahOWAkuaVsOS4uumikeeOhyAoR0h6KeOAggoKIVtdKGh0dHBzOi8vaS5wb3N0aW1nLmNjLzdMOVQxN1IxL2ppZS1waW5nMjAyNi0wMy0xNy0xMS0yMy0zNS5wbmcpCgotIOWmguaenCBgMSBsb25nIGN5Y2xlID0gNSBzaG9ydCBjeWNsZXNg77yMTFcg6KaBIDVzYyAo5omA5pyJ6Zi25q616YO96KaBKeOAgVNXL0FERC9TVUIvSkFMIOimgSA0c2MgKOWQjuS4ieiAheayoeaciSBNRU3vvIxTVyDmsqHmnIkgV0Ip44CBQkVRIOimgSAzc2MgKOayoeaciSBNRU0g5ZKMIFdCKeOAgumCo&#43;S5iOaJp&#43;ihjCBgTFcsIExXLCBBREQsIFNVQiwgQkVRLCBTVywgU1dgIOmcgOimge&#43;8mgoKICAtIOWNleWRqOacn&#43;&#43;8muKAnOW7tui/n&#43;WQkeS4iuWvuem9kOKAneKAlOKAlGA3bGMgPSAzNXNjYO&#43;8jOeQhuaDs&#43;WQnuWQkOmHjyAoKipUaHJvdWdocHV0KiopIOS4uiA8dT4x5p2h5oyH5LukIC8gNXNjPC91Pu&#43;8mwoKICAtIOWkmuWRqOacn&#43;&#43;8muKAnOWunumZhemcgOaxguKAneKAlOKAlGA1c2MgeCAyICsgNHNjIHggNCArIDNzYyB4IDEgPSAyOXNjYO&#43;8jOeQhuaDs&#43;WQnuWQkOmHj&#43;S4uiA8dT4xIOadoeaMh&#43;S7pCAvIOW5s&#43;WdhyBDUEkgKHNjKTwvdT7vvJsKCiAgLSDmtYHmsLTnur/vvJrigJzpmLbmrrXlkJHkuIrlr7npvZDigJ0gNyDmrKHlj5HlsIQgKyAqKmRyYWluKiogKOetieacgOWQjuS4gOadoeaMh&#43;S7pOi1sOWujOWJqeS4izTkuKrpmLbmrrUp4oCU4oCUYDdzYyArIDRzYyA9IDExc2Ng77yM55CG5oOz5ZCe5ZCQ6YePICjimqDvuI8g5LiN566XIGRyYWluKSDkuLogPHU&#43;MSDmnaHmjIfku6QgLyBzYyAoQ1BJ4omIMSk8L3U&#43;44CCCgotIOaVheiAjO&#43;8jOS4ieiAheWcqOS6lOe6p&#43;a1geawtOS4i&#43;eQhuaDs&#43;WQnuWQkOmHj&#43;S4uu&#43;8mioqMS8144CBMS8zfjEvNeOAgTEqKuOAggoKPiDimqDvuI8g5Y2V5ZGo5pyf5Y&#43;X5Yiw5pyA5oWi5oyH5Luk5bu26L&#43;f6ZmQ5Yi244CB5aSa5ZGo5pyf5Y&#43;X5YiwIENQSSDpmZDliLbjgIHmtYHmsLTnur/lj5fliLDmnIDmhaLpmLbmrrXpmZDliLbjgIIKCjwvYnI&#43;CgojIyMg6YCa55So5YWs5byPCgooc2hvcnQgY3ljbGUgPSBu77yb5rWB5rC057q/6Zi25q615pWwID0gTikKCi0gKirljZXlkajmnJ8qKiAo55So5pyA5oWi5oyH5Luk5a6a5ZGo5pyfKe&#43;8miRUID0gbiBcdGltZXMgVF97bG9uZ30k44CCCi0gKirlpJrlkajmnJ8qKiAo5oyH5Luk5pWw5Li6IGkp77yaJFQgPSBcc3VtX2kgQ1BJKGkpJOOAggotICoq55CG5oOzIE4g57qn5rWB5rC0KirvvJokVCA9IG4gKyAoTi0xKSTvvIzljbMgKipkcmFpbiA9IGxhdGVuY3kgLSAxKirjgIIKCi0gKirmtYHmsLTnmoTmj5DpgJ8gKHNwZWVkdXApIOWFrOW8jyoq77yaJFRfe3BpcGV9ID0gXGZyYWN7VF97U2luZ2xlQ3ljbGV9fXtOfSTvvIzljbPmj5DpgJ8gTiDlgI3jgIIo5YmN5o&#43;Q5piv5ZCE6Zi25q615bmz6KGh77yM5aaC5p6c5ZCE6Zi25q616ICX5pe25beu5byC5aSn77yM5Lya5a&#43;86Ie05o&#43;Q6YCf5LiL6ZmNKQotIOKaoO&#43;4jyDmtYHmsLTnm7jlr7nkuo7lpJrlkajmnJ/pnZ7mtYHmsLTnmoTmj5DpgJ/vvJokVF97cGlwZX0gPSBcZnJhY3tcc3VtX2kgQ1BJKGkpfXtpfSTvvIzljbPmj5DpgJ8g4oCc5bmz5Z2HIENQSeKAnSDlgI3jgIIKCj4g4pqg77iPIOa1geawtOe6v&#43;WKoOmAn&#43;adpeiHqiB0aHJvdWdocHV0IOWinuWKoO&#43;8jOiAjOS4jeaYryBsYXRlbmN5IOWHj&#43;Wwke&#43;8jOS6i&#43;WunuS4iuWNleadoeaMh&#43;S7pOeahCBsYXRlbmN5IOWPjeiAjOWPr&#43;iDveabtOWkpyAo6Iul5LiN5bmz6KGhKeOAggoKPC9icj4KCjwvYnI&#43;CgojIyDmtYHmsLTnur/nmoTku6Pku7cKCgoK5rWB5rC057q/6KaB5oOz4oCc5q&#43;P5Liq55&#43;t5ZGo5pyf6YO95o6o6L&#43;b5LiA5p2h5oyH5Luk4oCd77yM5YmN5o&#43;Q5piv4oCU4oCUCgotIOavj&#43;S4qumYtuautemcgOimgeeahOehrOS7tui1hOa6kOiDveWQjOaXtuacjeWKoeS4jeWQjOaMh&#43;S7pO&#43;8mwotIOWQpuWImeWwseS8muWHuueOsCoq57uT5p6E5YaS6ZmpIChzdHJ1Y3R1cmFsIGhhemFyZCkqKu&#43;8mui1hOa6kOWGsueqgeWvvOiHtOW/hemhu&#43;WBnOmhv&#43;&#43;8iHN0YWxs77yJ77yM5rWB5rC057q/4oCc5pat5rWB4oCd44CCCgpFLmcu77ya5aaC5p6cIElGIOWSjCBNRU0g5YWx55So5ZCM5LiA5Liq5Y2V56uv5Y&#43;j5YaF5a2Y77yM6YKj5LmI5b2T5p&#43;Q5p2hIExXL1NXIOWcqCBNRU0g6Zi25q616K6/6Zeu5YaF5a2Y5pe277yM5LiL5LiA5p2h5oyH5Luk5ZyoIElGIOmYtuauteWwseW/hemhu&#43;etiSAo5o&#43;S5YWlIGJ1YmJsZS9zdGFsbCnjgILop6PlhrPpnIDopoEqKuaKiuWGheWtmOi1hOa6kOe/u&#43;WAjSoqIChJLWNhY2hlICsgRC1jYWNoZSDliIbnprvvvIzmiJblpJrnq6/lj6PlrZjlgqjlmagp77yM5aKe5aSn56Gs5Lu25byA6ZSA44CCCgo&#43;IOa1geawtOe6v&#43;eahOS7o&#43;S7t&#43;aYr&#43;ehrOS7tuWGl&#43;S9meaIluabtOWkjeadgueahOaOp&#43;WItu&#43;8jOeQhuaDs&#43;eahCDigJxDUEk9MeKAnSDlj6rlnKgg4oCc6LWE5rqQ6Laz5aSf5LiU57uT5p6E5YaS6Zmp6YO96KKr6Kej5Yaz4oCdIOaXtuaIkOeri&#43;OAggoKPC9icj4KCjwvYnI&#43;CgojIyDkvovpopgKCiFbXShodHRwczovL2kucG9zdGltZy5jYy9YdlpZcXo1eC9qaWUtcGluZzIwMjYtMDMtMTctMTItMDktMzkucG5nKQoKLSDml7bpkp/lkajmnJ/kuLrvvJ/igJTigJQxMjUwcHMgKOWNleWRqOacn&#43;mdnua1geawtCnvvIwzNTBwcyAo5aSa5ZGo5pyf6Z2e5rWB5rC0Ke&#43;8jDM1MHBzICjmtYHmsLQp44CCCi0gYGx3YCDlkb3ku6TnmoTlu7bov5/kuLrvvJrvvJ/igJTigJQxMjUwcHMgKOmdnua1geawtCnvvIwqKjM1MHBzIHggNSA9IDE3NTBwcyoqICjmtYHmsLQp44CCCgotIOWmguaenOaUueaIkOWFree6p&#43;a1geawtO&#43;8jOW6lOivpeaKiuWTquS4qumYtuauteaLhuW8gO&#43;8jOaLhuW8gOWQjuWRqOacn&#43;S4uu&#43;8n&#43;KAlOKAlOaLhiBJRO&#43;8jOWRqOacn&#43;S4uiAzMDBwc&#43;OAggotIOaPkOmAn&#43;&#43;8n&#43;KAlOKAlDEyNTAvMzUwICjnm7jlr7nkuo7ljZXlkajmnJ8p77yMNjAlIHggNCArIDIwJSB4IDUgKyAyMCUgeCAzID0gNCAo55u45a&#43;55LqO5aSa5ZGo5pyfKeOAggoKPC9icj4KCjwvYnI&#43;CgojIyDmtYHmsLTnur/nmoTlrp7pmYXlrp7njrAKCua1geawtOe6v&#43;eahCDigJzoioLmi43igJ0g55Sx5pyA5oWi6Zi25q615Yaz5a6a77yM5LiN5ZCM5LqO5aSa5ZGo5pyf6Z2e5rWB5rC077yM5rWB5rC057q/5Lit5omA5pyJ5oyH5Luk5LiN6IO96Lez6L&#43;H6Zi25q6177yM5ZCm5YiZ5Lya5omT5Lmx6IqC5ouN44CCCgohW10oaHR0cHM6Ly9pLnBvc3RpbWcuY2Mvd01xczNkZDIvamllLXBpbmcyMDI2LTAzLTE3LTE0LTA0LTMyLnBuZykKCi0gU2VxdWVudGlhbGx5IOS4suihjO&#43;8muWQjOS4quaMh&#43;S7pOeahOS4jeWQjOmYtuaute&#43;8jOS4jeiDveS5seW6j&#43;&#43;8mwoKLSBTaW11bHRhbmVvdXNseSDlubbooYzvvJrkuI3lkIzmjIfku6TnmoTkuI3lkIzpmLbmrrXlj6/ku6XlkIzml7bov5vooYzjgIIKCgoK54m55q6K55qE77yM5LiN5piv5omA5pyJ5oyH5Luk55qEIEVYIOmDveWPr&#43;S7peWcqOWNleS4quefreWRqOacn&#43;WGheeul&#43;WujO&#43;8jOavlOWmgiBgZGl2YO&#43;8jOWvueS6jui/meenjemrmOW7tui/n&#43;aTjeS9nO&#43;8mgoKMeOAgSoqU3RhbGwgKOWBnOS9j&#43;a1geawtOe6vykqKu&#43;8muS4i&#43;S4gOS4quaMh&#43;S7pOWBnOWcqCBFWCDliY3pnaLkuIDkuKrpmLbmrrXvvIzlvaLmiJDmsJTms6EgYnViYmxl44CC5pON5L2c566A5Y2V77yM5L2G5Lya5a&#43;86Ie05ZCe5ZCQ5ZKM5o&#43;Q6YCf5bSp5rqD44CCCgoy44CBKipTZXBhcmF0ZSBsb25nLWxhdGVuY3kgcGlwZWxpbmUgKOWPpuW8gOmVv&#43;W7tui/n&#43;WKn&#43;iDveWNleWFgykqKu&#43;8muaKiiBESVYgLyBGUCDov5nnp43mk43kvZzkuqTnu5nkuJPnlKjljZXlhYMgTS1FeHRlbnRpb25zIOWSjCBGL0QtRXh0ZW50aW9uc&#43;&#43;8jOiuqeS4u&#43;a1geawtOe6v&#43;iDvee7p&#43;e7reaOqOi/m&#43;WFtuWug&#43;eLrOeri&#43;aMh&#43;S7pO&#43;8jOi/meWwseaYryBbUklTQy1WIOWIhuemu&#43;aooeWdl10oaHR0cHM6Ly9ibG9nLm5lcm8tbGl0aG9zLmNvbS9wb3N0cy8zMDYwLjIvKeeahOe8mOeUseOAgumAmuW4uO&#43;8jOaMh&#43;S7pOWcqCBXQiDpmLbmrrUqKuaMieeoi&#43;W6j&#43;mhuuW6jyoq6YCA5LyR77yM5Y6f5Zug5pivIOKAnOW8guW4uC/pmbfpmLEgKHRyYXBzKeKAnSDor63kuYnvvJrlpoLmnpzlkI7pnaLnmoTmjIfku6TlhYjpgIDkvJHkuobvvIzogIzliY3pnaLnmoTmjIfku6TlkI7mnaXop6blj5HlvILluLjvvIzkvJrlr7zoh7TnqIvluo/nirbmgIHkuI3kuIDoh7TjgILnhLbogIwgUklTQy1WICoq6YG/5YWN5LqG5b6I5aSa566X5pyv5byC5bi4KirvvIzmiYDku6XkubHluo/pgIDkvJHkuZ/mmK/lj6/ooYznmoTjgIIKCjwvYnI&#43;CgojIyMg55yf5q2j5a6e546w5rWB5rC057q/55qE5YWz6ZSu77ya5o&#43;S5YWl5rWB5rC05a&#43;E5a2Y5ZmoCgrlnKjljZXlkajmnJ/ph4zvvIzkuIDmnaHmjIfku6TnmoTmjqfliLbkv6Hlj7figJzlj6rmnI3liqHov5nkuIDmnaHigJ3vvIzmsqHmrafkuYnvvJvkvYblnKjmtYHmsLTnur/ph4zvvIzlkIzkuIDml7bliLvmnInlpJrmnaHmjIfku6TliIbliKvlpITkuo7kuI3lkIzpmLbmrrXvvIzkvaDlsLHkvJrpgYfliLDkuIDkupvlhbjlnovnmoTmt7fkubHvvJoKCi0g4oCc546w5Zyo6K&#43;l55So5ZOq5p2h5oyH5Luk55qEIHJzMS9yczIvaW1t77yf4oCdCi0g4oCc546w5ZyoIFdCIOW6lOivpeWGmeWTquadoeaMh&#43;S7pOeahCByZO&#43;8n&#43;KAnQoK6Kej5Yaz5pa55rOV5bCx5piv77yaKirlnKjpmLbmrrXkuYvpl7Tmj5LlhaUgcGlwZWxpbmUgcmVnaXN0ZXJzIChJRi9JROOAgUlEL0VY44CBRVgvTUVN44CBTUVNL1dCKSoq77yM5oqK4oCc5pWw5o2uICsg5o6n5Yi25L&#43;h5Y&#43;34oCd5LiA6LW35b6A5ZCO5bim77yM5L&#43;d6K&#43;B5q&#43;P5Liq6Zi25q6155So5Yiw55qE6YO95piv4oCc5bGe5LqO5ZCM5LiA5p2h5oyH5Luk4oCd55qE6YKj5Lu95L&#43;h5oGv44CCCgohW10oaHR0cHM6Ly9pLnBvc3RpbWcuY2MvUWRncFNTZHIvamllLXBpbmcyMDI2LTAzLTE3LTE0LTQ3LTUzLnBuZykKCj4gUGlwZWxpbmUgcmVnaXN0ZXJzICoq5LiN5pivIGFyY2hpdGVjdHVyYWwgc3RhdGUqKuOAguS4iuS4i&#43;aWh&#43;WIh&#43;aNoumcgOimgeS/neWtmOeahOaYr&#43;aetuaehOaAge&#43;8iOWvhOWtmOWZqOOAgVBD44CB5YaF5a2Y562J77yJ77yM6ICM5rWB5rC05a&#43;E5a2Y5Zmo44CB5YiG5pSv6aKE5rWL5Zmo44CBY2FjaGUg562J5bGe5LqO5b6u5p625p6E5oCB44CCCgo8L2JyPgoKPC9icj4KCjwvYnI&#43;CgojIFdlZWsgOSAgUGlwZWxpbmUgSGF6YXJkcwoKSW4gUHJvZ3Jlc3MuLi4KCgoKCgoKCg==">
+          <span class="home-post-download-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 2v7.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M4.5 7.8 8 11.5l3.5-3.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 12.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="home-post-download-text">下载 md</span>
+        </a>
+      </div>
+      
+      
+    </div>
+
+    
+    
+      
+      
+      
+        <a class="dn db-l w-third-l pl3" href="http://localhost:1313/">
+          <img src="http://localhost:1313/images/30605.jpg" alt="Lithos&#39; Blog"
+               style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+        </a>
+      
+    
+  </article>
   
   
   

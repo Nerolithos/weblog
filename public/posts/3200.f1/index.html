@@ -826,7 +826,7 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
 </span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>unordered_map<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> m;  <span style="color:#75715e">// 实例化“字符串→整数”哈希表
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m.reserve(<span style="color:#ae81ff">1024</span>);              <span style="color:#75715e">// 预留 1024 个键值对，减少 rehash 频率
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m.reserve<span style="color:#960050;background-color:#1e0010">(</span><span style="color:#ae81ff">1024</span>);              <span style="color:#75715e">// 预留 1024 个键值对，减少 rehash 频率
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m.max_load_factor(<span style="color:#ae81ff">0.7f</span>);      <span style="color:#75715e">// 限制装载因子，限制桶内链表长度
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span>    m.emplace(<span style="color:#e6db74">&#34;alice&#34;</span>, <span style="color:#ae81ff">1</span>);   <span style="color:#75715e">// 等价于 insert({k, v})，不会覆盖存在的键值对
