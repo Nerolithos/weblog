@@ -2124,12 +2124,12 @@
               currentMenuPet.fadeStartTime = performance.now();
               currentMenuPet.currentAlpha = 1;
             }
-          } else if (action === "jeb_") {
+          } else if (action === "jeb") {
             if (currentMenuPet) {
               currentMenuPet.jebEnabled = true;
               currentMenuPet.jebStartTime = performance.now();
             }
-          } else if (action === "unjeb_") {
+          } else if (action === "unjeb") {
             if (currentMenuPet) {
               currentMenuPet.jebEnabled = false;
             }
