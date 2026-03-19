@@ -22,6 +22,23 @@
     var cameraVideoEl = document.getElementById("camera-stream");
     var cameraErrorEl = document.getElementById("camera-error-overlay");
     var notesWindowEl = document.getElementById("notes-window");
+    var ringOverlayEl = document.getElementById("ring-puzzle-overlay");
+    var ringTitleEl = document.getElementById("ring-puzzle-title");
+    var ringSvgContainerEl = document.getElementById("ring-puzzle-svg-container");
+    var ringInstructionEl = document.getElementById("ring-puzzle-instruction");
+    var ringInputRowEl = document.getElementById("ring-puzzle-input-row");
+    var ringInputEl = document.getElementById("ring-puzzle-input");
+    var ringSubmitEl = document.getElementById("ring-puzzle-submit");
+    var ringStatusEl = document.getElementById("ring-puzzle-status");
+    // 第二阶段：热力图 / 像素矩阵控件
+    var containPuzzleContainerEl = document.getElementById("contain-puzzle-container");
+    var containCanvasEl = document.getElementById("contain-puzzle-canvas");
+    var containColorRangeEl = document.getElementById("contain-color-range");
+    var containClarityRangeEl = document.getElementById("contain-clarity-range");
+    // 最终黑屏结局 DOM
+    var tuningOverlayEl = document.getElementById("tuning-ending-overlay");
+    var tuningCodeEl = document.getElementById("tuning-code");
+    var tuningCenterEl = document.getElementById("tuning-ending-center");
 
     // 记录三个窗口的默认 transform，用于重新打开时回到初始位置
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
@@ -78,6 +95,452 @@
     var cameraStreamObj = null;
     var loveDialogShown = false;
 
+    // 同心圆环解密（Resources/start SoulContainer.exe）
+    var ringPuzzleInitialized = false;
+    var ringPuzzleSolved = false;
+    var ringPuzzleAnswer = "";
+    var ringPuzzleRings = [];
+    // 第二阶段像素矩阵状态
+    var containPuzzleInitialized = false;
+    var containPuzzleSolved = false;
+    // 最终结局只触发一次
+    var tuningEndingStarted = false;
+
+    function showRingPuzzleOverlay() {
+      if (!ringOverlayEl) return;
+      ringOverlayEl.style.display = "flex";
+      if (!ringPuzzleInitialized) {
+        initRingPuzzle();
+      }
+    }
+
+    function initRingPuzzle() {
+      if (ringPuzzleInitialized) return;
+      if (!ringOverlayEl || !ringSvgContainerEl) return;
+      if (!global.d3) return;
+
+      ringPuzzleInitialized = true;
+      ringPuzzleSolved = false;
+      ringPuzzleAnswer = "";
+      ringPuzzleRings = [];
+
+      var d3ref = global.d3;
+      var width = 440;
+      var height = 440;
+      var cx = width / 2;
+      var cy = height / 2;
+
+      var svg = d3ref.select(ringSvgContainerEl)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      var root = svg.append("g")
+        .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      var letters = ["S", "O", "U", "L", "S"]; // 5 个环，对齐后得到的密钥
+      var ringCount = letters.length;
+      var baseRadius = 170;
+      var radiusStep = 26;
+
+      for (var i = 0; i < ringCount; i++) {
+        var r = baseRadius - i * radiusStep;
+        var angle = Math.random() * 360;
+        var ring = {
+          index: i,
+          radius: r,
+          angle: angle,
+          keyLetter: letters[i]
+        };
+        ringPuzzleRings.push(ring);
+      }
+
+      ringPuzzleAnswer = letters.join("");
+
+      var ringGroups = root.selectAll(".ring-puzzle-ring")
+        .data(ringPuzzleRings)
+        .enter()
+        .append("g")
+        .attr("class", "ring-puzzle-ring");
+
+      // 每个环：实心“甜甜圈”式环（粗描边），整个环可拖动
+      ringGroups.append("circle")
+        .attr("r", function (d) { return d.radius; })
+        .attr("fill", "none")
+        .attr("stroke", "#dddddd")
+        .attr("stroke-width", 10.0);
+
+      // 关键点（径向对齐参考）：初始都指向 0°，通过旋转整个 ringGroup 来调整
+      ringGroups.append("circle")
+        .attr("class", "ring-puzzle-key-dot")
+        .attr("cx", function (d) { return d.radius; })
+        .attr("cy", 0)
+        .attr("r", 3.0)
+        .attr("fill", "#000000");
+
+      // 在每个实心环上散布若干干扰字符；真正的 SOULS 字母隐藏在黑点处，只在对齐后显现
+      var fillerChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      ringGroups.each(function (d) {
+        var g = d3ref.select(this);
+
+        // 1）先画一圈干扰字母，始终可见
+        var texts = [];
+        var fillerCount = 8;
+        for (var j = 0; j < fillerCount; j++) {
+          var ch = fillerChars[Math.floor(Math.random() * fillerChars.length)];
+          var baseAngle = (360 / fillerCount) * j + d.index * 13;
+          texts.push({ ch: ch, angleDeg: baseAngle });
+        }
+
+        g.selectAll(".ring-puzzle-letter")
+          .data(texts)
+          .enter()
+          .append("text")
+          .attr("class", "ring-puzzle-letter")
+          .attr("x", function (t) {
+            var rad = (t.angleDeg * Math.PI / 180);
+            return Math.cos(rad) * (d.radius - 12);
+          })
+          .attr("y", function (t) {
+            var rad = (t.angleDeg * Math.PI / 180);
+            return Math.sin(rad) * (d.radius - 12) + 4;
+          })
+          .attr("font-size", 11)
+          .attr("text-anchor", "middle")
+          .attr("fill", "#999999")
+          .text(function (t) { return t.ch; });
+
+        // 2）再在黑点处附着一个“隐藏”的关键字母，初始透明，对齐后才以红字显现
+        g.append("text")
+          .attr("class", "ring-puzzle-key-letter")
+          .attr("x", d.radius + 6) // 位于黑点外侧一点点
+          .attr("y", 4)
+          .attr("font-size", 11)
+          .attr("text-anchor", "start")
+          .attr("fill", "#ff0000")
+          .attr("fill-opacity", 0)
+          .text(d.keyLetter);
+      });
+
+      function updateRingTransforms() {
+        ringGroups.attr("transform", function (d) {
+          return "rotate(" + d.angle + ")";
+        });
+      }
+
+      function normalizeDeg(a) {
+        var x = a % 360;
+        if (x < 0) x += 360;
+        return x;
+      }
+
+      function checkAlignment() {
+        var tol = 7; // 误差容忍度（度）略放宽，让手感更宽松
+        if (!ringPuzzleRings.length) return;
+        var base = normalizeDeg(ringPuzzleRings[0].angle);
+        var allAligned = true;
+        for (var i = 1; i < ringPuzzleRings.length; i++) {
+          var a = normalizeDeg(ringPuzzleRings[i].angle);
+          var diff = Math.abs(a - base);
+          if (diff > 180) diff = 360 - diff;
+          if (diff > tol) {
+            allAligned = false;
+            break;
+          }
+        }
+
+        if (allAligned && !ringPuzzleSolved) {
+          ringPuzzleSolved = true;
+          // 干扰字母整体变淡；在黑点处的隐藏关键字母显现为红色 SOULS
+          root.selectAll(".ring-puzzle-letter").attr("fill", "#bbbbbb");
+          root.selectAll(".ring-puzzle-key-letter").attr("fill-opacity", 1);
+
+          if (ringInputRowEl) ringInputRowEl.style.display = "flex";
+          if (ringStatusEl) ringStatusEl.textContent = "Key ready. Enter it below.";
+        }
+      }
+
+      var drag = d3ref.drag()
+        .on("start", function (event, d) {
+          if (ringPuzzleSolved) return; // 解锁后禁止继续旋转
+          var p = d3ref.pointer(event, root.node());
+          // 记录当前指针角度，用于后续计算“增量旋转”，保证跨越 ±180° 时不会瞬移
+          d._dragPointerAngle = Math.atan2(p[1], p[0]) * 180 / Math.PI;
+        })
+        .on("drag", function (event, d) {
+          if (ringPuzzleSolved) return; // 解锁后禁止继续旋转
+          var p = d3ref.pointer(event, root.node());
+          var pointerAngle = Math.atan2(p[1], p[0]) * 180 / Math.PI;
+          var prevPointerAngle = d._dragPointerAngle;
+          if (prevPointerAngle == null) {
+            prevPointerAngle = pointerAngle;
+          }
+
+          // 本次事件的“增量角度”（-180°~180°），避免跨越 180° 时出现 360° 级别的跳变
+          var step = pointerAngle - prevPointerAngle;
+          if (step > 180) step -= 360;
+          if (step < -180) step += 360;
+
+          d._dragPointerAngle = pointerAngle;
+
+          // 当前环累积旋转，允许无限转圈
+          d.angle += step;
+
+          var dd = step; // 传递给其他环的就是这一次的增量
+
+          // 互相影响规则：
+          // 第 5 层（最内环）影响第 1 层：30%
+          // 第 4 层影响第 5 层（20%）和第 2 层（70%）
+          // 第 3 层影响第 4 层：90%
+          // 第 1 层影响第 4 层：50%
+          // 第 2 层影响第 5 层：60%
+          if (ringPuzzleRings.length >= 5) {
+            var last = ringPuzzleRings.length - 1;
+
+            if (d.index === last) {
+              var outer = ringPuzzleRings[0];
+              outer.angle += dd * 0.3;
+            }
+
+            if (d.index === last - 1) {
+              var inner5 = ringPuzzleRings[last];
+              var ring2 = ringPuzzleRings[1];
+              inner5.angle += dd * 0.2;
+              ring2.angle += dd * 0.7;
+            }
+
+            if (d.index === last - 3) {
+              var ring4 = ringPuzzleRings[last - 1];
+              ring4.angle += dd * 0.9;
+            }
+
+            if (d.index === 0) {
+              var ring4From1 = ringPuzzleRings[3];
+              ring4From1.angle += dd * 0.5;
+            }
+
+            if (d.index === 1) {
+              var ring5From2 = ringPuzzleRings[4];
+              ring5From2.angle += dd * 0.6;
+            }
+          }
+
+          updateRingTransforms();
+          checkAlignment();
+        });
+
+      ringGroups.call(drag);
+      updateRingTransforms();
+
+      // 处理密钥输入
+      function handleSubmit() {
+        if (!ringInputEl || !ringStatusEl) return;
+        var value = (ringInputEl.value || "").trim();
+        if (!value) return;
+        if (!ringPuzzleSolved) {
+          ringStatusEl.textContent = "Rings are not aligned yet.";
+          return;
+        }
+        if (value.toUpperCase() === ringPuzzleAnswer.toUpperCase()) {
+          if (ringTitleEl) ringTitleEl.textContent = "Please unlock (2/2)";
+          // 进入第二阶段：隐藏圆环与输入框，显示像素矩阵
+          if (ringSvgContainerEl) ringSvgContainerEl.style.display = "none";
+          if (ringInputRowEl) ringInputRowEl.style.display = "none";
+          if (ringInputEl) ringInputEl.value = "";
+          if (ringStatusEl) {
+            ringStatusEl.style.color = "#333333";
+            ringStatusEl.textContent = "";
+          }
+          if (ringInstructionEl) {
+            ringInstructionEl.textContent = "Please Adjust the Signal Frequency.";
+          }
+          if (containPuzzleContainerEl) containPuzzleContainerEl.style.display = "block";
+          initContainPuzzle();
+        } else {
+          ringStatusEl.style.color = "#bb0000";
+          ringStatusEl.textContent = "Incorrect key.";
+        }
+      }
+
+      if (ringSubmitEl) {
+        ringSubmitEl.addEventListener("click", handleSubmit);
+      }
+      if (ringInputEl) {
+        ringInputEl.addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter") handleSubmit();
+        });
+      }
+    }
+
+    // 第二阶段：热力图 / 像素矩阵，还原出 "CONTAINED"
+    function initContainPuzzle() {
+      if (containPuzzleInitialized) return;
+      if (!containCanvasEl || !containColorRangeEl || !containClarityRangeEl) return;
+      containPuzzleInitialized = true;
+
+      var ctx = containCanvasEl.getContext("2d");
+      if (!ctx) return;
+
+      var width = containCanvasEl.width;
+      var height = containCanvasEl.height;
+
+      // 目标解：在某个参数范围内视为“锁定”，要求略严格
+      var targetColor = 68;
+      var targetClarity = 42;
+      var tolColor = 3;
+      var tolClarity = 3;
+
+      function drawPuzzle() {
+        if (containPuzzleSolved) return;
+        if (!ctx) return;
+        var colorVal = parseInt(containColorRangeEl.value, 10) || 0;
+        var clarityVal = parseInt(containClarityRangeEl.value, 10) || 0;
+
+        var inTarget = Math.abs(colorVal - targetColor) <= tolColor &&
+          Math.abs(clarityVal - targetClarity) <= tolClarity;
+
+        if (inTarget) {
+          containPuzzleSolved = true;
+          // 不再改写小画面的像素内容，只更新文字与结局流程
+          if (ringStatusEl) {
+            ringStatusEl.style.color = "#00aa00";
+            ringStatusEl.textContent = "TUNINGS COMPLETED!";
+          }
+          // 稍作停顿后开始黑屏结局
+          setTimeout(startTuningEnding, 1200);
+          return;
+        }
+
+        // 未到达正确配置时：根据两个参数绘制“像素化热力图”
+        ctx.clearRect(0, 0, width, height);
+        var minCell = 6;
+        var maxCell = 34;
+
+        // 清晰度：以 targetClarity 为中心，靠近该点越清晰（cellSize 越小）
+        var clarityDist = Math.abs(clarityVal - targetClarity) / 100; // 0~1
+        if (clarityDist > 1) clarityDist = 1;
+        var cellSize = minCell + (maxCell - minCell) * clarityDist;
+        var cols = Math.ceil(width / cellSize);
+        var rows = Math.ceil(height / cellSize);
+
+        // 颜色纯度：以 targetColor 为中心，靠近该点越纯
+        var colorDist = Math.abs(colorVal - targetColor) / 100; // 0~1
+        if (colorDist > 1) colorDist = 1;
+        var purity = 1 - colorDist; // 0: 最不纯，1: 最纯
+
+        for (var y = 0; y < rows; y++) {
+          for (var x = 0; x < cols; x++) {
+            var nx = x / cols;
+            var ny = y / rows;
+            var rawNoise = (Math.sin(nx * 17.23 + ny * 11.73) + 1) * 0.5; // 0~1
+            // 越接近“最纯”时，噪声振幅越小，画面越接近纯色
+            var center = 0.5;
+            var amp = 1 - 0.85 * purity; // purity=1 时振幅最小
+            var noise = center + (rawNoise - center) * amp;
+
+            var base = 40 + noise * 180;
+
+            // 颜色从冷到暖，但总体饱和度由 purity 控制
+            var sat = 0.2 + 0.7 * purity; // 0.2~0.9
+
+            var r = base * (0.4 + 0.6 * noise * sat);
+            var g = base * (0.6 + 0.3 * (1 - noise) * (1 - purity));
+            var b = base * (0.8 + 0.4 * (1 - noise));
+
+            ctx.fillStyle = "rgb(" + Math.floor(r) + "," + Math.floor(g) + "," + Math.floor(b) + ")";
+            ctx.fillRect(x * cellSize, y * cellSize, Math.ceil(cellSize) + 1, Math.ceil(cellSize) + 1);
+          }
+        }
+
+        if (ringStatusEl) {
+          ringStatusEl.style.color = "#333333";
+          // 第二阶段不再给文字提示，只保留上方说明语
+          ringStatusEl.textContent = "";
+        }
+      }
+
+      containColorRangeEl.addEventListener("input", drawPuzzle);
+      containClarityRangeEl.addEventListener("input", drawPuzzle);
+
+      drawPuzzle();
+    }
+
+    // 最终黑屏结局：技术风 CLI 输出 + 结局字幕
+    function startTuningEnding() {
+      if (!tuningOverlayEl || !tuningCodeEl || !tuningCenterEl) return;
+      if (tuningEndingStarted) return;
+      tuningEndingStarted = true;
+
+      // 显示覆盖层并启动缓慢黑屏
+      tuningOverlayEl.style.display = "block";
+      // 强制一次重排以应用初始 opacity
+      void tuningOverlayEl.offsetWidth;
+      tuningOverlayEl.style.opacity = "1";
+
+      tuningCodeEl.textContent = "";
+
+      // 一组“技术风 / 黑客风”行模板，稍后循环输出到 200+ 行
+      var patterns = [
+        "[SC-CORE] bootstrapping soul-container runtime... seq=",
+        "[SC-CORE] validating arkpet descriptors... ok :: id=ark-",
+        "[SC-I/O ] streaming soul fragment blocks... bytes=",
+        "[SC-CHECK] checksum ok :: shard=",
+        "[SC-PIPE] redirecting stdout -> /dev/void :: channel=",
+        "[SC-LOCK] mutex acquired :: cage=ARKPETS slot=",
+        "[SC-MEM ] compacting heap sectors... freed=",
+        "[SC-NET ] tunnelling heartbeat to collector.soulcontainer.net :: hop=",
+        "[SC-DUMP] writing trace frame :: frame#",
+        "[SC-VFS ] mounting /souls/arkpets readonly :: inode=",
+        "[SC-ENC ] xor-cycling payload :: phase=",
+        "[SC-WATCH] pet process still alive :: pid=",
+        "[SC-TEMP] cooling virtual cores... temp=",
+        "[SC-GC  ] sweeping orphaned memories... objects=",
+        "[SC-AUD ] audit trail append ok :: event=MERGE seq=",
+        "[SC-CHAN] opening channel PET-L / PET-R / USER :: id=",
+        "[SC-TIMER] tick=",
+        "[SC-SHARD] stitching fragments... progress=",
+        "[SC-SEAL] sealing container :: revision=",
+        "[SC-TRACE] >>> ghost echo detected in lane=",
+        "[SC-TRACE] ... echo accepted.",
+        "[SC-INFO] no operator present, switching to daemon mode.",
+        "[SC-INFO] user heartbeat absorbed :: token=ALWAYS-LOVE",
+        "[SC-ROUTE] rerouting stdin from /dev/user to /dev/soul",
+        "[SC-CRON] scheduling eternity job :: cron=*/1 * * * *",
+        "[SC-STAT] container residency :: count=",
+        "[SC-FS  ] packing archive arkpets.soul :: block=",
+        "[SC-CODE] applying patchset FOREVER_TOGETHER :: delta=",
+        "[SC-END ] (no external observer registered).",
+        "[SC-END ] writing final header...",
+        "[SC-END ] waiting for silence..."
+      ];
+
+      var totalLines = 240;
+      var i = 0;
+
+      function appendNext() {
+        if (!tuningCodeEl) return;
+        if (i >= totalLines) {
+          // 输出完成后，先让绿色代码缓慢淡出，再淡入结局文本
+          tuningCodeEl.style.opacity = "0";
+          setTimeout(function () {
+            tuningCenterEl.style.opacity = "1";
+          }, 2600);
+          return;
+        }
+        var pat = patterns[i % patterns.length];
+        var num = ("000" + i).slice(-3);
+        var line = pat + num;
+        tuningCodeEl.textContent += line + "\n";
+        tuningCodeEl.scrollTop = tuningCodeEl.scrollHeight;
+        i++;
+        var delay = 20 + Math.random() * 30; // 约 20–50ms 一行
+        setTimeout(appendNext, delay);
+      }
+
+      // 稍等一瞬再开始刷屏，配合黑屏渐显
+      setTimeout(appendNext, 800);
+    }
+
     // 通用窗口“左右摇晃一下”效果：在当前拖拽位置附近小幅度平移
     function shakeWindowElement(el) {
       if (!el) return;
@@ -108,7 +571,13 @@
     function showCameraError() {
       clearCameraPopups();
       if (cameraVideoEl) cameraVideoEl.style.display = "none";
-      if (cameraErrorEl) cameraErrorEl.style.display = "flex";
+      if (cameraErrorEl) {
+        cameraErrorEl.style.display = "flex";
+        // 先确保从 0 开始，再触发慢慢变黑的效果
+        cameraErrorEl.style.opacity = "0";
+        void cameraErrorEl.offsetWidth;
+        cameraErrorEl.style.opacity = "1";
+      }
     }
 
     function startCameraStreamOnce() {
@@ -513,6 +982,16 @@
           } else {
             html += escapeHtml("/Users/Admin/Projects/SoulContainCorp/ArkPets") + "<br>";
           }
+        } else if (trimmed === "start SoulContainer.exe") {
+          if (cwd === "Resources") {
+            html += htmlLine("Launching SoulContainer.exe ...");
+            appendHtml(html);
+            heartsStreamIfReady();
+            showRingPuzzleOverlay();
+            return;
+          } else {
+            html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
+          }
         } else if (trimmed !== "") {
           // 其他未定义命令：模仿 zsh 的 command not found 提示
           html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
@@ -862,7 +1341,7 @@
         'pwd : show path to current location.\n' +
         'start : start an application, "start xxx.exe".\n' +
         'ls : list the files and directories within a specified location.\n\n' +
-        'Remeber, password for ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it.\n';
+        'Remember, password for ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it.\n';
       // 每次刷新都使用默认说明文本；下面的内容区供玩家自由记录，默认留空
       headerEl.textContent = defaultText;
       // 为玩家预留数行“空白稿纸”，让可编辑区域在初始状态下就是可见的
