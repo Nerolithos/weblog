@@ -676,7 +676,7 @@
       if (!header) return;
       var text = header.textContent || "";
       var pattern = /Remember, password for ArkPets\/Resources is[^.]*\./;
-      var replacement = 'Remember, password for ArkPets/Resources is (hexadecimal) "Answer to the Ultimate Question of Life, The Universe, and Everything".';
+      var replacement = 'Remember, password for ArkPets/Resources is (HEX: "0x...") "Answer to the Ultimate Question of Life, The Universe, and Everything".';
       if (pattern.test(text)) {
         text = text.replace(pattern, replacement);
       } else {
@@ -832,7 +832,9 @@
         htmlLine("stdin stream interrupted") +
         htmlLine("tty reassigned") +
         htmlLine("process id: unknown") + "<br>" +
-        htmlLine("For more help on ArkPets, head to ▇▇▇▇▇▇▇▇, or run 'AP COMMAND --help'.");
+        "For more help on ArkPets, head to ▇▇▇▇▇▇▇▇, or run '" +
+          '<span style="color:#00ff7f">AP COMMAND --help</span>' +
+        "'.<br>";
 
       arkTermOutput.innerHTML = headerHtml + bodyHtml;
       arkTermInput.value = "";
@@ -842,6 +844,10 @@
       var apCUsed = false;
       var apEUsed = false;
       var apHeartsShown = false;
+
+      // 简单命令历史，用于方向键在终端中回顾输入
+      var history = [];
+      var historyIndex = -1; // -1 表示当前正在输入的新命令
 
       // 当 ap -c 与 ap -e 都成功后，开始以“逐个输出”的方式刷出 1000 个爱心
       function heartsStreamIfReady() {
@@ -875,6 +881,29 @@
       }
 
       arkTermInput.addEventListener("keydown", function (ev) {
+        // 方向键：在命令历史中上下浏览
+        if (!inPasswordMode && (ev.key === "ArrowUp" || ev.key === "ArrowDown")) {
+          ev.preventDefault();
+          if (!history.length) return;
+          if (ev.key === "ArrowUp") {
+            if (historyIndex < 0) historyIndex = history.length - 1;
+            else if (historyIndex > 0) historyIndex -= 1;
+          } else if (ev.key === "ArrowDown") {
+            if (historyIndex >= 0) historyIndex += 1;
+            if (historyIndex >= history.length) historyIndex = -1;
+          }
+
+          if (historyIndex >= 0) {
+            arkTermInput.value = history[historyIndex];
+          } else {
+            arkTermInput.value = "";
+          }
+          // 将光标移到行尾
+          var len = arkTermInput.value.length;
+          try { arkTermInput.setSelectionRange(len, len); } catch (e) {}
+          return;
+        }
+
         // 密码模式：拦截输入，仅在 Enter 时处理
         if (inPasswordMode) {
           ev.preventDefault();
@@ -900,6 +929,11 @@
         var cmd = arkTermInput.value || "";
         arkTermInput.value = "";
 
+        if (cmd.trim()) {
+          history.push(cmd);
+          historyIndex = -1;
+        }
+
         // 历史区记录完整的一行带颜色的提示符 + 命令文本
         var html = "<br>" + promptHtml() + escapeHtml(cmd) + "<br>";
 
@@ -909,11 +943,12 @@
         if (trimmed === "AP COMMAND --help") {
           // 帮助信息：第一行使用纯红色 (255,0,0)，其余保持默认文字颜色
           html += '<span style="color:#ff0000">WARNING SOURCE CODE CORRUPTED</span><br>';
-          html += htmlLine('usage: ap [option (e.g. "-c")] [arg]');
-          html += htmlLine('Options (and corresponding environment variables):');
-          html += htmlLine('-c    : to answer the 3 questions given by the pets, use one word as arg.');
-          html += htmlLine('-e    : enlarge lower-cases , decode: +3, then use as arg.');
-        } else if (trimmed === "python run Arkpets") {
+          html += 'First try copying and pasting the pets.<br>';
+          html += 'usage: ap [option] [arg], (e.g. ap -c pet)<br>';
+          html += 'Options:<br>';
+          html += '<span style="color:#00ff7f">-c</span>    : answer the 3 questions by the pets with the same word, hint: if(ctrlV.len() == 7) cout &lt;&lt; ctrlV[2] &lt;&lt; endl;<br>';
+          html += '<span style="color:#00ff7f">-e</span>    : for lower-cases in ctrlV, decode by: "+3", then use as arg.<br>';
+        } else if (trimmed === "python run ArkPets") {
           // python run ArkPets 的固定回复，其中 ALWAYS 使用纯红色 (255,0,0)
           html += escapeHtml("ArkPets is ") + '<span style="color:#ff0000">ALWAYS</span>' + escapeHtml(" running...") + "<br>";
         } else if (parts[0] === "ap") {
@@ -921,7 +956,7 @@
           if (parts.length === 1) {
             // 纯 ap
             html += htmlLine('ArkPets-3.1 (c) Pseudogryph L.T.D. | packaged by SoulContainer, Inc. |');
-            html += htmlLine('Type "AP COMMAND --help" for more information.');
+            html += 'Type "' + '<span style="color:#00ff7f">AP COMMAND --help</span>' + '" for more information.<br>';
           } else if (parts[1] === "-c") {
             var argC = (parts[2] || "").toLowerCase();
             if (argC === "always") {
@@ -1336,12 +1371,12 @@
       contentEl.setAttribute("contenteditable", "true");
 
       var defaultText = '' +
-        'Terminal (Shell) Language:\n' +
+        'Terminal (Shell) Language:\n\n' +
         'cd : change directory, "cd .." to exit; "cd xxx" to enter xxx.\n' +
         'pwd : show path to current location.\n' +
         'start : start an application, "start xxx.exe".\n' +
         'ls : list the files and directories within a specified location.\n\n' +
-        'Remember, password for ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it.\n';
+        'Remember, password for cd into ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it. I need to... run it? Or rather destroy it?\n';
       // 每次刷新都使用默认说明文本；下面的内容区供玩家自由记录，默认留空
       headerEl.textContent = defaultText;
       // 为玩家预留数行“空白稿纸”，让可编辑区域在初始状态下就是可见的
@@ -1562,6 +1597,9 @@
           isDeleted: false,
           fadeStartTime: 0,
           fadeDuration: 3000,
+          // 删除后重新出现的延迟（毫秒）与计划时间戳
+          respawnDelay: 6000,
+          respawnAt: 0,
           // jeb/unjeb 彩虹特效开关
           jebEnabled: false,
           jebStartTime: 0,
@@ -2172,6 +2210,8 @@
             t = 1;
             p.deleting = false;
             p.isDeleted = true;
+            // 在完全淡出后，记录一个将来重新出现的时间点
+            p.respawnAt = now + (p.respawnDelay || 6000);
           }
           p.currentAlpha = 1 - t;
         }
@@ -2199,10 +2239,31 @@
       }
 
       function updatePet(p, now, dt) {
-        // 若已被删除且不在淡出过程，则保持静止，仅维持视觉状态
+        // 若已被删除且不在淡出过程，则等待到达重生时间点
         if (p.isDeleted && !p.deleting) {
-          applyVisualEffects(p, now);
-          return;
+          if (p.respawnAt && now >= p.respawnAt) {
+            // 从“上方”重新掉落回原来的地面位置
+            p.isDeleted = false;
+            p.deleting = false;
+            p.currentAlpha = 1;
+            p.respawnAt = 0;
+
+            // 回到各自的基础 X 坐标，从画布外稍高处开始下落
+            p.skeleton.x = p.baseX;
+            p.skeleton.y = (p.baseY || -300) + 600;
+            p.isDropping = true;
+            p.dropStartY = p.skeleton.y;
+            p.dropStartTime = now;
+
+            // 回到 idle 动画，等待自动行走重新接管
+            if (p.idleAnim) {
+              p.state.setAnimation(0, p.idleAnim, true);
+            }
+          } else {
+            // 删除后的静止期仅维持视觉状态（完全透明）
+            applyVisualEffects(p, now);
+            return;
+          }
         }
         p.state.update(dt / 1000);
         p.state.apply(p.skeleton);
@@ -2213,9 +2274,9 @@
           return;
         }
 
-        // 拖拽结束后的下落插值：用恒定速度 dropSpeedPerMs 让角色从当前 Y 落回 -300
+        // 拖拽结束后的下落插值：用恒定速度 dropSpeedPerMs 让角色从当前 Y 落回地面（baseY）
         if (p.isDropping) {
-          var targetY = -300;
+          var targetY = (p.baseY || -300);
           var dy = targetY - p.skeleton.y;
           var dist = Math.abs(dy);
           // dt 是毫秒，这里用恒定速度推进，距离越远耗时越久，但速度相同。
