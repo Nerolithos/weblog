@@ -20,6 +20,7 @@
     var sideTermEl = document.getElementById("side-terminal");
     var petWindowEl = document.getElementById("pet-window");
     var cameraVideoEl = document.getElementById("camera-stream");
+    var cameraFaceCanvasEl = document.getElementById("camera-face-overlay");
     var cameraErrorEl = document.getElementById("camera-error-overlay");
     var notesWindowEl = document.getElementById("notes-window");
     var ringOverlayEl = document.getElementById("ring-puzzle-overlay");
@@ -94,6 +95,365 @@
     var cameraPopupsDisabled = false;
     var cameraStreamObj = null;
     var loveDialogShown = false;
+
+    // 浏览器端人脸检测后端（优先使用 OpenCV.js，其次尝试 FaceDetector），
+    // 对外暴露为同步的 dlibHogDetectFaces(video) -> [{x,y,w,h}]
+    var faceDetectorBackend = {
+      detector: null,
+      offscreenCanvas: null,
+      offscreenCtx: null,
+      latestFacesByVideo: new WeakMap(),
+      activeVideos: [],
+      loopRunning: false
+    };
+
+    function ensureFaceDetectorForVideo(videoEl) {
+      if (!videoEl || !global.FaceDetector) return;
+
+      if (!faceDetectorBackend.detector) {
+        try {
+          faceDetectorBackend.detector = new global.FaceDetector({ fastMode: true, maxDetectedFaces: 3 });
+        } catch (e) {
+          faceDetectorBackend.detector = null;
+          return;
+        }
+      }
+
+      if (!faceDetectorBackend.offscreenCanvas) {
+        var c = document.createElement("canvas");
+        c.width = 320;
+        c.height = 240;
+        faceDetectorBackend.offscreenCanvas = c;
+        faceDetectorBackend.offscreenCtx = c.getContext("2d", { willReadFrequently: true });
+      }
+
+      if (faceDetectorBackend.activeVideos.indexOf(videoEl) === -1) {
+        faceDetectorBackend.activeVideos.push(videoEl);
+      }
+
+      if (!faceDetectorBackend.loopRunning) {
+        faceDetectorBackend.loopRunning = true;
+        runFaceDetectorLoop();
+      }
+
+      if (!global.dlibHogDetectFaces) {
+        global.dlibHogDetectFaces = function (video) {
+          var arr = faceDetectorBackend.latestFacesByVideo.get(video);
+          return arr ? arr.slice() : [];
+        };
+      }
+    }
+
+    // OpenCV.js Haar 人脸检测作为主要实现
+    var opencvBackend = {
+      cvReady: false,
+      initializing: false,
+      faceClassifier: null,
+      cascadeLoaded: false,
+      loadingCascade: false,
+      // 期望与 index.html 同目录下放置 haarcascade_frontalface_default.xml，
+      // 由开发服务器以同源静态资源方式提供。
+      cascadeFile: "haarcascade_frontalface_default.xml",
+      offscreenCanvas: null,
+      offscreenCtx: null,
+      latestFacesByVideo: new WeakMap(),
+      activeVideos: [],
+      loopRunning: false,
+      pollTimer: null
+    };
+
+    function ensureOpenCvDetectorForVideo(videoEl) {
+      if (!videoEl) return;
+
+      if (opencvBackend.activeVideos.indexOf(videoEl) === -1) {
+        opencvBackend.activeVideos.push(videoEl);
+      }
+
+      function startLoopIfReady() {
+        if (!opencvBackend.cvReady || opencvBackend.loopRunning) return;
+
+        if (!opencvBackend.offscreenCanvas) {
+          var c = document.createElement("canvas");
+          c.width = 320;
+          c.height = 240;
+          opencvBackend.offscreenCanvas = c;
+          opencvBackend.offscreenCtx = c.getContext("2d", { willReadFrequently: true });
+        }
+
+        // 始终先暴露同步的 dlibHogDetectFaces 接口，即便分类器尚未就绪时也返回空数组，
+        // 这样前端的人脸可视化循环至少能正常调用而不会因为 undefined 而完全失效。
+        if (!global.dlibHogDetectFaces) {
+          global.dlibHogDetectFaces = function (video) {
+            var arr = opencvBackend.latestFacesByVideo.get(video);
+            return arr ? arr.slice() : [];
+          };
+        }
+
+        // 若人脸分类器尚未加载，触发一次异步加载
+        if (!opencvBackend.faceClassifier) {
+          if (!opencvBackend.loadingCascade && global.cv) {
+            opencvBackend.loadingCascade = true;
+            try {
+              // 同源加载本地 haarcascade_frontalface_default.xml，避免跨域 / CORP 限制
+              fetch(opencvBackend.cascadeFile)
+                .then(function (res) { return res.arrayBuffer(); })
+                .then(function (buf) {
+                  var data = new Uint8Array(buf);
+                  global.cv.FS_createDataFile("/", opencvBackend.cascadeFile, data, true, false, false);
+                  var classifier = new global.cv.CascadeClassifier();
+                  if (!classifier.load(opencvBackend.cascadeFile)) {
+                    console.warn("[DualPets] OpenCV: failed to load cascade file");
+                    classifier.delete();
+                    opencvBackend.loadingCascade = false;
+                    return;
+                  }
+                  opencvBackend.faceClassifier = classifier;
+                  opencvBackend.cascadeLoaded = true;
+                  opencvBackend.loadingCascade = false;
+                  console.log("[DualPets] OpenCV: cascade loaded successfully");
+                  if (!opencvBackend.loopRunning && opencvBackend.activeVideos.length) {
+                    opencvBackend.loopRunning = true;
+                    runOpenCvLoop();
+                  }
+                })
+                .catch(function () {
+                  console.warn("[DualPets] OpenCV: failed to fetch haarcascade xml");
+                  opencvBackend.loadingCascade = false;
+                });
+            } catch (e) {
+              console.warn("[DualPets] OpenCV: error while loading cascade", e);
+              opencvBackend.loadingCascade = false;
+            }
+          }
+          return;
+        }
+
+        opencvBackend.loopRunning = true;
+        runOpenCvLoop();
+      }
+
+      if (!global.cv) {
+        if (!opencvBackend.pollTimer) {
+          opencvBackend.pollTimer = setInterval(function () {
+            if (global.cv) {
+              clearInterval(opencvBackend.pollTimer);
+              opencvBackend.pollTimer = null;
+              // 如果 runtime 已经初始化过，则直接标记 ready
+              if (global.cv.Mat) {
+                opencvBackend.cvReady = true;
+                startLoopIfReady();
+              } else if (!opencvBackend.initializing) {
+                opencvBackend.initializing = true;
+                global.cv['onRuntimeInitialized'] = function () {
+                  opencvBackend.cvReady = true;
+                  opencvBackend.initializing = false;
+                  startLoopIfReady();
+                };
+              }
+            }
+          }, 300);
+        }
+        return;
+      }
+
+      if (!opencvBackend.cvReady) {
+        if (global.cv.Mat) {
+          opencvBackend.cvReady = true;
+        } else if (!opencvBackend.initializing) {
+          opencvBackend.initializing = true;
+          global.cv['onRuntimeInitialized'] = function () {
+            opencvBackend.cvReady = true;
+            opencvBackend.initializing = false;
+            startLoopIfReady();
+          };
+        }
+      }
+
+      startLoopIfReady();
+    }
+
+    function runOpenCvLoop() {
+      if (!opencvBackend.cvReady || !opencvBackend.faceClassifier || !opencvBackend.offscreenCanvas || !opencvBackend.offscreenCtx) {
+        opencvBackend.loopRunning = false;
+        return;
+      }
+
+      var videos = opencvBackend.activeVideos.slice();
+      if (!videos.length) {
+        opencvBackend.loopRunning = false;
+        return;
+      }
+
+      var c = opencvBackend.offscreenCanvas;
+      var ctx2d = opencvBackend.offscreenCtx;
+
+      try {
+        for (var i = 0; i < videos.length; i++) {
+          var videoEl = videos[i];
+          if (!videoEl || videoEl.readyState < 2) {
+            opencvBackend.latestFacesByVideo.set(videoEl, []);
+            continue;
+          }
+
+          var vw = videoEl.videoWidth || videoEl.clientWidth;
+          var vh = videoEl.videoHeight || videoEl.clientHeight;
+          if (!vw || !vh) {
+            opencvBackend.latestFacesByVideo.set(videoEl, []);
+            continue;
+          }
+
+          var targetW = Math.min(320, vw);
+          var scale = targetW / vw;
+          var targetH = Math.max(1, Math.round(vh * scale));
+          c.width = targetW;
+          c.height = targetH;
+
+          try {
+            ctx2d.drawImage(videoEl, 0, 0, targetW, targetH);
+          } catch (e2) {
+            opencvBackend.latestFacesByVideo.set(videoEl, []);
+            continue;
+          }
+
+          var src = null;
+          var gray = null;
+          var facesRect = null;
+          var faces = [];
+
+          try {
+            src = global.cv.imread(c);
+            gray = new global.cv.Mat();
+            global.cv.cvtColor(src, gray, global.cv.COLOR_RGBA2GRAY, 0);
+            facesRect = new global.cv.RectVector();
+            // 使用 Haar 人脸分类器进行多尺度检测
+            // 参数：scaleFactor=1.1, minNeighbors=3, minSize 60x60 以去掉噪点
+            var minSize = new global.cv.Size(60, 60);
+            var maxSize = new global.cv.Size(0, 0);
+            opencvBackend.faceClassifier.detectMultiScale(gray, facesRect, 1.1, 3, 0, minSize, maxSize);
+
+            var bestArea = 0;
+            var bestRect = null;
+            for (var j = 0; j < facesRect.size(); j++) {
+              var r = facesRect.get(j);
+              var area = r.width * r.height;
+              if (area > bestArea) {
+                bestArea = area;
+                bestRect = r;
+              }
+            }
+            if (bestRect) {
+              var sx = vw / targetW;
+              var sy = vh / targetH;
+              faces.push({
+                x: bestRect.x * sx,
+                y: bestRect.y * sy,
+                w: bestRect.width * sx,
+                h: bestRect.height * sy
+              });
+            }
+          } catch (e3) {
+            faces = [];
+          } finally {
+            if (src) src.delete();
+            if (gray) gray.delete();
+            if (facesRect) facesRect.delete();
+          }
+
+          opencvBackend.latestFacesByVideo.set(videoEl, faces);
+        }
+      } catch (eOuter) {
+        opencvBackend.loopRunning = false;
+        return;
+      }
+
+      if (opencvBackend.activeVideos.length) {
+        setTimeout(runOpenCvLoop, 180);
+      } else {
+        opencvBackend.loopRunning = false;
+      }
+    }
+
+    function runFaceDetectorLoop() {
+      if (!faceDetectorBackend.detector || !faceDetectorBackend.offscreenCanvas || !faceDetectorBackend.offscreenCtx) {
+        faceDetectorBackend.loopRunning = false;
+        return;
+      }
+
+      var videos = faceDetectorBackend.activeVideos.slice();
+      if (!videos.length) {
+        faceDetectorBackend.loopRunning = false;
+        return;
+      }
+
+      var c = faceDetectorBackend.offscreenCanvas;
+      var ctx = faceDetectorBackend.offscreenCtx;
+
+      Promise.all(videos.map(function (videoEl) {
+        if (!videoEl || videoEl.readyState < 2) {
+          return Promise.resolve({ video: videoEl, faces: [] });
+        }
+        var vw = videoEl.videoWidth || videoEl.clientWidth;
+        var vh = videoEl.videoHeight || videoEl.clientHeight;
+        if (!vw || !vh) {
+          return Promise.resolve({ video: videoEl, faces: [] });
+        }
+
+        // 缩放到较小分辨率提高性能，同时记录缩放比例，稍后再映射回原视频坐标系
+        var targetW = Math.min(320, vw);
+        var scale = targetW / vw;
+        var targetH = Math.max(1, Math.round(vh * scale));
+        c.width = targetW;
+        c.height = targetH;
+
+        try {
+          ctx.drawImage(videoEl, 0, 0, targetW, targetH);
+        } catch (e) {
+          return Promise.resolve({ video: videoEl, faces: [] });
+        }
+
+        return faceDetectorBackend.detector.detect(c).then(function (detections) {
+          var sx = vw / targetW;
+          var sy = vh / targetH;
+          var faces = (detections || []).map(function (d) {
+            var b = d.boundingBox || d;
+            return {
+              x: b.x * sx,
+              y: b.y * sy,
+              w: b.width * sx,
+              h: b.height * sy
+            };
+          });
+          return { video: videoEl, faces: faces };
+        }).catch(function () {
+          return { video: videoEl, faces: [] };
+        });
+      })).then(function (results) {
+        for (var i = 0; i < results.length; i++) {
+          var r = results[i];
+          if (!r || !r.video) continue;
+          if (r.faces && r.faces.length) {
+            faceDetectorBackend.latestFacesByVideo.set(r.video, r.faces);
+          } else {
+            faceDetectorBackend.latestFacesByVideo.set(r.video, []);
+          }
+        }
+
+        // 如果仍有活动视频，继续下一轮检测
+        if (faceDetectorBackend.activeVideos.length) {
+          setTimeout(runFaceDetectorLoop, 120);
+        } else {
+          faceDetectorBackend.loopRunning = false;
+        }
+      }).catch(function () {
+        // 任何错误都停止检测循环，避免狂刷错误
+        faceDetectorBackend.loopRunning = false;
+      });
+    }
+
+    // 人脸检测状态（假设存在全局 dlibHogDetectFaces(video) -> 数组 [{x,y,w,h}, ...]）
+    var faceDetectionActive = false;
+    var faceDetectionSucceeded = false;
+    var faceDetectionRafId = 0;
 
     // 同心圆环解密（Resources/start SoulContainer.exe）
     var ringPuzzleInitialized = false;
@@ -589,11 +949,19 @@
           cameraStreamObj = stream;
           cameraVideoEl.srcObject = stream;
           cameraVideoEl.style.display = "block";
+          // 准备基于 OpenCV.js 的人脸/上半身检测，结果通过 dlibHogDetectFaces 暴露给前端循环
+          ensureOpenCvDetectorForVideo(cameraVideoEl);
           // 摄像头开启时隐藏记事本窗口
           if (notesWindowEl) notesWindowEl.style.display = "none";
           clearCameraPopups();
           if (cameraErrorEl) cameraErrorEl.style.display = "none";
-          showLoveDialogOnce();
+          // 始终先进入人脸检测循环；若底层 dlib API 不可用，将在超时后给出失败提示并重试
+          if (cameraFaceCanvasEl) {
+            startFaceDetectionLoop();
+          } else {
+            // 没有覆盖层画布时，退回到原始 LOVE 流程
+            showLoveDialogOnce();
+          }
         }).catch(function () {
           // 用户拒绝或出错时：显示 401 提示
           showCameraError();
@@ -668,6 +1036,146 @@
         }
       }
       cameraStreamObj = null;
+      // 重置人脸检测状态与可视化
+      faceDetectionActive = false;
+      faceDetectionSucceeded = false;
+      if (faceDetectionRafId) {
+        try { cancelAnimationFrame(faceDetectionRafId); } catch (e) {}
+        faceDetectionRafId = 0;
+      }
+      if (cameraFaceCanvasEl) {
+        var ctx = cameraFaceCanvasEl.getContext("2d");
+        if (ctx) {
+          ctx.clearRect(0, 0, cameraFaceCanvasEl.width || 0, cameraFaceCanvasEl.height || 0);
+        }
+      }
+    }
+
+    function startFaceDetectionLoop() {
+      if (!cameraVideoEl || !cameraFaceCanvasEl) return;
+      var ctx = cameraFaceCanvasEl.getContext("2d");
+      if (!ctx) return;
+
+      function resizeCanvasToViewport() {
+        var vw = window.innerWidth || document.documentElement.clientWidth || cameraFaceCanvasEl.width || 0;
+        var vh = window.innerHeight || document.documentElement.clientHeight || cameraFaceCanvasEl.height || 0;
+        cameraFaceCanvasEl.width = vw;
+        cameraFaceCanvasEl.height = vh;
+      }
+
+      resizeCanvasToViewport();
+
+      faceDetectionActive = true;
+      faceDetectionSucceeded = false;
+      var detectStart = performance.now();
+      // 检测总时长放宽到约 20 秒
+      var detectTimeout = 20000;
+      // 第一次检测到真实人脸框后的“展示时长”，期间持续跟随人头移动
+      var firstHitTime = null;
+      var successViewMs = 5000;
+
+      function loop() {
+        if (!faceDetectionActive) return;
+
+        if (!cameraVideoEl || cameraVideoEl.readyState < 2) {
+          faceDetectionRafId = requestAnimationFrame(loop);
+          return;
+        }
+
+        ctx.clearRect(0, 0, cameraFaceCanvasEl.width, cameraFaceCanvasEl.height);
+
+        var faces = [];
+        try {
+          if (global.dlibHogDetectFaces) {
+            faces = global.dlibHogDetectFaces(cameraVideoEl) || [];
+          }
+        } catch (e) {
+          faces = [];
+        }
+        var now = performance.now();
+        var elapsed = now - detectStart;
+
+        if (faces.length > 0) {
+          // 仅在真正检测到人脸时绘制绿色框，不再造“中心假框”，
+          // 避免出现与人位置无关的静止矩形。
+          var vx, vy, vw, vh;
+
+          var videoW = cameraVideoEl.videoWidth || cameraVideoEl.clientWidth || cameraFaceCanvasEl.width;
+          var videoH = cameraVideoEl.videoHeight || cameraVideoEl.clientHeight || cameraFaceCanvasEl.height;
+          var canvasW = cameraFaceCanvasEl.width;
+          var canvasH = cameraFaceCanvasEl.height;
+
+          var f = faces[0];
+          vx = f.x;
+          vy = f.y;
+          vw = f.w;
+          vh = f.h;
+
+          var canvasX = vx;
+          var canvasY = vy;
+          var canvasWrect = vw;
+          var canvasHrect = vh;
+
+          if (videoW > 0 && videoH > 0 && canvasW > 0 && canvasH > 0) {
+            // object-fit: cover 的缩放与裁剪
+            var scaleX = canvasW / videoW;
+            var scaleY = canvasH / videoH;
+            var scale = Math.max(scaleX, scaleY);
+            var displayW = videoW * scale;
+            var displayH = videoH * scale;
+            var offsetX = (canvasW - displayW) / 2;
+            var offsetY = (canvasH - displayH) / 2;
+
+            canvasX = offsetX + vx * scale;
+            canvasY = offsetY + vy * scale;
+            canvasWrect = vw * scale;
+            canvasHrect = vh * scale;
+          }
+
+          // 绘制绿色矩形边框
+          ctx.strokeStyle = "#00ff00";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(canvasX, canvasY, canvasWrect, canvasHrect);
+
+          // 在边框上方绘制提示文字
+          ctx.fillStyle = "#00ff00";
+          ctx.font = "16px 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace";
+          var label = "Admin Detected: Security Level 3";
+          var textWidth = ctx.measureText(label).width;
+          var tx = Math.max(10, Math.min(canvasX, cameraFaceCanvasEl.width - textWidth - 10));
+          var ty = Math.max(24, canvasY - 8);
+          ctx.fillText(label, tx, ty);
+
+          // 记录第一次命中时间，之后继续跟随人头移动一段时间再进入 LOVE 流程
+          if (firstHitTime === null) {
+            firstHitTime = now;
+          }
+
+          if (now - firstHitTime >= successViewMs) {
+            faceDetectionSucceeded = true;
+            faceDetectionActive = false;
+            startLoveDialogFlow();
+            return;
+          }
+
+          // 尚未到达展示时长：继续 requestAnimationFrame 循环
+        } else {
+          // 当前这一帧没有真实检测结果：重置 firstHitTime，
+          // 需要重新持续检测 successViewMs 才会进入 LOVE 流程。
+          firstHitTime = null;
+        }
+
+        // 到达总超时时间仍未检测到人脸（且也未走放宽逻辑）：给出失败提示并重试
+        if (!faceDetectionSucceeded && firstHitTime === null && elapsed >= detectTimeout) {
+          faceDetectionActive = false;
+          showFaceFailAndRetry();
+          return;
+        }
+
+        faceDetectionRafId = requestAnimationFrame(loop);
+      }
+
+      faceDetectionRafId = requestAnimationFrame(loop);
     }
 
     function revealResourcesPasswordInNotes() {
@@ -675,10 +1183,26 @@
       var header = notesWindowEl.querySelector(".notes-header");
       if (!header) return;
       var text = header.textContent || "";
-      var pattern = /Remember, password for ArkPets\/Resources is[^.]*\./;
       var replacement = 'Remember, password for ArkPets/Resources is (HEX: "0x...") "Answer to the Ultimate Question of Life, The Universe, and Everything".';
+
+      // 如果已经是明文版本，就不再重复改写
+      if (text.indexOf(replacement) !== -1) {
+        header.textContent = text;
+        return;
+      }
+
+      // 匹配任何一行包含 ArkPets/Resources 的“Remember, password for ...”行，
+      // 同时尽量保留后面的说明句（Don't let the senior managers...）
+      var pattern = /Remember, password for[^\n]*ArkPets\/Resources[^\n]*/;
       if (pattern.test(text)) {
-        text = text.replace(pattern, replacement);
+        text = text.replace(pattern, function (line) {
+          var tailIndex = line.indexOf("Don't let the senior managers");
+          if (tailIndex !== -1) {
+            var tail = line.slice(tailIndex); // 保留完整尾部说明
+            return replacement + " " + tail;
+          }
+          return replacement;
+        });
       } else {
         if (text && !/\n$/.test(text)) text += "\n\n";
         text += replacement;
@@ -686,28 +1210,68 @@
       header.textContent = text;
     }
 
-    function showLoveDialogOnce() {
+    // 人脸检测失败时：短暂提示，然后重新打开摄像头重试
+    function showFaceFailAndRetry() {
+      var dlg = document.getElementById("love-dialog");
+      if (dlg) {
+        var inner = dlg.firstElementChild;
+        if (inner) {
+          inner.textContent = "Facial recognition failed. Try again.";
+        }
+        dlg.style.display = "flex";
+        dlg.style.opacity = "1";
+        setTimeout(function () {
+          dlg.style.opacity = "0";
+          setTimeout(function () {
+            dlg.style.display = "none";
+            // 关闭当前摄像头并重新开始检测流程
+            stopCameraStream();
+            cameraStarted = false;
+            startCameraStreamOnce();
+          }, 400);
+        }, 2200);
+      } else {
+        // 若 LOVE 对话框不存在，则直接重试
+        stopCameraStream();
+        cameraStarted = false;
+        startCameraStreamOnce();
+      }
+    }
+
+    // 检测通过后，展示管理员欢迎文案，并继续原有密码解锁流程
+    function startLoveDialogFlow() {
       if (loveDialogShown) return;
       loveDialogShown = true;
-      setTimeout(function () {
-        if (cameraVideoEl) {
-          cameraVideoEl.style.display = "none";
-        }
-        stopCameraStream();
 
-        var dlg = document.getElementById("love-dialog");
-        if (dlg) {
-          dlg.style.display = "flex";
-          dlg.style.opacity = "1";
+      if (cameraVideoEl) {
+        cameraVideoEl.style.display = "none";
+      }
+      stopCameraStream();
+
+      var dlg = document.getElementById("love-dialog");
+      if (dlg) {
+        var inner = dlg.firstElementChild;
+        if (inner) {
+          inner.textContent = "Administrator detected. Welcome.\nThe password to Resources is available.";
+        }
+        dlg.style.display = "flex";
+        dlg.style.opacity = "1";
+        setTimeout(function () {
+          dlg.style.opacity = "0";
           setTimeout(function () {
-            dlg.style.opacity = "0";
-            setTimeout(function () {
-              dlg.style.display = "none";
-            }, 400);
-          }, 5500);
-        }
+            dlg.style.display = "none";
+          }, 400);
+        }, 5500);
+      }
 
-        revealResourcesPasswordInNotes();
+      revealResourcesPasswordInNotes();
+    }
+
+    // 兼容旧逻辑：不使用人脸识别时的延迟 LOVE 流程
+    function showLoveDialogOnce() {
+      if (loveDialogShown) return;
+      setTimeout(function () {
+        startLoveDialogFlow();
       }, 5000);
     }
 
@@ -1375,6 +1939,7 @@
         'cd : change directory, "cd .." to exit; "cd xxx" to enter xxx.\n' +
         'pwd : show path to current location.\n' +
         'start : start an application, "start xxx.exe".\n' +
+        'rm : delete an application, "rm xxx.exe".\n' +
         'ls : list the files and directories within a specified location.\n\n' +
         'Remember, password for cd into ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it. I need to... run it? Or rather destroy it?\n';
       // 每次刷新都使用默认说明文本；下面的内容区供玩家自由记录，默认留空

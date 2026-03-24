@@ -322,6 +322,14 @@
       background: #000;
     }
 
+    /* 人脸检测可视化覆盖层：绘制绿色边框与提示文字 */
+    #camera-face-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 101; /* 高于视频，但低于 LOVE 对话框等 UI */
+      pointer-events: none;
+    }
+
     /* "OPEN YOUR CAMERA" 弹窗样式 */
     .camera-popup {
       position: fixed;
@@ -735,10 +743,12 @@ You joined the two pets, a third soul was added to the collection. They were nev
   </div>
   <!-- 摄像头视频覆盖层 -->
   <video id="camera-stream" autoplay playsinline muted></video>
-  <!-- LOVE 提示对话框 -->
-  <div id="love-dialog" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:19;opacity:0;transition:opacity 0.3s ease-out;">
+  <!-- 人脸检测可视化覆盖层 -->
+  <canvas id="camera-face-overlay"></canvas>
+  <!-- LOVE 提示对话框：置于摄像头视频与人脸覆盖层之上 -->
+  <div id="love-dialog" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:220;opacity:0;transition:opacity 0.3s ease-out;">
     <div style="background:#ffffff;border-radius:8px;border:1px solid #000;padding:16px 22px;box-shadow:0 10px 30px rgba(0,0,0,0.7);font-family:'SF Mono',Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:14px;text-align:center;white-space:pre-line;color:#ff0000;font-weight:700;">
-Thank you, for your LOVE :)
+Administrator detected. Welcome.
 The password to Resources is available.
     </div>
   </div>
@@ -763,6 +773,9 @@ You did not answered the call of the trapped souls, leading a normal life, unkno
 
   <!-- D3 for concentric ring puzzle -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <!-- OpenCV.js：用于浏览器端人脸 / 上半身检测（本地同源加载，避免跨域策略拦截） -->
+  <script src="opencv.js"></script>
 
   <!-- Dual pets logic (already in this folder) -->
   <script src="dual-pets.js?v=20260308"></script>
