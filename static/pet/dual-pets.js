@@ -41,6 +41,12 @@
     var tuningCodeEl = document.getElementById("tuning-code");
     var tuningCenterEl = document.getElementById("tuning-ending-center");
 
+    // 右上角登录状态 + 北京时间小框
+    var statusPanelEl = document.getElementById("status-panel");
+    var loginStatusEl = document.getElementById("login-status-label");
+    var statusTimeEl = document.getElementById("status-time-label");
+    var statusTooltipEl = document.getElementById("status-tooltip");
+
     // 记录三个窗口的默认 transform，用于重新打开时回到初始位置
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
     var termDefaultTransform = sideTermEl ? (sideTermEl.style.transform || "") : "";
@@ -95,6 +101,14 @@
     var cameraPopupsDisabled = false;
     var cameraStreamObj = null;
     var loveDialogShown = false;
+
+    // 终端爱心流控制：ap -c ALWAYS 与 ap -e LOVE 之后快速输出 ♥，
+    // 当管理员验证完成（摄像头检测通过）后停止输出，并打印完成提示语。
+    var apHeartsStopRequested = false;
+    var apHeartsCompletionLineShown = false;
+
+    // 登录状态：默认 Guest，通过摄像头管理员验证后切换为 Admin Lv.3
+    var isAdminValidated = false;
 
     // 浏览器端人脸检测后端（优先使用 OpenCV.js，其次尝试 FaceDetector），
     // 对外暴露为同步的 dlibHogDetectFaces(video) -> [{x,y,w,h}]
@@ -901,6 +915,77 @@
       setTimeout(appendNext, 800);
     }
 
+    // 右上角状态栏：北京时间与登录状态
+    (function initStatusPanel() {
+      if (!statusPanelEl) return;
+
+      // 初始化时间：使用北京时间（Asia/Shanghai），每秒刷新
+      function updateBeijingTime() {
+        if (!statusTimeEl) return;
+        try {
+          var now = new Date();
+          var fmtDate = new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Asia/Shanghai",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+          }).format(now);
+          var fmtTime = new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Asia/Shanghai",
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          }).format(now);
+          // 显示为两行：第一行日期，第二行时间 + 时区说明
+          statusTimeEl.textContent = fmtDate + "\n" + fmtTime + " (Shanghai)";
+        } catch (e) {
+          // 某些环境可能不支持该时区，退化为本地时间
+          statusTimeEl.textContent = new Date().toLocaleString();
+        }
+      }
+
+      updateBeijingTime();
+      setInterval(updateBeijingTime, 1000);
+
+      // 初始化登录状态显示
+      if (loginStatusEl && !isAdminValidated) {
+        loginStatusEl.textContent = "👤 Guest";
+      }
+
+      // 在 Guest 状态下悬浮显示提示气泡
+      if (loginStatusEl && statusTooltipEl) {
+        function showTooltip() {
+          if (!loginStatusEl || !statusTooltipEl) return;
+          if (isAdminValidated) return; // 管理员状态下不再显示提示
+          if (loginStatusEl.textContent.indexOf("Guest") === -1) return;
+          var rect = statusPanelEl.getBoundingClientRect();
+          var top = rect.bottom + 6;
+          var left = rect.right - statusTooltipEl.offsetWidth;
+          if (!statusTooltipEl.offsetWidth) {
+            // 先设置为 block 获取尺寸
+            statusTooltipEl.style.display = "block";
+            var r2 = statusTooltipEl.getBoundingClientRect();
+            statusTooltipEl.style.display = "none";
+            left = rect.right - r2.width;
+          }
+          if (left < 8) left = 8;
+          statusTooltipEl.style.left = left + "px";
+          statusTooltipEl.style.top = top + "px";
+          statusTooltipEl.style.display = "block";
+        }
+
+        function hideTooltip() {
+          if (!statusTooltipEl) return;
+          statusTooltipEl.style.display = "none";
+        }
+
+        loginStatusEl.addEventListener("mouseenter", showTooltip);
+        loginStatusEl.addEventListener("mouseleave", hideTooltip);
+        statusPanelEl.addEventListener("mouseleave", hideTooltip);
+      }
+    })();
+
     // 通用窗口“左右摇晃一下”效果：在当前拖拽位置附近小幅度平移
     function shakeWindowElement(el) {
       if (!el) return;
@@ -1243,6 +1328,15 @@
       if (loveDialogShown) return;
       loveDialogShown = true;
 
+      // 摄像头验证通过后，通知终端停止继续输出爱心，并在终端打印完成提示语。
+      apHeartsStopRequested = true;
+
+      // 更新右上角登录状态为管理员等级
+      isAdminValidated = true;
+      if (loginStatusEl) {
+        loginStatusEl.textContent = "👤 Admin Lv.3";
+      }
+
       if (cameraVideoEl) {
         cameraVideoEl.style.display = "none";
       }
@@ -1362,7 +1456,12 @@
 
       function updateLivePrompt() {
         if (!livePromptSpan) return;
-        livePromptSpan.innerHTML = promptHtml();
+        // 密码模式下，将提示符替换为密码提示文本，并与输入框保持同一行。
+        if (inPasswordMode && pendingCdTarget === "Resources") {
+          livePromptSpan.textContent = "Enter Password : ꄗ ";
+        } else {
+          livePromptSpan.innerHTML = promptHtml();
+        }
       }
 
       function htmlLine(text) {
@@ -1413,7 +1512,8 @@
       var history = [];
       var historyIndex = -1; // -1 表示当前正在输入的新命令
 
-      // 当 ap -c 与 ap -e 都成功后，开始以“逐个输出”的方式刷出 1000 个爱心
+      // 当 ap -c 与 ap -e 都成功后，开始以“逐个输出”的方式快速刷出爱心，
+      // 直到摄像头验证流程完成（apHeartsStopRequested 置为 true）。
       function heartsStreamIfReady() {
         if (!(apCUsed && apEUsed) || apHeartsShown) return;
         apHeartsShown = true;
@@ -1422,16 +1522,22 @@
         startCameraStreamOnce();
         startCameraPopupsOnce();
 
-        var total = 1000;
-        var produced = 0;
+        apHeartsStopRequested = false;
+        apHeartsCompletionLineShown = false;
 
         function tick() {
-          if (produced >= total) return;
-          produced += 1;
-          appendHtml('<span style="color:#ff0000">♥</span> ');
-          if (produced < total) {
-            setTimeout(tick, 3); // 非常快速地逐个输出
+          // 摄像头验证完成后：停止继续输出 ♥，并在终端输出完成提示语。
+          if (apHeartsStopRequested) {
+            if (!apHeartsCompletionLineShown) {
+              apHeartsCompletionLineShown = true;
+              appendHtml('<br>Admin Validation Complete. Welcome to <span style="color:#ff0000">SoulContainer®</span>!<br>');
+            }
+            return;
           }
+
+          appendHtml('<span style="color:#ff0000">♥</span> ');
+          // 进一步加快输出速度，让摄像头打开前的爱心流更密集。
+          setTimeout(tick, 1);
         }
 
         tick();
@@ -1477,11 +1583,12 @@
             arkTermInput.value = "";
             inPasswordMode = false;
 
-            if (pendingCdTarget === "Resources" && pwd === "0x2A") {
+            if (pendingCdTarget === "Resources" && (pwd === "0x2A" || pwd === "0x2a")) {
               cwd = "Resources";
-              updateLivePrompt();
             }
             pendingCdTarget = null;
+            // 无论密码是否正确，都恢复为正常提示符（Arkpets 或 Resources）。
+            updateLivePrompt();
           } else if (ev.key.length === 1) {
             passwordBuffer += ev.key;
           }
@@ -1531,7 +1638,7 @@
                 html += '<span style="color:#ff0000">NO TURNING BACK NOW.</span><br>';
               }
             } else {
-              html += htmlLine('ap: invalid argument.');
+              html += htmlLine('ap: please use correct ap -c argument.');
             }
           } else if (parts[1] === "-e") {
             var argE = (parts[2] || "").toLowerCase();
@@ -1543,11 +1650,11 @@
                 html += '<span style="color:#ff0000">NO TURNING BACK NOW.</span><br>';
               }
             } else {
-              html += htmlLine('ap: invalid argument.');
+              html += htmlLine('ap: please use correct ap -e argument.');
             }
           } else {
             // 其他 ap 子命令一律视为参数错误
-            html += htmlLine('ap: invalid argument.');
+            html += htmlLine('ap: no such command.');
           }
         } else if (trimmed === "cd ..") {
           if (cwd === "ArkPets") {
@@ -1561,10 +1668,12 @@
           }
         } else if (trimmed === "cd Resources") {
           if (cwd === "ArkPets") {
-            html += "Enter Password : ꄗ ";
+            // 进入密码模式：不在历史输出中再打印一行提示，而是把
+            // 当前行提示符切换为 "Enter Password : ꄗ "，输入框与其同一行。
             inPasswordMode = true;
             passwordBuffer = "";
             pendingCdTarget = "Resources";
+            updateLivePrompt();
           }
         } else if (trimmed === "ls") {
           if (cwd === "Resources") {
@@ -1591,6 +1700,8 @@
           } else {
             html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
           }
+        } else if (trimmed === "rm SoulContainer.exe" && cwd === "Resources") {
+          html += '<span style="color:#ff0000">WARNING</span>: Security level low, at minimum, level 4 is required to delete core document.<br>';
         } else if (trimmed !== "") {
           // 其他未定义命令：模仿 zsh 的 command not found 提示
           html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";

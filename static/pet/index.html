@@ -644,6 +644,51 @@
     .desktop-icon.selected::before {
       opacity: 1;
     }
+
+    /* 右上角登录状态 + 北京时间小框 */
+    #status-panel {
+      position: fixed;
+      top: 10px;
+      right: 16px;
+      padding: 4px 10px 4px 10px;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      z-index: 130; /* 高于一般窗口与桌面，也高于摄像头视频层 */
+      pointer-events: auto;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    }
+    #login-status-label {
+      cursor: default;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+    #status-time-label {
+      white-space: pre-line; /* 允许使用换行符分成两行：日期 + 时间 */
+      opacity: 0.9;
+      text-align: right;
+    }
+    /* 登录提示气泡：悬浮在 Guest 上时显示 */
+    #status-tooltip {
+      position: fixed;
+      max-width: 220px;
+      padding: 6px 8px;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 4px;
+      border: 1px solid #000000;
+      font-size: 11px;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 140;
+      white-space: normal;
+    }
   </style>
 </head>
 <body>
@@ -767,6 +812,13 @@ You did not answered the call of the trapped souls, leading a normal life, unkno
   <div id="terminal-dialog">
     <pre></pre>
   </div>
+
+  <!-- 右上角登录状态 + 北京时间显示 -->
+  <div id="status-panel">
+    <span id="login-status-label">👤 Guest</span>
+    <span id="status-time-label"></span>
+  </div>
+  <div id="status-tooltip">To log in, run both ap commands.</div>
 
   <!-- Spine webgl runtime built locally from Spine 3.8 runtimes (spine-ts/build/spine-webgl.js) -->
   <script src="spine-webgl-3.8.js"></script>
