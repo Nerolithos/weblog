@@ -511,6 +511,55 @@
       background: #999999;
     }
 
+    /* KeyVault 窗口：整体风格模仿 Notes / Terminal */
+    #keyvault-window {
+      position: absolute;
+      left: 120px;
+      bottom: 40px;
+      width: 360px;
+      height: 340px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      border: 1px solid #000000;
+      z-index: 0;
+      overflow: hidden;
+      display: none; /* 默认关闭，双击图标后由 JS 打开 */
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      box-sizing: border-box;
+      flex-direction: column;
+    }
+    #keyvault-window .kv-titlebar {
+      height: 24px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+      user-select: none;
+    }
+    #keyvault-window .kv-title-text {
+      font-size: 11px;
+      color: #444444;
+      margin-left: 6px;
+      flex: 1;
+      text-align: center;
+    }
+    #keyvault-window .kv-body {
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #222222;
+      line-height: 1.4;
+      box-sizing: border-box;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    #keyvault-window .kv-placeholder {
+      font-size: 11px;
+      color: #555555;
+    }
+
     /* 同心圆环解密覆盖层 */
     #ring-puzzle-overlay {
       position: fixed;
@@ -698,6 +747,7 @@
     <div class="desktop-icon" data-app="pets"><span class="icon-emoji">🐱</span><span class="icon-label">ArkPets</span></div>
     <div class="desktop-icon" data-app="terminal"><span class="icon-emoji">⌨</span><span class="icon-label">Terminal</span></div>
     <div class="desktop-icon" data-app="notes"><span class="icon-emoji">📝</span><span class="icon-label">Notes</span></div>
+    <div class="desktop-icon" data-app="keyvault"><span class="icon-emoji">🔐</span><span class="icon-label">KeyVault</span></div>
   </div>
   <div id="window-layer">
     <div id="main-row">
@@ -742,6 +792,20 @@
       <div class="notes-body">
         <div class="notes-header"></div>
         <div class="notes-content"></div>
+      </div>
+    </div>
+    <!-- KeyVault 窗口：仅在 Admin Lv.3 状态下可打开，功能待定 -->
+    <div id="keyvault-window">
+      <div class="kv-titlebar">
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn kv-close"></div>
+          <div class="ark-term-btn min kv-min"></div>
+        </div>
+        <div class="kv-title-text">KeyVault</div>
+      </div>
+      <div class="kv-body">
+        <div id="kv-puzzle-container"></div>
+        <div id="kv-puzzle-status" class="kv-placeholder" style="margin-top:8px;">Arrange the tiles from 1 to 15.</div>
       </div>
     </div>
   </div>
@@ -811,6 +875,21 @@ You did not answered the call of the trapped souls, leading a normal life, unkno
   </div>
   <div id="terminal-dialog">
     <pre></pre>
+  </div>
+
+  <!-- KeyVault 访客模式提示框：Guest 状态下双击 KeyVault 图标时弹出 -->
+  <div id="keyvault-guest-dialog" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:80;">
+    <div style="background:#ffffff;border-radius:8px;border:1px solid #000000;box-shadow:0 12px 30px rgba(0,0,0,0.7);min-width:320px;max-width:380px;padding:12px 14px 14px 14px;font-family:'SF Mono',Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:13px;color:#000000;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#444444;">
+          <span>KeyVault</span>
+        </div>
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn kv-guest-close" style="background:#ff0000;"></div>
+        </div>
+      </div>
+      <div>Currently not logged in, try running ap commands first.</div>
+    </div>
   </div>
 
   <!-- 右上角登录状态 + 北京时间显示 -->

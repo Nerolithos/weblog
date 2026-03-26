@@ -41,6 +41,12 @@
     var tuningCodeEl = document.getElementById("tuning-code");
     var tuningCenterEl = document.getElementById("tuning-ending-center");
 
+    // KeyVault 窗口与访客提示框
+    var keyVaultWindowEl = document.getElementById("keyvault-window");
+    var keyVaultGuestDialogEl = document.getElementById("keyvault-guest-dialog");
+    var keyVaultPuzzleContainerEl = document.getElementById("kv-puzzle-container");
+    var keyVaultPuzzleStatusEl = document.getElementById("kv-puzzle-status");
+
     // 右上角登录状态 + 北京时间小框
     var statusPanelEl = document.getElementById("status-panel");
     var loginStatusEl = document.getElementById("login-status-label");
@@ -51,6 +57,7 @@
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
     var termDefaultTransform = sideTermEl ? (sideTermEl.style.transform || "") : "";
     var notesDefaultTransform = notesWindowEl ? (notesWindowEl.style.transform || "") : "";
+    var keyVaultDefaultTransform = keyVaultWindowEl ? (keyVaultWindowEl.style.transform || "") : "";
 
     // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
     var BASE_Z = 20;
@@ -479,6 +486,10 @@
     var containPuzzleSolved = false;
     // 最终结局只触发一次
     var tuningEndingStarted = false;
+
+    // KeyVault 数字华容道（15-puzzle）状态
+    var keyVaultPuzzleInitialized = false;
+    var keyVaultBoard = null; // 长度 16 的数组，0 表示空格，其余 1..15
 
     function showRingPuzzleOverlay() {
       if (!ringOverlayEl) return;
@@ -913,6 +924,156 @@
 
       // 稍等一瞬再开始刷屏，配合黑屏渐显
       setTimeout(appendNext, 800);
+    }
+
+    // KeyVault 内部：D3 数字华容道（4x4 15-puzzle）
+    function initKeyVaultPuzzle() {
+      if (keyVaultPuzzleInitialized) return;
+      if (!keyVaultPuzzleContainerEl || !global.d3) return;
+      keyVaultPuzzleInitialized = true;
+
+      var d3ref = global.d3;
+
+      var width = 240;
+      var height = 240;
+      var margin = 6;
+      var cols = 4;
+      var rows = 4;
+      var cellSize = (width - margin * 2) / cols;
+
+      var svg = d3ref.select(keyVaultPuzzleContainerEl)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("display", "block")
+        .style("margin", "0 auto");
+
+      var boardGroup = svg.append("g")
+        .attr("transform", "translate(" + margin + "," + margin + ")");
+
+      function indexToRC(idx) {
+        return { r: Math.floor(idx / cols), c: idx % cols };
+      }
+
+      function rcToIndex(r, c) {
+        return r * cols + c;
+      }
+
+      function createSolvedBoard() {
+        var arr = [];
+        for (var i = 1; i <= 15; i++) arr.push(i);
+        arr.push(0);
+        return arr;
+      }
+
+      function shuffleBoard(steps) {
+        keyVaultBoard = createSolvedBoard();
+        var emptyIdx = 15;
+        for (var s = 0; s < steps; s++) {
+          var rc = indexToRC(emptyIdx);
+          var neighbors = [];
+          if (rc.r > 0) neighbors.push(rcToIndex(rc.r - 1, rc.c));
+          if (rc.r < rows - 1) neighbors.push(rcToIndex(rc.r + 1, rc.c));
+          if (rc.c > 0) neighbors.push(rcToIndex(rc.r, rc.c - 1));
+          if (rc.c < cols - 1) neighbors.push(rcToIndex(rc.r, rc.c + 1));
+          var pick = neighbors[Math.floor(Math.random() * neighbors.length)];
+          var tmp = keyVaultBoard[pick];
+          keyVaultBoard[pick] = keyVaultBoard[emptyIdx];
+          keyVaultBoard[emptyIdx] = tmp;
+          emptyIdx = pick;
+        }
+      }
+
+      function isSolved() {
+        if (!keyVaultBoard || keyVaultBoard.length !== 16) return false;
+        for (var i = 0; i < 15; i++) {
+          if (keyVaultBoard[i] !== i + 1) return false;
+        }
+        return keyVaultBoard[15] === 0;
+      }
+
+      function renderBoard() {
+        if (!keyVaultBoard) return;
+        var tilesData = [];
+        for (var i = 0; i < keyVaultBoard.length; i++) {
+          var v = keyVaultBoard[i];
+          if (v === 0) continue;
+          tilesData.push({ value: v, index: i });
+        }
+
+        var tiles = boardGroup.selectAll(".kv-tile")
+          .data(tilesData, function (d) { return d.value; });
+
+        var tilesEnter = tiles.enter()
+          .append("g")
+          .attr("class", "kv-tile")
+          .style("cursor", "pointer")
+          .on("click", function (event, d) {
+            moveTile(d.value);
+          });
+
+        tilesEnter.append("rect")
+          .attr("rx", 6)
+          .attr("ry", 6)
+          .attr("width", cellSize - 6)
+          .attr("height", cellSize - 6)
+          .attr("x", 3)
+          .attr("y", 3)
+          .attr("fill", "#ffffff")
+          .attr("stroke", "#000000")
+          .attr("stroke-width", 1.5);
+
+        tilesEnter.append("text")
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "central")
+          .attr("x", cellSize / 2)
+          .attr("y", cellSize / 2 + 1)
+          .attr("font-size", 18)
+          .attr("font-family", "'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace")
+          .text(function (d) { return d.value; });
+
+        tilesEnter.merge(tiles)
+          .transition()
+          .duration(180)
+          .attr("transform", function (d) {
+            var rc = indexToRC(d.index);
+            return "translate(" + (rc.c * cellSize) + "," + (rc.r * cellSize) + ")";
+          });
+
+        tiles.exit().remove();
+
+        if (keyVaultPuzzleStatusEl) {
+          if (isSolved()) {
+            keyVaultPuzzleStatusEl.textContent = "ACCESS GRANTED.";
+          } else {
+            keyVaultPuzzleStatusEl.textContent = "Arrange the tiles 1~15.";
+          }
+        }
+      }
+
+      function moveTile(value) {
+        if (!keyVaultBoard) return;
+        var tileIdx = -1;
+        var emptyIdx = -1;
+        for (var i = 0; i < keyVaultBoard.length; i++) {
+          if (keyVaultBoard[i] === value) tileIdx = i;
+          else if (keyVaultBoard[i] === 0) emptyIdx = i;
+        }
+        if (tileIdx === -1 || emptyIdx === -1) return;
+        var trc = indexToRC(tileIdx);
+        var erc = indexToRC(emptyIdx);
+        var dist = Math.abs(trc.r - erc.r) + Math.abs(trc.c - erc.c);
+        if (dist !== 1) return; // 仅允许与空格相邻的块移动
+
+        var tmp = keyVaultBoard[tileIdx];
+        keyVaultBoard[tileIdx] = keyVaultBoard[emptyIdx];
+        keyVaultBoard[emptyIdx] = tmp;
+        renderBoard();
+      }
+
+      // 初始化：从已解状态出发做随机合法移动，保证可解
+      shuffleBoard(80);
+      renderBoard();
     }
 
     // 右上角状态栏：北京时间与登录状态
@@ -1702,6 +1863,7 @@
           }
         } else if (trimmed === "rm SoulContainer.exe" && cwd === "Resources") {
           html += '<span style="color:#ff0000">WARNING</span>: Security level low, at minimum, level 4 is required to delete core document.<br>';
+          html += 'Try to elevate privileges through visiting <span style="color:#33ff66">KeyVault</span>.<br>';
         } else if (trimmed !== "") {
           // 其他未定义命令：模仿 zsh 的 command not found 提示
           html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
@@ -1850,6 +2012,91 @@
       }
     }
 
+    // KeyVault 窗口拖拽：模仿 Notes / Terminal
+    function initKeyVaultWindow() {
+      if (!keyVaultWindowEl) return;
+      var titleBar = keyVaultWindowEl.querySelector(".kv-titlebar");
+      var minBtn = keyVaultWindowEl.querySelector(".kv-min");
+      var closeBtn = keyVaultWindowEl.querySelector(".kv-close");
+      if (!titleBar) return;
+
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        bringToFront(keyVaultWindowEl);
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var tx = baseX + dx;
+        var ty = baseY + dy;
+        keyVaultWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        var m = keyVaultWindowEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      titleBar.addEventListener("mousedown", onMouseDown);
+
+      // 点击 KeyVault 窗口任意区域都应将其置于最上层
+      keyVaultWindowEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(keyVaultWindowEl);
+      });
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          keyVaultWindowEl.style.display = "none";
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          shakeWindowElement(keyVaultWindowEl);
+        });
+      }
+
+      // 访客提示框关闭按钮
+      if (keyVaultGuestDialogEl) {
+        var guestClose = keyVaultGuestDialogEl.querySelector(".kv-guest-close");
+        if (guestClose) {
+          guestClose.addEventListener("click", function (ev) {
+            ev.stopPropagation();
+            keyVaultGuestDialogEl.style.display = "none";
+          });
+        }
+        // 点击对话框外部区域也关闭
+        keyVaultGuestDialogEl.addEventListener("click", function (ev) {
+          if (ev.target === keyVaultGuestDialogEl) {
+            keyVaultGuestDialogEl.style.display = "none";
+          }
+        });
+      }
+    }
+
     function initDesktopIcons() {
       var desktop = document.getElementById("desktop-area");
       if (!desktop) return;
@@ -1885,6 +2132,19 @@
           win = notesWindowEl;
           displayMode = "flex";
           defaultTransform = notesDefaultTransform;
+        } else if (app === "keyvault") {
+          // 未通过管理员验证时：仅弹访客提示框
+          if (!isAdminValidated) {
+            if (keyVaultGuestDialogEl) {
+              keyVaultGuestDialogEl.style.display = "flex";
+            }
+            return;
+          }
+          win = keyVaultWindowEl;
+          displayMode = "flex";
+          defaultTransform = keyVaultDefaultTransform;
+          // 首次打开 KeyVault 时初始化数字华容道
+          initKeyVaultPuzzle();
         }
         if (!win) return;
 
@@ -2129,6 +2389,7 @@
     initArkTerminal();
     initTerminalDrag();
     initPetWindowDrag();
+    initKeyVaultWindow();
     initDesktopIcons();
     initNotesWindow();
     applyLayoutScale();
