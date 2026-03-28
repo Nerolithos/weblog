@@ -44,8 +44,11 @@
     // KeyVault 窗口与访客提示框
     var keyVaultWindowEl = document.getElementById("keyvault-window");
     var keyVaultGuestDialogEl = document.getElementById("keyvault-guest-dialog");
-    var keyVaultPuzzleContainerEl = document.getElementById("kv-puzzle-container");
+    var keyVaultPuzzleRowEl = document.getElementById("kv-puzzle-container");
+    var keyVaultPuzzleContainerEl = document.getElementById("kv-puzzle-left");
+    var keyVaultPuzzlePreviewEl = document.getElementById("kv-puzzle-right");
     var keyVaultPuzzleStatusEl = document.getElementById("kv-puzzle-status");
+    var keyVaultConfidentialEl = document.getElementById("kv-confidential");
 
     // 右上角登录状态 + 北京时间小框
     var statusPanelEl = document.getElementById("status-panel");
@@ -490,6 +493,7 @@
     // KeyVault 数字华容道（15-puzzle）状态
     var keyVaultPuzzleInitialized = false;
     var keyVaultBoard = null; // 长度 16 的数组，0 表示空格，其余 1..15
+    var keyVaultPuzzleCompleted = false; // 解出后锁定，并展示机密表格
 
     function showRingPuzzleOverlay() {
       if (!ringOverlayEl) return;
@@ -941,6 +945,7 @@
       var rows = 4;
       var cellSize = (width - margin * 2) / cols;
 
+      // 左侧可操作华容道
       var svg = d3ref.select(keyVaultPuzzleContainerEl)
         .append("svg")
         .attr("width", width)
@@ -950,6 +955,21 @@
 
       var boardGroup = svg.append("g")
         .attr("transform", "translate(" + margin + "," + margin + ")");
+
+      // 右侧目标示意华容道（固定为 1..15, 空格）
+      var previewSvg = null;
+      var previewGroup = null;
+      if (keyVaultPuzzlePreviewEl) {
+        previewSvg = d3ref.select(keyVaultPuzzlePreviewEl)
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height)
+          .style("display", "block")
+          .style("margin", "0 auto");
+
+        previewGroup = previewSvg.append("g")
+          .attr("transform", "translate(" + margin + "," + margin + ")");
+      }
 
       function indexToRC(idx) {
         return { r: Math.floor(idx / cols), c: idx % cols };
@@ -964,6 +984,52 @@
         for (var i = 1; i <= 15; i++) arr.push(i);
         arr.push(0);
         return arr;
+      }
+
+      function renderPreview() {
+        if (!previewGroup) return;
+        var solved = createSolvedBoard();
+        var tilesData = [];
+        for (var i = 0; i < solved.length; i++) {
+          var v = solved[i];
+          if (v === 0) continue;
+          tilesData.push({ value: v, index: i });
+        }
+
+        var tiles = previewGroup.selectAll(".kv-tile-preview")
+          .data(tilesData, function (d) { return d.value; });
+
+        var tilesEnter = tiles.enter()
+          .append("g")
+          .attr("class", "kv-tile-preview");
+
+        tilesEnter.append("rect")
+          .attr("rx", 6)
+          .attr("ry", 6)
+          .attr("width", cellSize - 6)
+          .attr("height", cellSize - 6)
+          .attr("x", 3)
+          .attr("y", 3)
+          .attr("fill", "#f8f8f8")
+          .attr("stroke", "#000000")
+          .attr("stroke-width", 1.2);
+
+        tilesEnter.append("text")
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "central")
+          .attr("x", cellSize / 2)
+          .attr("y", cellSize / 2 + 1)
+          .attr("font-size", 18)
+          .attr("font-family", "'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace")
+          .text(function (d) { return d.value; });
+
+        tilesEnter.merge(tiles)
+          .attr("transform", function (d) {
+            var rc = indexToRC(d.index);
+            return "translate(" + (rc.c * cellSize) + "," + (rc.r * cellSize) + ")";
+          });
+
+        tiles.exit().remove();
       }
 
       function shuffleBoard(steps) {
@@ -1042,16 +1108,30 @@
 
         tiles.exit().remove();
 
+        var solved = isSolved();
         if (keyVaultPuzzleStatusEl) {
-          if (isSolved()) {
-            keyVaultPuzzleStatusEl.textContent = "ACCESS GRANTED.";
+          if (solved) {
+            keyVaultPuzzleStatusEl.textContent = "ACCESS GRANTED. Puzzle solved.";
           } else {
-            keyVaultPuzzleStatusEl.textContent = "Arrange the tiles 1~15.";
+            // 华容道进行中不显示提示文字
+            keyVaultPuzzleStatusEl.textContent = "";
+          }
+        }
+
+        // 首次解出时，隐藏拼图，展示 KeyVault 机密信息表格
+        if (solved && !keyVaultPuzzleCompleted) {
+          keyVaultPuzzleCompleted = true;
+          if (keyVaultPuzzleRowEl) {
+            keyVaultPuzzleRowEl.style.display = "none";
+          }
+          if (keyVaultConfidentialEl) {
+            keyVaultConfidentialEl.style.display = "block";
           }
         }
       }
 
       function moveTile(value) {
+        if (keyVaultPuzzleCompleted) return; // 已解锁后不再允许移动
         if (!keyVaultBoard) return;
         var tileIdx = -1;
         var emptyIdx = -1;
@@ -1073,6 +1153,7 @@
 
       // 初始化：从已解状态出发做随机合法移动，保证可解
       shuffleBoard(80);
+      renderPreview();
       renderBoard();
     }
 
@@ -1505,18 +1586,22 @@
 
       var dlg = document.getElementById("love-dialog");
       if (dlg) {
-        var inner = dlg.firstElementChild;
-        if (inner) {
-          inner.textContent = "Administrator detected. Welcome.\nThe password to Resources is available.";
+        var textEl = document.getElementById("love-dialog-text");
+        if (textEl) {
+          textEl.textContent = "Welcome, Dr. Hiro Pleighman.\nThe password to Resources is available in Notes.";
+        }
+        // 绑定关闭按钮：点击红色按钮后关闭 LOVE 对话框
+        var closeBtn = dlg.querySelector(".love-close");
+        if (closeBtn) {
+          closeBtn.onclick = function () {
+            dlg.style.opacity = "0";
+            setTimeout(function () {
+              dlg.style.display = "none";
+            }, 300);
+          };
         }
         dlg.style.display = "flex";
         dlg.style.opacity = "1";
-        setTimeout(function () {
-          dlg.style.opacity = "0";
-          setTimeout(function () {
-            dlg.style.display = "none";
-          }, 400);
-        }, 5500);
       }
 
       revealResourcesPasswordInNotes();

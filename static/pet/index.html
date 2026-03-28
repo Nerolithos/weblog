@@ -516,7 +516,7 @@
       position: absolute;
       left: 120px;
       bottom: 40px;
-      width: 360px;
+      width: 640px;
       height: 340px;
       background: #ffffff;
       border-radius: 8px;
@@ -558,6 +558,49 @@
     #keyvault-window .kv-placeholder {
       font-size: 11px;
       color: #555555;
+    }
+    /* KeyVault 华容道左右布局：左侧可操作，右侧目标示意 */
+    #kv-puzzle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    #kv-puzzle-left,
+    #kv-puzzle-right {
+      flex: 0 0 auto;
+    }
+    #kv-puzzle-arrow {
+      flex: 0 0 auto;
+      font-size: 18px;
+      font-weight: 700;
+      color: #000000;
+      user-select: none;
+    }
+    /* KeyVault 机密信息表格样式 */
+    #kv-confidential-title {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    #kv-confidential-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 11px;
+    }
+    #kv-confidential-table th,
+    #kv-confidential-table td {
+      border: 1px solid #000000;
+      padding: 3px 4px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    #kv-confidential-table th {
+      background: #f0f0f0;
+      font-weight: 600;
+    }
+    #kv-confidential-table td:last-child {
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
 
     /* 同心圆环解密覆盖层 */
@@ -804,8 +847,56 @@
         <div class="kv-title-text">KeyVault</div>
       </div>
       <div class="kv-body">
-        <div id="kv-puzzle-container"></div>
-        <div id="kv-puzzle-status" class="kv-placeholder" style="margin-top:8px;">Arrange the tiles from 1 to 15.</div>
+        <div id="kv-puzzle-container">
+          <div id="kv-puzzle-left"></div>
+          <div id="kv-puzzle-arrow">→</div>
+          <div id="kv-puzzle-right"></div>
+        </div>
+        <div id="kv-puzzle-status" class="kv-placeholder" style="margin-top:8px;"></div>
+        <div id="kv-confidential" style="display:none;margin-top:8px;">
+          <div id="kv-confidential-title">Confidential: ArkPets Project Team at SoulCOntainer corp.</div>
+          <table id="kv-confidential-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Authorization Level</th>
+                <th>Email</th>
+                <th>Password</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Senior Manager</td>
+                <td>Clyde J. Rothschild</td>
+                <td>Lv.4</td>
+                <td>Clyde.J.R@SoulCont.com</td>
+                <td>5G16H9IC</td>
+              </tr>
+              <tr>
+                <td>Project Manager</td>
+                <td>Hiro Pleighman</td>
+                <td>Lv.3</td>
+                <td>Hiro.P@SoulCont.com</td>
+                <td>8G5H12IF</td>
+              </tr>
+              <tr>
+                <td>Project Member</td>
+                <td>Elias Hoffmann</td>
+                <td>Lv.2</td>
+                <td>Elias.H@SoulCont.com</td>
+                <td>4G5H1I4J</td>
+              </tr>
+              <tr>
+                <td>Project Member</td>
+                <td>Hidayat Agni Tandi</td>
+                <td>Lv.2</td>
+                <td>Hidayat.T@SoulCont.com</td>
+                <td>CG5H6I14</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -856,9 +947,17 @@ You joined the two pets, a third soul was added to the collection. They were nev
   <canvas id="camera-face-overlay"></canvas>
   <!-- LOVE 提示对话框：置于摄像头视频与人脸覆盖层之上 -->
   <div id="love-dialog" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:220;opacity:0;transition:opacity 0.3s ease-out;">
-    <div style="background:#ffffff;border-radius:8px;border:1px solid #000;padding:16px 22px;box-shadow:0 10px 30px rgba(0,0,0,0.7);font-family:'SF Mono',Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:14px;text-align:center;white-space:pre-line;color:#ff0000;font-weight:700;">
-Administrator detected. Welcome.
-The password to Resources is available.
+    <div style="background:#ffffff;border-radius:8px;border:1px solid #000;padding:12px 18px 14px 18px;box-shadow:0 10px 30px rgba(0,0,0,0.7);font-family:'SF Mono',Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:13px;white-space:pre-line;color:#ff0000;font-weight:700;min-width:260px;max-width:340px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;color:#000000;font-weight:600;font-size:11px;">
+        <span>ArkPets System</span>
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn love-close" style="background:#ff0000;"></div>
+        </div>
+      </div>
+      <div id="love-dialog-text" style="text-align:center;">
+Administrator detected. Welcome, Dr. Hiro Pleighman.
+The password to Resources is available in Notes.
+      </div>
     </div>
   </div>
   <!-- 摄像头错误覆盖层：拒绝授权时使用 -->
