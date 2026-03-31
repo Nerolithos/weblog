@@ -1111,7 +1111,7 @@
         var solved = isSolved();
         if (keyVaultPuzzleStatusEl) {
           if (solved) {
-            keyVaultPuzzleStatusEl.textContent = "ACCESS GRANTED. Puzzle solved.";
+            keyVaultPuzzleStatusEl.textContent = "ACCESS GRANTED.";
           } else {
             // 华容道进行中不显示提示文字
             keyVaultPuzzleStatusEl.textContent = "";
