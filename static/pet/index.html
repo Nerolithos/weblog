@@ -781,6 +781,68 @@
       z-index: 140;
       white-space: normal;
     }
+
+    /* line 聊天窗口通用样式 */
+    #line-window .line-msg-row {
+      display: flex;
+      margin: 6px 0;
+    }
+    #line-window .line-msg-row.left {
+      justify-content: flex-start;
+    }
+    #line-window .line-msg-row.right {
+      justify-content: flex-end;
+    }
+    #line-window .line-msg-inner {
+      display: flex;
+      align-items: flex-start;
+      max-width: 80%;
+    }
+    #line-window .line-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    #line-window .line-msg-content {
+      display: flex;
+      flex-direction: column;
+      margin: 0 8px;
+    }
+    #line-window .line-msg-name {
+      font-size: 11px;
+      color: #000000;
+      margin-bottom: 2px;
+    }
+    #line-window .line-bubble {
+      padding: 6px 9px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      word-break: break-word;
+      background: #f0f0f0;
+      color: #000000;
+      text-align: left;
+    }
+    #line-window .line-msg-row.right .line-bubble {
+      background: #d6f0ff;
+    }
+    #line-window .line-date {
+      text-align: center;
+      font-size: 11px;
+      color: #666666;
+      margin: 10px 0 6px;
+    }
+    #line-window .line-msg-row.left .line-msg-content {
+      margin: 0 0 0 8px;
+      text-align: left;
+      align-items: flex-start;
+    }
+    #line-window .line-msg-row.right .line-msg-content {
+      margin: 0 8px 0 0;
+      text-align: left;
+      align-items: flex-end;
+    }
   </style>
 </head>
 <body>
@@ -791,6 +853,7 @@
     <div class="desktop-icon" data-app="terminal"><span class="icon-emoji">⌨</span><span class="icon-label">Terminal</span></div>
     <div class="desktop-icon" data-app="notes"><span class="icon-emoji">📝</span><span class="icon-label">Notes</span></div>
     <div class="desktop-icon" data-app="keyvault"><span class="icon-emoji">🔐</span><span class="icon-label">KeyVault</span></div>
+    <div class="desktop-icon" data-app="line"><span class="icon-emoji">💬</span><span class="icon-label">line</span></div>
   </div>
   <div id="window-layer">
     <div id="main-row">
@@ -897,6 +960,43 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+
+    <!-- line 聊天应用窗口 -->
+    <div id="line-window" style="position:absolute;right:40px;top:90px;width:640px;height:420px;background:#ffffff;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.6);border:1px solid #000000;display:none;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;box-sizing:border-box;flex-direction:column;">
+      <div class="line-titlebar" style="height:24px;background:#f0f0f0;display:flex;align-items:center;padding:0 8px;box-sizing:border-box;user-select:none;">
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn line-close"></div>
+          <div class="ark-term-btn min line-min"></div>
+        </div>
+        <div class="line-title-text" style="font-size:11px;color:#444444;margin-left:6px;flex:1;text-align:center;">line</div>
+      </div>
+      <div class="line-body" style="display:flex;height:calc(100% - 24px);background:#f5f5f5;">
+        <div id="line-list" style="width:260px;border-right:1px solid #dddddd;background:#f7f7f7;display:flex;flex-direction:column;">
+          <div class="line-contact" data-contact="clyde" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;">
+            <img src="Resources/Clyde.jpg" alt="Clyde" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
+            <div style="display:flex;flex-direction:column;">
+              <span class="line-name" style="font-size:13px;color:#111111;">Clyde J. Rothschild</span>
+              <span style="font-size:11px;color:#999999;">Last seen recently</span>
+            </div>
+          </div>
+          <div class="line-contact" data-contact="elias" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;opacity:0.6;">
+            <img src="Resources/Elias.jpg" alt="Elias" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
+            <div style="display:flex;flex-direction:column;">
+              <span class="line-name" style="font-size:13px;color:#111111;">Elias Hoffmann</span>
+              <span style="font-size:11px;color:#999999;">No messages</span>
+            </div>
+          </div>
+          <div class="line-contact" data-contact="hidayat" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;opacity:0.6;">
+            <img src="Resources/Hidayat.jpg" alt="Hidayat" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
+            <div style="display:flex;flex-direction:column;">
+              <span class="line-name" style="font-size:13px;color:#111111;">Hidayat Agni Tandi</span>
+              <span style="font-size:11px;color:#999999;">No messages</span>
+            </div>
+          </div>
+        </div>
+        <div id="line-chat" style="flex:1;padding:12px 16px;overflow-y:auto;background:#ffffff;"></div>
       </div>
     </div>
   </div>

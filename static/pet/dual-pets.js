@@ -50,17 +50,23 @@
     var keyVaultPuzzleStatusEl = document.getElementById("kv-puzzle-status");
     var keyVaultConfidentialEl = document.getElementById("kv-confidential");
 
+    // line 聊天应用窗口
+    var lineWindowEl = document.getElementById("line-window");
+    var lineListEl = document.getElementById("line-list");
+    var lineChatEl = document.getElementById("line-chat");
+
     // 右上角登录状态 + 北京时间小框
     var statusPanelEl = document.getElementById("status-panel");
     var loginStatusEl = document.getElementById("login-status-label");
     var statusTimeEl = document.getElementById("status-time-label");
     var statusTooltipEl = document.getElementById("status-tooltip");
 
-    // 记录三个窗口的默认 transform，用于重新打开时回到初始位置
+    // 记录几个窗口的默认 transform，用于重新打开时回到初始位置
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
     var termDefaultTransform = sideTermEl ? (sideTermEl.style.transform || "") : "";
     var notesDefaultTransform = notesWindowEl ? (notesWindowEl.style.transform || "") : "";
     var keyVaultDefaultTransform = keyVaultWindowEl ? (keyVaultWindowEl.style.transform || "") : "";
+    var lineDefaultTransform = lineWindowEl ? (lineWindowEl.style.transform || "") : "";
 
     // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
     var BASE_Z = 20;
@@ -494,6 +500,78 @@
     var keyVaultPuzzleInitialized = false;
     var keyVaultBoard = null; // 长度 16 的数组，0 表示空格，其余 1..15
     var keyVaultPuzzleCompleted = false; // 解出后锁定，并展示机密表格
+
+    // line 聊天内容（目前只实现 Clyde 对话）
+    var lineConversations = {
+      clyde: [
+        {
+          date: "(May 24th, 2024)",
+          messages: [
+            { speaker: "hiro", text: "Greetings, Mr. Rothschild. I will be working under your commands from today. Thank you for having me." },
+            { speaker: "clyde", text: "Right, I was just informed that you was reassigned to the Arkpets project group, which I was in charge of. I am most eager to see your progress." },
+            { speaker: "hiro", text: "Pardon my ignorance, but your project was rather secretive. I was only told by the HQ that this project was regarding soul. Are we maybe doing hyper-personified AI?" },
+            { speaker: "clyde", text: "No. Talk to me in the company email." }
+          ]
+        },
+        {
+          date: "(July 2th, 2025)",
+          messages: [
+            { speaker: "hiro", text: "Phase one was initialized with great yields, we are able to repeatedly contain souls of stray cats. No offense, but I still don't agree with the Board, how are digital pets superior than their real counterparts?" },
+            { speaker: "hiro", text: "Maybe there's more prospect beyond pets in their mind?" }
+          ]
+        },
+        {
+          date: "(July 3th, 2025)",
+          messages: [
+            { speaker: "clyde", text: "The Board as well as myself will decide its future. Do your job and your work shall be commended." },
+            { speaker: "hiro", text: "Yes, Mr. Rothschild." }
+          ]
+        },
+        {
+          date: "(October 11th, 2025)",
+          messages: [
+            { speaker: "clyde", text: "I've yet to hear from you for a rather extended period. Report the status quo." },
+            { speaker: "hiro", text: "Sir, phase three was advancing as expected, we found some terminally ill tumor patients willing to participate as test subjects to preserve their conscious digitally." },
+            { speaker: "hiro", text: "The program for human soul preservation, SoulContainer.exe was developed for this test, but..." },
+            { speaker: "clyde", text: "But?" },
+            { speaker: "hiro", text: "The legal procedure was sluggish if not stuck completely still. This will take us valuable time." },
+            { speaker: "clyde", text: "Every single time! These incompetent idiots ... never mind, I'll handle it." },
+            { speaker: "hiro", text: "Yes, sir." }
+          ]
+        },
+        {
+          date: "(January 24th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Mr. Hidayat just called me about the Board and hanged up in a hurry, it sounds like he got himself in some trouble. Was this of our concern potentially?" },
+            { speaker: "clyde", text: "Hidayat was a disgusting traitor to the firm. He left and spoiled our blueprints to the opposition company. Never trust his lying nonsense." },
+            { speaker: "clyde", text: "Tell no one about this." },
+            { speaker: "hiro", text: "It will be so, Mr. Rothschild." }
+          ]
+        },
+        {
+          date: "(February 31th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Sir, why are these subjects calling for help like crazy? The alarm was going on one after another the whole morning." },
+            { speaker: "clyde", text: "Don't mind, they were dying anyways and we helped them live forever. Now they turn back on us? How ungrateful." },
+            { speaker: "hiro", text: "Yes, but they were not dying I'm afraid, I tested their conscious activity and the data doesn't make sense, it seems they were ... underaged?" }
+          ]
+        },
+        {
+          date: "(March 2th, 2026)",
+          messages: [
+            { speaker: "clyde", text: "It has been an honor ... we couldn't have done it without you." },
+            { speaker: "clyde", text: "Unfortunately, You know too much." }
+          ]
+        },
+        {
+          date: "(March 3th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "What? What have you done? Why are the police taking me away?" },
+            { speaker: "clyde", text: "Farewell, Mr. Hiro. You started this inhumane test, not the Board. Enjoy your life, or rather what's left of it." }
+          ]
+        }
+      ]
+    };
 
     function showRingPuzzleOverlay() {
       if (!ringOverlayEl) return;
@@ -2230,6 +2308,10 @@
           defaultTransform = keyVaultDefaultTransform;
           // 首次打开 KeyVault 时初始化数字华容道
           initKeyVaultPuzzle();
+        } else if (app === "line") {
+          win = lineWindowEl;
+          displayMode = "flex";
+          defaultTransform = lineDefaultTransform;
         }
         if (!win) return;
 
@@ -2381,6 +2463,157 @@
       }
     }
 
+    function initLineWindow() {
+      if (!lineWindowEl) return;
+      var titleBar = lineWindowEl.querySelector(".line-titlebar");
+      var minBtn = lineWindowEl.querySelector(".line-min");
+      var closeBtn = lineWindowEl.querySelector(".line-close");
+      if (!titleBar) return;
+
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        bringToFront(lineWindowEl);
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var tx = baseX + dx;
+        var ty = baseY + dy;
+        lineWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        var m = lineWindowEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      titleBar.addEventListener("mousedown", onMouseDown);
+
+      lineWindowEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(lineWindowEl);
+      });
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          lineWindowEl.style.display = "none";
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          shakeWindowElement(lineWindowEl);
+        });
+      }
+
+      if (lineListEl && lineChatEl) {
+        function renderConversation(contactId) {
+          var blocks = lineConversations[contactId];
+          lineChatEl.innerHTML = "";
+          if (!blocks) {
+            lineChatEl.textContent = "No messages.";
+            return;
+          }
+          for (var i = 0; i < blocks.length; i++) {
+            var blk = blocks[i];
+            if (blk.date) {
+              var dateEl = document.createElement("div");
+              dateEl.className = "line-date";
+              dateEl.textContent = blk.date;
+              lineChatEl.appendChild(dateEl);
+            }
+            var msgs = blk.messages || [];
+            for (var j = 0; j < msgs.length; j++) {
+              var msg = msgs[j];
+              var row = document.createElement("div");
+              row.className = "line-msg-row " + (msg.speaker === "hiro" ? "right" : "left");
+
+              var inner = document.createElement("div");
+              inner.className = "line-msg-inner";
+
+              var avatar = document.createElement("img");
+              avatar.className = "line-avatar";
+              if (msg.speaker === "hiro") {
+                avatar.src = "Resources/Hiro.jpg";
+                avatar.alt = "Hiro";
+              } else {
+                avatar.src = "Resources/Clyde.jpg";
+                avatar.alt = "Clyde";
+              }
+
+              var content = document.createElement("div");
+              content.className = "line-msg-content";
+
+              var nameEl = document.createElement("div");
+              nameEl.className = "line-msg-name";
+              nameEl.textContent = (msg.speaker === "hiro") ? "Hiro Pleighman" : "Clyde J. Rothschild";
+
+              var bubble = document.createElement("div");
+              bubble.className = "line-bubble";
+              bubble.textContent = msg.text;
+
+              content.appendChild(nameEl);
+              content.appendChild(bubble);
+
+              // Hiro 的消息整体靠右：内容在内侧、头像在最右；
+              // Clyde 在左：头像在左、内容在其右。
+              if (msg.speaker === "hiro") {
+                inner.appendChild(content);
+                inner.appendChild(avatar);
+              } else {
+                inner.appendChild(avatar);
+                inner.appendChild(content);
+              }
+              row.appendChild(inner);
+              lineChatEl.appendChild(row);
+            }
+          }
+          lineChatEl.scrollTop = lineChatEl.scrollHeight;
+        }
+
+        // 侧边联系人点击切换会话（目前仅 Clyde 有内容）
+        var contacts = lineListEl.querySelectorAll(".line-contact");
+        for (var k = 0; k < contacts.length; k++) {
+          (function () {
+            var item = contacts[k];
+            var id = item.getAttribute("data-contact");
+            item.addEventListener("click", function () {
+              for (var m = 0; m < contacts.length; m++) {
+                contacts[m].style.background = "";
+              }
+              item.style.background = "#e0e9ff";
+              renderConversation(id);
+            });
+          })();
+        }
+
+        // 默认选中 Clyde
+        renderConversation("clyde");
+      }
+    }
+
     function initNotesWindow() {
       if (!notesWindowEl) return;
       var headerEl = notesWindowEl.querySelector(".notes-header");
@@ -2475,6 +2708,7 @@
     initTerminalDrag();
     initPetWindowDrag();
     initKeyVaultWindow();
+    initLineWindow();
     initDesktopIcons();
     initNotesWindow();
     applyLayoutScale();
