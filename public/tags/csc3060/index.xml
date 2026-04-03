@@ -6,8 +6,22 @@
     <description>Recent content in CSC3060 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 14 Mar 2026 10:37:34 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 02 Apr 2026 10:11:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/csc3060/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>
+      <link>http://localhost:1313/posts/3060.6/</link>
+      <pubDate>Thu, 02 Apr 2026 10:11:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.6/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</title>
+      <link>http://localhost:1313/posts/3060.5/</link>
+      <pubDate>Tue, 17 Mar 2026 10:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.5/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险</description>
+    </item>
     <item>
       <title>💻 CSC3060 Project: Code Scheduling</title>
       <link>http://localhost:1313/posts/3060p3/</link>

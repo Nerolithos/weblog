@@ -13,14 +13,14 @@
       <link>http://localhost:1313/posts/emoji/</link>
       <pubDate>Mon, 16 Mar 2026 14:57:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/emoji/</guid>
-      <description>Proof of Work of a html + js Super-Mario-type, rough-like game</description>
+      <description>Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game</description>
     </item>
     <item>
       <title>🐈 ArkPets</title>
       <link>http://localhost:1313/posts/pet/</link>
       <pubDate>Fri, 06 Mar 2026 13:57:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/pet/</guid>
-      <description>Proof of Work of a spine-ts + html + js exercise</description>
+      <description>Proof of Work of a html + js puzzle-game exercise, powered by spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on game.</description>
     </item>
   </channel>
 </rss>

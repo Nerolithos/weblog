@@ -20,13 +20,53 @@
     var sideTermEl = document.getElementById("side-terminal");
     var petWindowEl = document.getElementById("pet-window");
     var cameraVideoEl = document.getElementById("camera-stream");
+    var cameraFaceCanvasEl = document.getElementById("camera-face-overlay");
     var cameraErrorEl = document.getElementById("camera-error-overlay");
     var notesWindowEl = document.getElementById("notes-window");
+    var ringOverlayEl = document.getElementById("ring-puzzle-overlay");
+    var ringTitleEl = document.getElementById("ring-puzzle-title");
+    var ringSvgContainerEl = document.getElementById("ring-puzzle-svg-container");
+    var ringInstructionEl = document.getElementById("ring-puzzle-instruction");
+    var ringInputRowEl = document.getElementById("ring-puzzle-input-row");
+    var ringInputEl = document.getElementById("ring-puzzle-input");
+    var ringSubmitEl = document.getElementById("ring-puzzle-submit");
+    var ringStatusEl = document.getElementById("ring-puzzle-status");
+    // 第二阶段：热力图 / 像素矩阵控件
+    var containPuzzleContainerEl = document.getElementById("contain-puzzle-container");
+    var containCanvasEl = document.getElementById("contain-puzzle-canvas");
+    var containColorRangeEl = document.getElementById("contain-color-range");
+    var containClarityRangeEl = document.getElementById("contain-clarity-range");
+    // 最终黑屏结局 DOM
+    var tuningOverlayEl = document.getElementById("tuning-ending-overlay");
+    var tuningCodeEl = document.getElementById("tuning-code");
+    var tuningCenterEl = document.getElementById("tuning-ending-center");
 
-    // 记录三个窗口的默认 transform，用于重新打开时回到初始位置
+    // KeyVault 窗口与访客提示框
+    var keyVaultWindowEl = document.getElementById("keyvault-window");
+    var keyVaultGuestDialogEl = document.getElementById("keyvault-guest-dialog");
+    var keyVaultPuzzleRowEl = document.getElementById("kv-puzzle-container");
+    var keyVaultPuzzleContainerEl = document.getElementById("kv-puzzle-left");
+    var keyVaultPuzzlePreviewEl = document.getElementById("kv-puzzle-right");
+    var keyVaultPuzzleStatusEl = document.getElementById("kv-puzzle-status");
+    var keyVaultConfidentialEl = document.getElementById("kv-confidential");
+
+    // line 聊天应用窗口
+    var lineWindowEl = document.getElementById("line-window");
+    var lineListEl = document.getElementById("line-list");
+    var lineChatEl = document.getElementById("line-chat");
+
+    // 右上角登录状态 + 北京时间小框
+    var statusPanelEl = document.getElementById("status-panel");
+    var loginStatusEl = document.getElementById("login-status-label");
+    var statusTimeEl = document.getElementById("status-time-label");
+    var statusTooltipEl = document.getElementById("status-tooltip");
+
+    // 记录几个窗口的默认 transform，用于重新打开时回到初始位置
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
     var termDefaultTransform = sideTermEl ? (sideTermEl.style.transform || "") : "";
     var notesDefaultTransform = notesWindowEl ? (notesWindowEl.style.transform || "") : "";
+    var keyVaultDefaultTransform = keyVaultWindowEl ? (keyVaultWindowEl.style.transform || "") : "";
+    var lineDefaultTransform = lineWindowEl ? (lineWindowEl.style.transform || "") : "";
 
     // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
     var BASE_Z = 20;
@@ -78,6 +118,1194 @@
     var cameraStreamObj = null;
     var loveDialogShown = false;
 
+    // 终端爱心流控制：ap -c ALWAYS 与 ap -e LOVE 之后快速输出 ♥，
+    // 当管理员验证完成（摄像头检测通过）后停止输出，并打印完成提示语。
+    var apHeartsStopRequested = false;
+    var apHeartsCompletionLineShown = false;
+
+    // 登录状态：默认 Guest，通过摄像头管理员验证后切换为 Admin Lv.3
+    var isAdminValidated = false;
+
+    // 浏览器端人脸检测后端（优先使用 OpenCV.js，其次尝试 FaceDetector），
+    // 对外暴露为同步的 dlibHogDetectFaces(video) -> [{x,y,w,h}]
+    var faceDetectorBackend = {
+      detector: null,
+      offscreenCanvas: null,
+      offscreenCtx: null,
+      latestFacesByVideo: new WeakMap(),
+      activeVideos: [],
+      loopRunning: false
+    };
+
+    function ensureFaceDetectorForVideo(videoEl) {
+      if (!videoEl || !global.FaceDetector) return;
+
+      if (!faceDetectorBackend.detector) {
+        try {
+          faceDetectorBackend.detector = new global.FaceDetector({ fastMode: true, maxDetectedFaces: 3 });
+        } catch (e) {
+          faceDetectorBackend.detector = null;
+          return;
+        }
+      }
+
+      if (!faceDetectorBackend.offscreenCanvas) {
+        var c = document.createElement("canvas");
+        c.width = 320;
+        c.height = 240;
+        faceDetectorBackend.offscreenCanvas = c;
+        faceDetectorBackend.offscreenCtx = c.getContext("2d", { willReadFrequently: true });
+      }
+
+      if (faceDetectorBackend.activeVideos.indexOf(videoEl) === -1) {
+        faceDetectorBackend.activeVideos.push(videoEl);
+      }
+
+      if (!faceDetectorBackend.loopRunning) {
+        faceDetectorBackend.loopRunning = true;
+        runFaceDetectorLoop();
+      }
+
+      if (!global.dlibHogDetectFaces) {
+        global.dlibHogDetectFaces = function (video) {
+          var arr = faceDetectorBackend.latestFacesByVideo.get(video);
+          return arr ? arr.slice() : [];
+        };
+      }
+    }
+
+    // OpenCV.js Haar 人脸检测作为主要实现
+    var opencvBackend = {
+      cvReady: false,
+      initializing: false,
+      faceClassifier: null,
+      cascadeLoaded: false,
+      loadingCascade: false,
+      // 期望与 index.html 同目录下放置 haarcascade_frontalface_default.xml，
+      // 由开发服务器以同源静态资源方式提供。
+      cascadeFile: "haarcascade_frontalface_default.xml",
+      offscreenCanvas: null,
+      offscreenCtx: null,
+      latestFacesByVideo: new WeakMap(),
+      activeVideos: [],
+      loopRunning: false,
+      pollTimer: null
+    };
+
+    function ensureOpenCvDetectorForVideo(videoEl) {
+      if (!videoEl) return;
+
+      if (opencvBackend.activeVideos.indexOf(videoEl) === -1) {
+        opencvBackend.activeVideos.push(videoEl);
+      }
+
+      function startLoopIfReady() {
+        if (!opencvBackend.cvReady || opencvBackend.loopRunning) return;
+
+        if (!opencvBackend.offscreenCanvas) {
+          var c = document.createElement("canvas");
+          c.width = 320;
+          c.height = 240;
+          opencvBackend.offscreenCanvas = c;
+          opencvBackend.offscreenCtx = c.getContext("2d", { willReadFrequently: true });
+        }
+
+        // 始终先暴露同步的 dlibHogDetectFaces 接口，即便分类器尚未就绪时也返回空数组，
+        // 这样前端的人脸可视化循环至少能正常调用而不会因为 undefined 而完全失效。
+        if (!global.dlibHogDetectFaces) {
+          global.dlibHogDetectFaces = function (video) {
+            var arr = opencvBackend.latestFacesByVideo.get(video);
+            return arr ? arr.slice() : [];
+          };
+        }
+
+        // 若人脸分类器尚未加载，触发一次异步加载
+        if (!opencvBackend.faceClassifier) {
+          if (!opencvBackend.loadingCascade && global.cv) {
+            opencvBackend.loadingCascade = true;
+            try {
+              // 同源加载本地 haarcascade_frontalface_default.xml，避免跨域 / CORP 限制
+              fetch(opencvBackend.cascadeFile)
+                .then(function (res) { return res.arrayBuffer(); })
+                .then(function (buf) {
+                  var data = new Uint8Array(buf);
+                  global.cv.FS_createDataFile("/", opencvBackend.cascadeFile, data, true, false, false);
+                  var classifier = new global.cv.CascadeClassifier();
+                  if (!classifier.load(opencvBackend.cascadeFile)) {
+                    console.warn("[DualPets] OpenCV: failed to load cascade file");
+                    classifier.delete();
+                    opencvBackend.loadingCascade = false;
+                    return;
+                  }
+                  opencvBackend.faceClassifier = classifier;
+                  opencvBackend.cascadeLoaded = true;
+                  opencvBackend.loadingCascade = false;
+                  console.log("[DualPets] OpenCV: cascade loaded successfully");
+                  if (!opencvBackend.loopRunning && opencvBackend.activeVideos.length) {
+                    opencvBackend.loopRunning = true;
+                    runOpenCvLoop();
+                  }
+                })
+                .catch(function () {
+                  console.warn("[DualPets] OpenCV: failed to fetch haarcascade xml");
+                  opencvBackend.loadingCascade = false;
+                });
+            } catch (e) {
+              console.warn("[DualPets] OpenCV: error while loading cascade", e);
+              opencvBackend.loadingCascade = false;
+            }
+          }
+          return;
+        }
+
+        opencvBackend.loopRunning = true;
+        runOpenCvLoop();
+      }
+
+      if (!global.cv) {
+        if (!opencvBackend.pollTimer) {
+          opencvBackend.pollTimer = setInterval(function () {
+            if (global.cv) {
+              clearInterval(opencvBackend.pollTimer);
+              opencvBackend.pollTimer = null;
+              // 如果 runtime 已经初始化过，则直接标记 ready
+              if (global.cv.Mat) {
+                opencvBackend.cvReady = true;
+                startLoopIfReady();
+              } else if (!opencvBackend.initializing) {
+                opencvBackend.initializing = true;
+                global.cv['onRuntimeInitialized'] = function () {
+                  opencvBackend.cvReady = true;
+                  opencvBackend.initializing = false;
+                  startLoopIfReady();
+                };
+              }
+            }
+          }, 300);
+        }
+        return;
+      }
+
+      if (!opencvBackend.cvReady) {
+        if (global.cv.Mat) {
+          opencvBackend.cvReady = true;
+        } else if (!opencvBackend.initializing) {
+          opencvBackend.initializing = true;
+          global.cv['onRuntimeInitialized'] = function () {
+            opencvBackend.cvReady = true;
+            opencvBackend.initializing = false;
+            startLoopIfReady();
+          };
+        }
+      }
+
+      startLoopIfReady();
+    }
+
+    function runOpenCvLoop() {
+      if (!opencvBackend.cvReady || !opencvBackend.faceClassifier || !opencvBackend.offscreenCanvas || !opencvBackend.offscreenCtx) {
+        opencvBackend.loopRunning = false;
+        return;
+      }
+
+      var videos = opencvBackend.activeVideos.slice();
+      if (!videos.length) {
+        opencvBackend.loopRunning = false;
+        return;
+      }
+
+      var c = opencvBackend.offscreenCanvas;
+      var ctx2d = opencvBackend.offscreenCtx;
+
+      try {
+        for (var i = 0; i < videos.length; i++) {
+          var videoEl = videos[i];
+          if (!videoEl || videoEl.readyState < 2) {
+            opencvBackend.latestFacesByVideo.set(videoEl, []);
+            continue;
+          }
+
+          var vw = videoEl.videoWidth || videoEl.clientWidth;
+          var vh = videoEl.videoHeight || videoEl.clientHeight;
+          if (!vw || !vh) {
+            opencvBackend.latestFacesByVideo.set(videoEl, []);
+            continue;
+          }
+
+          var targetW = Math.min(320, vw);
+          var scale = targetW / vw;
+          var targetH = Math.max(1, Math.round(vh * scale));
+          c.width = targetW;
+          c.height = targetH;
+
+          try {
+            ctx2d.drawImage(videoEl, 0, 0, targetW, targetH);
+          } catch (e2) {
+            opencvBackend.latestFacesByVideo.set(videoEl, []);
+            continue;
+          }
+
+          var src = null;
+          var gray = null;
+          var facesRect = null;
+          var faces = [];
+
+          try {
+            src = global.cv.imread(c);
+            gray = new global.cv.Mat();
+            global.cv.cvtColor(src, gray, global.cv.COLOR_RGBA2GRAY, 0);
+            facesRect = new global.cv.RectVector();
+            // 使用 Haar 人脸分类器进行多尺度检测
+            // 参数：scaleFactor=1.1, minNeighbors=3, minSize 60x60 以去掉噪点
+            var minSize = new global.cv.Size(60, 60);
+            var maxSize = new global.cv.Size(0, 0);
+            opencvBackend.faceClassifier.detectMultiScale(gray, facesRect, 1.1, 3, 0, minSize, maxSize);
+
+            var bestArea = 0;
+            var bestRect = null;
+            for (var j = 0; j < facesRect.size(); j++) {
+              var r = facesRect.get(j);
+              var area = r.width * r.height;
+              if (area > bestArea) {
+                bestArea = area;
+                bestRect = r;
+              }
+            }
+            if (bestRect) {
+              var sx = vw / targetW;
+              var sy = vh / targetH;
+              faces.push({
+                x: bestRect.x * sx,
+                y: bestRect.y * sy,
+                w: bestRect.width * sx,
+                h: bestRect.height * sy
+              });
+            }
+          } catch (e3) {
+            faces = [];
+          } finally {
+            if (src) src.delete();
+            if (gray) gray.delete();
+            if (facesRect) facesRect.delete();
+          }
+
+          opencvBackend.latestFacesByVideo.set(videoEl, faces);
+        }
+      } catch (eOuter) {
+        opencvBackend.loopRunning = false;
+        return;
+      }
+
+      if (opencvBackend.activeVideos.length) {
+        setTimeout(runOpenCvLoop, 180);
+      } else {
+        opencvBackend.loopRunning = false;
+      }
+    }
+
+    function runFaceDetectorLoop() {
+      if (!faceDetectorBackend.detector || !faceDetectorBackend.offscreenCanvas || !faceDetectorBackend.offscreenCtx) {
+        faceDetectorBackend.loopRunning = false;
+        return;
+      }
+
+      var videos = faceDetectorBackend.activeVideos.slice();
+      if (!videos.length) {
+        faceDetectorBackend.loopRunning = false;
+        return;
+      }
+
+      var c = faceDetectorBackend.offscreenCanvas;
+      var ctx = faceDetectorBackend.offscreenCtx;
+
+      Promise.all(videos.map(function (videoEl) {
+        if (!videoEl || videoEl.readyState < 2) {
+          return Promise.resolve({ video: videoEl, faces: [] });
+        }
+        var vw = videoEl.videoWidth || videoEl.clientWidth;
+        var vh = videoEl.videoHeight || videoEl.clientHeight;
+        if (!vw || !vh) {
+          return Promise.resolve({ video: videoEl, faces: [] });
+        }
+
+        // 缩放到较小分辨率提高性能，同时记录缩放比例，稍后再映射回原视频坐标系
+        var targetW = Math.min(320, vw);
+        var scale = targetW / vw;
+        var targetH = Math.max(1, Math.round(vh * scale));
+        c.width = targetW;
+        c.height = targetH;
+
+        try {
+          ctx.drawImage(videoEl, 0, 0, targetW, targetH);
+        } catch (e) {
+          return Promise.resolve({ video: videoEl, faces: [] });
+        }
+
+        return faceDetectorBackend.detector.detect(c).then(function (detections) {
+          var sx = vw / targetW;
+          var sy = vh / targetH;
+          var faces = (detections || []).map(function (d) {
+            var b = d.boundingBox || d;
+            return {
+              x: b.x * sx,
+              y: b.y * sy,
+              w: b.width * sx,
+              h: b.height * sy
+            };
+          });
+          return { video: videoEl, faces: faces };
+        }).catch(function () {
+          return { video: videoEl, faces: [] };
+        });
+      })).then(function (results) {
+        for (var i = 0; i < results.length; i++) {
+          var r = results[i];
+          if (!r || !r.video) continue;
+          if (r.faces && r.faces.length) {
+            faceDetectorBackend.latestFacesByVideo.set(r.video, r.faces);
+          } else {
+            faceDetectorBackend.latestFacesByVideo.set(r.video, []);
+          }
+        }
+
+        // 如果仍有活动视频，继续下一轮检测
+        if (faceDetectorBackend.activeVideos.length) {
+          setTimeout(runFaceDetectorLoop, 120);
+        } else {
+          faceDetectorBackend.loopRunning = false;
+        }
+      }).catch(function () {
+        // 任何错误都停止检测循环，避免狂刷错误
+        faceDetectorBackend.loopRunning = false;
+      });
+    }
+
+    // 人脸检测状态（假设存在全局 dlibHogDetectFaces(video) -> 数组 [{x,y,w,h}, ...]）
+    var faceDetectionActive = false;
+    var faceDetectionSucceeded = false;
+    var faceDetectionRafId = 0;
+
+    // 同心圆环解密（Resources/start SoulContainer.exe）
+    var ringPuzzleInitialized = false;
+    var ringPuzzleSolved = false;
+    var ringPuzzleAnswer = "";
+    var ringPuzzleRings = [];
+    // 第二阶段像素矩阵状态
+    var containPuzzleInitialized = false;
+    var containPuzzleSolved = false;
+    // 最终结局只触发一次
+    var tuningEndingStarted = false;
+
+    // KeyVault 数字华容道（15-puzzle）状态
+    var keyVaultPuzzleInitialized = false;
+    var keyVaultBoard = null; // 长度 16 的数组，0 表示空格，其余 1..15
+    var keyVaultPuzzleCompleted = false; // 解出后锁定，并展示机密表格
+
+    // line 聊天内容（目前只实现 Clyde 对话）
+    var lineConversations = {
+      clyde: [
+        {
+          date: "(May 24th, 2024)",
+          messages: [
+            { speaker: "hiro", text: "Greetings, Mr. Rothschild. I will be working under your commands from today. Thank you for having me." },
+            { speaker: "clyde", text: "Right, I was just informed that you was reassigned to the Arkpets project group, which I was in charge of. I am most eager to see your progress." },
+            { speaker: "hiro", text: "Pardon my ignorance, but your project was rather secretive. I was only told by the HQ that this project was regarding soul. Are we maybe doing hyper-personified AI?" },
+            { speaker: "clyde", text: "No. Talk to me in the company email." }
+          ]
+        },
+        {
+          date: "(July 2th, 2025)",
+          messages: [
+            { speaker: "hiro", text: "Phase one was initialized with great yields, we are able to repeatedly contain souls of stray cats. No offense, but I still don't agree with the Board, how are digital pets superior than their real counterparts?" },
+            { speaker: "hiro", text: "Maybe there's more prospect beyond pets in their mind?" }
+          ]
+        },
+        {
+          date: "(July 3th, 2025)",
+          messages: [
+            { speaker: "clyde", text: "The Board as well as myself will decide its future. Do your job and your work shall be commended." },
+            { speaker: "hiro", text: "Yes, Mr. Rothschild." }
+          ]
+        },
+        {
+          date: "(October 11th, 2025)",
+          messages: [
+            { speaker: "clyde", text: "I've yet to hear from you for a rather extended period. Report the status quo." },
+            { speaker: "hiro", text: "Sir, phase three was advancing as expected, we found some terminally ill tumor patients willing to participate as test subjects to preserve their conscious digitally." },
+            { speaker: "hiro", text: "The program for human soul preservation, SoulContainer.exe was developed for this test, but..." },
+            { speaker: "clyde", text: "But?" },
+            { speaker: "hiro", text: "The legal procedure was sluggish if not stuck completely still. This will take us valuable time." },
+            { speaker: "clyde", text: "Every single time! These incompetent idiots ... never mind, I'll handle it." },
+            { speaker: "hiro", text: "Yes, sir." }
+          ]
+        },
+        {
+          date: "(January 24th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Mr. Hidayat just called me about the Board and hanged up in a hurry, it sounds like he got himself in some trouble. Was this of our concern potentially?" },
+            { speaker: "clyde", text: "Hidayat was a disgusting traitor to the firm. He left and spoiled our blueprints to the opposition company. Never trust his lying nonsense." },
+            { speaker: "clyde", text: "Tell no one about this." },
+            { speaker: "hiro", text: "It will be so, Mr. Rothschild." }
+          ]
+        },
+        {
+          date: "(February 31th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Sir, why are these subjects calling for help like crazy? The alarm was going on one after another the whole morning." },
+            { speaker: "clyde", text: "Don't mind, they were dying anyways and we helped them live forever. Now they turn back on us? How ungrateful." },
+            { speaker: "hiro", text: "Yes, but they were not dying I'm afraid, I tested their conscious activity and the data doesn't make sense, it seems they were ... underaged?" }
+          ]
+        },
+        {
+          date: "(March 2th, 2026)",
+          messages: [
+            { speaker: "clyde", text: "It has been an honor ... we couldn't have done it without you." },
+            { speaker: "clyde", text: "Unfortunately, You know too much." }
+          ]
+        },
+        {
+          date: "(March 3th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "What? What have you done? Why are the police taking me away?" },
+            { speaker: "clyde", text: "Farewell, Mr. Hiro. You started this inhumane test, not the Board. Enjoy your life, or rather what's left of it." }
+          ]
+        }
+      ]
+    };
+
+    function showRingPuzzleOverlay() {
+      if (!ringOverlayEl) return;
+      ringOverlayEl.style.display = "flex";
+      if (!ringPuzzleInitialized) {
+        initRingPuzzle();
+      }
+    }
+
+    function initRingPuzzle() {
+      if (ringPuzzleInitialized) return;
+      if (!ringOverlayEl || !ringSvgContainerEl) return;
+      if (!global.d3) return;
+
+      ringPuzzleInitialized = true;
+      ringPuzzleSolved = false;
+      ringPuzzleAnswer = "";
+      ringPuzzleRings = [];
+
+      var d3ref = global.d3;
+      var width = 440;
+      var height = 440;
+      var cx = width / 2;
+      var cy = height / 2;
+
+      var svg = d3ref.select(ringSvgContainerEl)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      var root = svg.append("g")
+        .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      var letters = ["S", "O", "U", "L", "S"]; // 5 个环，对齐后得到的密钥
+      var ringCount = letters.length;
+      var baseRadius = 170;
+      var radiusStep = 26;
+
+      for (var i = 0; i < ringCount; i++) {
+        var r = baseRadius - i * radiusStep;
+        var angle = Math.random() * 360;
+        var ring = {
+          index: i,
+          radius: r,
+          angle: angle,
+          keyLetter: letters[i]
+        };
+        ringPuzzleRings.push(ring);
+      }
+
+      ringPuzzleAnswer = letters.join("");
+
+      var ringGroups = root.selectAll(".ring-puzzle-ring")
+        .data(ringPuzzleRings)
+        .enter()
+        .append("g")
+        .attr("class", "ring-puzzle-ring");
+
+      // 每个环：实心“甜甜圈”式环（粗描边），整个环可拖动
+      ringGroups.append("circle")
+        .attr("r", function (d) { return d.radius; })
+        .attr("fill", "none")
+        .attr("stroke", "#dddddd")
+        .attr("stroke-width", 10.0);
+
+      // 关键点（径向对齐参考）：初始都指向 0°，通过旋转整个 ringGroup 来调整
+      ringGroups.append("circle")
+        .attr("class", "ring-puzzle-key-dot")
+        .attr("cx", function (d) { return d.radius; })
+        .attr("cy", 0)
+        .attr("r", 3.0)
+        .attr("fill", "#000000");
+
+      // 在每个实心环上散布若干干扰字符；真正的 SOULS 字母隐藏在黑点处，只在对齐后显现
+      var fillerChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      ringGroups.each(function (d) {
+        var g = d3ref.select(this);
+
+        // 1）先画一圈干扰字母，始终可见
+        var texts = [];
+        var fillerCount = 8;
+        for (var j = 0; j < fillerCount; j++) {
+          var ch = fillerChars[Math.floor(Math.random() * fillerChars.length)];
+          var baseAngle = (360 / fillerCount) * j + d.index * 13;
+          texts.push({ ch: ch, angleDeg: baseAngle });
+        }
+
+        g.selectAll(".ring-puzzle-letter")
+          .data(texts)
+          .enter()
+          .append("text")
+          .attr("class", "ring-puzzle-letter")
+          .attr("x", function (t) {
+            var rad = (t.angleDeg * Math.PI / 180);
+            return Math.cos(rad) * (d.radius - 12);
+          })
+          .attr("y", function (t) {
+            var rad = (t.angleDeg * Math.PI / 180);
+            return Math.sin(rad) * (d.radius - 12) + 4;
+          })
+          .attr("font-size", 11)
+          .attr("text-anchor", "middle")
+          .attr("fill", "#999999")
+          .text(function (t) { return t.ch; });
+
+        // 2）再在黑点处附着一个“隐藏”的关键字母，初始透明，对齐后才以红字显现
+        g.append("text")
+          .attr("class", "ring-puzzle-key-letter")
+          .attr("x", d.radius + 6) // 位于黑点外侧一点点
+          .attr("y", 4)
+          .attr("font-size", 11)
+          .attr("text-anchor", "start")
+          .attr("fill", "#ff0000")
+          .attr("fill-opacity", 0)
+          .text(d.keyLetter);
+      });
+
+      function updateRingTransforms() {
+        ringGroups.attr("transform", function (d) {
+          return "rotate(" + d.angle + ")";
+        });
+      }
+
+      function normalizeDeg(a) {
+        var x = a % 360;
+        if (x < 0) x += 360;
+        return x;
+      }
+
+      function checkAlignment() {
+        var tol = 7; // 误差容忍度（度）略放宽，让手感更宽松
+        if (!ringPuzzleRings.length) return;
+        var base = normalizeDeg(ringPuzzleRings[0].angle);
+        var allAligned = true;
+        for (var i = 1; i < ringPuzzleRings.length; i++) {
+          var a = normalizeDeg(ringPuzzleRings[i].angle);
+          var diff = Math.abs(a - base);
+          if (diff > 180) diff = 360 - diff;
+          if (diff > tol) {
+            allAligned = false;
+            break;
+          }
+        }
+
+        if (allAligned && !ringPuzzleSolved) {
+          ringPuzzleSolved = true;
+          // 干扰字母整体变淡；在黑点处的隐藏关键字母显现为红色 SOULS
+          root.selectAll(".ring-puzzle-letter").attr("fill", "#bbbbbb");
+          root.selectAll(".ring-puzzle-key-letter").attr("fill-opacity", 1);
+
+          if (ringInputRowEl) ringInputRowEl.style.display = "flex";
+          if (ringStatusEl) ringStatusEl.textContent = "Key ready. Enter it below.";
+        }
+      }
+
+      var drag = d3ref.drag()
+        .on("start", function (event, d) {
+          if (ringPuzzleSolved) return; // 解锁后禁止继续旋转
+          var p = d3ref.pointer(event, root.node());
+          // 记录当前指针角度，用于后续计算“增量旋转”，保证跨越 ±180° 时不会瞬移
+          d._dragPointerAngle = Math.atan2(p[1], p[0]) * 180 / Math.PI;
+        })
+        .on("drag", function (event, d) {
+          if (ringPuzzleSolved) return; // 解锁后禁止继续旋转
+          var p = d3ref.pointer(event, root.node());
+          var pointerAngle = Math.atan2(p[1], p[0]) * 180 / Math.PI;
+          var prevPointerAngle = d._dragPointerAngle;
+          if (prevPointerAngle == null) {
+            prevPointerAngle = pointerAngle;
+          }
+
+          // 本次事件的“增量角度”（-180°~180°），避免跨越 180° 时出现 360° 级别的跳变
+          var step = pointerAngle - prevPointerAngle;
+          if (step > 180) step -= 360;
+          if (step < -180) step += 360;
+
+          d._dragPointerAngle = pointerAngle;
+
+          // 当前环累积旋转，允许无限转圈
+          d.angle += step;
+
+          var dd = step; // 传递给其他环的就是这一次的增量
+
+          // 互相影响规则：
+          // 第 5 层（最内环）影响第 1 层：30%
+          // 第 4 层影响第 5 层（20%）和第 2 层（70%）
+          // 第 3 层影响第 4 层：90%
+          // 第 1 层影响第 4 层：50%
+          // 第 2 层影响第 5 层：60%
+          if (ringPuzzleRings.length >= 5) {
+            var last = ringPuzzleRings.length - 1;
+
+            if (d.index === last) {
+              var outer = ringPuzzleRings[0];
+              outer.angle += dd * 0.3;
+            }
+
+            if (d.index === last - 1) {
+              var inner5 = ringPuzzleRings[last];
+              var ring2 = ringPuzzleRings[1];
+              inner5.angle += dd * 0.2;
+              ring2.angle += dd * 0.7;
+            }
+
+            if (d.index === last - 3) {
+              var ring4 = ringPuzzleRings[last - 1];
+              ring4.angle += dd * 0.9;
+            }
+
+            if (d.index === 0) {
+              var ring4From1 = ringPuzzleRings[3];
+              ring4From1.angle += dd * 0.5;
+            }
+
+            if (d.index === 1) {
+              var ring5From2 = ringPuzzleRings[4];
+              ring5From2.angle += dd * 0.6;
+            }
+          }
+
+          updateRingTransforms();
+          checkAlignment();
+        });
+
+      ringGroups.call(drag);
+      updateRingTransforms();
+
+      // 处理密钥输入
+      function handleSubmit() {
+        if (!ringInputEl || !ringStatusEl) return;
+        var value = (ringInputEl.value || "").trim();
+        if (!value) return;
+        if (!ringPuzzleSolved) {
+          ringStatusEl.textContent = "Rings are not aligned yet.";
+          return;
+        }
+        if (value.toUpperCase() === ringPuzzleAnswer.toUpperCase()) {
+          if (ringTitleEl) ringTitleEl.textContent = "Please unlock (2/2)";
+          // 进入第二阶段：隐藏圆环与输入框，显示像素矩阵
+          if (ringSvgContainerEl) ringSvgContainerEl.style.display = "none";
+          if (ringInputRowEl) ringInputRowEl.style.display = "none";
+          if (ringInputEl) ringInputEl.value = "";
+          if (ringStatusEl) {
+            ringStatusEl.style.color = "#333333";
+            ringStatusEl.textContent = "";
+          }
+          if (ringInstructionEl) {
+            ringInstructionEl.textContent = "Please Adjust the Signal Frequency.";
+          }
+          if (containPuzzleContainerEl) containPuzzleContainerEl.style.display = "block";
+          initContainPuzzle();
+        } else {
+          ringStatusEl.style.color = "#bb0000";
+          ringStatusEl.textContent = "Incorrect key.";
+        }
+      }
+
+      if (ringSubmitEl) {
+        ringSubmitEl.addEventListener("click", handleSubmit);
+      }
+      if (ringInputEl) {
+        ringInputEl.addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter") handleSubmit();
+        });
+      }
+    }
+
+    // 第二阶段：热力图 / 像素矩阵，还原出 "CONTAINED"
+    function initContainPuzzle() {
+      if (containPuzzleInitialized) return;
+      if (!containCanvasEl || !containColorRangeEl || !containClarityRangeEl) return;
+      containPuzzleInitialized = true;
+
+      var ctx = containCanvasEl.getContext("2d");
+      if (!ctx) return;
+
+      var width = containCanvasEl.width;
+      var height = containCanvasEl.height;
+
+      // 目标解：在某个参数范围内视为“锁定”，要求略严格
+      var targetColor = 68;
+      var targetClarity = 42;
+      var tolColor = 3;
+      var tolClarity = 3;
+
+      function drawPuzzle() {
+        if (containPuzzleSolved) return;
+        if (!ctx) return;
+        var colorVal = parseInt(containColorRangeEl.value, 10) || 0;
+        var clarityVal = parseInt(containClarityRangeEl.value, 10) || 0;
+
+        var inTarget = Math.abs(colorVal - targetColor) <= tolColor &&
+          Math.abs(clarityVal - targetClarity) <= tolClarity;
+
+        if (inTarget) {
+          containPuzzleSolved = true;
+          // 不再改写小画面的像素内容，只更新文字与结局流程
+          if (ringStatusEl) {
+            ringStatusEl.style.color = "#00aa00";
+            ringStatusEl.textContent = "TUNINGS COMPLETED!";
+          }
+          // 稍作停顿后开始黑屏结局
+          setTimeout(startTuningEnding, 1200);
+          return;
+        }
+
+        // 未到达正确配置时：根据两个参数绘制“像素化热力图”
+        ctx.clearRect(0, 0, width, height);
+        var minCell = 6;
+        var maxCell = 34;
+
+        // 清晰度：以 targetClarity 为中心，靠近该点越清晰（cellSize 越小）
+        var clarityDist = Math.abs(clarityVal - targetClarity) / 100; // 0~1
+        if (clarityDist > 1) clarityDist = 1;
+        var cellSize = minCell + (maxCell - minCell) * clarityDist;
+        var cols = Math.ceil(width / cellSize);
+        var rows = Math.ceil(height / cellSize);
+
+        // 颜色纯度：以 targetColor 为中心，靠近该点越纯
+        var colorDist = Math.abs(colorVal - targetColor) / 100; // 0~1
+        if (colorDist > 1) colorDist = 1;
+        var purity = 1 - colorDist; // 0: 最不纯，1: 最纯
+
+        for (var y = 0; y < rows; y++) {
+          for (var x = 0; x < cols; x++) {
+            var nx = x / cols;
+            var ny = y / rows;
+            var rawNoise = (Math.sin(nx * 17.23 + ny * 11.73) + 1) * 0.5; // 0~1
+            // 越接近“最纯”时，噪声振幅越小，画面越接近纯色
+            var center = 0.5;
+            var amp = 1 - 0.85 * purity; // purity=1 时振幅最小
+            var noise = center + (rawNoise - center) * amp;
+
+            var base = 40 + noise * 180;
+
+            // 颜色从冷到暖，但总体饱和度由 purity 控制
+            var sat = 0.2 + 0.7 * purity; // 0.2~0.9
+
+            var r = base * (0.4 + 0.6 * noise * sat);
+            var g = base * (0.6 + 0.3 * (1 - noise) * (1 - purity));
+            var b = base * (0.8 + 0.4 * (1 - noise));
+
+            ctx.fillStyle = "rgb(" + Math.floor(r) + "," + Math.floor(g) + "," + Math.floor(b) + ")";
+            ctx.fillRect(x * cellSize, y * cellSize, Math.ceil(cellSize) + 1, Math.ceil(cellSize) + 1);
+          }
+        }
+
+        if (ringStatusEl) {
+          ringStatusEl.style.color = "#333333";
+          // 第二阶段不再给文字提示，只保留上方说明语
+          ringStatusEl.textContent = "";
+        }
+      }
+
+      containColorRangeEl.addEventListener("input", drawPuzzle);
+      containClarityRangeEl.addEventListener("input", drawPuzzle);
+
+      drawPuzzle();
+    }
+
+    // 最终黑屏结局：技术风 CLI 输出 + 结局字幕
+    function startTuningEnding() {
+      if (!tuningOverlayEl || !tuningCodeEl || !tuningCenterEl) return;
+      if (tuningEndingStarted) return;
+      tuningEndingStarted = true;
+
+      // 显示覆盖层并启动缓慢黑屏
+      tuningOverlayEl.style.display = "block";
+      // 强制一次重排以应用初始 opacity
+      void tuningOverlayEl.offsetWidth;
+      tuningOverlayEl.style.opacity = "1";
+
+      tuningCodeEl.textContent = "";
+
+      // 一组“技术风 / 黑客风”行模板，稍后循环输出到 200+ 行
+      var patterns = [
+        "[SC-CORE] bootstrapping soul-container runtime... seq=",
+        "[SC-CORE] validating arkpet descriptors... ok :: id=ark-",
+        "[SC-I/O ] streaming soul fragment blocks... bytes=",
+        "[SC-CHECK] checksum ok :: shard=",
+        "[SC-PIPE] redirecting stdout -> /dev/void :: channel=",
+        "[SC-LOCK] mutex acquired :: cage=ARKPETS slot=",
+        "[SC-MEM ] compacting heap sectors... freed=",
+        "[SC-NET ] tunnelling heartbeat to collector.soulcontainer.net :: hop=",
+        "[SC-DUMP] writing trace frame :: frame#",
+        "[SC-VFS ] mounting /souls/arkpets readonly :: inode=",
+        "[SC-ENC ] xor-cycling payload :: phase=",
+        "[SC-WATCH] pet process still alive :: pid=",
+        "[SC-TEMP] cooling virtual cores... temp=",
+        "[SC-GC  ] sweeping orphaned memories... objects=",
+        "[SC-AUD ] audit trail append ok :: event=MERGE seq=",
+        "[SC-CHAN] opening channel PET-L / PET-R / USER :: id=",
+        "[SC-TIMER] tick=",
+        "[SC-SHARD] stitching fragments... progress=",
+        "[SC-SEAL] sealing container :: revision=",
+        "[SC-TRACE] >>> ghost echo detected in lane=",
+        "[SC-TRACE] ... echo accepted.",
+        "[SC-INFO] no operator present, switching to daemon mode.",
+        "[SC-INFO] user heartbeat absorbed :: token=ALWAYS-LOVE",
+        "[SC-ROUTE] rerouting stdin from /dev/user to /dev/soul",
+        "[SC-CRON] scheduling eternity job :: cron=*/1 * * * *",
+        "[SC-STAT] container residency :: count=",
+        "[SC-FS  ] packing archive arkpets.soul :: block=",
+        "[SC-CODE] applying patchset FOREVER_TOGETHER :: delta=",
+        "[SC-END ] (no external observer registered).",
+        "[SC-END ] writing final header...",
+        "[SC-END ] waiting for silence..."
+      ];
+
+      var totalLines = 240;
+      var i = 0;
+
+      function appendNext() {
+        if (!tuningCodeEl) return;
+        if (i >= totalLines) {
+          // 输出完成后，先让绿色代码缓慢淡出，再淡入结局文本
+          tuningCodeEl.style.opacity = "0";
+          setTimeout(function () {
+            tuningCenterEl.style.opacity = "1";
+          }, 2600);
+          return;
+        }
+        var pat = patterns[i % patterns.length];
+        var num = ("000" + i).slice(-3);
+        var line = pat + num;
+        tuningCodeEl.textContent += line + "\n";
+        tuningCodeEl.scrollTop = tuningCodeEl.scrollHeight;
+        i++;
+        var delay = 20 + Math.random() * 30; // 约 20–50ms 一行
+        setTimeout(appendNext, delay);
+      }
+
+      // 稍等一瞬再开始刷屏，配合黑屏渐显
+      setTimeout(appendNext, 800);
+    }
+
+    // KeyVault 内部：D3 数字华容道（4x4 15-puzzle）
+    function initKeyVaultPuzzle() {
+      if (keyVaultPuzzleInitialized) return;
+      if (!keyVaultPuzzleContainerEl || !global.d3) return;
+      keyVaultPuzzleInitialized = true;
+
+      var d3ref = global.d3;
+
+      var width = 240;
+      var height = 240;
+      var margin = 6;
+      var cols = 4;
+      var rows = 4;
+      var cellSize = (width - margin * 2) / cols;
+
+      // 左侧可操作华容道
+      var svg = d3ref.select(keyVaultPuzzleContainerEl)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("display", "block")
+        .style("margin", "0 auto");
+
+      var boardGroup = svg.append("g")
+        .attr("transform", "translate(" + margin + "," + margin + ")");
+
+      // 右侧目标示意华容道（固定为 1..15, 空格）
+      var previewSvg = null;
+      var previewGroup = null;
+      if (keyVaultPuzzlePreviewEl) {
+        previewSvg = d3ref.select(keyVaultPuzzlePreviewEl)
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height)
+          .style("display", "block")
+          .style("margin", "0 auto");
+
+        previewGroup = previewSvg.append("g")
+          .attr("transform", "translate(" + margin + "," + margin + ")");
+      }
+
+      function indexToRC(idx) {
+        return { r: Math.floor(idx / cols), c: idx % cols };
+      }
+
+      function rcToIndex(r, c) {
+        return r * cols + c;
+      }
+
+      function createSolvedBoard() {
+        var arr = [];
+        for (var i = 1; i <= 15; i++) arr.push(i);
+        arr.push(0);
+        return arr;
+      }
+
+      function renderPreview() {
+        if (!previewGroup) return;
+        var solved = createSolvedBoard();
+        var tilesData = [];
+        for (var i = 0; i < solved.length; i++) {
+          var v = solved[i];
+          if (v === 0) continue;
+          tilesData.push({ value: v, index: i });
+        }
+
+        var tiles = previewGroup.selectAll(".kv-tile-preview")
+          .data(tilesData, function (d) { return d.value; });
+
+        var tilesEnter = tiles.enter()
+          .append("g")
+          .attr("class", "kv-tile-preview");
+
+        tilesEnter.append("rect")
+          .attr("rx", 6)
+          .attr("ry", 6)
+          .attr("width", cellSize - 6)
+          .attr("height", cellSize - 6)
+          .attr("x", 3)
+          .attr("y", 3)
+          .attr("fill", "#f8f8f8")
+          .attr("stroke", "#000000")
+          .attr("stroke-width", 1.2);
+
+        tilesEnter.append("text")
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "central")
+          .attr("x", cellSize / 2)
+          .attr("y", cellSize / 2 + 1)
+          .attr("font-size", 18)
+          .attr("font-family", "'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace")
+          .text(function (d) { return d.value; });
+
+        tilesEnter.merge(tiles)
+          .attr("transform", function (d) {
+            var rc = indexToRC(d.index);
+            return "translate(" + (rc.c * cellSize) + "," + (rc.r * cellSize) + ")";
+          });
+
+        tiles.exit().remove();
+      }
+
+      function shuffleBoard(steps) {
+        keyVaultBoard = createSolvedBoard();
+        var emptyIdx = 15;
+        for (var s = 0; s < steps; s++) {
+          var rc = indexToRC(emptyIdx);
+          var neighbors = [];
+          if (rc.r > 0) neighbors.push(rcToIndex(rc.r - 1, rc.c));
+          if (rc.r < rows - 1) neighbors.push(rcToIndex(rc.r + 1, rc.c));
+          if (rc.c > 0) neighbors.push(rcToIndex(rc.r, rc.c - 1));
+          if (rc.c < cols - 1) neighbors.push(rcToIndex(rc.r, rc.c + 1));
+          var pick = neighbors[Math.floor(Math.random() * neighbors.length)];
+          var tmp = keyVaultBoard[pick];
+          keyVaultBoard[pick] = keyVaultBoard[emptyIdx];
+          keyVaultBoard[emptyIdx] = tmp;
+          emptyIdx = pick;
+        }
+      }
+
+      function isSolved() {
+        if (!keyVaultBoard || keyVaultBoard.length !== 16) return false;
+        for (var i = 0; i < 15; i++) {
+          if (keyVaultBoard[i] !== i + 1) return false;
+        }
+        return keyVaultBoard[15] === 0;
+      }
+
+      function renderBoard() {
+        if (!keyVaultBoard) return;
+        var tilesData = [];
+        for (var i = 0; i < keyVaultBoard.length; i++) {
+          var v = keyVaultBoard[i];
+          if (v === 0) continue;
+          tilesData.push({ value: v, index: i });
+        }
+
+        var tiles = boardGroup.selectAll(".kv-tile")
+          .data(tilesData, function (d) { return d.value; });
+
+        var tilesEnter = tiles.enter()
+          .append("g")
+          .attr("class", "kv-tile")
+          .style("cursor", "pointer")
+          .on("click", function (event, d) {
+            moveTile(d.value);
+          });
+
+        tilesEnter.append("rect")
+          .attr("rx", 6)
+          .attr("ry", 6)
+          .attr("width", cellSize - 6)
+          .attr("height", cellSize - 6)
+          .attr("x", 3)
+          .attr("y", 3)
+          .attr("fill", "#ffffff")
+          .attr("stroke", "#000000")
+          .attr("stroke-width", 1.5);
+
+        tilesEnter.append("text")
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "central")
+          .attr("x", cellSize / 2)
+          .attr("y", cellSize / 2 + 1)
+          .attr("font-size", 18)
+          .attr("font-family", "'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace")
+          .text(function (d) { return d.value; });
+
+        tilesEnter.merge(tiles)
+          .transition()
+          .duration(180)
+          .attr("transform", function (d) {
+            var rc = indexToRC(d.index);
+            return "translate(" + (rc.c * cellSize) + "," + (rc.r * cellSize) + ")";
+          });
+
+        tiles.exit().remove();
+
+        var solved = isSolved();
+        if (keyVaultPuzzleStatusEl) {
+          if (solved) {
+            keyVaultPuzzleStatusEl.textContent = "ACCESS GRANTED.";
+          } else {
+            // 华容道进行中不显示提示文字
+            keyVaultPuzzleStatusEl.textContent = "";
+          }
+        }
+
+        // 首次解出时，隐藏拼图，展示 KeyVault 机密信息表格
+        if (solved && !keyVaultPuzzleCompleted) {
+          keyVaultPuzzleCompleted = true;
+          if (keyVaultPuzzleRowEl) {
+            keyVaultPuzzleRowEl.style.display = "none";
+          }
+          if (keyVaultConfidentialEl) {
+            keyVaultConfidentialEl.style.display = "block";
+          }
+        }
+      }
+
+      function moveTile(value) {
+        if (keyVaultPuzzleCompleted) return; // 已解锁后不再允许移动
+        if (!keyVaultBoard) return;
+        var tileIdx = -1;
+        var emptyIdx = -1;
+        for (var i = 0; i < keyVaultBoard.length; i++) {
+          if (keyVaultBoard[i] === value) tileIdx = i;
+          else if (keyVaultBoard[i] === 0) emptyIdx = i;
+        }
+        if (tileIdx === -1 || emptyIdx === -1) return;
+        var trc = indexToRC(tileIdx);
+        var erc = indexToRC(emptyIdx);
+        var dist = Math.abs(trc.r - erc.r) + Math.abs(trc.c - erc.c);
+        if (dist !== 1) return; // 仅允许与空格相邻的块移动
+
+        var tmp = keyVaultBoard[tileIdx];
+        keyVaultBoard[tileIdx] = keyVaultBoard[emptyIdx];
+        keyVaultBoard[emptyIdx] = tmp;
+        renderBoard();
+      }
+
+      // 初始化：从已解状态出发做随机合法移动，保证可解
+      shuffleBoard(80);
+      renderPreview();
+      renderBoard();
+    }
+
+    // 右上角状态栏：北京时间与登录状态
+    (function initStatusPanel() {
+      if (!statusPanelEl) return;
+
+      // 初始化时间：使用北京时间（Asia/Shanghai），每秒刷新
+      function updateBeijingTime() {
+        if (!statusTimeEl) return;
+        try {
+          var now = new Date();
+          var fmtDate = new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Asia/Shanghai",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+          }).format(now);
+          var fmtTime = new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Asia/Shanghai",
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          }).format(now);
+          // 显示为两行：第一行日期，第二行时间 + 时区说明
+          statusTimeEl.textContent = fmtDate + "\n" + fmtTime + " (Shanghai)";
+        } catch (e) {
+          // 某些环境可能不支持该时区，退化为本地时间
+          statusTimeEl.textContent = new Date().toLocaleString();
+        }
+      }
+
+      updateBeijingTime();
+      setInterval(updateBeijingTime, 1000);
+
+      // 初始化登录状态显示
+      if (loginStatusEl && !isAdminValidated) {
+        loginStatusEl.textContent = "👤 Guest";
+      }
+
+      // 在 Guest 状态下悬浮显示提示气泡
+      if (loginStatusEl && statusTooltipEl) {
+        function showTooltip() {
+          if (!loginStatusEl || !statusTooltipEl) return;
+          if (isAdminValidated) return; // 管理员状态下不再显示提示
+          if (loginStatusEl.textContent.indexOf("Guest") === -1) return;
+          var rect = statusPanelEl.getBoundingClientRect();
+          var top = rect.bottom + 6;
+          var left = rect.right - statusTooltipEl.offsetWidth;
+          if (!statusTooltipEl.offsetWidth) {
+            // 先设置为 block 获取尺寸
+            statusTooltipEl.style.display = "block";
+            var r2 = statusTooltipEl.getBoundingClientRect();
+            statusTooltipEl.style.display = "none";
+            left = rect.right - r2.width;
+          }
+          if (left < 8) left = 8;
+          statusTooltipEl.style.left = left + "px";
+          statusTooltipEl.style.top = top + "px";
+          statusTooltipEl.style.display = "block";
+        }
+
+        function hideTooltip() {
+          if (!statusTooltipEl) return;
+          statusTooltipEl.style.display = "none";
+        }
+
+        loginStatusEl.addEventListener("mouseenter", showTooltip);
+        loginStatusEl.addEventListener("mouseleave", hideTooltip);
+        statusPanelEl.addEventListener("mouseleave", hideTooltip);
+      }
+    })();
+
     // 通用窗口“左右摇晃一下”效果：在当前拖拽位置附近小幅度平移
     function shakeWindowElement(el) {
       if (!el) return;
@@ -108,7 +1336,13 @@
     function showCameraError() {
       clearCameraPopups();
       if (cameraVideoEl) cameraVideoEl.style.display = "none";
-      if (cameraErrorEl) cameraErrorEl.style.display = "flex";
+      if (cameraErrorEl) {
+        cameraErrorEl.style.display = "flex";
+        // 先确保从 0 开始，再触发慢慢变黑的效果
+        cameraErrorEl.style.opacity = "0";
+        void cameraErrorEl.offsetWidth;
+        cameraErrorEl.style.opacity = "1";
+      }
     }
 
     function startCameraStreamOnce() {
@@ -120,11 +1354,19 @@
           cameraStreamObj = stream;
           cameraVideoEl.srcObject = stream;
           cameraVideoEl.style.display = "block";
+          // 准备基于 OpenCV.js 的人脸/上半身检测，结果通过 dlibHogDetectFaces 暴露给前端循环
+          ensureOpenCvDetectorForVideo(cameraVideoEl);
           // 摄像头开启时隐藏记事本窗口
           if (notesWindowEl) notesWindowEl.style.display = "none";
           clearCameraPopups();
           if (cameraErrorEl) cameraErrorEl.style.display = "none";
-          showLoveDialogOnce();
+          // 始终先进入人脸检测循环；若底层 dlib API 不可用，将在超时后给出失败提示并重试
+          if (cameraFaceCanvasEl) {
+            startFaceDetectionLoop();
+          } else {
+            // 没有覆盖层画布时，退回到原始 LOVE 流程
+            showLoveDialogOnce();
+          }
         }).catch(function () {
           // 用户拒绝或出错时：显示 401 提示
           showCameraError();
@@ -199,6 +1441,146 @@
         }
       }
       cameraStreamObj = null;
+      // 重置人脸检测状态与可视化
+      faceDetectionActive = false;
+      faceDetectionSucceeded = false;
+      if (faceDetectionRafId) {
+        try { cancelAnimationFrame(faceDetectionRafId); } catch (e) {}
+        faceDetectionRafId = 0;
+      }
+      if (cameraFaceCanvasEl) {
+        var ctx = cameraFaceCanvasEl.getContext("2d");
+        if (ctx) {
+          ctx.clearRect(0, 0, cameraFaceCanvasEl.width || 0, cameraFaceCanvasEl.height || 0);
+        }
+      }
+    }
+
+    function startFaceDetectionLoop() {
+      if (!cameraVideoEl || !cameraFaceCanvasEl) return;
+      var ctx = cameraFaceCanvasEl.getContext("2d");
+      if (!ctx) return;
+
+      function resizeCanvasToViewport() {
+        var vw = window.innerWidth || document.documentElement.clientWidth || cameraFaceCanvasEl.width || 0;
+        var vh = window.innerHeight || document.documentElement.clientHeight || cameraFaceCanvasEl.height || 0;
+        cameraFaceCanvasEl.width = vw;
+        cameraFaceCanvasEl.height = vh;
+      }
+
+      resizeCanvasToViewport();
+
+      faceDetectionActive = true;
+      faceDetectionSucceeded = false;
+      var detectStart = performance.now();
+      // 检测总时长放宽到约 20 秒
+      var detectTimeout = 20000;
+      // 第一次检测到真实人脸框后的“展示时长”，期间持续跟随人头移动
+      var firstHitTime = null;
+      var successViewMs = 5000;
+
+      function loop() {
+        if (!faceDetectionActive) return;
+
+        if (!cameraVideoEl || cameraVideoEl.readyState < 2) {
+          faceDetectionRafId = requestAnimationFrame(loop);
+          return;
+        }
+
+        ctx.clearRect(0, 0, cameraFaceCanvasEl.width, cameraFaceCanvasEl.height);
+
+        var faces = [];
+        try {
+          if (global.dlibHogDetectFaces) {
+            faces = global.dlibHogDetectFaces(cameraVideoEl) || [];
+          }
+        } catch (e) {
+          faces = [];
+        }
+        var now = performance.now();
+        var elapsed = now - detectStart;
+
+        if (faces.length > 0) {
+          // 仅在真正检测到人脸时绘制绿色框，不再造“中心假框”，
+          // 避免出现与人位置无关的静止矩形。
+          var vx, vy, vw, vh;
+
+          var videoW = cameraVideoEl.videoWidth || cameraVideoEl.clientWidth || cameraFaceCanvasEl.width;
+          var videoH = cameraVideoEl.videoHeight || cameraVideoEl.clientHeight || cameraFaceCanvasEl.height;
+          var canvasW = cameraFaceCanvasEl.width;
+          var canvasH = cameraFaceCanvasEl.height;
+
+          var f = faces[0];
+          vx = f.x;
+          vy = f.y;
+          vw = f.w;
+          vh = f.h;
+
+          var canvasX = vx;
+          var canvasY = vy;
+          var canvasWrect = vw;
+          var canvasHrect = vh;
+
+          if (videoW > 0 && videoH > 0 && canvasW > 0 && canvasH > 0) {
+            // object-fit: cover 的缩放与裁剪
+            var scaleX = canvasW / videoW;
+            var scaleY = canvasH / videoH;
+            var scale = Math.max(scaleX, scaleY);
+            var displayW = videoW * scale;
+            var displayH = videoH * scale;
+            var offsetX = (canvasW - displayW) / 2;
+            var offsetY = (canvasH - displayH) / 2;
+
+            canvasX = offsetX + vx * scale;
+            canvasY = offsetY + vy * scale;
+            canvasWrect = vw * scale;
+            canvasHrect = vh * scale;
+          }
+
+          // 绘制绿色矩形边框
+          ctx.strokeStyle = "#00ff00";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(canvasX, canvasY, canvasWrect, canvasHrect);
+
+          // 在边框上方绘制提示文字
+          ctx.fillStyle = "#00ff00";
+          ctx.font = "16px 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace";
+          var label = "Admin Detected: Security Level 3";
+          var textWidth = ctx.measureText(label).width;
+          var tx = Math.max(10, Math.min(canvasX, cameraFaceCanvasEl.width - textWidth - 10));
+          var ty = Math.max(24, canvasY - 8);
+          ctx.fillText(label, tx, ty);
+
+          // 记录第一次命中时间，之后继续跟随人头移动一段时间再进入 LOVE 流程
+          if (firstHitTime === null) {
+            firstHitTime = now;
+          }
+
+          if (now - firstHitTime >= successViewMs) {
+            faceDetectionSucceeded = true;
+            faceDetectionActive = false;
+            startLoveDialogFlow();
+            return;
+          }
+
+          // 尚未到达展示时长：继续 requestAnimationFrame 循环
+        } else {
+          // 当前这一帧没有真实检测结果：重置 firstHitTime，
+          // 需要重新持续检测 successViewMs 才会进入 LOVE 流程。
+          firstHitTime = null;
+        }
+
+        // 到达总超时时间仍未检测到人脸（且也未走放宽逻辑）：给出失败提示并重试
+        if (!faceDetectionSucceeded && firstHitTime === null && elapsed >= detectTimeout) {
+          faceDetectionActive = false;
+          showFaceFailAndRetry();
+          return;
+        }
+
+        faceDetectionRafId = requestAnimationFrame(loop);
+      }
+
+      faceDetectionRafId = requestAnimationFrame(loop);
     }
 
     function revealResourcesPasswordInNotes() {
@@ -206,10 +1588,26 @@
       var header = notesWindowEl.querySelector(".notes-header");
       if (!header) return;
       var text = header.textContent || "";
-      var pattern = /Remember, password for ArkPets\/Resources is[^.]*\./;
-      var replacement = 'Remember, password for ArkPets/Resources is (hexadecimal) "Answer to the Ultimate Question of Life, The Universe, and Everything".';
+      var replacement = 'Remember, password for ArkPets/Resources is (HEX: "0x...") "Answer to the Ultimate Question of Life, The Universe, and Everything".';
+
+      // 如果已经是明文版本，就不再重复改写
+      if (text.indexOf(replacement) !== -1) {
+        header.textContent = text;
+        return;
+      }
+
+      // 匹配任何一行包含 ArkPets/Resources 的“Remember, password for ...”行，
+      // 同时尽量保留后面的说明句（Don't let the senior managers...）
+      var pattern = /Remember, password for[^\n]*ArkPets\/Resources[^\n]*/;
       if (pattern.test(text)) {
-        text = text.replace(pattern, replacement);
+        text = text.replace(pattern, function (line) {
+          var tailIndex = line.indexOf("Don't let the senior managers");
+          if (tailIndex !== -1) {
+            var tail = line.slice(tailIndex); // 保留完整尾部说明
+            return replacement + " " + tail;
+          }
+          return replacement;
+        });
       } else {
         if (text && !/\n$/.test(text)) text += "\n\n";
         text += replacement;
@@ -217,28 +1615,81 @@
       header.textContent = text;
     }
 
-    function showLoveDialogOnce() {
+    // 人脸检测失败时：短暂提示，然后重新打开摄像头重试
+    function showFaceFailAndRetry() {
+      var dlg = document.getElementById("love-dialog");
+      if (dlg) {
+        var inner = dlg.firstElementChild;
+        if (inner) {
+          inner.textContent = "Facial recognition failed. Try again.";
+        }
+        dlg.style.display = "flex";
+        dlg.style.opacity = "1";
+        setTimeout(function () {
+          dlg.style.opacity = "0";
+          setTimeout(function () {
+            dlg.style.display = "none";
+            // 关闭当前摄像头并重新开始检测流程
+            stopCameraStream();
+            cameraStarted = false;
+            startCameraStreamOnce();
+          }, 400);
+        }, 2200);
+      } else {
+        // 若 LOVE 对话框不存在，则直接重试
+        stopCameraStream();
+        cameraStarted = false;
+        startCameraStreamOnce();
+      }
+    }
+
+    // 检测通过后，展示管理员欢迎文案，并继续原有密码解锁流程
+    function startLoveDialogFlow() {
       if (loveDialogShown) return;
       loveDialogShown = true;
-      setTimeout(function () {
-        if (cameraVideoEl) {
-          cameraVideoEl.style.display = "none";
-        }
-        stopCameraStream();
 
-        var dlg = document.getElementById("love-dialog");
-        if (dlg) {
-          dlg.style.display = "flex";
-          dlg.style.opacity = "1";
-          setTimeout(function () {
+      // 摄像头验证通过后，通知终端停止继续输出爱心，并在终端打印完成提示语。
+      apHeartsStopRequested = true;
+
+      // 更新右上角登录状态为管理员等级
+      isAdminValidated = true;
+      if (loginStatusEl) {
+        loginStatusEl.textContent = "👤 Admin Lv.3";
+      }
+
+      if (cameraVideoEl) {
+        cameraVideoEl.style.display = "none";
+      }
+      stopCameraStream();
+
+      var dlg = document.getElementById("love-dialog");
+      if (dlg) {
+        var textEl = document.getElementById("love-dialog-text");
+        if (textEl) {
+          textEl.textContent = "Welcome, Dr. Hiro Pleighman.\nThe password to Resources is available in Notes.";
+        }
+        // 绑定关闭按钮：点击红色按钮后关闭 LOVE 对话框
+        var closeBtn = dlg.querySelector(".love-close");
+        if (closeBtn) {
+          closeBtn.onclick = function () {
             dlg.style.opacity = "0";
             setTimeout(function () {
               dlg.style.display = "none";
-            }, 400);
-          }, 5500);
+            }, 300);
+          };
         }
+        dlg.style.display = "flex";
+        dlg.style.opacity = "1";
+      }
 
-        revealResourcesPasswordInNotes();
+      revealResourcesPasswordInNotes();
+    }
+
+    // 兼容旧逻辑：不使用人脸识别时的延迟 LOVE 流程
+    function showLoveDialogOnce() {
+      if (loveDialogShown) return;
+      setTimeout(function () {
+        startLoveDialogFlow();
       }, 5000);
     }
 
@@ -329,7 +1780,12 @@
 
       function updateLivePrompt() {
         if (!livePromptSpan) return;
-        livePromptSpan.innerHTML = promptHtml();
+        // 密码模式下，将提示符替换为密码提示文本，并与输入框保持同一行。
+        if (inPasswordMode && pendingCdTarget === "Resources") {
+          livePromptSpan.textContent = "Enter Password : ꄗ ";
+        } else {
+          livePromptSpan.innerHTML = promptHtml();
+        }
       }
 
       function htmlLine(text) {
@@ -363,7 +1819,9 @@
         htmlLine("stdin stream interrupted") +
         htmlLine("tty reassigned") +
         htmlLine("process id: unknown") + "<br>" +
-        htmlLine("For more help on ArkPets, head to ▇▇▇▇▇▇▇▇, or run 'AP COMMAND --help'.");
+        "For more help on ArkPets, head to ▇▇▇▇▇▇▇▇, or run '" +
+          '<span style="color:#00ff7f">AP COMMAND --help</span>' +
+        "'.<br>";
 
       arkTermOutput.innerHTML = headerHtml + bodyHtml;
       arkTermInput.value = "";
@@ -374,7 +1832,12 @@
       var apEUsed = false;
       var apHeartsShown = false;
 
-      // 当 ap -c 与 ap -e 都成功后，开始以“逐个输出”的方式刷出 1000 个爱心
+      // 简单命令历史，用于方向键在终端中回顾输入
+      var history = [];
+      var historyIndex = -1; // -1 表示当前正在输入的新命令
+
+      // 当 ap -c 与 ap -e 都成功后，开始以“逐个输出”的方式快速刷出爱心，
+      // 直到摄像头验证流程完成（apHeartsStopRequested 置为 true）。
       function heartsStreamIfReady() {
         if (!(apCUsed && apEUsed) || apHeartsShown) return;
         apHeartsShown = true;
@@ -383,16 +1846,22 @@
         startCameraStreamOnce();
         startCameraPopupsOnce();
 
-        var total = 1000;
-        var produced = 0;
+        apHeartsStopRequested = false;
+        apHeartsCompletionLineShown = false;
 
         function tick() {
-          if (produced >= total) return;
-          produced += 1;
-          appendHtml('<span style="color:#ff0000">♥</span> ');
-          if (produced < total) {
-            setTimeout(tick, 3); // 非常快速地逐个输出
+          // 摄像头验证完成后：停止继续输出 ♥，并在终端输出完成提示语。
+          if (apHeartsStopRequested) {
+            if (!apHeartsCompletionLineShown) {
+              apHeartsCompletionLineShown = true;
+              appendHtml('<br>Admin Validation Complete. Welcome to <span style="color:#ff0000">SoulContainer®</span>!<br>');
+            }
+            return;
           }
+
+          appendHtml('<span style="color:#ff0000">♥</span> ');
+          // 进一步加快输出速度，让摄像头打开前的爱心流更密集。
+          setTimeout(tick, 1);
         }
 
         tick();
@@ -406,6 +1875,29 @@
       }
 
       arkTermInput.addEventListener("keydown", function (ev) {
+        // 方向键：在命令历史中上下浏览
+        if (!inPasswordMode && (ev.key === "ArrowUp" || ev.key === "ArrowDown")) {
+          ev.preventDefault();
+          if (!history.length) return;
+          if (ev.key === "ArrowUp") {
+            if (historyIndex < 0) historyIndex = history.length - 1;
+            else if (historyIndex > 0) historyIndex -= 1;
+          } else if (ev.key === "ArrowDown") {
+            if (historyIndex >= 0) historyIndex += 1;
+            if (historyIndex >= history.length) historyIndex = -1;
+          }
+
+          if (historyIndex >= 0) {
+            arkTermInput.value = history[historyIndex];
+          } else {
+            arkTermInput.value = "";
+          }
+          // 将光标移到行尾
+          var len = arkTermInput.value.length;
+          try { arkTermInput.setSelectionRange(len, len); } catch (e) {}
+          return;
+        }
+
         // 密码模式：拦截输入，仅在 Enter 时处理
         if (inPasswordMode) {
           ev.preventDefault();
@@ -415,11 +1907,12 @@
             arkTermInput.value = "";
             inPasswordMode = false;
 
-            if (pendingCdTarget === "Resources" && pwd === "0x2A") {
+            if (pendingCdTarget === "Resources" && (pwd === "0x2A" || pwd === "0x2a")) {
               cwd = "Resources";
-              updateLivePrompt();
             }
             pendingCdTarget = null;
+            // 无论密码是否正确，都恢复为正常提示符（Arkpets 或 Resources）。
+            updateLivePrompt();
           } else if (ev.key.length === 1) {
             passwordBuffer += ev.key;
           }
@@ -431,6 +1924,11 @@
         var cmd = arkTermInput.value || "";
         arkTermInput.value = "";
 
+        if (cmd.trim()) {
+          history.push(cmd);
+          historyIndex = -1;
+        }
+
         // 历史区记录完整的一行带颜色的提示符 + 命令文本
         var html = "<br>" + promptHtml() + escapeHtml(cmd) + "<br>";
 
@@ -440,11 +1938,12 @@
         if (trimmed === "AP COMMAND --help") {
           // 帮助信息：第一行使用纯红色 (255,0,0)，其余保持默认文字颜色
           html += '<span style="color:#ff0000">WARNING SOURCE CODE CORRUPTED</span><br>';
-          html += htmlLine('usage: ap [option (e.g. "-c")] [arg]');
-          html += htmlLine('Options (and corresponding environment variables):');
-          html += htmlLine('-c    : to answer the 3 questions given by the pets, use one word as arg.');
-          html += htmlLine('-e    : enlarge lower-cases , decode: +3, then use as arg.');
-        } else if (trimmed === "python run Arkpets") {
+          html += 'First try copying and pasting the pets.<br>';
+          html += 'usage: ap [option] [arg], (e.g. ap -c pet)<br>';
+          html += 'Options:<br>';
+          html += '<span style="color:#00ff7f">-c</span>    : answer the 3 questions by the pets with the same word, hint: if(ctrlV.len() == 7) cout &lt;&lt; ctrlV[2] &lt;&lt; endl;<br>';
+          html += '<span style="color:#00ff7f">-e</span>    : for lower-cases in ctrlV, decode by: "+3", then use as arg.<br>';
+        } else if (trimmed === "python run ArkPets") {
           // python run ArkPets 的固定回复，其中 ALWAYS 使用纯红色 (255,0,0)
           html += escapeHtml("ArkPets is ") + '<span style="color:#ff0000">ALWAYS</span>' + escapeHtml(" running...") + "<br>";
         } else if (parts[0] === "ap") {
@@ -452,7 +1951,7 @@
           if (parts.length === 1) {
             // 纯 ap
             html += htmlLine('ArkPets-3.1 (c) Pseudogryph L.T.D. | packaged by SoulContainer, Inc. |');
-            html += htmlLine('Type "AP COMMAND --help" for more information.');
+            html += 'Type "' + '<span style="color:#00ff7f">AP COMMAND --help</span>' + '" for more information.<br>';
           } else if (parts[1] === "-c") {
             var argC = (parts[2] || "").toLowerCase();
             if (argC === "always") {
@@ -463,7 +1962,7 @@
                 html += '<span style="color:#ff0000">NO TURNING BACK NOW.</span><br>';
               }
             } else {
-              html += htmlLine('ap: invalid argument.');
+              html += htmlLine('ap: please use correct ap -c argument.');
             }
           } else if (parts[1] === "-e") {
             var argE = (parts[2] || "").toLowerCase();
@@ -475,11 +1974,11 @@
                 html += '<span style="color:#ff0000">NO TURNING BACK NOW.</span><br>';
               }
             } else {
-              html += htmlLine('ap: invalid argument.');
+              html += htmlLine('ap: please use correct ap -e argument.');
             }
           } else {
             // 其他 ap 子命令一律视为参数错误
-            html += htmlLine('ap: invalid argument.');
+            html += htmlLine('ap: no such command.');
           }
         } else if (trimmed === "cd ..") {
           if (cwd === "ArkPets") {
@@ -493,10 +1992,12 @@
           }
         } else if (trimmed === "cd Resources") {
           if (cwd === "ArkPets") {
-            html += "Enter Password : ꄗ ";
+            // 进入密码模式：不在历史输出中再打印一行提示，而是把
+            // 当前行提示符切换为 "Enter Password : ꄗ "，输入框与其同一行。
             inPasswordMode = true;
             passwordBuffer = "";
             pendingCdTarget = "Resources";
+            updateLivePrompt();
           }
         } else if (trimmed === "ls") {
           if (cwd === "Resources") {
@@ -513,6 +2014,19 @@
           } else {
             html += escapeHtml("/Users/Admin/Projects/SoulContainCorp/ArkPets") + "<br>";
           }
+        } else if (trimmed === "start SoulContainer.exe") {
+          if (cwd === "Resources") {
+            html += htmlLine("Launching SoulContainer.exe ...");
+            appendHtml(html);
+            heartsStreamIfReady();
+            showRingPuzzleOverlay();
+            return;
+          } else {
+            html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
+          }
+        } else if (trimmed === "rm SoulContainer.exe" && cwd === "Resources") {
+          html += '<span style="color:#ff0000">WARNING</span>: Security level low, at minimum, level 4 is required to delete core document.<br>';
+          html += 'Try to elevate privileges through visiting <span style="color:#33ff66">KeyVault</span>.<br>';
         } else if (trimmed !== "") {
           // 其他未定义命令：模仿 zsh 的 command not found 提示
           html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
@@ -661,6 +2175,91 @@
       }
     }
 
+    // KeyVault 窗口拖拽：模仿 Notes / Terminal
+    function initKeyVaultWindow() {
+      if (!keyVaultWindowEl) return;
+      var titleBar = keyVaultWindowEl.querySelector(".kv-titlebar");
+      var minBtn = keyVaultWindowEl.querySelector(".kv-min");
+      var closeBtn = keyVaultWindowEl.querySelector(".kv-close");
+      if (!titleBar) return;
+
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        bringToFront(keyVaultWindowEl);
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var tx = baseX + dx;
+        var ty = baseY + dy;
+        keyVaultWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        var m = keyVaultWindowEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      titleBar.addEventListener("mousedown", onMouseDown);
+
+      // 点击 KeyVault 窗口任意区域都应将其置于最上层
+      keyVaultWindowEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(keyVaultWindowEl);
+      });
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          keyVaultWindowEl.style.display = "none";
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          shakeWindowElement(keyVaultWindowEl);
+        });
+      }
+
+      // 访客提示框关闭按钮
+      if (keyVaultGuestDialogEl) {
+        var guestClose = keyVaultGuestDialogEl.querySelector(".kv-guest-close");
+        if (guestClose) {
+          guestClose.addEventListener("click", function (ev) {
+            ev.stopPropagation();
+            keyVaultGuestDialogEl.style.display = "none";
+          });
+        }
+        // 点击对话框外部区域也关闭
+        keyVaultGuestDialogEl.addEventListener("click", function (ev) {
+          if (ev.target === keyVaultGuestDialogEl) {
+            keyVaultGuestDialogEl.style.display = "none";
+          }
+        });
+      }
+    }
+
     function initDesktopIcons() {
       var desktop = document.getElementById("desktop-area");
       if (!desktop) return;
@@ -696,6 +2295,23 @@
           win = notesWindowEl;
           displayMode = "flex";
           defaultTransform = notesDefaultTransform;
+        } else if (app === "keyvault") {
+          // 未通过管理员验证时：仅弹访客提示框
+          if (!isAdminValidated) {
+            if (keyVaultGuestDialogEl) {
+              keyVaultGuestDialogEl.style.display = "flex";
+            }
+            return;
+          }
+          win = keyVaultWindowEl;
+          displayMode = "flex";
+          defaultTransform = keyVaultDefaultTransform;
+          // 首次打开 KeyVault 时初始化数字华容道
+          initKeyVaultPuzzle();
+        } else if (app === "line") {
+          win = lineWindowEl;
+          displayMode = "flex";
+          defaultTransform = lineDefaultTransform;
         }
         if (!win) return;
 
@@ -847,6 +2463,157 @@
       }
     }
 
+    function initLineWindow() {
+      if (!lineWindowEl) return;
+      var titleBar = lineWindowEl.querySelector(".line-titlebar");
+      var minBtn = lineWindowEl.querySelector(".line-min");
+      var closeBtn = lineWindowEl.querySelector(".line-close");
+      if (!titleBar) return;
+
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        bringToFront(lineWindowEl);
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var tx = baseX + dx;
+        var ty = baseY + dy;
+        lineWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        var m = lineWindowEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      titleBar.addEventListener("mousedown", onMouseDown);
+
+      lineWindowEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(lineWindowEl);
+      });
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          lineWindowEl.style.display = "none";
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          shakeWindowElement(lineWindowEl);
+        });
+      }
+
+      if (lineListEl && lineChatEl) {
+        function renderConversation(contactId) {
+          var blocks = lineConversations[contactId];
+          lineChatEl.innerHTML = "";
+          if (!blocks) {
+            lineChatEl.textContent = "No messages.";
+            return;
+          }
+          for (var i = 0; i < blocks.length; i++) {
+            var blk = blocks[i];
+            if (blk.date) {
+              var dateEl = document.createElement("div");
+              dateEl.className = "line-date";
+              dateEl.textContent = blk.date;
+              lineChatEl.appendChild(dateEl);
+            }
+            var msgs = blk.messages || [];
+            for (var j = 0; j < msgs.length; j++) {
+              var msg = msgs[j];
+              var row = document.createElement("div");
+              row.className = "line-msg-row " + (msg.speaker === "hiro" ? "right" : "left");
+
+              var inner = document.createElement("div");
+              inner.className = "line-msg-inner";
+
+              var avatar = document.createElement("img");
+              avatar.className = "line-avatar";
+              if (msg.speaker === "hiro") {
+                avatar.src = "Resources/Hiro.jpg";
+                avatar.alt = "Hiro";
+              } else {
+                avatar.src = "Resources/Clyde.jpg";
+                avatar.alt = "Clyde";
+              }
+
+              var content = document.createElement("div");
+              content.className = "line-msg-content";
+
+              var nameEl = document.createElement("div");
+              nameEl.className = "line-msg-name";
+              nameEl.textContent = (msg.speaker === "hiro") ? "Hiro Pleighman" : "Clyde J. Rothschild";
+
+              var bubble = document.createElement("div");
+              bubble.className = "line-bubble";
+              bubble.textContent = msg.text;
+
+              content.appendChild(nameEl);
+              content.appendChild(bubble);
+
+              // Hiro 的消息整体靠右：内容在内侧、头像在最右；
+              // Clyde 在左：头像在左、内容在其右。
+              if (msg.speaker === "hiro") {
+                inner.appendChild(content);
+                inner.appendChild(avatar);
+              } else {
+                inner.appendChild(avatar);
+                inner.appendChild(content);
+              }
+              row.appendChild(inner);
+              lineChatEl.appendChild(row);
+            }
+          }
+          lineChatEl.scrollTop = lineChatEl.scrollHeight;
+        }
+
+        // 侧边联系人点击切换会话（目前仅 Clyde 有内容）
+        var contacts = lineListEl.querySelectorAll(".line-contact");
+        for (var k = 0; k < contacts.length; k++) {
+          (function () {
+            var item = contacts[k];
+            var id = item.getAttribute("data-contact");
+            item.addEventListener("click", function () {
+              for (var m = 0; m < contacts.length; m++) {
+                contacts[m].style.background = "";
+              }
+              item.style.background = "#e0e9ff";
+              renderConversation(id);
+            });
+          })();
+        }
+
+        // 默认选中 Clyde
+        renderConversation("clyde");
+      }
+    }
+
     function initNotesWindow() {
       if (!notesWindowEl) return;
       var headerEl = notesWindowEl.querySelector(".notes-header");
@@ -857,12 +2624,13 @@
       contentEl.setAttribute("contenteditable", "true");
 
       var defaultText = '' +
-        'Terminal (Shell) Language:\n' +
+        'Terminal (Shell) Language:\n\n' +
         'cd : change directory, "cd .." to exit; "cd xxx" to enter xxx.\n' +
         'pwd : show path to current location.\n' +
         'start : start an application, "start xxx.exe".\n' +
+        'rm : delete an application, "rm xxx.exe".\n' +
         'ls : list the files and directories within a specified location.\n\n' +
-        'Remeber, password for ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it.\n';
+        'Remember, password for cd into ArkPets/Resources is ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇. Don\'t let the senior managers at SoulContainer get their filthy hands on it. I need to... run it? Or rather destroy it?\n';
       // 每次刷新都使用默认说明文本；下面的内容区供玩家自由记录，默认留空
       headerEl.textContent = defaultText;
       // 为玩家预留数行“空白稿纸”，让可编辑区域在初始状态下就是可见的
@@ -939,6 +2707,8 @@
     initArkTerminal();
     initTerminalDrag();
     initPetWindowDrag();
+    initKeyVaultWindow();
+    initLineWindow();
     initDesktopIcons();
     initNotesWindow();
     applyLayoutScale();
@@ -1083,6 +2853,9 @@
           isDeleted: false,
           fadeStartTime: 0,
           fadeDuration: 3000,
+          // 删除后重新出现的延迟（毫秒）与计划时间戳
+          respawnDelay: 6000,
+          respawnAt: 0,
           // jeb/unjeb 彩虹特效开关
           jebEnabled: false,
           jebStartTime: 0,
@@ -1645,12 +3418,12 @@
               currentMenuPet.fadeStartTime = performance.now();
               currentMenuPet.currentAlpha = 1;
             }
-          } else if (action === "jeb_") {
+          } else if (action === "jeb") {
             if (currentMenuPet) {
               currentMenuPet.jebEnabled = true;
               currentMenuPet.jebStartTime = performance.now();
             }
-          } else if (action === "unjeb_") {
+          } else if (action === "unjeb") {
             if (currentMenuPet) {
               currentMenuPet.jebEnabled = false;
             }
@@ -1693,6 +3466,8 @@
             t = 1;
             p.deleting = false;
             p.isDeleted = true;
+            // 在完全淡出后，记录一个将来重新出现的时间点
+            p.respawnAt = now + (p.respawnDelay || 6000);
           }
           p.currentAlpha = 1 - t;
         }
@@ -1720,10 +3495,31 @@
       }
 
       function updatePet(p, now, dt) {
-        // 若已被删除且不在淡出过程，则保持静止，仅维持视觉状态
+        // 若已被删除且不在淡出过程，则等待到达重生时间点
         if (p.isDeleted && !p.deleting) {
-          applyVisualEffects(p, now);
-          return;
+          if (p.respawnAt && now >= p.respawnAt) {
+            // 从“上方”重新掉落回原来的地面位置
+            p.isDeleted = false;
+            p.deleting = false;
+            p.currentAlpha = 1;
+            p.respawnAt = 0;
+
+            // 回到各自的基础 X 坐标，从画布外稍高处开始下落
+            p.skeleton.x = p.baseX;
+            p.skeleton.y = (p.baseY || -300) + 600;
+            p.isDropping = true;
+            p.dropStartY = p.skeleton.y;
+            p.dropStartTime = now;
+
+            // 回到 idle 动画，等待自动行走重新接管
+            if (p.idleAnim) {
+              p.state.setAnimation(0, p.idleAnim, true);
+            }
+          } else {
+            // 删除后的静止期仅维持视觉状态（完全透明）
+            applyVisualEffects(p, now);
+            return;
+          }
         }
         p.state.update(dt / 1000);
         p.state.apply(p.skeleton);
@@ -1734,9 +3530,9 @@
           return;
         }
 
-        // 拖拽结束后的下落插值：用恒定速度 dropSpeedPerMs 让角色从当前 Y 落回 -300
+        // 拖拽结束后的下落插值：用恒定速度 dropSpeedPerMs 让角色从当前 Y 落回地面（baseY）
         if (p.isDropping) {
-          var targetY = -300;
+          var targetY = (p.baseY || -300);
           var dy = targetY - p.skeleton.y;
           var dist = Math.abs(dy);
           // dt 是毫秒，这里用恒定速度推进，距离越远耗时越久，但速度相同。
