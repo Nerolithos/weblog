@@ -61,12 +61,27 @@
     var statusTimeEl = document.getElementById("status-time-label");
     var statusTooltipEl = document.getElementById("status-tooltip");
 
+    // 底部任务栏元素：home 键 + 打开程序列表
+    var taskbarEl = document.getElementById("taskbar");
+    var taskbarWindowsEl = document.getElementById("taskbar-windows");
+    var homeMenuEl = document.getElementById("home-menu");
+    var systemDialogEl = document.getElementById("system-warning-dialog");
+
     // 记录几个窗口的默认 transform，用于重新打开时回到初始位置
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
     var termDefaultTransform = sideTermEl ? (sideTermEl.style.transform || "") : "";
     var notesDefaultTransform = notesWindowEl ? (notesWindowEl.style.transform || "") : "";
     var keyVaultDefaultTransform = keyVaultWindowEl ? (keyVaultWindowEl.style.transform || "") : "";
     var lineDefaultTransform = lineWindowEl ? (lineWindowEl.style.transform || "") : "";
+
+    // 打开状态：用于底部任务栏显示哪些应用（与是否最小化/隐藏区分开）
+    var openApps = {
+      pets: false,
+      terminal: false,
+      notes: false,
+      keyvault: false,
+      line: false
+    };
 
     // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
     var BASE_Z = 20;
@@ -77,6 +92,149 @@
       zCounter += 1;
       if (zCounter > MAX_Z) zCounter = BASE_Z;
       el.style.zIndex = String(zCounter);
+    }
+
+    function clampWindowToViewport(el) {
+      if (!el) return;
+      var rect = el.getBoundingClientRect();
+      var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+      var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+      if (!vw || !vh) return;
+
+      var dx = 0;
+      var dy = 0;
+      if (rect.left < 0) dx = -rect.left;
+      else if (rect.right > vw) dx = vw - rect.right;
+      if (rect.top < 0) dy = -rect.top;
+      else if (rect.bottom > vh) dy = vh - rect.bottom;
+
+      if (!dx && !dy) return;
+
+      var m = (el.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+      var curX = m ? (parseFloat(m[1]) || 0) : 0;
+      var curY = m ? (parseFloat(m[2]) || 0) : 0;
+      var newX = curX + dx;
+      var newY = curY + dy;
+      el.style.transform = "translate(" + newX + "px," + newY + "px)";
+    }
+
+    function centerWindowInViewport(el) {
+      if (!el) return;
+      var rect = el.getBoundingClientRect();
+      var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+      var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+      if (!vw || !vh) return;
+
+      var targetLeft = (vw - rect.width) / 2;
+      var targetTop = (vh - rect.height) / 2;
+      var dx = targetLeft - rect.left;
+      var dy = targetTop - rect.top;
+
+      var m = (el.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+      var curX = m ? (parseFloat(m[1]) || 0) : 0;
+      var curY = m ? (parseFloat(m[2]) || 0) : 0;
+      var newX = curX + dx;
+      var newY = curY + dy;
+      el.style.transform = "translate(" + newX + "px," + newY + "px)";
+      clampWindowToViewport(el);
+    }
+
+    function refreshTaskbarWindows() {
+      if (!taskbarWindowsEl) return;
+      while (taskbarWindowsEl.firstChild) {
+        taskbarWindowsEl.removeChild(taskbarWindowsEl.firstChild);
+      }
+
+      var apps = [
+        { key: "pets", label: "ArkPets", el: petWindowEl, display: "block" },
+        { key: "terminal", label: "Terminal", el: sideTermEl, display: "block" },
+        { key: "notes", label: "Notes", el: notesWindowEl, display: "flex" },
+        { key: "keyvault", label: "KeyVault", el: keyVaultWindowEl, display: "flex" },
+        { key: "line", label: "line", el: lineWindowEl, display: "flex" }
+      ];
+
+      for (var i = 0; i < apps.length; i++) {
+        var app = apps[i];
+        if (!openApps[app.key]) continue;
+        var btn = document.createElement("div");
+        btn.className = "taskbar-window-button";
+        btn.textContent = app.label;
+        (function (winEl, displayMode) {
+          btn.addEventListener("click", function () {
+            if (!winEl) return;
+            if (winEl.style.display === "none") {
+              winEl.style.display = displayMode;
+            }
+            bringToFront(winEl);
+          });
+        })(app.el, app.display);
+        taskbarWindowsEl.appendChild(btn);
+      }
+    }
+
+    function initTaskbarHome() {
+      if (!taskbarEl) return;
+      var homeBtn = document.getElementById("taskbar-home");
+      if (homeBtn && homeMenuEl) {
+        homeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          homeMenuEl.style.display = (homeMenuEl.style.display === "block") ? "none" : "block";
+        });
+      }
+
+      if (homeMenuEl) {
+        var items = homeMenuEl.querySelectorAll(".home-menu-item");
+        for (var i = 0; i < items.length; i++) {
+          items[i].addEventListener("mousedown", function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            var action = this.getAttribute("data-action");
+            if (homeMenuEl) {
+              homeMenuEl.style.display = "none";
+            }
+            if (systemDialogEl) {
+              var body = systemDialogEl.querySelector("#system-warning-dialog-body");
+              if (body) {
+                if (action === "restart") {
+                  body.textContent = "Restart interrupted: Arkpets is still running.";
+                } else if (action === "shutdown") {
+                  body.textContent = "Power off interrupted: Arkpets is still running.";
+                } else {
+                  body.textContent = "Arkpets is still running.";
+                }
+              }
+              systemDialogEl.style.display = "flex";
+            }
+          });
+        }
+      }
+
+      if (systemDialogEl) {
+        var closeBtn = systemDialogEl.querySelector(".system-dialog-close");
+        if (closeBtn) {
+          closeBtn.addEventListener("click", function (ev) {
+            ev.stopPropagation();
+            systemDialogEl.style.display = "none";
+          });
+        }
+
+        systemDialogEl.addEventListener("click", function (ev) {
+          if (ev.target === systemDialogEl) {
+            systemDialogEl.style.display = "none";
+          }
+        });
+      }
+
+      document.addEventListener("mousedown", function (ev) {
+        if (!homeMenuEl) return;
+        if (homeMenuEl.style.display !== "block") return;
+        // 点击在 home 菜单或 home 按钮内部时不自动关闭，交给各自逻辑处理
+        var homeBtnEl = document.getElementById("taskbar-home");
+        if (homeMenuEl.contains(ev.target) || (homeBtnEl && homeBtnEl.contains(ev.target))) {
+          return;
+        }
+        homeMenuEl.style.display = "none";
+      });
     }
 
     // 简单对话框 DOM 与台词库
@@ -1624,13 +1782,18 @@
           inner.textContent = "Facial recognition failed. Try again.";
         }
         dlg.style.display = "flex";
-        dlg.style.opacity = "1";
+            // 最小化：保持 openApps.line 为 true
+            refreshTaskbarWindows();
         setTimeout(function () {
           dlg.style.opacity = "0";
           setTimeout(function () {
             dlg.style.display = "none";
             // 关闭当前摄像头并重新开始检测流程
-            stopCameraStream();
+            lineWindowEl.style.display = "none";
+            if (openApps.hasOwnProperty("line")) {
+              openApps.line = false;
+            }
+            refreshTaskbarWindows();
             cameraStarted = false;
             startCameraStreamOnce();
           }, 400);
@@ -1654,7 +1817,14 @@
       // 更新右上角登录状态为管理员等级
       isAdminValidated = true;
       if (loginStatusEl) {
-        loginStatusEl.textContent = "👤 Admin Lv.3";
+        loginStatusEl.textContent = "👤 Hiro Pleighman";
+      }
+
+      // 登录成功后才启动 Matrix 字符雨背景（如果可用）
+      if (window.startMatrixRain) {
+        try {
+          window.startMatrixRain();
+        } catch (e) {}
       }
 
       if (cameraVideoEl) {
@@ -2058,6 +2228,14 @@
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
+        var m = (sideTermEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
         ev.preventDefault();
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
@@ -2070,6 +2248,7 @@
         var tx = baseX + dx;
         var ty = baseY + dy;
         sideTermEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(sideTermEl);
       }
 
       function onMouseUp() {
@@ -2097,12 +2276,18 @@
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           sideTermEl.style.display = "none";
+          // 最小化：保持 openApps.terminal 为 true，不从任务栏移除
+          refreshTaskbarWindows();
         });
       }
       if (closeBtn) {
         closeBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
-          shakeWindowElement(sideTermEl);
+          sideTermEl.style.display = "none";
+          if (openApps.hasOwnProperty("terminal")) {
+            openApps.terminal = false;
+          }
+          refreshTaskbarWindows();
         });
       }
     }
@@ -2127,6 +2312,14 @@
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
+        var m = (petWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
         ev.preventDefault();
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
@@ -2139,6 +2332,7 @@
         var tx = baseX + dx;
         var ty = baseY + dy;
         petWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(petWindowEl);
       }
 
       function onMouseUp() {
@@ -2165,11 +2359,14 @@
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           petWindowEl.style.display = "none";
+          // ArkPets 允许被最小化，但仍保持打开状态
+          refreshTaskbarWindows();
         });
       }
       if (closeBtn) {
         closeBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
+          // ArkPets 的红色按钮只抖动，不允许关闭
           shakeWindowElement(petWindowEl);
         });
       }
@@ -2195,6 +2392,14 @@
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
+        var m = (keyVaultWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
         ev.preventDefault();
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
@@ -2207,6 +2412,7 @@
         var tx = baseX + dx;
         var ty = baseY + dy;
         keyVaultWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(keyVaultWindowEl);
       }
 
       function onMouseUp() {
@@ -2233,12 +2439,18 @@
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           keyVaultWindowEl.style.display = "none";
+          // 最小化：保持 openApps.keyvault 为 true
+          refreshTaskbarWindows();
         });
       }
       if (closeBtn) {
         closeBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
-          shakeWindowElement(keyVaultWindowEl);
+          keyVaultWindowEl.style.display = "none";
+          if (openApps.hasOwnProperty("keyvault")) {
+            openApps.keyvault = false;
+          }
+          refreshTaskbarWindows();
         });
       }
 
@@ -2315,16 +2527,27 @@
         }
         if (!win) return;
 
+        // 逻辑上标记为“已打开”，应当出现在底部任务栏中
+        if (openApps.hasOwnProperty(app)) {
+          openApps[app] = true;
+        }
+
         if (isWindowOpen(win)) {
-          // 如果窗口已经开着：只抖动并置顶
+          // 如果窗口已经可见：只抖动并置顶
           bringToFront(win);
           shakeWindowElement(win);
         } else {
-          // 窗口未开：回到默认位置后再打开
-          win.style.transform = defaultTransform;
+          // 窗口未显示（包含已最小化）：在视口中心附近打开
           win.style.display = displayMode;
+          // 先应用默认 transform 以获得正确尺寸与初始位置
+          win.style.transform = defaultTransform;
+          // 强制一次重排，再居中到屏幕附近
+          void win.offsetWidth;
+          centerWindowInViewport(win);
           bringToFront(win);
         }
+
+        refreshTaskbarWindows();
       }
 
       function setSelected(icon) {
@@ -2348,7 +2571,11 @@
       desktop.addEventListener("mousedown", function (ev) {
         if (ev.button !== 0) return;
         var icon = ev.target.closest(".desktop-icon");
-        if (!icon) return;
+        if (!icon) {
+          // 点击桌面空白处：取消图标选中高亮
+          setSelected(null);
+          return;
+        }
         ev.preventDefault();
         setSelected(icon);
         draggingIcon = icon;
@@ -2445,6 +2672,14 @@
         }
       }, true);
 
+      // 在桌面图标高亮时，点击任意非图标区域都会取消高亮
+      document.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        if (ev.target.closest(".desktop-icon")) return;
+        if (!selectedIcon) return;
+        setSelected(null);
+      });
+
       if (notesWindowEl) {
         var minBtn = notesWindowEl.querySelector(".notes-min");
         var closeBtn = notesWindowEl.querySelector(".notes-close");
@@ -2452,12 +2687,18 @@
           minBtn.addEventListener("click", function (ev) {
             ev.stopPropagation();
             notesWindowEl.style.display = "none";
+            // 最小化：保持 openApps.notes 为 true
+            refreshTaskbarWindows();
           });
         }
         if (closeBtn) {
           closeBtn.addEventListener("click", function (ev) {
             ev.stopPropagation();
-            shakeWindowElement(notesWindowEl);
+            notesWindowEl.style.display = "none";
+            if (openApps.hasOwnProperty("notes")) {
+              openApps.notes = false;
+            }
+            refreshTaskbarWindows();
           });
         }
       }
@@ -2482,6 +2723,14 @@
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
+        var m = (lineWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
         ev.preventDefault();
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
@@ -2494,6 +2743,7 @@
         var tx = baseX + dx;
         var ty = baseY + dy;
         lineWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(lineWindowEl);
       }
 
       function onMouseUp() {
@@ -2655,6 +2905,14 @@
           dragging = true;
           startX = ev.clientX;
           startY = ev.clientY;
+          var m = (notesWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+          if (m) {
+            baseX = parseFloat(m[1]) || 0;
+            baseY = parseFloat(m[2]) || 0;
+          } else {
+            baseX = 0;
+            baseY = 0;
+          }
           ev.preventDefault();
           document.addEventListener("mousemove", onMouseMove);
           document.addEventListener("mouseup", onMouseUp);
@@ -2667,6 +2925,7 @@
           var tx = baseX + dx;
           var ty = baseY + dy;
           notesWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+          clampWindowToViewport(notesWindowEl);
         }
 
         function onMouseUp() {
@@ -2711,7 +2970,33 @@
     initLineWindow();
     initDesktopIcons();
     initNotesWindow();
+    initTaskbarHome();
+    // 初始状态：ArkPets、Terminal、Notes 均视为已打开，显示在任务栏
+    if (openApps) {
+      if (openApps.hasOwnProperty("pets")) {
+        openApps.pets = true;
+      }
+      if (openApps.hasOwnProperty("terminal")) {
+        openApps.terminal = true;
+      }
+      if (openApps.hasOwnProperty("notes")) {
+        openApps.notes = true;
+      }
+      refreshTaskbarWindows();
+    }
+    // 先按屏幕尺寸整体缩放一次布局
     applyLayoutScale();
+    // 然后调整各窗口的初始位置：
+    // ArkPets 窗口居中显示，Terminal / Notes 保证不超出当前显示区域
+    if (petWindowEl) {
+      centerWindowInViewport(petWindowEl);
+    }
+    if (sideTermEl) {
+      clampWindowToViewport(sideTermEl);
+    }
+    if (notesWindowEl) {
+      clampWindowToViewport(notesWindowEl);
+    }
     window.addEventListener("resize", applyLayoutScale);
 
     var rosAtlasUrl = assetBaseUrl + "/" + rosAtlas;
