@@ -979,6 +979,7 @@
     <div class="desktop-icon" data-app="notes"><span class="icon-emoji">📝</span><span class="icon-label">Notes</span></div>
     <div class="desktop-icon" data-app="keyvault"><span class="icon-emoji">🔐</span><span class="icon-label">KeyVault</span></div>
     <div class="desktop-icon" data-app="line"><span class="icon-emoji">💬</span><span class="icon-label">line</span></div>
+    <div class="desktop-icon" data-app="chatap"><span class="icon-emoji" style="color:#ffffff;">֎</span><span class="icon-label">ChatAP</span></div>
   </div>
   <div id="window-layer">
     <div id="main-row">
@@ -1122,6 +1123,24 @@
           </div>
         </div>
         <div id="line-chat" style="flex:1;padding:12px 16px;overflow-y:auto;background:#ffffff;"></div>
+      </div>
+    </div>
+
+    <!-- ChatAP 大模型聊天窗口 -->
+    <div id="chatap-window" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:640px;height:420px;background:#111111;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.6);border:1px solid #444444;display:none;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;box-sizing:border-box;flex-direction:column;color:#f5f5f5;">
+      <div class="chatap-titlebar" style="height:24px;background:#1f1f1f;display:flex;align-items:center;padding:0 8px;box-sizing:border-box;user-select:none;cursor:move;">
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn chatap-close"></div>
+          <div class="ark-term-btn min chatap-min"></div>
+        </div>
+        <div class="chatap-title-text" style="font-size:11px;color:#dddddd;margin-left:6px;flex:1;text-align:center;">ChatAP</div>
+      </div>
+      <div class="chatap-body" style="display:flex;flex-direction:column;height:calc(100% - 24px);background:#111111;">
+        <div id="chatap-output" style="flex:1;padding:10px 12px;font-size:13px;line-height:1.5;overflow-y:auto;background:#141414;border-bottom:1px solid #333333;display:flex;flex-direction:column;gap:6px;"></div>
+        <div class="chatap-input-row" style="padding:8px 10px;display:flex;gap:8px;align-items:flex-end;background:#181818;border-top:1px solid #333333;">
+          <textarea id="chatap-input" rows="2" style="flex:1;resize:vertical;min-height:44px;max-height:120px;background:#101010;color:#f5f5f5;border:1px solid #444444;border-radius:4px;font-family:inherit;font-size:13px;padding:6px 8px;outline:none;"></textarea>
+          <button id="chatap-send" style="padding:6px 14px;font-size:13px;border-radius:4px;border:1px solid #5e9cff;background:#2c66ff;color:#ffffff;cursor:pointer;">Send</button>
+        </div>
       </div>
     </div>
   </div>

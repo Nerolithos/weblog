@@ -1,9 +1,9 @@
 ---
-title: "🐈 ArkPets"
-date: 2026-03-06T13:57:34+08:00
+title: "🐈 ArkPets suspense puzzle game"
+date: 2026-04-06T10:51:34+08:00
 draft: false
 slug: "pet"
-summary: "Proof of Work of a html + js puzzle-game exercise, powered by spine-ts, opencv and d3. This project began as fabricating Arknights' spine-cpp locally, and turned into a full-on game."
+summary: "Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights' spine-cpp locally, and turned into a full-on suspense game."
 categories: 
 - SDS
 tags: 

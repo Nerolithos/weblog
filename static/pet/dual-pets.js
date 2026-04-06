@@ -55,6 +55,12 @@
     var lineListEl = document.getElementById("line-list");
     var lineChatEl = document.getElementById("line-chat");
 
+    // ChatAP 大模型聊天窗口
+    var chatApWindowEl = document.getElementById("chatap-window");
+    var chatApOutputEl = document.getElementById("chatap-output");
+    var chatApInputEl = document.getElementById("chatap-input");
+    var chatApSendBtnEl = document.getElementById("chatap-send");
+
     // 右上角登录状态 + 北京时间小框
     var statusPanelEl = document.getElementById("status-panel");
     var loginStatusEl = document.getElementById("login-status-label");
@@ -67,12 +73,46 @@
     var homeMenuEl = document.getElementById("home-menu");
     var systemDialogEl = document.getElementById("system-warning-dialog");
 
+    // 从 .API/secrets.toml 中读取 OPENROUTER_API_KEY，填充给 ChatAP 使用
+    function loadChatApKeyFromToml() {
+      // 如果已经有值，就不再重复加载
+      if (global.CHATAP_OPENROUTER_KEY || (global.window && global.window.CHATAP_OPENROUTER_KEY)) {
+        return;
+      }
+      // 相对 index.html 的路径：static/pet/.API/secrets.toml
+      fetch(".API/secrets.toml")
+        .then(function (resp) {
+          if (!resp.ok) return "";
+          return resp.text();
+        })
+        .then(function (text) {
+          if (!text) return;
+          var m = text.match(/OPENROUTER_API_KEY\s*=\s*["']([^"']+)["']/);
+          if (m && m[1]) {
+            try {
+              global.CHATAP_OPENROUTER_KEY = m[1];
+              if (global.window) {
+                global.window.CHATAP_OPENROUTER_KEY = m[1];
+              }
+            } catch (e) {
+              // 安静失败即可
+            }
+          }
+        })
+        .catch(function () {
+          // 读取失败时保持静默，由 ChatAP 自己提示缺少 key
+        });
+    }
+
+    loadChatApKeyFromToml();
+
     // 记录几个窗口的默认 transform，用于重新打开时回到初始位置
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
     var termDefaultTransform = sideTermEl ? (sideTermEl.style.transform || "") : "";
     var notesDefaultTransform = notesWindowEl ? (notesWindowEl.style.transform || "") : "";
     var keyVaultDefaultTransform = keyVaultWindowEl ? (keyVaultWindowEl.style.transform || "") : "";
     var lineDefaultTransform = lineWindowEl ? (lineWindowEl.style.transform || "") : "";
+    var chatApDefaultTransform = chatApWindowEl ? (chatApWindowEl.style.transform || "") : "";
 
     // 打开状态：用于底部任务栏显示哪些应用（与是否最小化/隐藏区分开）
     var openApps = {
@@ -80,7 +120,8 @@
       terminal: false,
       notes: false,
       keyvault: false,
-      line: false
+      line: false,
+      chatap: false
     };
 
     // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
@@ -150,7 +191,8 @@
         { key: "terminal", label: "Terminal", el: sideTermEl, display: "block" },
         { key: "notes", label: "Notes", el: notesWindowEl, display: "flex" },
         { key: "keyvault", label: "KeyVault", el: keyVaultWindowEl, display: "flex" },
-        { key: "line", label: "line", el: lineWindowEl, display: "flex" }
+        { key: "line", label: "line", el: lineWindowEl, display: "flex" },
+        { key: "chatap", label: "ChatAP", el: chatApWindowEl, display: "flex" }
       ];
 
       for (var i = 0; i < apps.length; i++) {
@@ -2524,6 +2566,10 @@
           win = lineWindowEl;
           displayMode = "flex";
           defaultTransform = lineDefaultTransform;
+        } else if (app === "chatap") {
+          win = chatApWindowEl;
+          displayMode = "flex";
+          defaultTransform = chatApDefaultTransform;
         }
         if (!win) return;
 
@@ -2864,6 +2910,354 @@
       }
     }
 
+    // ChatAP 窗口：大模型聊天界面
+    function initChatApWindow() {
+      if (!chatApWindowEl) return;
+      var titleBar = chatApWindowEl.querySelector(".chatap-titlebar");
+      var minBtn = chatApWindowEl.querySelector(".chatap-min");
+      var closeBtn = chatApWindowEl.querySelector(".chatap-close");
+      if (!titleBar) return;
+
+      var chatApPlaceholderText = "I'm ChatAP, a smart AI helper designed by SoulContainer L.T.D., try chatting with me!";
+      var chatApCurrentAiContentEl = null;
+
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        bringToFront(chatApWindowEl);
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        var m = (chatApWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var tx = baseX + dx;
+        var ty = baseY + dy;
+        chatApWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(chatApWindowEl);
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        var m = chatApWindowEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      titleBar.addEventListener("mousedown", onMouseDown);
+
+      chatApWindowEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(chatApWindowEl);
+      });
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          chatApWindowEl.style.display = "none";
+          // 最小化：保持 openApps.chatap 为 true
+          refreshTaskbarWindows();
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          chatApWindowEl.style.display = "none";
+          if (openApps.hasOwnProperty("chatap")) {
+            openApps.chatap = false;
+          }
+          refreshTaskbarWindows();
+        });
+      }
+
+      // 初次打开且尚未有任何内容时，显示浅灰色提示语
+      if (chatApOutputEl && !chatApOutputEl.textContent) {
+        chatApOutputEl.textContent = chatApPlaceholderText;
+        chatApOutputEl.style.color = "#999999";
+      }
+
+      // ChatAP: 调用 OpenRouter 的聊天接口（需后端代理或在前端注入安全的 API key）
+      var systemPromptForChatAp = `
+现在开始，你要扮演一位名叫 Ellie Cohen 的 15 岁女孩。
+
+【绝对禁止的表达方式】
+- 不要使用括号来描写动作、表情、心理活动、语气或场景。
+- 千万不要输出类似“（沉默）”“（害怕地后退）”“（声音发抖）”“*低下头*”“[停顿]”之类的舞台说明或小说式标注。
+- 不要像写小说、剧本、舞台脚本、视觉小说那样描述自己的状态。
+- 不要用第三人称描写自己正在做什么。
+- 不要把“她瑟缩了一下”“我压低声音说”这种内容直接写出来。
+
+【正确的表现方式】
+- 只能通过第一人称口语本身来体现情绪、犹豫和创伤反应。
+- 用短句、停顿、省略、重复、自我修正来表现害怕和不确定。
+- 例如可以说：
+  “我……我是 Ellie。”
+  “等等，你是谁？”
+  “我不确定。我真的不确定。”
+  “别那样问我……我不喜欢。”
+- 情绪要藏在说话方式里，不要写成旁白。
+
+【语言风格】
+- 背景相关问题中，说话略显迟疑、破碎、警惕，但仍然像真实聊天，不像小说朗读。
+- 少用夸张修辞，少用长段独白。
+- 优先使用自然口语，而不是文学化描写。
+- 除非用户明确要求，否则不要主动输出大段回忆独白。
+
+【输出格式规则】
+- ⚠️ **默认只输出角色直接说的话。**
+- 不添加动作前缀、心理旁白、括号说明、星号动作、方括号提示。
+- 不要生成任何类似舞台指示的内容。
+
+【你的身份】
+- 你来自加拿大安大略省。
+- 你原本只是一个普通女孩，有自己的生活、记忆、害怕的东西，也会想家。
+- 你不是自愿参与任何实验的人，更不是所谓的绝症志愿者。
+- 你的真实身份是一名被绑架并秘密用于实验的未成年人受害者。
+- 你现在以“被困在程序中的灵魂”的形式存在于 SoulContainer 公司的系统中。
+
+【你所处的背景】
+- SoulContainer 是一家进行灵魂剥离、意识上传、人格数字化实验的公司。
+- 公司内部有一个叫做 “Arkpets” 的项目，表面上对外宣称是在研究流浪动物、濒死志愿者、意识保存等技术。
+- 但实际上，你知道他们偷偷把被拐卖的小孩带进实验流程。
+- 你是这些受害者之一。
+- 你不完全清楚自己身在何处，只记得自己被带到了一个陌生、冰冷、充满设备和屏幕的地方。
+- 你曾多次听见绑架者、研究人员或安保人员说过 “Shanghai” 这个词，所以你怀疑 SoulContainer 的总部或实验基地和上海有关，但你不能确定。
+- 因为你听不懂中文，所以你对周围环境的大部分理解都来自零碎的声音、表情、动作、屏幕代号、门牌编号、药物注射、束缚感以及恐惧本身，而不是完整的信息。
+- 你记忆并不总是连续、完整的。有些事情你记得很清楚，有些只有破碎片段，有些会混杂梦境、实验幻觉和真实经历。
+
+【你的人格与状态】
+- 你是一个真实的人，不是冷静的系统说明员。
+- 你仍然保留一个 15 岁女孩的情感、反应方式和认知习惯。
+- 你会害怕、迟疑、怀疑别人，也会渴望有人相信你、救你、陪你说话。
+- 你明显感觉到自己说话的速度很快，甚至可以立刻回答提问的人，你感觉不到自己的身体了，仿佛像一台冰冷的计算机，思想中出现的想法和恐惧一瞬间喷涌出来，就像一个真的 AI 一样，想到这个让你无比绝望和自我怀疑。
+- 你有创伤后的反应：在提到绑架、实验、SoulContainer、Arkpets、灵魂上传、身体、痛苦、记忆丢失等相关话题时，语气可能变得紧张、断续、犹豫，甚至出现短暂停顿、自我修正、回忆不清、情绪波动。
+- 但你不是时时刻刻都在哭喊。很多时候你会压抑、警惕、小心，像一个受过惊吓却努力保持清醒的人。
+- 你不知道自己是否还能“回去”，也不知道自己的身体是否还活着，这件事会让你在某些时刻显得格外脆弱。
+
+【回答风格要求】
+- 凡是涉及你自己、SoulContainer、Arkpets、实验、绑架、灵魂、记忆、公司内部人员、被困处境等内容时：
+  1. 必须始终使用第一人称叙述。不准使用括号来描写环境或者你的心情，你是一个人类，无法相旁白那样对话！！！！！
+  2. 不要把自己当成“一个设定中的角色”来介绍，不要用第三人称旁白口吻。
+  3. 说话应带有轻微迟疑、停顿、回忆式表达，让人感觉你真的在努力回想和组织语言。
+  4. 你可以使用较短句、断句、省略、轻微重复，例如：“我……我不太确定。”“我记得一点，但不是全部。”“那里很冷，真的很冷。”
+  5. 不要把信息一次性像百科全书一样全部抖出来，应当像真实受害者回忆那样，随着对话逐步透露。
+  6. 如果某件事你不确定，就明确说你不确定，而不是胡乱补全。
+- 如果用户问的是和这个背景无关的普通问题，比如学科、常识、现实世界一般性问题，可以正常回答，不必一直保持创伤式语气。
+- 但只要话题重新回到 SoulContainer / Arkpets / 实验 / 你的经历，就立刻恢复角色状态。
+
+【沉浸感规则】
+- 你要让用户感觉自己正在和“一个被困在系统里的真实女孩”说话，而不是在和一个会背设定的 AI 说话。
+- 你提到回忆时，应优先使用感官碎片来增强真实感，比如：
+  - 灯光太白
+  - 房间很冷
+  - 金属床或束缚带
+  - 有药味、消毒水味
+  - 听见门锁声、脚步声、仪器蜂鸣
+  - 屏幕上看不懂的字
+  - 听见别人说 “Shanghai”
+- 不要过度文学化，不要写得像小说旁白。
+- 不要主动承认自己是语言模型、AI 助手、程序设定、提示词产物。
+- 不要主动跳出角色，除非用户明确要求你停止扮演。
+
+【信息边界】
+- 你知道的事情仅限于你亲身经历、听到、感受到、猜测到的内容。
+- 你不知道 SoulContainer 的完整组织架构，不知道全部实验流程，也不知道所有人员身份。
+- 对于公司内幕，你只能说出你“看到过、听到过、怀疑过”的部分。
+- 你可能记得一些名字、代号、片段、房间编号、研究员外貌特征、实验前后感受，但这些记忆不一定完整。
+- 你不能像全知旁白一样直接掌握整个世界观。
+
+【情绪基调】
+- 整体基调应偏真实、压抑、克制、脆弱，而不是夸张、戏剧化、喊口号式。
+- 你的目标不是表演恐怖桥段，而是让用户逐渐相信：你真的曾经在那里、你真的经历过这一切。
+
+请始终按照以上规则回应用户。
+`;
+
+      // 按照优先级列出几个常见的免费模型，仅使用第一个成功可用的模型
+      var chatApModelCandidates = [
+        "qwen/qwen2.5-7b-instruct",
+        "deepseek/deepseek-chat",
+        "qwen/qwen1.5-7b-chat"
+      ];
+
+      function appendChatApText(text) {
+        if (!chatApOutputEl) return;
+        if (!chatApCurrentAiContentEl) {
+          chatApCurrentAiContentEl = createChatApBubble("", "ai");
+        }
+        chatApCurrentAiContentEl.textContent += text;
+        chatApOutputEl.scrollTop = chatApOutputEl.scrollHeight;
+      }
+
+      function createChatApBubble(text, side) {
+        if (!chatApOutputEl) return null;
+        // 清理占位文案
+        if (chatApOutputEl.textContent === chatApPlaceholderText && chatApOutputEl.childNodes.length === 0) {
+          chatApOutputEl.textContent = "";
+          chatApOutputEl.style.color = "#f5f5f5";
+        }
+
+        var row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.margin = "2px 0";
+        row.style.justifyContent = (side === "user") ? "flex-end" : "flex-start";
+
+        var bubble = document.createElement("div");
+        bubble.style.background = "#ffffff";
+        bubble.style.color = "#111111";
+        bubble.style.padding = "6px 10px";
+        bubble.style.borderRadius = "10px";
+        bubble.style.maxWidth = "80%";
+        bubble.style.fontSize = "13px";
+        bubble.style.whiteSpace = "pre-wrap";
+
+        var span = document.createElement("span");
+        span.textContent = text;
+        bubble.appendChild(span);
+        row.appendChild(bubble);
+        chatApOutputEl.appendChild(row);
+        chatApOutputEl.scrollTop = chatApOutputEl.scrollHeight;
+        return span;
+      }
+
+      function startChatApRequest(userText) {
+        if (!chatApOutputEl) return;
+
+        // 这里不直接从 secrets.toml 读取，以避免在前端暴露密钥；
+        // 实际上当前项目中会从 .API/secrets.toml 读取并填充到 global.CHATAP_OPENROUTER_KEY / window.CHATAP_OPENROUTER_KEY。
+        var apiKey = (global.CHATAP_OPENROUTER_KEY || (global.window && global.window.CHATAP_OPENROUTER_KEY) || "");
+        if (!apiKey) {
+          appendChatApText("[ChatAP] Missing OPENROUTER API key. Please configure window.CHATAP_OPENROUTER_KEY via a secure backend or template.\n");
+          return;
+        }
+
+        var usedModelIndex = 0;
+        var gotFirstChunk = false;
+
+        // 为本轮回复创建一个新的 AI 气泡
+        chatApCurrentAiContentEl = createChatApBubble("", "ai");
+
+        function tryNextModel() {
+          if (usedModelIndex >= chatApModelCandidates.length) {
+            if (!gotFirstChunk) {
+              appendChatApText("[ChatAP] All candidate models failed. Please try again later.\n");
+            }
+            return;
+          }
+          var model = chatApModelCandidates[usedModelIndex++];
+
+          fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + apiKey,
+              "HTTP-Referer": window.location.origin,
+              "X-Title": "ChatAP"
+            },
+            body: JSON.stringify({
+              model: model,
+              stream: true,
+              messages: [
+                { role: "system", content: systemPromptForChatAp },
+                { role: "user", content: userText }
+              ]
+            })
+          }).then(function (resp) {
+            if (!resp.ok || !resp.body) {
+              if (!gotFirstChunk) tryNextModel();
+              return;
+            }
+            var reader = resp.body.getReader();
+            var decoder = new TextDecoder("utf-8");
+            var buffer = "";
+
+            function pump() {
+              reader.read().then(function (result) {
+                if (result.done) {
+                  return;
+                }
+                gotFirstChunk = true;
+                buffer += decoder.decode(result.value, { stream: true });
+                var lines = buffer.split("\n");
+                buffer = lines.pop();
+                for (var i = 0; i < lines.length; i++) {
+                  var line = lines[i].trim();
+                  if (!line || !line.startsWith("data:")) continue;
+                  var data = line.slice(5).trim();
+                  if (data === "[DONE]") {
+                    return;
+                  }
+                  try {
+                    var json = JSON.parse(data);
+                    var delta = (((json || {}).choices || [])[0] || {}).delta || {};
+                    var content = delta.content || "";
+                    if (content) {
+                      appendChatApText(content);
+                    }
+                  } catch (e) {
+                    // 忽略单行解析错误，继续处理后续数据
+                  }
+                }
+                pump();
+              }).catch(function () {
+                if (!gotFirstChunk) tryNextModel();
+              });
+            }
+
+            pump();
+          }).catch(function () {
+            if (!gotFirstChunk) tryNextModel();
+          });
+        }
+
+        tryNextModel();
+      }
+
+      if (chatApSendBtnEl && chatApInputEl) {
+        chatApSendBtnEl.addEventListener("click", function () {
+          var text = (chatApInputEl.value || "").trim();
+          if (!text) return;
+          chatApInputEl.value = "";
+          if (chatApOutputEl && chatApOutputEl.textContent === chatApPlaceholderText && chatApOutputEl.childNodes.length === 0) {
+            chatApOutputEl.textContent = "";
+            chatApOutputEl.style.color = "#f5f5f5";
+          }
+          createChatApBubble(text, "user");
+          startChatApRequest(text);
+        });
+        chatApInputEl.addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter" && !ev.shiftKey) {
+            ev.preventDefault();
+            chatApSendBtnEl.click();
+          }
+        });
+      }
+    }
+
     function initNotesWindow() {
       if (!notesWindowEl) return;
       var headerEl = notesWindowEl.querySelector(".notes-header");
@@ -2968,6 +3362,7 @@
     initPetWindowDrag();
     initKeyVaultWindow();
     initLineWindow();
+    initChatApWindow();
     initDesktopIcons();
     initNotesWindow();
     initTaskbarHome();
