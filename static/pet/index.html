@@ -802,6 +802,13 @@
       text-overflow: ellipsis;
       color: #000000;
     }
+    .taskbar-window-button.active {
+      border-color: #ffffff;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      background: #c0c0c0;
+      box-shadow: inset 1px 1px 0 #ffffff;
+    }
 
     /* home 菜单：关机 / 重启 选项 */
     #home-menu {
@@ -951,6 +958,13 @@
     }
     #line-window .line-msg-row.right .line-bubble {
       background: #d6f0ff;
+    }
+    #line-window .line-bubble-highlight {
+      color: #c00000;
+    }
+    #line-window .line-bubble-highlight-word {
+      color: #c00000;
+      font-weight: 600;
     }
     #line-window .line-date {
       text-align: center;
@@ -1104,21 +1118,21 @@
             <img src="Resources/Clyde.jpg" alt="Clyde" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
             <div style="display:flex;flex-direction:column;">
               <span class="line-name" style="font-size:13px;color:#111111;">Clyde J. Rothschild</span>
-              <span style="font-size:11px;color:#999999;">Last seen recently</span>
+              <span class="line-subtitle" style="font-size:11px;color:#999999;">Last seen recently</span>
             </div>
           </div>
           <div class="line-contact" data-contact="elias" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;opacity:0.6;">
             <img src="Resources/Elias.jpg" alt="Elias" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
             <div style="display:flex;flex-direction:column;">
               <span class="line-name" style="font-size:13px;color:#111111;">Elias Hoffmann</span>
-              <span style="font-size:11px;color:#999999;">No messages</span>
+              <span class="line-subtitle" style="font-size:11px;color:#999999;">No messages</span>
             </div>
           </div>
-          <div class="line-contact" data-contact="hidayat" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;opacity:0.6;">
+          <div class="line-contact" data-contact="hidayat" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;">
             <img src="Resources/Hidayat.jpg" alt="Hidayat" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
             <div style="display:flex;flex-direction:column;">
               <span class="line-name" style="font-size:13px;color:#111111;">Hidayat Agni Tandi</span>
-              <span style="font-size:11px;color:#999999;">No messages</span>
+              <span class="line-subtitle" style="font-size:11px;color:#999999;">Private Chat</span>
             </div>
           </div>
         </div>
@@ -1182,7 +1196,7 @@
   <div id="tuning-ending-overlay">
     <pre id="tuning-code"></pre>
     <div id="tuning-ending-center">ENDING 2: FOREVER TOGETHER
-You joined the two pets, a third soul was added to the collection. They were never AI, rather trapped souls, now you know the truth, but for what?  You will never get to tell the tale...
+You joined the two pets, a third soul was added to the collection. They were never terminal patients or cats according to Mr. Clyde, rather trapped souls of abducted kids, now you know the truth, Mr. Hiro, but for what?  You'll never get to tell the tale...
 (Property of SoulContainer Inc., pseudogryph L.T.D.)</div>
   </div>
   <!-- 摄像头视频覆盖层 -->
@@ -1206,8 +1220,8 @@ The password to Resources is available in Notes.
   </div>
   <!-- 摄像头错误覆盖层：拒绝授权时使用 -->
   <div id="camera-error-overlay">
-    <div>ENDING 1: SOLITUDE
-You did not answered the call of the trapped souls, leading a normal life, unknowing of the atrocities of SoulContainer Inc. ...</div>
+    <div>ENDING 1: SOLITUDE DEATH
+You did not answered the call of the trapped souls, soon, some security officers at SoulCOntainer come and caught you, you were killed at the spot, similar to the fate of Mr. Hidayat.</div>
   </div>
   <div id="pet-dialog"></div>
   <div id="pet-menu">

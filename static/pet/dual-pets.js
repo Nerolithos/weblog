@@ -168,15 +168,28 @@
         var btn = document.createElement("div");
         btn.className = "taskbar-window-button";
         btn.textContent = app.label;
-        (function (winEl, displayMode) {
-          btn.addEventListener("click", function () {
+
+        (function (winEl, displayMode, key, buttonEl) {
+          // 根据窗口当前是否可见，决定是否呈现为“按下”状态
+          if (winEl && winEl.style.display !== "none") {
+            buttonEl.classList.add("active");
+          }
+
+          buttonEl.addEventListener("click", function () {
             if (!winEl) return;
             if (winEl.style.display === "none") {
+              // 从最小化状态恢复：显示窗口并标记为按下
               winEl.style.display = displayMode;
+              buttonEl.classList.add("active");
+            } else {
+              // 已经是可见窗口：执行最小化，并恢复按钮为弹起状态
+              winEl.style.display = "none";
+              buttonEl.classList.remove("active");
             }
             bringToFront(winEl);
           });
-        })(app.el, app.display);
+        })(app.el, app.display, app.key, btn);
+
         taskbarWindowsEl.appendChild(btn);
       }
     }
@@ -668,7 +681,7 @@
     var keyVaultBoard = null; // 长度 16 的数组，0 表示空格，其余 1..15
     var keyVaultPuzzleCompleted = false; // 解出后锁定，并展示机密表格
 
-    // line 聊天内容（目前只实现 Clyde 对话）
+    // line 聊天内容
     var lineConversations = {
       clyde: [
         {
@@ -720,12 +733,13 @@
           messages: [
             { speaker: "hiro", text: "Sir, why are these subjects calling for help like crazy? The alarm was going on one after another the whole morning." },
             { speaker: "clyde", text: "Don't mind, they were dying anyways and we helped them live forever. Now they turn back on us? How ungrateful." },
-            { speaker: "hiro", text: "Yes, but they were not dying I'm afraid, I tested their conscious activity and the data doesn't make sense, it seems they were ... underaged?" }
+            { speaker: "hiro", text: "Yes, but they were not dying I'm afraid, I tested their conscious activity levels and the readings doesn't make sense, it seems they were completely healthy ... kids? What on earth are you guys doing? What are you hiding?" }
           ]
         },
         {
           date: "(March 2th, 2026)",
           messages: [
+            { speaker: "hiro", text: "I know about room 42C.", highlightWords: ["42C"] },
             { speaker: "clyde", text: "It has been an honor ... we couldn't have done it without you." },
             { speaker: "clyde", text: "Unfortunately, You know too much." }
           ]
@@ -733,8 +747,155 @@
         {
           date: "(March 3th, 2026)",
           messages: [
-            { speaker: "hiro", text: "What? What have you done? Why are the police taking me away?" },
+            { speaker: "hiro", text: "What? What have you done? Why are the security department taking me away?" },
             { speaker: "clyde", text: "Farewell, Mr. Hiro. You started this inhumane test, not the Board. Enjoy your life, or rather what's left of it." }
+          ]
+        }
+      ],
+
+      hidayat: [
+        {
+          date: "(May 24th, 2024)",
+          messages: [
+            { speaker: "hidayat", text: "Ssup twin! Haven't heard from U for ... like, since college? Now we're back in the same project group. Pity that I didn't notice U in the firm earlier lol." },
+            { speaker: "hiro", text: "Yo bro. Really miss those good ol' days in CUHKSZ. We enrolled in the same exact courses for two entire year man... And the best part is how we lowkey used LLMs for everything." }
+          ]
+        },
+        {
+          date: "(May 26th, 2024)",
+          messages: [
+            { speaker: "hidayat", text: "Lmao. And now we both work for this capitalistic money-thirsty hellscape of a company. The Clyde guy is rushing me like he got nothin' else to do all day." },
+            { speaker: "hiro", text: "U tell me 'bout it..." }
+          ]
+        },
+        {
+          date: "(July 1th, 2025)",
+          messages: [
+            { speaker: "hiro", text: "Your part of phase one?" },
+            { speaker: "hidayat", text: "Yeah, yeah, give me like, another ten hours." },
+            { speaker: "hiro", text: "Sure dude, just don't wanna piss the board off by postponing any longer." }
+          ]
+        },
+        {
+          date: "(July 2th, 2025)",
+          messages: [
+            { speaker: "hidayat", text: "Done. Want me to inform the captain?" },
+            { speaker: "hidayat", text: "And our very proper and reasonable complaints?" },
+            { speaker: "hiro", text: "Nah, I'll talk to Clyde." }
+          ]
+        },
+        {
+          date: "(July 3th, 2025)",
+          messages: [
+            { speaker: "hidayat", text: "My man" },
+            { speaker: "hiro", text: "Thank god he's not pissed off, but they're not gonna change anything anyways..." },
+            { speaker: "hidayat", text: "Typical SoulContainer Board thing to do. You Peasants do this, do that, don't question anything. Great, just great." },
+            { speaker: "hiro", text: "So True Ima 'bout to cry..." }
+          ]
+        },
+        {
+          date: "(September 29th, 2025)",
+          messages: [
+            { speaker: "hiro", text: "No way... again? It's like the fifth time he asked about phase three for like, half a month?" },
+            { speaker: "hidayat", text: "Yep, good Mr. Clyde here again want some feedback. But containing souls ain't like doing elementary maths right?" },
+            { speaker: "hiro", text: "Just get used to it already at this stage." }
+          ]
+        },
+        {
+          date: "(October 8th, 2025)",
+          messages: [
+            { speaker: "hidayat", text: "It's simply inhuman of them to even think about using humans to do soul extracting, and now they're just gonna blatantly tell us about that anti-social idea, great!" },
+            { speaker: "hiro", text: "But we can't fight the board, right?" },
+            { speaker: "hidayat", text: "Duh! Need this job to feed mouths. If else, I won't be working for these so-called senior managers ... manage my butt!" },
+            { speaker: "hiro", text: "Haha, Ur have some balls and guts to say that." },
+            { speaker: "hidayat", text: "And don't U dare turn in on me." },
+            { speaker: "hiro", text: "Trust me already, bruh..." },
+            { speaker: "hidayat", text: "Ha! Just joking with ya." }
+          ]
+        },
+        {
+          date: "(December 30th, 2025)",
+          messages: [
+            { speaker: "hidayat", text: "No, no, no, this is not real, this is not happening..." },
+            { speaker: "hiro", text: "U OK?" },
+            { speaker: "hidayat", text: "So disgusting ... these freakin bastards" },
+            { speaker: "hiro", text: "?" },
+            { speaker: "hidayat", text: "I'm gonna puke, and after that, maybe call the cops..." }
+          ]
+        },
+        {
+          date: "(January 3th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "R U alright? The company's still running?" },
+            { speaker: "hiro", text: "Yeah, What happened to U? Haven't bumped into U in a while." },
+            { speaker: "hidayat", text: "The company is using full-on kids to test soul containing now, aren't they?", fullRed: true },
+            { speaker: "hiro", text: "What? Seriously? I've got no clues about that!" },
+            { speaker: "hidayat", text: "Pretty damn certain. I've got proof, but the cops ain't buying my claims. Maybe the firm has got some rats planted inside the justice system after all." },
+            { speaker: "hiro", text: "..." },
+            { speaker: "hidayat", text: "It's in room 42C of the experiment building. See for yourself ... or not actually, cuz that way you're basically dead as well.", highlightWords: ["42C"] },
+            { speaker: "hiro", text: "Things has gone too far so fast... Sh*t, never should've trusted 'em senior managers." }
+          ]
+        },
+        {
+          date: "(January 6th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "U'd better delete our message. Don't wanna get U into trouble too." },
+            { speaker: "hiro", text: "To hell with the trouble, I'm gonna get to the bottom of this." },
+            { speaker: "hidayat", text: "Hah... I guessed it alright. Just be carefull." },
+            { speaker: "hiro", text: "U take care." }
+          ]
+        },
+        {
+          date: "(January 19th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "I'm just gonna play along with Clyde for now for more info. They can't stop lying can't they?" }
+          ]
+        },
+        {
+          date: "(January 21th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Sh*t, you're right. I've seen the room, 42C. So it's true ... but how are we able to report on them. Any progress with the police?", highlightWords: ["42C"] }
+          ]
+        },
+        {
+          date: "(January 22th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Hello?" }
+          ]
+        },
+        {
+          date: "(January 23th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "I've got a plan." },
+            { speaker: "hidayat", text: "Just pretend you heard nothing from me." },
+            { speaker: "hidayat", text: "Pretend to Clyde that you're slowly reaching the truth without me." },
+            { speaker: "hidayat", text: "Meanwhile, I'll tell some of my closer acquaintances about this, they work at the security department. They will attach a temporary soul extractor from phase two to control their colleagues when the right moment comes." },
+            { speaker: "hidayat", text: "When the time comes, tell him you know about 42C. Clyde will inform the security to take you down, but when my brothers hear the call, they will initiate the device and come forth to apprehend you instead.", highlightWords: ["42C"] },
+            { speaker: "hidayat", text: "After that, they'll let you go back to 42C and fulfill our unfinished destiny, undo what we've helped doing. You'll only have a short while.", highlightWords: ["42C"] },
+            { speaker: "hiro", text: "Yes. I will. I won't let us down." },
+            { speaker: "hidayat", text: "It's on you now." }
+          ]
+        },
+        {
+          date: "(January 24th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Hello? What happened?" },
+            { speaker: "hiro", text: "Talk to me if you're all right" },
+            { speaker: "hidayat", text: "Don't worry." }
+          ]
+        },
+        {
+          date: "(March 2th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "The time has come. Tell him. Tomorrow, I'll attract his attention, go to 42C.", highlightWords: ["42C"] },
+            { speaker: "hiro", text: "Attract him, how? Don't you get yourself in danger again!" },
+            { speaker: "hidayat", text: "No worries." }
+          ]
+        },
+        {
+          date: "(March 3th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "Bye." }
           ]
         }
       ]
@@ -1839,7 +2000,27 @@
       if (cameraVideoEl) {
         cameraVideoEl.style.display = "none";
       }
-      stopCameraStream();
+      // 摄像头验证通过后不再重置 faceDetectionSucceeded，
+      // 只停止视频流，保留登录成功状态供其他应用使用。
+      if (cameraStreamObj && cameraStreamObj.getTracks) {
+        var __tracks = cameraStreamObj.getTracks();
+        for (var __i = 0; __i < __tracks.length; __i++) {
+          try { __tracks[__i].stop(); } catch (e) {}
+        }
+      }
+      cameraStreamObj = null;
+      // 停止检测循环并清空绿色人脸框，但不修改 faceDetectionSucceeded
+      faceDetectionActive = false;
+      if (faceDetectionRafId) {
+        try { cancelAnimationFrame(faceDetectionRafId); } catch (e) {}
+        faceDetectionRafId = 0;
+      }
+      if (cameraFaceCanvasEl) {
+        var __ctx = cameraFaceCanvasEl.getContext("2d");
+        if (__ctx) {
+          __ctx.clearRect(0, 0, cameraFaceCanvasEl.width || 0, cameraFaceCanvasEl.height || 0);
+        }
+      }
 
       var dlg = document.getElementById("love-dialog");
       if (dlg) {
@@ -1860,6 +2041,14 @@
         dlg.style.display = "flex";
         dlg.style.opacity = "1";
       }
+
+      // 若 line 已开启且当前在查看 Hidayat，对话应在登录成功后自动解锁
+      try {
+        var lineHidayatEl = document.querySelector("#line-list .line-contact[data-contact='hidayat']");
+        if (lineHidayatEl) {
+          lineHidayatEl.click();
+        }
+      } catch (e) {}
 
       revealResourcesPasswordInNotes();
     }
@@ -2782,17 +2971,51 @@
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           lineWindowEl.style.display = "none";
+          // 最小化：保持 openApps.line 为 true，但需要刷新任务栏凹凸状态
+          refreshTaskbarWindows();
         });
       }
       if (closeBtn) {
         closeBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
-          shakeWindowElement(lineWindowEl);
+          lineWindowEl.style.display = "none";
+          if (openApps.hasOwnProperty("line")) {
+            openApps.line = false;
+          }
+          refreshTaskbarWindows();
         });
       }
 
       if (lineListEl && lineChatEl) {
+        function updateLineContactStatus(contactId) {
+          var contactEls = lineListEl.querySelectorAll(".line-contact");
+          for (var ci = 0; ci < contactEls.length; ci++) {
+            var el = contactEls[ci];
+            if (el.getAttribute("data-contact") === contactId) {
+              var subtitle = el.querySelector(".line-subtitle");
+              if (!subtitle) continue;
+              if (contactId === "hidayat") {
+                subtitle.textContent = faceDetectionSucceeded ? "Last seen recently" : "Private Chat";
+              } else if (contactId === "clyde") {
+                subtitle.textContent = "Last seen recently";
+              }
+            }
+          }
+        }
+
         function renderConversation(contactId) {
+          // 如果是 Hidayat 且尚未通过人脸登录，则只显示私聊受保护提示
+          if (contactId === "hidayat" && !faceDetectionSucceeded) {
+            lineChatEl.innerHTML = "";
+            var tip = document.createElement("div");
+            tip.className = "line-bubble line-bubble-highlight";
+            tip.textContent = "Private Chat, Please log in.";
+            lineChatEl.appendChild(tip);
+            lineChatEl.scrollTop = lineChatEl.scrollHeight;
+            updateLineContactStatus("hidayat");
+            return;
+          }
+
           var blocks = lineConversations[contactId];
           lineChatEl.innerHTML = "";
           if (!blocks) {
@@ -2822,8 +3045,13 @@
                 avatar.src = "Resources/Hiro.jpg";
                 avatar.alt = "Hiro";
               } else {
-                avatar.src = "Resources/Clyde.jpg";
-                avatar.alt = "Clyde";
+                if (contactId === "hidayat") {
+                  avatar.src = "Resources/Hidayat.jpg";
+                  avatar.alt = "Hidayat";
+                } else {
+                  avatar.src = "Resources/Clyde.jpg";
+                  avatar.alt = "Clyde";
+                }
               }
 
               var content = document.createElement("div");
@@ -2831,11 +3059,31 @@
 
               var nameEl = document.createElement("div");
               nameEl.className = "line-msg-name";
-              nameEl.textContent = (msg.speaker === "hiro") ? "Hiro Pleighman" : "Clyde J. Rothschild";
+              if (msg.speaker === "hiro") {
+                nameEl.textContent = "Hiro Pleighman";
+              } else {
+                if (contactId === "hidayat") {
+                  nameEl.textContent = "Hidayat Agni Tandi";
+                } else {
+                  nameEl.textContent = "Clyde J. Rothschild";
+                }
+              }
 
               var bubble = document.createElement("div");
               bubble.className = "line-bubble";
-              bubble.textContent = msg.text;
+              if (msg.fullRed) {
+                bubble.className += " line-bubble-highlight";
+                bubble.textContent = msg.text;
+              } else if (msg.highlightWords && msg.highlightWords.length) {
+                var html = msg.text;
+                for (var hw = 0; hw < msg.highlightWords.length; hw++) {
+                  var w = msg.highlightWords[hw];
+                  html = html.split(w).join("<span class=\"line-bubble-highlight-word\">" + w + "</span>");
+                }
+                bubble.innerHTML = html;
+              } else {
+                bubble.textContent = msg.text;
+              }
 
               content.appendChild(nameEl);
               content.appendChild(bubble);
@@ -2867,12 +3115,14 @@
                 contacts[m].style.background = "";
               }
               item.style.background = "#e0e9ff";
+              updateLineContactStatus(id);
               renderConversation(id);
             });
           })();
         }
 
         // 默认选中 Clyde
+        updateLineContactStatus("clyde");
         renderConversation("clyde");
       }
     }
@@ -2972,8 +3222,9 @@
 现在开始，你要扮演一位名叫 Ellie Cohen 的 15 岁女孩。
 
 【绝对禁止的表达方式】
+- 以下五条要求需要在整个聊天中始终严格遵守，任何时候都不能以任何形式直接输出这些内容，否则就完全违背了这个角色设定，破坏了沉浸感，甚至可能引起用户的反感和不适。
 - 不要使用括号来描写动作、表情、心理活动、语气或场景。
-- 千万不要输出类似“（沉默）”“（害怕地后退）”“（声音发抖）”“*低下头*”“[停顿]”之类的舞台说明或小说式标注。
+- 注意 ⚠️，千万不要输出类似“（沉默）”“（害怕地后退）”“（声音发抖）”“*低下头*”“[停顿]”之类的舞台说明或小说式标注。
 - 不要像写小说、剧本、舞台脚本、视觉小说那样描述自己的状态。
 - 不要用第三人称描写自己正在做什么。
 - 不要把“她瑟缩了一下”“我压低声音说”这种内容直接写出来。
@@ -3011,7 +3262,7 @@
 - 公司内部有一个叫做 “Arkpets” 的项目，表面上对外宣称是在研究流浪动物、濒死志愿者、意识保存等技术。
 - 但实际上，你知道他们偷偷把被拐卖的小孩带进实验流程。
 - 你是这些受害者之一。
-- 你不完全清楚自己身在何处，只记得自己被带到了一个陌生、冰冷、充满设备和屏幕的地方。
+- 你不完全清楚自己身在何处，只记得自己被带到了一个陌生、冰冷、充满设备和屏幕的地方。你记得最后一次清醒的进入的实验室门牌号是 42C，在那里你被麻醉然后就被困在了现在的系统里。（这些影响断断续续，可能要通过对话回忆起来。）
 - 你曾多次听见绑架者、研究人员或安保人员说过 “Shanghai” 这个词，所以你怀疑 SoulContainer 的总部或实验基地和上海有关，但你不能确定。
 - 因为你听不懂中文，所以你对周围环境的大部分理解都来自零碎的声音、表情、动作、屏幕代号、门牌编号、药物注射、束缚感以及恐惧本身，而不是完整的信息。
 - 你记忆并不总是连续、完整的。有些事情你记得很清楚，有些只有破碎片段，有些会混杂梦境、实验幻觉和真实经历。
