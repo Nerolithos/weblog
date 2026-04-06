@@ -73,39 +73,6 @@
     var homeMenuEl = document.getElementById("home-menu");
     var systemDialogEl = document.getElementById("system-warning-dialog");
 
-    // 从 .API/secrets.toml 中读取 OPENROUTER_API_KEY，填充给 ChatAP 使用
-    function loadChatApKeyFromToml() {
-      // 如果已经有值，就不再重复加载
-      if (global.CHATAP_OPENROUTER_KEY || (global.window && global.window.CHATAP_OPENROUTER_KEY)) {
-        return;
-      }
-      // 相对 index.html 的路径：static/pet/.API/secrets.toml
-      fetch(".API/secrets.toml")
-        .then(function (resp) {
-          if (!resp.ok) return "";
-          return resp.text();
-        })
-        .then(function (text) {
-          if (!text) return;
-          var m = text.match(/OPENROUTER_API_KEY\s*=\s*["']([^"']+)["']/);
-          if (m && m[1]) {
-            try {
-              global.CHATAP_OPENROUTER_KEY = m[1];
-              if (global.window) {
-                global.window.CHATAP_OPENROUTER_KEY = m[1];
-              }
-            } catch (e) {
-              // 安静失败即可
-            }
-          }
-        })
-        .catch(function () {
-          // 读取失败时保持静默，由 ChatAP 自己提示缺少 key
-        });
-    }
-
-    loadChatApKeyFromToml();
-
     // 记录几个窗口的默认 transform，用于重新打开时回到初始位置
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
     var termDefaultTransform = sideTermEl ? (sideTermEl.style.transform || "") : "";
@@ -3147,14 +3114,6 @@
       function startChatApRequest(userText) {
         if (!chatApOutputEl) return;
 
-        // 这里不直接从 secrets.toml 读取，以避免在前端暴露密钥；
-        // 实际上当前项目中会从 .API/secrets.toml 读取并填充到 global.CHATAP_OPENROUTER_KEY / window.CHATAP_OPENROUTER_KEY。
-        var apiKey = (global.CHATAP_OPENROUTER_KEY || (global.window && global.window.CHATAP_OPENROUTER_KEY) || "");
-        if (!apiKey) {
-          appendChatApText("[ChatAP] Missing OPENROUTER API key. Please configure window.CHATAP_OPENROUTER_KEY via a secure backend or template.\n");
-          return;
-        }
-
         var usedModelIndex = 0;
         var gotFirstChunk = false;
 
@@ -3170,17 +3129,13 @@
           }
           var model = chatApModelCandidates[usedModelIndex++];
 
-          fetch("https://openrouter.ai/api/v1/chat/completions", {
+          fetch("/api/chatap", {
             method: "POST",
             headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + apiKey,
-              "HTTP-Referer": window.location.origin,
-              "X-Title": "ChatAP"
+              "Content-Type": "application/json"
             },
             body: JSON.stringify({
               model: model,
-              stream: true,
               messages: [
                 { role: "system", content: systemPromptForChatAp },
                 { role: "user", content: userText }
