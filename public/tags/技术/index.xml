@@ -6,8 +6,15 @@
     <description>Recent content in 技术 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 21 Oct 2024 00:26:58 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 07 Apr 2026 11:30:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🛠️ GitHub Action Bot 自动化管理仓库入门</title>
+      <link>http://localhost:1313/posts/gab/</link>
+      <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/gab/</guid>
+      <description>从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。</description>
+    </item>
     <item>
       <title>📢 如何快速批量地将音频转文字？</title>
       <link>http://localhost:1313/posts/whisper/</link>

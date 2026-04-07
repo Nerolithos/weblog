@@ -6,12 +6,19 @@
     <description>Recent content in Categories on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 02 Apr 2026 10:11:34 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 07 Apr 2026 11:30:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>帮助</title>
+      <link>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</link>
+      <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</guid>
+      <description></description>
+    </item>
     <item>
       <title>SDS</title>
       <link>http://localhost:1313/categories/sds/</link>
-      <pubDate>Thu, 02 Apr 2026 10:11:34 +0800</pubDate>
+      <pubDate>Mon, 06 Apr 2026 10:51:34 +0800</pubDate>
       <guid>http://localhost:1313/categories/sds/</guid>
       <description></description>
     </item>
@@ -27,13 +34,6 @@
       <link>http://localhost:1313/categories/sse/</link>
       <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
       <guid>http://localhost:1313/categories/sse/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>帮助</title>
-      <link>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</link>
-      <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</guid>
       <description></description>
     </item>
   </channel>

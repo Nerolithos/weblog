@@ -8,14 +8,15 @@
     html, body {
       margin: 0;
       padding: 0;
-      /* 画布外统一使用纯浅黑色背景 */
-      background: #181818;
+      /* 登录前使用静态默认背景图；登录成功后再叠加字符雨 */
+      background: #000000 url('Resources/default.png') center center / cover no-repeat;
       color: #eee;
       height: 100%;
       font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden; /* 整个屏幕不可滚动，防止上下拖动页面 */
     }
     #matrix-bg {
       position: fixed;
@@ -300,7 +301,7 @@
       align-items: flex-start;
       justify-content: flex-start;
       padding: 20px 18px;
-      z-index: 10; /* 全页面最高，盖住 canvas 与对白框 */
+      z-index: 180; /* 高于任务栏与其他窗口，彻底遮住底部框 */
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s ease-out;
@@ -727,7 +728,8 @@
       content: "";
       position: absolute;
       inset: -4px -10px;
-      background: rgba(120, 170, 255, 0.35);
+      /* 默认使用浅白色高亮，字符雨开启后通过 body.matrix-active 切换为浅蓝色 */
+      background: rgba(255, 255, 255, 0.5);
       border-radius: 4px;
       opacity: 0;
       pointer-events: none;
@@ -736,7 +738,137 @@
     .desktop-icon.selected::before {
       opacity: 1;
     }
+    body.matrix-active .desktop-icon.selected::before {
+      background: rgba(120, 170, 255, 0.35);
+    }
 
+    /* 底部任务栏：模仿 Windows 98 风格 */
+    #taskbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 30px;
+      padding: 2px 6px;
+      box-sizing: border-box;
+      background: #c0c0c0;
+      border-top: 2px solid #ffffff;
+      box-shadow: 0 -2px 0 #808080 inset;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-family: "MS Sans Serif", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      z-index: 60;
+      color: #000000;
+    }
+    #taskbar-home {
+      min-width: 68px;
+      padding: 3px 10px;
+      border: 2px solid #ffffff;
+      border-bottom-color: #808080;
+      border-right-color: #808080;
+      background: #c0c0c0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      font-weight: 600;
+      text-transform: lowercase;
+      color: #000000;
+    }
+    #taskbar-windows {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow: hidden;
+    }
+    .taskbar-window-button {
+      min-width: 80px;
+      max-width: 160px;
+      padding: 2px 8px;
+      border: 2px solid #808080;
+      border-top-color: #ffffff;
+      border-left-color: #ffffff;
+      background: #dcdcdc;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 11px;
+      cursor: default;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #000000;
+    }
+    .taskbar-window-button.active {
+      border-color: #ffffff;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      background: #c0c0c0;
+      box-shadow: inset 1px 1px 0 #ffffff;
+    }
+
+    /* home 菜单：关机 / 重启 选项 */
+    #home-menu {
+      position: fixed;
+      left: 6px;
+      bottom: 32px;
+      min-width: 120px;
+      background: #ffffff;
+      border: 1px solid #000000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      font-size: 11px;
+      font-family: "MS Sans Serif", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      display: none;
+      z-index: 80;
+    }
+    .home-menu-item {
+      padding: 4px 10px;
+      cursor: default;
+      white-space: nowrap;
+      color: #000000;
+    }
+    .home-menu-item:hover {
+      background: #c0c0c0;
+    }
+
+    /* System 警告框：白底 + 红色关闭按钮 */
+    #system-warning-dialog {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 160;
+    }
+    #system-warning-dialog-inner {
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #000000;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+      min-width: 320px;
+      max-width: 380px;
+      padding: 10px 14px 12px 14px;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      color: #000000;
+    }
+    #system-warning-dialog-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #444444;
+    }
+    .system-dialog-close {
+      background: #ff0000 !important;
+    }
+    #system-warning-dialog-body {
+      white-space: normal;
+    }
     /* 右上角登录状态 + 北京时间小框 */
     #status-panel {
       position: fixed;
@@ -827,6 +959,13 @@
     #line-window .line-msg-row.right .line-bubble {
       background: #d6f0ff;
     }
+    #line-window .line-bubble-highlight {
+      color: #c00000;
+    }
+    #line-window .line-bubble-highlight-word {
+      color: #c00000;
+      font-weight: 600;
+    }
     #line-window .line-date {
       text-align: center;
       font-size: 11px;
@@ -854,6 +993,7 @@
     <div class="desktop-icon" data-app="notes"><span class="icon-emoji">📝</span><span class="icon-label">Notes</span></div>
     <div class="desktop-icon" data-app="keyvault"><span class="icon-emoji">🔐</span><span class="icon-label">KeyVault</span></div>
     <div class="desktop-icon" data-app="line"><span class="icon-emoji">💬</span><span class="icon-label">line</span></div>
+    <div class="desktop-icon" data-app="chatap"><span class="icon-emoji" style="color:#ffffff;">֎</span><span class="icon-label">ChatAP</span></div>
   </div>
   <div id="window-layer">
     <div id="main-row">
@@ -978,25 +1118,43 @@
             <img src="Resources/Clyde.jpg" alt="Clyde" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
             <div style="display:flex;flex-direction:column;">
               <span class="line-name" style="font-size:13px;color:#111111;">Clyde J. Rothschild</span>
-              <span style="font-size:11px;color:#999999;">Last seen recently</span>
+              <span class="line-subtitle" style="font-size:11px;color:#999999;">Last seen recently</span>
             </div>
           </div>
           <div class="line-contact" data-contact="elias" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;opacity:0.6;">
             <img src="Resources/Elias.jpg" alt="Elias" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
             <div style="display:flex;flex-direction:column;">
               <span class="line-name" style="font-size:13px;color:#111111;">Elias Hoffmann</span>
-              <span style="font-size:11px;color:#999999;">No messages</span>
+              <span class="line-subtitle" style="font-size:11px;color:#999999;">No messages</span>
             </div>
           </div>
-          <div class="line-contact" data-contact="hidayat" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;opacity:0.6;">
+          <div class="line-contact" data-contact="hidayat" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;">
             <img src="Resources/Hidayat.jpg" alt="Hidayat" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
             <div style="display:flex;flex-direction:column;">
               <span class="line-name" style="font-size:13px;color:#111111;">Hidayat Agni Tandi</span>
-              <span style="font-size:11px;color:#999999;">No messages</span>
+              <span class="line-subtitle" style="font-size:11px;color:#999999;">Private Chat</span>
             </div>
           </div>
         </div>
         <div id="line-chat" style="flex:1;padding:12px 16px;overflow-y:auto;background:#ffffff;"></div>
+      </div>
+    </div>
+
+    <!-- ChatAP 大模型聊天窗口 -->
+    <div id="chatap-window" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:640px;height:420px;background:#111111;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.6);border:1px solid #444444;display:none;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;box-sizing:border-box;flex-direction:column;color:#f5f5f5;">
+      <div class="chatap-titlebar" style="height:24px;background:#1f1f1f;display:flex;align-items:center;padding:0 8px;box-sizing:border-box;user-select:none;cursor:move;">
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn chatap-close"></div>
+          <div class="ark-term-btn min chatap-min"></div>
+        </div>
+        <div class="chatap-title-text" style="font-size:11px;color:#dddddd;margin-left:6px;flex:1;text-align:center;">ChatAP</div>
+      </div>
+      <div class="chatap-body" style="display:flex;flex-direction:column;height:calc(100% - 24px);background:#111111;">
+        <div id="chatap-output" style="flex:1;padding:10px 12px;font-size:13px;line-height:1.5;overflow-y:auto;background:#141414;border-bottom:1px solid #333333;display:flex;flex-direction:column;gap:6px;"></div>
+        <div class="chatap-input-row" style="padding:8px 10px;display:flex;gap:8px;align-items:flex-end;background:#181818;border-top:1px solid #333333;">
+          <textarea id="chatap-input" rows="2" style="flex:1;resize:vertical;min-height:44px;max-height:120px;background:#101010;color:#f5f5f5;border:1px solid #444444;border-radius:4px;font-family:inherit;font-size:13px;padding:6px 8px;outline:none;"></textarea>
+          <button id="chatap-send" style="padding:6px 14px;font-size:13px;border-radius:4px;border:1px solid #5e9cff;background:#2c66ff;color:#ffffff;cursor:pointer;">Send</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1038,7 +1196,7 @@
   <div id="tuning-ending-overlay">
     <pre id="tuning-code"></pre>
     <div id="tuning-ending-center">ENDING 2: FOREVER TOGETHER
-You joined the two pets, a third soul was added to the collection. They were never AI, rather trapped souls, now you know the truth, but for what?  You will never get to tell the tale...
+You joined the two pets, a third soul was added to the collection. They were never terminal patients or cats according to Mr. Clyde, rather trapped souls of abducted kids, now you know the truth, Mr. Hiro, but for what?  You'll never get to tell the tale...
 (Property of SoulContainer Inc., pseudogryph L.T.D.)</div>
   </div>
   <!-- 摄像头视频覆盖层 -->
@@ -1062,8 +1220,8 @@ The password to Resources is available in Notes.
   </div>
   <!-- 摄像头错误覆盖层：拒绝授权时使用 -->
   <div id="camera-error-overlay">
-    <div>ENDING 1: SOLITUDE
-You did not answered the call of the trapped souls, leading a normal life, unknowing of the atrocities of SoulContainer Inc. ...</div>
+    <div>ENDING 1: SOLITUDE DEATH
+You did not answered the call of the trapped souls, soon, some security officers at SoulCOntainer come and caught you, you were killed at the spot, similar to the fate of Mr. Hidayat.</div>
   </div>
   <div id="pet-dialog"></div>
   <div id="pet-menu">
@@ -1097,6 +1255,31 @@ You did not answered the call of the trapped souls, leading a normal life, unkno
     <span id="status-time-label"></span>
   </div>
   <div id="status-tooltip">To log in, run both ap commands.</div>
+
+  <!-- 底部任务栏：左侧 home 键，右侧显示当前打开的程序列表 -->
+  <div id="taskbar">
+    <div id="taskbar-home">home</div>
+    <div id="taskbar-windows"></div>
+  </div>
+
+  <!-- home 菜单：关机 / 重启 选项 -->
+  <div id="home-menu">
+    <div class="home-menu-item" data-action="shutdown">Shutdown</div>
+    <div class="home-menu-item" data-action="restart">Restart</div>
+  </div>
+
+  <!-- System 警告框：提示 Arkpets 仍在运行 -->
+  <div id="system-warning-dialog">
+    <div id="system-warning-dialog-inner">
+      <div id="system-warning-dialog-titlebar">
+        <span>System</span>
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn system-dialog-close"></div>
+        </div>
+      </div>
+      <div id="system-warning-dialog-body"></div>
+    </div>
+  </div>
 
   <!-- Spine webgl runtime built locally from Spine 3.8 runtimes (spine-ts/build/spine-webgl.js) -->
   <script src="spine-webgl-3.8.js"></script>
@@ -1138,7 +1321,7 @@ You did not answered the call of the trapped souls, leading a normal life, unkno
     })();
   </script>
     <script>
-      // Matrix rain 背景效果，仅绘制在页面背景 canvas，上层宠物 canvas 不受影响
+      // Matrix rain 背景效果：仅在管理员登录（人脸识别通过）后由 JS 主流程显式启动。
       (function () {
         var bg = document.getElementById('matrix-bg');
         if (!bg || !bg.getContext) return;
@@ -1171,6 +1354,7 @@ You did not answered the call of the trapped souls, leading a normal life, unkno
         var columns = [];
         var width = 0;
         var height = 0;
+        var intervalId = null;
 
         function randInt(a, b) {
           return Math.floor(Math.random() * (b - a + 1)) + a;
@@ -1236,17 +1420,35 @@ You did not answered the call of the trapped souls, leading a normal life, unkno
         }
 
         function startMatrix() {
+          if (intervalId !== null) return;
           rebuildColumns();
-          setInterval(animate, REFRESH_MS);
+          intervalId = setInterval(animate, REFRESH_MS);
+          if (document && document.body) {
+            document.body.classList.add('matrix-active');
+          }
         }
 
-        window.addEventListener('resize', rebuildColumns);
-
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', startMatrix);
-        } else {
-          startMatrix();
+        function stopMatrix() {
+          if (intervalId !== null) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+          if (bg && ctx) {
+            ctx.clearRect(0, 0, width, height);
+          }
+          if (document && document.body) {
+            document.body.classList.remove('matrix-active');
+          }
         }
+
+        window.addEventListener('resize', function () {
+          if (!intervalId) return;
+          rebuildColumns();
+        });
+
+        // 对外暴露控制字符雨的全局函数，由主逻辑在登录成功后调用
+        window.startMatrixRain = startMatrix;
+        window.stopMatrixRain = stopMatrix;
       })();
     </script>
 </body>

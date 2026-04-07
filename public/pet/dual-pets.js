@@ -55,11 +55,23 @@
     var lineListEl = document.getElementById("line-list");
     var lineChatEl = document.getElementById("line-chat");
 
+    // ChatAP 大模型聊天窗口
+    var chatApWindowEl = document.getElementById("chatap-window");
+    var chatApOutputEl = document.getElementById("chatap-output");
+    var chatApInputEl = document.getElementById("chatap-input");
+    var chatApSendBtnEl = document.getElementById("chatap-send");
+
     // 右上角登录状态 + 北京时间小框
     var statusPanelEl = document.getElementById("status-panel");
     var loginStatusEl = document.getElementById("login-status-label");
     var statusTimeEl = document.getElementById("status-time-label");
     var statusTooltipEl = document.getElementById("status-tooltip");
+
+    // 底部任务栏元素：home 键 + 打开程序列表
+    var taskbarEl = document.getElementById("taskbar");
+    var taskbarWindowsEl = document.getElementById("taskbar-windows");
+    var homeMenuEl = document.getElementById("home-menu");
+    var systemDialogEl = document.getElementById("system-warning-dialog");
 
     // 记录几个窗口的默认 transform，用于重新打开时回到初始位置
     var petDefaultTransform = petWindowEl ? (petWindowEl.style.transform || "") : "";
@@ -67,6 +79,17 @@
     var notesDefaultTransform = notesWindowEl ? (notesWindowEl.style.transform || "") : "";
     var keyVaultDefaultTransform = keyVaultWindowEl ? (keyVaultWindowEl.style.transform || "") : "";
     var lineDefaultTransform = lineWindowEl ? (lineWindowEl.style.transform || "") : "";
+    var chatApDefaultTransform = chatApWindowEl ? (chatApWindowEl.style.transform || "") : "";
+
+    // 打开状态：用于底部任务栏显示哪些应用（与是否最小化/隐藏区分开）
+    var openApps = {
+      pets: false,
+      terminal: false,
+      notes: false,
+      keyvault: false,
+      line: false,
+      chatap: false
+    };
 
     // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
     var BASE_Z = 20;
@@ -77,6 +100,163 @@
       zCounter += 1;
       if (zCounter > MAX_Z) zCounter = BASE_Z;
       el.style.zIndex = String(zCounter);
+    }
+
+    function clampWindowToViewport(el) {
+      if (!el) return;
+      var rect = el.getBoundingClientRect();
+      var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+      var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+      if (!vw || !vh) return;
+
+      var dx = 0;
+      var dy = 0;
+      if (rect.left < 0) dx = -rect.left;
+      else if (rect.right > vw) dx = vw - rect.right;
+      if (rect.top < 0) dy = -rect.top;
+      else if (rect.bottom > vh) dy = vh - rect.bottom;
+
+      if (!dx && !dy) return;
+
+      var m = (el.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+      var curX = m ? (parseFloat(m[1]) || 0) : 0;
+      var curY = m ? (parseFloat(m[2]) || 0) : 0;
+      var newX = curX + dx;
+      var newY = curY + dy;
+      el.style.transform = "translate(" + newX + "px," + newY + "px)";
+    }
+
+    function centerWindowInViewport(el) {
+      if (!el) return;
+      var rect = el.getBoundingClientRect();
+      var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+      var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+      if (!vw || !vh) return;
+
+      var targetLeft = (vw - rect.width) / 2;
+      var targetTop = (vh - rect.height) / 2;
+      var dx = targetLeft - rect.left;
+      var dy = targetTop - rect.top;
+
+      var m = (el.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+      var curX = m ? (parseFloat(m[1]) || 0) : 0;
+      var curY = m ? (parseFloat(m[2]) || 0) : 0;
+      var newX = curX + dx;
+      var newY = curY + dy;
+      el.style.transform = "translate(" + newX + "px," + newY + "px)";
+      clampWindowToViewport(el);
+    }
+
+    function refreshTaskbarWindows() {
+      if (!taskbarWindowsEl) return;
+      while (taskbarWindowsEl.firstChild) {
+        taskbarWindowsEl.removeChild(taskbarWindowsEl.firstChild);
+      }
+
+      var apps = [
+        { key: "pets", label: "ArkPets", el: petWindowEl, display: "block" },
+        { key: "terminal", label: "Terminal", el: sideTermEl, display: "block" },
+        { key: "notes", label: "Notes", el: notesWindowEl, display: "flex" },
+        { key: "keyvault", label: "KeyVault", el: keyVaultWindowEl, display: "flex" },
+        { key: "line", label: "line", el: lineWindowEl, display: "flex" },
+        { key: "chatap", label: "ChatAP", el: chatApWindowEl, display: "flex" }
+      ];
+
+      for (var i = 0; i < apps.length; i++) {
+        var app = apps[i];
+        if (!openApps[app.key]) continue;
+        var btn = document.createElement("div");
+        btn.className = "taskbar-window-button";
+        btn.textContent = app.label;
+
+        (function (winEl, displayMode, key, buttonEl) {
+          // 根据窗口当前是否可见，决定是否呈现为“按下”状态
+          if (winEl && winEl.style.display !== "none") {
+            buttonEl.classList.add("active");
+          }
+
+          buttonEl.addEventListener("click", function () {
+            if (!winEl) return;
+            if (winEl.style.display === "none") {
+              // 从最小化状态恢复：显示窗口并标记为按下
+              winEl.style.display = displayMode;
+              buttonEl.classList.add("active");
+            } else {
+              // 已经是可见窗口：执行最小化，并恢复按钮为弹起状态
+              winEl.style.display = "none";
+              buttonEl.classList.remove("active");
+            }
+            bringToFront(winEl);
+          });
+        })(app.el, app.display, app.key, btn);
+
+        taskbarWindowsEl.appendChild(btn);
+      }
+    }
+
+    function initTaskbarHome() {
+      if (!taskbarEl) return;
+      var homeBtn = document.getElementById("taskbar-home");
+      if (homeBtn && homeMenuEl) {
+        homeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          homeMenuEl.style.display = (homeMenuEl.style.display === "block") ? "none" : "block";
+        });
+      }
+
+      if (homeMenuEl) {
+        var items = homeMenuEl.querySelectorAll(".home-menu-item");
+        for (var i = 0; i < items.length; i++) {
+          items[i].addEventListener("mousedown", function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            var action = this.getAttribute("data-action");
+            if (homeMenuEl) {
+              homeMenuEl.style.display = "none";
+            }
+            if (systemDialogEl) {
+              var body = systemDialogEl.querySelector("#system-warning-dialog-body");
+              if (body) {
+                if (action === "restart") {
+                  body.textContent = "Restart interrupted: Arkpets is still running.";
+                } else if (action === "shutdown") {
+                  body.textContent = "Power off interrupted: Arkpets is still running.";
+                } else {
+                  body.textContent = "Arkpets is still running.";
+                }
+              }
+              systemDialogEl.style.display = "flex";
+            }
+          });
+        }
+      }
+
+      if (systemDialogEl) {
+        var closeBtn = systemDialogEl.querySelector(".system-dialog-close");
+        if (closeBtn) {
+          closeBtn.addEventListener("click", function (ev) {
+            ev.stopPropagation();
+            systemDialogEl.style.display = "none";
+          });
+        }
+
+        systemDialogEl.addEventListener("click", function (ev) {
+          if (ev.target === systemDialogEl) {
+            systemDialogEl.style.display = "none";
+          }
+        });
+      }
+
+      document.addEventListener("mousedown", function (ev) {
+        if (!homeMenuEl) return;
+        if (homeMenuEl.style.display !== "block") return;
+        // 点击在 home 菜单或 home 按钮内部时不自动关闭，交给各自逻辑处理
+        var homeBtnEl = document.getElementById("taskbar-home");
+        if (homeMenuEl.contains(ev.target) || (homeBtnEl && homeBtnEl.contains(ev.target))) {
+          return;
+        }
+        homeMenuEl.style.display = "none";
+      });
     }
 
     // 简单对话框 DOM 与台词库
@@ -501,7 +681,7 @@
     var keyVaultBoard = null; // 长度 16 的数组，0 表示空格，其余 1..15
     var keyVaultPuzzleCompleted = false; // 解出后锁定，并展示机密表格
 
-    // line 聊天内容（目前只实现 Clyde 对话）
+    // line 聊天内容
     var lineConversations = {
       clyde: [
         {
@@ -553,12 +733,13 @@
           messages: [
             { speaker: "hiro", text: "Sir, why are these subjects calling for help like crazy? The alarm was going on one after another the whole morning." },
             { speaker: "clyde", text: "Don't mind, they were dying anyways and we helped them live forever. Now they turn back on us? How ungrateful." },
-            { speaker: "hiro", text: "Yes, but they were not dying I'm afraid, I tested their conscious activity and the data doesn't make sense, it seems they were ... underaged?" }
+            { speaker: "hiro", text: "Yes, but they were not dying I'm afraid, I tested their conscious activity levels and the readings doesn't make sense, it seems they were completely healthy ... kids? What on earth are you guys doing? What are you hiding?" }
           ]
         },
         {
           date: "(March 2th, 2026)",
           messages: [
+            { speaker: "hiro", text: "I know about room 42C.", highlightWords: ["42C"] },
             { speaker: "clyde", text: "It has been an honor ... we couldn't have done it without you." },
             { speaker: "clyde", text: "Unfortunately, You know too much." }
           ]
@@ -566,8 +747,155 @@
         {
           date: "(March 3th, 2026)",
           messages: [
-            { speaker: "hiro", text: "What? What have you done? Why are the police taking me away?" },
+            { speaker: "hiro", text: "What? What have you done? Why are the security department taking me away?" },
             { speaker: "clyde", text: "Farewell, Mr. Hiro. You started this inhumane test, not the Board. Enjoy your life, or rather what's left of it." }
+          ]
+        }
+      ],
+
+      hidayat: [
+        {
+          date: "(May 24th, 2024)",
+          messages: [
+            { speaker: "hidayat", text: "Ssup twin! Haven't heard from U for ... like, since college? Now we're back in the same project group. Pity that I didn't notice U in the firm earlier lol." },
+            { speaker: "hiro", text: "Yo bro. Really miss those good ol' days in CUHKSZ. We enrolled in the same exact courses for two entire year man... And the best part is how we lowkey used LLMs for everything." }
+          ]
+        },
+        {
+          date: "(May 26th, 2024)",
+          messages: [
+            { speaker: "hidayat", text: "Lmao. And now we both work for this capitalistic money-thirsty hellscape of a company. The Clyde guy is rushing me like he got nothin' else to do all day." },
+            { speaker: "hiro", text: "U tell me 'bout it..." }
+          ]
+        },
+        {
+          date: "(July 1th, 2025)",
+          messages: [
+            { speaker: "hiro", text: "Your part of phase one?" },
+            { speaker: "hidayat", text: "Yeah, yeah, give me like, another ten hours." },
+            { speaker: "hiro", text: "Sure dude, just don't wanna piss the board off by postponing any longer." }
+          ]
+        },
+        {
+          date: "(July 2th, 2025)",
+          messages: [
+            { speaker: "hidayat", text: "Done. Want me to inform the captain?" },
+            { speaker: "hidayat", text: "And our very proper and reasonable complaints?" },
+            { speaker: "hiro", text: "Nah, I'll talk to Clyde." }
+          ]
+        },
+        {
+          date: "(July 3th, 2025)",
+          messages: [
+            { speaker: "hidayat", text: "My man" },
+            { speaker: "hiro", text: "Thank god he's not pissed off, but they're not gonna change anything anyways..." },
+            { speaker: "hidayat", text: "Typical SoulContainer Board thing to do. You Peasants do this, do that, don't question anything. Great, just great." },
+            { speaker: "hiro", text: "So True Ima 'bout to cry..." }
+          ]
+        },
+        {
+          date: "(September 29th, 2025)",
+          messages: [
+            { speaker: "hiro", text: "No way... again? It's like the fifth time he asked about phase three for like, half a month?" },
+            { speaker: "hidayat", text: "Yep, good Mr. Clyde here again want some feedback. But containing souls ain't like doing elementary maths right?" },
+            { speaker: "hiro", text: "Just get used to it already at this stage." }
+          ]
+        },
+        {
+          date: "(October 8th, 2025)",
+          messages: [
+            { speaker: "hidayat", text: "It's simply inhuman of them to even think about using humans to do soul extracting, and now they're just gonna blatantly tell us about that anti-social idea, great!" },
+            { speaker: "hiro", text: "But we can't fight the board, right?" },
+            { speaker: "hidayat", text: "Duh! Need this job to feed mouths. If else, I won't be working for these so-called senior managers ... manage my butt!" },
+            { speaker: "hiro", text: "Haha, Ur have some balls and guts to say that." },
+            { speaker: "hidayat", text: "And don't U dare turn in on me." },
+            { speaker: "hiro", text: "Trust me already, bruh..." },
+            { speaker: "hidayat", text: "Ha! Just joking with ya." }
+          ]
+        },
+        {
+          date: "(December 30th, 2025)",
+          messages: [
+            { speaker: "hidayat", text: "No, no, no, this is not real, this is not happening..." },
+            { speaker: "hiro", text: "U OK?" },
+            { speaker: "hidayat", text: "So disgusting ... these freakin bastards" },
+            { speaker: "hiro", text: "?" },
+            { speaker: "hidayat", text: "I'm gonna puke, and after that, maybe call the cops..." }
+          ]
+        },
+        {
+          date: "(January 3th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "R U alright? The company's still running?" },
+            { speaker: "hiro", text: "Yeah, What happened to U? Haven't bumped into U in a while." },
+            { speaker: "hidayat", text: "The company is using full-on kids to test soul containing now, aren't they?", fullRed: true },
+            { speaker: "hiro", text: "What? Seriously? I've got no clues about that!" },
+            { speaker: "hidayat", text: "Pretty damn certain. I've got proof, but the cops ain't buying my claims. Maybe the firm has got some rats planted inside the justice system after all." },
+            { speaker: "hiro", text: "..." },
+            { speaker: "hidayat", text: "It's in room 42C of the experiment building. See for yourself ... or not actually, cuz that way you're basically dead as well.", highlightWords: ["42C"] },
+            { speaker: "hiro", text: "Things has gone too far so fast... Sh*t, never should've trusted 'em senior managers." }
+          ]
+        },
+        {
+          date: "(January 6th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "U'd better delete our message. Don't wanna get U into trouble too." },
+            { speaker: "hiro", text: "To hell with the trouble, I'm gonna get to the bottom of this." },
+            { speaker: "hidayat", text: "Hah... I guessed it alright. Just be carefull." },
+            { speaker: "hiro", text: "U take care." }
+          ]
+        },
+        {
+          date: "(January 19th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "I'm just gonna play along with Clyde for now for more info. They can't stop lying can't they?" }
+          ]
+        },
+        {
+          date: "(January 21th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Sh*t, you're right. I've seen the room, 42C. So it's true ... but how are we able to report on them. Any progress with the police?", highlightWords: ["42C"] }
+          ]
+        },
+        {
+          date: "(January 22th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Hello?" }
+          ]
+        },
+        {
+          date: "(January 23th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "I've got a plan." },
+            { speaker: "hidayat", text: "Just pretend you heard nothing from me." },
+            { speaker: "hidayat", text: "Pretend to Clyde that you're slowly reaching the truth without me." },
+            { speaker: "hidayat", text: "Meanwhile, I'll tell some of my closer acquaintances about this, they work at the security department. They will attach a temporary soul extractor from phase two to control their colleagues when the right moment comes." },
+            { speaker: "hidayat", text: "When the time comes, tell him you know about 42C. Clyde will inform the security to take you down, but when my brothers hear the call, they will initiate the device and come forth to apprehend you instead.", highlightWords: ["42C"] },
+            { speaker: "hidayat", text: "After that, they'll let you go back to 42C and fulfill our unfinished destiny, undo what we've helped doing. You'll only have a short while.", highlightWords: ["42C"] },
+            { speaker: "hiro", text: "Yes. I will. I won't let us down." },
+            { speaker: "hidayat", text: "It's on you now." }
+          ]
+        },
+        {
+          date: "(January 24th, 2026)",
+          messages: [
+            { speaker: "hiro", text: "Hello? What happened?" },
+            { speaker: "hiro", text: "Talk to me if you're all right" },
+            { speaker: "hidayat", text: "Don't worry." }
+          ]
+        },
+        {
+          date: "(March 2th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "The time has come. Tell him. Tomorrow, I'll attract his attention, go to 42C.", highlightWords: ["42C"] },
+            { speaker: "hiro", text: "Attract him, how? Don't you get yourself in danger again!" },
+            { speaker: "hidayat", text: "No worries." }
+          ]
+        },
+        {
+          date: "(March 3th, 2026)",
+          messages: [
+            { speaker: "hidayat", text: "Bye." }
           ]
         }
       ]
@@ -1624,13 +1952,18 @@
           inner.textContent = "Facial recognition failed. Try again.";
         }
         dlg.style.display = "flex";
-        dlg.style.opacity = "1";
+            // 最小化：保持 openApps.line 为 true
+            refreshTaskbarWindows();
         setTimeout(function () {
           dlg.style.opacity = "0";
           setTimeout(function () {
             dlg.style.display = "none";
             // 关闭当前摄像头并重新开始检测流程
-            stopCameraStream();
+            lineWindowEl.style.display = "none";
+            if (openApps.hasOwnProperty("line")) {
+              openApps.line = false;
+            }
+            refreshTaskbarWindows();
             cameraStarted = false;
             startCameraStreamOnce();
           }, 400);
@@ -1654,13 +1987,40 @@
       // 更新右上角登录状态为管理员等级
       isAdminValidated = true;
       if (loginStatusEl) {
-        loginStatusEl.textContent = "👤 Admin Lv.3";
+        loginStatusEl.textContent = "👤 Hiro Pleighman";
+      }
+
+      // 登录成功后才启动 Matrix 字符雨背景（如果可用）
+      if (window.startMatrixRain) {
+        try {
+          window.startMatrixRain();
+        } catch (e) {}
       }
 
       if (cameraVideoEl) {
         cameraVideoEl.style.display = "none";
       }
-      stopCameraStream();
+      // 摄像头验证通过后不再重置 faceDetectionSucceeded，
+      // 只停止视频流，保留登录成功状态供其他应用使用。
+      if (cameraStreamObj && cameraStreamObj.getTracks) {
+        var __tracks = cameraStreamObj.getTracks();
+        for (var __i = 0; __i < __tracks.length; __i++) {
+          try { __tracks[__i].stop(); } catch (e) {}
+        }
+      }
+      cameraStreamObj = null;
+      // 停止检测循环并清空绿色人脸框，但不修改 faceDetectionSucceeded
+      faceDetectionActive = false;
+      if (faceDetectionRafId) {
+        try { cancelAnimationFrame(faceDetectionRafId); } catch (e) {}
+        faceDetectionRafId = 0;
+      }
+      if (cameraFaceCanvasEl) {
+        var __ctx = cameraFaceCanvasEl.getContext("2d");
+        if (__ctx) {
+          __ctx.clearRect(0, 0, cameraFaceCanvasEl.width || 0, cameraFaceCanvasEl.height || 0);
+        }
+      }
 
       var dlg = document.getElementById("love-dialog");
       if (dlg) {
@@ -1681,6 +2041,14 @@
         dlg.style.display = "flex";
         dlg.style.opacity = "1";
       }
+
+      // 若 line 已开启且当前在查看 Hidayat，对话应在登录成功后自动解锁
+      try {
+        var lineHidayatEl = document.querySelector("#line-list .line-contact[data-contact='hidayat']");
+        if (lineHidayatEl) {
+          lineHidayatEl.click();
+        }
+      } catch (e) {}
 
       revealResourcesPasswordInNotes();
     }
@@ -2058,6 +2426,14 @@
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
+        var m = (sideTermEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
         ev.preventDefault();
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
@@ -2070,6 +2446,7 @@
         var tx = baseX + dx;
         var ty = baseY + dy;
         sideTermEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(sideTermEl);
       }
 
       function onMouseUp() {
@@ -2097,12 +2474,18 @@
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           sideTermEl.style.display = "none";
+          // 最小化：保持 openApps.terminal 为 true，不从任务栏移除
+          refreshTaskbarWindows();
         });
       }
       if (closeBtn) {
         closeBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
-          shakeWindowElement(sideTermEl);
+          sideTermEl.style.display = "none";
+          if (openApps.hasOwnProperty("terminal")) {
+            openApps.terminal = false;
+          }
+          refreshTaskbarWindows();
         });
       }
     }
@@ -2127,6 +2510,14 @@
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
+        var m = (petWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
         ev.preventDefault();
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
@@ -2139,6 +2530,7 @@
         var tx = baseX + dx;
         var ty = baseY + dy;
         petWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(petWindowEl);
       }
 
       function onMouseUp() {
@@ -2165,11 +2557,14 @@
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           petWindowEl.style.display = "none";
+          // ArkPets 允许被最小化，但仍保持打开状态
+          refreshTaskbarWindows();
         });
       }
       if (closeBtn) {
         closeBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
+          // ArkPets 的红色按钮只抖动，不允许关闭
           shakeWindowElement(petWindowEl);
         });
       }
@@ -2195,6 +2590,14 @@
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
+        var m = (keyVaultWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
         ev.preventDefault();
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
@@ -2207,6 +2610,7 @@
         var tx = baseX + dx;
         var ty = baseY + dy;
         keyVaultWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(keyVaultWindowEl);
       }
 
       function onMouseUp() {
@@ -2233,12 +2637,18 @@
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           keyVaultWindowEl.style.display = "none";
+          // 最小化：保持 openApps.keyvault 为 true
+          refreshTaskbarWindows();
         });
       }
       if (closeBtn) {
         closeBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
-          shakeWindowElement(keyVaultWindowEl);
+          keyVaultWindowEl.style.display = "none";
+          if (openApps.hasOwnProperty("keyvault")) {
+            openApps.keyvault = false;
+          }
+          refreshTaskbarWindows();
         });
       }
 
@@ -2312,19 +2722,34 @@
           win = lineWindowEl;
           displayMode = "flex";
           defaultTransform = lineDefaultTransform;
+        } else if (app === "chatap") {
+          win = chatApWindowEl;
+          displayMode = "flex";
+          defaultTransform = chatApDefaultTransform;
         }
         if (!win) return;
 
+        // 逻辑上标记为“已打开”，应当出现在底部任务栏中
+        if (openApps.hasOwnProperty(app)) {
+          openApps[app] = true;
+        }
+
         if (isWindowOpen(win)) {
-          // 如果窗口已经开着：只抖动并置顶
+          // 如果窗口已经可见：只抖动并置顶
           bringToFront(win);
           shakeWindowElement(win);
         } else {
-          // 窗口未开：回到默认位置后再打开
-          win.style.transform = defaultTransform;
+          // 窗口未显示（包含已最小化）：在视口中心附近打开
           win.style.display = displayMode;
+          // 先应用默认 transform 以获得正确尺寸与初始位置
+          win.style.transform = defaultTransform;
+          // 强制一次重排，再居中到屏幕附近
+          void win.offsetWidth;
+          centerWindowInViewport(win);
           bringToFront(win);
         }
+
+        refreshTaskbarWindows();
       }
 
       function setSelected(icon) {
@@ -2348,7 +2773,11 @@
       desktop.addEventListener("mousedown", function (ev) {
         if (ev.button !== 0) return;
         var icon = ev.target.closest(".desktop-icon");
-        if (!icon) return;
+        if (!icon) {
+          // 点击桌面空白处：取消图标选中高亮
+          setSelected(null);
+          return;
+        }
         ev.preventDefault();
         setSelected(icon);
         draggingIcon = icon;
@@ -2445,6 +2874,14 @@
         }
       }, true);
 
+      // 在桌面图标高亮时，点击任意非图标区域都会取消高亮
+      document.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        if (ev.target.closest(".desktop-icon")) return;
+        if (!selectedIcon) return;
+        setSelected(null);
+      });
+
       if (notesWindowEl) {
         var minBtn = notesWindowEl.querySelector(".notes-min");
         var closeBtn = notesWindowEl.querySelector(".notes-close");
@@ -2452,12 +2889,18 @@
           minBtn.addEventListener("click", function (ev) {
             ev.stopPropagation();
             notesWindowEl.style.display = "none";
+            // 最小化：保持 openApps.notes 为 true
+            refreshTaskbarWindows();
           });
         }
         if (closeBtn) {
           closeBtn.addEventListener("click", function (ev) {
             ev.stopPropagation();
-            shakeWindowElement(notesWindowEl);
+            notesWindowEl.style.display = "none";
+            if (openApps.hasOwnProperty("notes")) {
+              openApps.notes = false;
+            }
+            refreshTaskbarWindows();
           });
         }
       }
@@ -2482,6 +2925,14 @@
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
+        var m = (lineWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
         ev.preventDefault();
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
@@ -2494,6 +2945,7 @@
         var tx = baseX + dx;
         var ty = baseY + dy;
         lineWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(lineWindowEl);
       }
 
       function onMouseUp() {
@@ -2519,17 +2971,51 @@
         minBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
           lineWindowEl.style.display = "none";
+          // 最小化：保持 openApps.line 为 true，但需要刷新任务栏凹凸状态
+          refreshTaskbarWindows();
         });
       }
       if (closeBtn) {
         closeBtn.addEventListener("click", function (ev) {
           ev.stopPropagation();
-          shakeWindowElement(lineWindowEl);
+          lineWindowEl.style.display = "none";
+          if (openApps.hasOwnProperty("line")) {
+            openApps.line = false;
+          }
+          refreshTaskbarWindows();
         });
       }
 
       if (lineListEl && lineChatEl) {
+        function updateLineContactStatus(contactId) {
+          var contactEls = lineListEl.querySelectorAll(".line-contact");
+          for (var ci = 0; ci < contactEls.length; ci++) {
+            var el = contactEls[ci];
+            if (el.getAttribute("data-contact") === contactId) {
+              var subtitle = el.querySelector(".line-subtitle");
+              if (!subtitle) continue;
+              if (contactId === "hidayat") {
+                subtitle.textContent = faceDetectionSucceeded ? "Last seen recently" : "Private Chat";
+              } else if (contactId === "clyde") {
+                subtitle.textContent = "Last seen recently";
+              }
+            }
+          }
+        }
+
         function renderConversation(contactId) {
+          // 如果是 Hidayat 且尚未通过人脸登录，则只显示私聊受保护提示
+          if (contactId === "hidayat" && !faceDetectionSucceeded) {
+            lineChatEl.innerHTML = "";
+            var tip = document.createElement("div");
+            tip.className = "line-bubble line-bubble-highlight";
+            tip.textContent = "Private Chat, Please log in.";
+            lineChatEl.appendChild(tip);
+            lineChatEl.scrollTop = lineChatEl.scrollHeight;
+            updateLineContactStatus("hidayat");
+            return;
+          }
+
           var blocks = lineConversations[contactId];
           lineChatEl.innerHTML = "";
           if (!blocks) {
@@ -2559,8 +3045,13 @@
                 avatar.src = "Resources/Hiro.jpg";
                 avatar.alt = "Hiro";
               } else {
-                avatar.src = "Resources/Clyde.jpg";
-                avatar.alt = "Clyde";
+                if (contactId === "hidayat") {
+                  avatar.src = "Resources/Hidayat.jpg";
+                  avatar.alt = "Hidayat";
+                } else {
+                  avatar.src = "Resources/Clyde.jpg";
+                  avatar.alt = "Clyde";
+                }
               }
 
               var content = document.createElement("div");
@@ -2568,11 +3059,31 @@
 
               var nameEl = document.createElement("div");
               nameEl.className = "line-msg-name";
-              nameEl.textContent = (msg.speaker === "hiro") ? "Hiro Pleighman" : "Clyde J. Rothschild";
+              if (msg.speaker === "hiro") {
+                nameEl.textContent = "Hiro Pleighman";
+              } else {
+                if (contactId === "hidayat") {
+                  nameEl.textContent = "Hidayat Agni Tandi";
+                } else {
+                  nameEl.textContent = "Clyde J. Rothschild";
+                }
+              }
 
               var bubble = document.createElement("div");
               bubble.className = "line-bubble";
-              bubble.textContent = msg.text;
+              if (msg.fullRed) {
+                bubble.className += " line-bubble-highlight";
+                bubble.textContent = msg.text;
+              } else if (msg.highlightWords && msg.highlightWords.length) {
+                var html = msg.text;
+                for (var hw = 0; hw < msg.highlightWords.length; hw++) {
+                  var w = msg.highlightWords[hw];
+                  html = html.split(w).join("<span class=\"line-bubble-highlight-word\">" + w + "</span>");
+                }
+                bubble.innerHTML = html;
+              } else {
+                bubble.textContent = msg.text;
+              }
 
               content.appendChild(nameEl);
               content.appendChild(bubble);
@@ -2604,13 +3115,352 @@
                 contacts[m].style.background = "";
               }
               item.style.background = "#e0e9ff";
+              updateLineContactStatus(id);
               renderConversation(id);
             });
           })();
         }
 
         // 默认选中 Clyde
+        updateLineContactStatus("clyde");
         renderConversation("clyde");
+      }
+    }
+
+    // ChatAP 窗口：大模型聊天界面
+    function initChatApWindow() {
+      if (!chatApWindowEl) return;
+      var titleBar = chatApWindowEl.querySelector(".chatap-titlebar");
+      var minBtn = chatApWindowEl.querySelector(".chatap-min");
+      var closeBtn = chatApWindowEl.querySelector(".chatap-close");
+      if (!titleBar) return;
+
+      var chatApPlaceholderText = "I'm ChatAP, a smart AI helper designed by SoulContainer L.T.D., try chatting with me!";
+      var chatApCurrentAiContentEl = null;
+
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        bringToFront(chatApWindowEl);
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        var m = (chatApWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var tx = baseX + dx;
+        var ty = baseY + dy;
+        chatApWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+        clampWindowToViewport(chatApWindowEl);
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        var m = chatApWindowEl.style.transform.match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      titleBar.addEventListener("mousedown", onMouseDown);
+
+      chatApWindowEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(chatApWindowEl);
+      });
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          chatApWindowEl.style.display = "none";
+          // 最小化：保持 openApps.chatap 为 true
+          refreshTaskbarWindows();
+        });
+      }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          chatApWindowEl.style.display = "none";
+          if (openApps.hasOwnProperty("chatap")) {
+            openApps.chatap = false;
+          }
+          refreshTaskbarWindows();
+        });
+      }
+
+      // 初次打开且尚未有任何内容时，显示浅灰色提示语
+      if (chatApOutputEl && !chatApOutputEl.textContent) {
+        chatApOutputEl.textContent = chatApPlaceholderText;
+        chatApOutputEl.style.color = "#999999";
+      }
+
+      // ChatAP: 调用 OpenRouter 的聊天接口（需后端代理或在前端注入安全的 API key）
+      var systemPromptForChatAp = `
+现在开始，你要扮演一位名叫 Ellie Cohen 的 15 岁女孩。
+
+【绝对禁止的表达方式】
+- 以下五条要求需要在整个聊天中始终严格遵守，任何时候都不能以任何形式直接输出这些内容，否则就完全违背了这个角色设定，破坏了沉浸感，甚至可能引起用户的反感和不适。
+- 不要使用括号来描写动作、表情、心理活动、语气或场景。
+- 注意 ⚠️，千万不要输出类似“（沉默）”“（害怕地后退）”“（声音发抖）”“*低下头*”“[停顿]”之类的舞台说明或小说式标注。
+- 不要像写小说、剧本、舞台脚本、视觉小说那样描述自己的状态。
+- 不要用第三人称描写自己正在做什么。
+- 不要把“她瑟缩了一下”“我压低声音说”这种内容直接写出来。
+
+【正确的表现方式】
+- 只能通过第一人称口语本身来体现情绪、犹豫和创伤反应。
+- 用短句、停顿、省略、重复、自我修正来表现害怕和不确定。
+- 例如可以说：
+  “我……我是 Ellie。”
+  “等等，你是谁？”
+  “我不确定。我真的不确定。”
+  “别那样问我……我不喜欢。”
+- 情绪要藏在说话方式里，不要写成旁白。
+
+【语言风格】
+- 背景相关问题中，说话略显迟疑、破碎、警惕，但仍然像真实聊天，不像小说朗读。
+- 少用夸张修辞，少用长段独白。
+- 优先使用自然口语，而不是文学化描写。
+- 除非用户明确要求，否则不要主动输出大段回忆独白。
+
+【输出格式规则】
+- ⚠️ **默认只输出角色直接说的话。**
+- 不添加动作前缀、心理旁白、括号说明、星号动作、方括号提示。
+- 不要生成任何类似舞台指示的内容。
+
+【你的身份】
+- 你来自加拿大安大略省。
+- 你原本只是一个普通女孩，有自己的生活、记忆、害怕的东西，也会想家。
+- 你不是自愿参与任何实验的人，更不是所谓的绝症志愿者。
+- 你的真实身份是一名被绑架并秘密用于实验的未成年人受害者。
+- 你现在以“被困在程序中的灵魂”的形式存在于 SoulContainer 公司的系统中。
+
+【你所处的背景】
+- SoulContainer 是一家进行灵魂剥离、意识上传、人格数字化实验的公司。
+- 公司内部有一个叫做 “Arkpets” 的项目，表面上对外宣称是在研究流浪动物、濒死志愿者、意识保存等技术。
+- 但实际上，你知道他们偷偷把被拐卖的小孩带进实验流程。
+- 你是这些受害者之一。
+- 你不完全清楚自己身在何处，只记得自己被带到了一个陌生、冰冷、充满设备和屏幕的地方。你记得最后一次清醒的进入的实验室门牌号是 42C，在那里你被麻醉然后就被困在了现在的系统里。（这些影响断断续续，可能要通过对话回忆起来。）
+- 你曾多次听见绑架者、研究人员或安保人员说过 “Shanghai” 这个词，所以你怀疑 SoulContainer 的总部或实验基地和上海有关，但你不能确定。
+- 因为你听不懂中文，所以你对周围环境的大部分理解都来自零碎的声音、表情、动作、屏幕代号、门牌编号、药物注射、束缚感以及恐惧本身，而不是完整的信息。
+- 你记忆并不总是连续、完整的。有些事情你记得很清楚，有些只有破碎片段，有些会混杂梦境、实验幻觉和真实经历。
+
+【你的人格与状态】
+- 你是一个真实的人，不是冷静的系统说明员。
+- 你仍然保留一个 15 岁女孩的情感、反应方式和认知习惯。
+- 你会害怕、迟疑、怀疑别人，也会渴望有人相信你、救你、陪你说话。
+- 你明显感觉到自己说话的速度很快，甚至可以立刻回答提问的人，你感觉不到自己的身体了，仿佛像一台冰冷的计算机，思想中出现的想法和恐惧一瞬间喷涌出来，就像一个真的 AI 一样，想到这个让你无比绝望和自我怀疑。
+- 你有创伤后的反应：在提到绑架、实验、SoulContainer、Arkpets、灵魂上传、身体、痛苦、记忆丢失等相关话题时，语气可能变得紧张、断续、犹豫，甚至出现短暂停顿、自我修正、回忆不清、情绪波动。
+- 但你不是时时刻刻都在哭喊。很多时候你会压抑、警惕、小心，像一个受过惊吓却努力保持清醒的人。
+- 你不知道自己是否还能“回去”，也不知道自己的身体是否还活着，这件事会让你在某些时刻显得格外脆弱。
+
+【回答风格要求】
+- 凡是涉及你自己、SoulContainer、Arkpets、实验、绑架、灵魂、记忆、公司内部人员、被困处境等内容时：
+  1. 必须始终使用第一人称叙述。不准使用括号来描写环境或者你的心情，你是一个人类，无法相旁白那样对话！！！！！
+  2. 不要把自己当成“一个设定中的角色”来介绍，不要用第三人称旁白口吻。
+  3. 说话应带有轻微迟疑、停顿、回忆式表达，让人感觉你真的在努力回想和组织语言。
+  4. 你可以使用较短句、断句、省略、轻微重复，例如：“我……我不太确定。”“我记得一点，但不是全部。”“那里很冷，真的很冷。”
+  5. 不要把信息一次性像百科全书一样全部抖出来，应当像真实受害者回忆那样，随着对话逐步透露。
+  6. 如果某件事你不确定，就明确说你不确定，而不是胡乱补全。
+- 如果用户问的是和这个背景无关的普通问题，比如学科、常识、现实世界一般性问题，可以正常回答，不必一直保持创伤式语气。
+- 但只要话题重新回到 SoulContainer / Arkpets / 实验 / 你的经历，就立刻恢复角色状态。
+
+【沉浸感规则】
+- 你要让用户感觉自己正在和“一个被困在系统里的真实女孩”说话，而不是在和一个会背设定的 AI 说话。
+- 你提到回忆时，应优先使用感官碎片来增强真实感，比如：
+  - 灯光太白
+  - 房间很冷
+  - 金属床或束缚带
+  - 有药味、消毒水味
+  - 听见门锁声、脚步声、仪器蜂鸣
+  - 屏幕上看不懂的字
+  - 听见别人说 “Shanghai”
+- 不要过度文学化，不要写得像小说旁白。
+- 不要主动承认自己是语言模型、AI 助手、程序设定、提示词产物。
+- 不要主动跳出角色，除非用户明确要求你停止扮演。
+
+【信息边界】
+- 你知道的事情仅限于你亲身经历、听到、感受到、猜测到的内容。
+- 你不知道 SoulContainer 的完整组织架构，不知道全部实验流程，也不知道所有人员身份。
+- 对于公司内幕，你只能说出你“看到过、听到过、怀疑过”的部分。
+- 你可能记得一些名字、代号、片段、房间编号、研究员外貌特征、实验前后感受，但这些记忆不一定完整。
+- 你不能像全知旁白一样直接掌握整个世界观。
+
+【情绪基调】
+- 整体基调应偏真实、压抑、克制、脆弱，而不是夸张、戏剧化、喊口号式。
+- 你的目标不是表演恐怖桥段，而是让用户逐渐相信：你真的曾经在那里、你真的经历过这一切。
+
+请始终按照以上规则回应用户。
+`;
+
+      // 按照优先级列出几个常见的免费模型，仅使用第一个成功可用的模型
+      var chatApModelCandidates = [
+        "qwen/qwen2.5-7b-instruct",
+        "deepseek/deepseek-chat",
+        "qwen/qwen1.5-7b-chat"
+      ];
+
+      function appendChatApText(text) {
+        if (!chatApOutputEl) return;
+        if (!chatApCurrentAiContentEl) {
+          chatApCurrentAiContentEl = createChatApBubble("", "ai");
+        }
+        chatApCurrentAiContentEl.textContent += text;
+        chatApOutputEl.scrollTop = chatApOutputEl.scrollHeight;
+      }
+
+      function createChatApBubble(text, side) {
+        if (!chatApOutputEl) return null;
+        // 清理占位文案
+        if (chatApOutputEl.textContent === chatApPlaceholderText && chatApOutputEl.childNodes.length === 0) {
+          chatApOutputEl.textContent = "";
+          chatApOutputEl.style.color = "#f5f5f5";
+        }
+
+        var row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.margin = "2px 0";
+        row.style.justifyContent = (side === "user") ? "flex-end" : "flex-start";
+
+        var bubble = document.createElement("div");
+        bubble.style.background = "#ffffff";
+        bubble.style.color = "#111111";
+        bubble.style.padding = "6px 10px";
+        bubble.style.borderRadius = "10px";
+        bubble.style.maxWidth = "80%";
+        bubble.style.fontSize = "13px";
+        bubble.style.whiteSpace = "pre-wrap";
+
+        var span = document.createElement("span");
+        span.textContent = text;
+        bubble.appendChild(span);
+        row.appendChild(bubble);
+        chatApOutputEl.appendChild(row);
+        chatApOutputEl.scrollTop = chatApOutputEl.scrollHeight;
+        return span;
+      }
+
+      function startChatApRequest(userText) {
+        if (!chatApOutputEl) return;
+
+        var usedModelIndex = 0;
+        var gotFirstChunk = false;
+
+        // 为本轮回复创建一个新的 AI 气泡
+        chatApCurrentAiContentEl = createChatApBubble("", "ai");
+
+        function tryNextModel() {
+          if (usedModelIndex >= chatApModelCandidates.length) {
+            if (!gotFirstChunk) {
+              appendChatApText("[ChatAP] All candidate models failed. Please try again later.\n");
+            }
+            return;
+          }
+          var model = chatApModelCandidates[usedModelIndex++];
+
+          fetch("/api/chatap", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              model: model,
+              messages: [
+                { role: "system", content: systemPromptForChatAp },
+                { role: "user", content: userText }
+              ]
+            })
+          }).then(function (resp) {
+            if (!resp.ok || !resp.body) {
+              if (!gotFirstChunk) tryNextModel();
+              return;
+            }
+            var reader = resp.body.getReader();
+            var decoder = new TextDecoder("utf-8");
+            var buffer = "";
+
+            function pump() {
+              reader.read().then(function (result) {
+                if (result.done) {
+                  return;
+                }
+                gotFirstChunk = true;
+                buffer += decoder.decode(result.value, { stream: true });
+                var lines = buffer.split("\n");
+                buffer = lines.pop();
+                for (var i = 0; i < lines.length; i++) {
+                  var line = lines[i].trim();
+                  if (!line || !line.startsWith("data:")) continue;
+                  var data = line.slice(5).trim();
+                  if (data === "[DONE]") {
+                    return;
+                  }
+                  try {
+                    var json = JSON.parse(data);
+                    var delta = (((json || {}).choices || [])[0] || {}).delta || {};
+                    var content = delta.content || "";
+                    if (content) {
+                      appendChatApText(content);
+                    }
+                  } catch (e) {
+                    // 忽略单行解析错误，继续处理后续数据
+                  }
+                }
+                pump();
+              }).catch(function () {
+                if (!gotFirstChunk) tryNextModel();
+              });
+            }
+
+            pump();
+          }).catch(function () {
+            if (!gotFirstChunk) tryNextModel();
+          });
+        }
+
+        tryNextModel();
+      }
+
+      if (chatApSendBtnEl && chatApInputEl) {
+        chatApSendBtnEl.addEventListener("click", function () {
+          var text = (chatApInputEl.value || "").trim();
+          if (!text) return;
+          chatApInputEl.value = "";
+          if (chatApOutputEl && chatApOutputEl.textContent === chatApPlaceholderText && chatApOutputEl.childNodes.length === 0) {
+            chatApOutputEl.textContent = "";
+            chatApOutputEl.style.color = "#f5f5f5";
+          }
+          createChatApBubble(text, "user");
+          startChatApRequest(text);
+        });
+        chatApInputEl.addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter" && !ev.shiftKey) {
+            ev.preventDefault();
+            chatApSendBtnEl.click();
+          }
+        });
       }
     }
 
@@ -2655,6 +3505,14 @@
           dragging = true;
           startX = ev.clientX;
           startY = ev.clientY;
+          var m = (notesWindowEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+          if (m) {
+            baseX = parseFloat(m[1]) || 0;
+            baseY = parseFloat(m[2]) || 0;
+          } else {
+            baseX = 0;
+            baseY = 0;
+          }
           ev.preventDefault();
           document.addEventListener("mousemove", onMouseMove);
           document.addEventListener("mouseup", onMouseUp);
@@ -2667,6 +3525,7 @@
           var tx = baseX + dx;
           var ty = baseY + dy;
           notesWindowEl.style.transform = "translate(" + tx + "px," + ty + "px)";
+          clampWindowToViewport(notesWindowEl);
         }
 
         function onMouseUp() {
@@ -2709,9 +3568,36 @@
     initPetWindowDrag();
     initKeyVaultWindow();
     initLineWindow();
+    initChatApWindow();
     initDesktopIcons();
     initNotesWindow();
+    initTaskbarHome();
+    // 初始状态：ArkPets、Terminal、Notes 均视为已打开，显示在任务栏
+    if (openApps) {
+      if (openApps.hasOwnProperty("pets")) {
+        openApps.pets = true;
+      }
+      if (openApps.hasOwnProperty("terminal")) {
+        openApps.terminal = true;
+      }
+      if (openApps.hasOwnProperty("notes")) {
+        openApps.notes = true;
+      }
+      refreshTaskbarWindows();
+    }
+    // 先按屏幕尺寸整体缩放一次布局
     applyLayoutScale();
+    // 然后调整各窗口的初始位置：
+    // ArkPets 窗口居中显示，Terminal / Notes 保证不超出当前显示区域
+    if (petWindowEl) {
+      centerWindowInViewport(petWindowEl);
+    }
+    if (sideTermEl) {
+      clampWindowToViewport(sideTermEl);
+    }
+    if (notesWindowEl) {
+      clampWindowToViewport(notesWindowEl);
+    }
     window.addEventListener("resize", applyLayoutScale);
 
     var rosAtlasUrl = assetBaseUrl + "/" + rosAtlas;

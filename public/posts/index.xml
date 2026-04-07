@@ -6,8 +6,22 @@
     <description>Recent content in Posts on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 02 Apr 2026 10:11:34 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 07 Apr 2026 11:30:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🛠️ GitHub Action Bot 自动化管理仓库入门</title>
+      <link>http://localhost:1313/posts/gab/</link>
+      <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/gab/</guid>
+      <description>从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。</description>
+    </item>
+    <item>
+      <title>🐈 ArkPets suspense puzzle game</title>
+      <link>http://localhost:1313/posts/pet/</link>
+      <pubDate>Mon, 06 Apr 2026 10:51:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/pet/</guid>
+      <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
+    </item>
     <item>
       <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>
       <link>http://localhost:1313/posts/3060.6/</link>
@@ -48,14 +62,7 @@
       <link>http://localhost:1313/posts/history-today/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/history-today/</guid>
-      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-04)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2025&lt;/strong&gt; — The impeachment of President Yoon Suk Yeol of South Korea in response to his declaration of martial law is unanimously upheld by the country&amp;#39;s Constitutional Court, ending his presidency.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2023&lt;/strong&gt; — Finland becomes a member of NATO after Turkey accepts its membership request.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2020&lt;/strong&gt; — China holds a national day of mourning for martyrs who died in the fight against the novel coronavirus disease outbreak.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2017&lt;/strong&gt; — Syria conducts an air strike on Khan Shaykhun using chemical weapons, killing 89 civilians.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2013&lt;/strong&gt; — 74 people are killed in a building collapse in Thane, India.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>🐈 ArkPets</title>
-      <link>http://localhost:1313/posts/pet/</link>
-      <pubDate>Fri, 06 Mar 2026 13:57:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/pet/</guid>
-      <description>Proof of Work of a html + js puzzle-game exercise, powered by spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on game.</description>
+      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-07)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2022&lt;/strong&gt; — Ketanji Brown Jackson is confirmed for the Supreme Court of the United States, becoming the first black female justice.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2021&lt;/strong&gt; — COVID-19 pandemic: The Centers for Disease Control and Prevention announces that the SARS-CoV-2 Alpha variant has become the dominant strain of COVID-19 in the United States.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2020&lt;/strong&gt; — COVID-19 pandemic: China ends its lockdown in Wuhan.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2020&lt;/strong&gt; — COVID-19 pandemic: Acting Secretary of the Navy Thomas Modly resigns for his handling of the COVID-19 pandemic on USS Theodore Roosevelt and the dismissal of Brett Crozier.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2018&lt;/strong&gt; — Former Brazilian president, Luiz Inácio Lula da Silva, is arrested for corruption by determination of Judge Sérgio Moro, from the &amp;#34;Car-Wash Operation&amp;#34;. Lula stayed imprisoned for 580 days, after being released by the Brazilian Supreme Court.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>

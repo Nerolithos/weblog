@@ -6,8 +6,15 @@
     <description>Recent content in SDS on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 02 Apr 2026 10:11:34 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2026 10:51:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/sds/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🐈 ArkPets suspense puzzle game</title>
+      <link>http://localhost:1313/posts/pet/</link>
+      <pubDate>Mon, 06 Apr 2026 10:51:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/pet/</guid>
+      <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
+    </item>
     <item>
       <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>
       <link>http://localhost:1313/posts/3060.6/</link>
@@ -35,13 +42,6 @@
       <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3060p3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等</description>
-    </item>
-    <item>
-      <title>🐈 ArkPets</title>
-      <link>http://localhost:1313/posts/pet/</link>
-      <pubDate>Fri, 06 Mar 2026 13:57:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/pet/</guid>
-      <description>Proof of Work of a html + js puzzle-game exercise, powered by spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on game.</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
