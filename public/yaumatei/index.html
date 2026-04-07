@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title> # Grassroot HongKong | Lithos&#39; Blog</title>
+    <title>📝 Grassroot HongKong | Lithos&#39; Blog</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.
 I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.">
@@ -22,10 +22,18 @@ I find myself always agitated to be surrounded by old, down-to-earth, and perhap
 
 
 
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
     
 
     
       
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
 
     
 
@@ -33,33 +41,173 @@ I find myself always agitated to be surrounded by old, down-to-earth, and perhap
 
     
       <link rel="canonical" href="http://localhost:1313/yaumatei/">
-    
-
     <meta property="og:url" content="http://localhost:1313/yaumatei/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
-  <meta property="og:title" content=" # Grassroot HongKong">
+  <meta property="og:title" content="📝 Grassroot HongKong">
   <meta property="og:description" content="What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.
 I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It’s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="article">
     <meta property="article:published_time" content="2024-09-10T09:08:58+08:00">
     <meta property="article:modified_time" content="2024-09-10T09:08:58+08:00">
+    <meta property="article:tag" content="Diary">
 
-  <meta itemprop="name" content=" # Grassroot HongKong">
+  <meta itemprop="name" content="📝 Grassroot HongKong">
   <meta itemprop="description" content="What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.
 I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It’s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.">
   <meta itemprop="datePublished" content="2024-09-10T09:08:58+08:00">
   <meta itemprop="dateModified" content="2024-09-10T09:08:58+08:00">
   <meta itemprop="wordCount" content="324">
+  <meta itemprop="keywords" content="Diary">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content=" # Grassroot HongKong">
+  <meta name="twitter:title" content="📝 Grassroot HongKong">
   <meta name="twitter:description" content="What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.
 I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It’s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.">
 
-	
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
   </head>
 
   <body class="ma0 avenir bg-near-white">
+
+    
 
     
 
@@ -77,6 +225,34 @@ I find myself always agitated to be surrounded by old, down-to-earth, and perhap
       
 
       
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/emoji" title="">
+              🎮 EmojiGame
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
       
 <div class="ananke-socials">
   
@@ -88,7 +264,7 @@ I find myself always agitated to be surrounded by old, down-to-earth, and perhap
 
       <div class="tc-l pv6 ph3 ph4-ns">
         
-          <div class="f2 f1-l fw2 white-90 mb0 lh-title"> # Grassroot HongKong</div>
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">📝 Grassroot HongKong</div>
           
         
       </div>
@@ -102,7 +278,7 @@ I find myself always agitated to be surrounded by old, down-to-earth, and perhap
     <article class="center cf pv5 ph3 ph4-ns mw7">
       <header>
         <h1 class="f1">
-           # Grassroot HongKong
+          📝 Grassroot HongKong
         </h1>
       </header>
       <div class="nested-copy-line-height lh-copy f4 nested-links mid-gray">
@@ -116,17 +292,22 @@ I find myself always agitated to be surrounded by old, down-to-earth, and perhap
   </div>
 
     </main>
-    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
-  <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
-    &copy;  Lithos' Blog 2024 
-  </a>
-    <div>
-<div class="ananke-socials">
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
   
-</div>
-</div>
-  </div>
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/emoji" target="_blank" rel="noopener noreferrer">🎮 EmojiGame</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
 </footer>
 
   </body>

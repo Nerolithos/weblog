@@ -312,23 +312,9 @@
     <item>
       <title>🌐 在 cloudflare 部署 Hugo 构架博客的 manual</title>
       <link>http://localhost:1313/posts/weblog_deploy/</link>
-      <pubDate>Tue, 10 Sep 2024 23:34:08 +0800</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/weblog_deploy/</guid>
       <description>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。</description>
-    </item>
-    <item>
-      <title>📝 River Town: the Metaphor of Chapter VI. ‘Storm’</title>
-      <link>http://localhost:1313/posts/river_town/</link>
-      <pubDate>Tue, 10 Sep 2024 15:49:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/river_town/</guid>
-      <description>&lt;p&gt;In Chapter six of River Town, the metaphor of &amp;ldquo;storm&amp;rdquo; is incredibly ingenious, much like the line from &lt;em&gt;Border Town&lt;/em&gt;: &amp;ldquo;The heavy rain washed everything, yet it washed away nothing.&amp;rdquo; True, storms rinsed both HongKong and Fuling the night of HongKong’s handover to China. Yet only when people, like Andy in &lt;em&gt;The Shawshank Redemption&lt;/em&gt;, allow the rain to cleanse the blockages and stubbornness deep within their souls, and reach their arms out to the sky, can they attain true liberation.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>📝 Grassroot HongKong</title>
-      <link>http://localhost:1313/posts/yaumatei/</link>
-      <pubDate>Tue, 10 Sep 2024 09:08:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/yaumatei/</guid>
-      <description>&lt;p&gt;What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.&lt;/p&gt;&#xA;&lt;p&gt;I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&amp;rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

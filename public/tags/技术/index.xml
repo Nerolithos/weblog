@@ -32,7 +32,7 @@
     <item>
       <title>🌐 在 cloudflare 部署 Hugo 构架博客的 manual</title>
       <link>http://localhost:1313/posts/weblog_deploy/</link>
-      <pubDate>Tue, 10 Sep 2024 23:34:08 +0800</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/weblog_deploy/</guid>
       <description>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。</description>
     </item>
