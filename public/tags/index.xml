@@ -6,8 +6,15 @@
     <description>Recent content in Tags on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 07 Apr 2026 11:30:34 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 07 Apr 2026 13:30:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CSC3060</title>
+      <link>http://localhost:1313/tags/csc3060/</link>
+      <pubDate>Tue, 07 Apr 2026 13:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/tags/csc3060/</guid>
+      <description></description>
+    </item>
     <item>
       <title>技术</title>
       <link>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</link>
@@ -20,13 +27,6 @@
       <link>http://localhost:1313/tags/projects/</link>
       <pubDate>Mon, 06 Apr 2026 10:51:34 +0800</pubDate>
       <guid>http://localhost:1313/tags/projects/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>CSC3060</title>
-      <link>http://localhost:1313/tags/csc3060/</link>
-      <pubDate>Thu, 02 Apr 2026 10:11:34 +0800</pubDate>
-      <guid>http://localhost:1313/tags/csc3060/</guid>
       <description></description>
     </item>
     <item>
@@ -76,13 +76,6 @@
       <link>http://localhost:1313/tags/%E7%BB%83%E4%B9%A0/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
       <guid>http://localhost:1313/tags/%E7%BB%83%E4%B9%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Diary</title>
-      <link>http://localhost:1313/tags/diary/</link>
-      <pubDate>Wed, 30 Oct 2024 13:49:58 +0800</pubDate>
-      <guid>http://localhost:1313/tags/diary/</guid>
       <description></description>
     </item>
     <item>

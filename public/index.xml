@@ -6,8 +6,15 @@
     <description>Recent content on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 07 Apr 2026 11:30:34 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 07 Apr 2026 13:30:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💯 CSC3060 Quiz Q&amp;A</title>
+      <link>http://localhost:1313/posts/3060q/</link>
+      <pubDate>Tue, 07 Apr 2026 13:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060q/</guid>
+      <description>Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.</description>
+    </item>
     <item>
       <title>🛠️ GitHub Action Bot 自动化管理仓库入门</title>
       <link>http://localhost:1313/posts/gab/</link>
@@ -100,7 +107,7 @@
       <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
     </item>
     <item>
-      <title>💻 CSC3200 Final Revision C&#43;&#43; 期末样卷</title>
+      <title>💯 CSC3200 Final Revision C&#43;&#43; 期末样卷</title>
       <link>http://localhost:1313/posts/3200.f3/</link>
       <pubDate>Thu, 11 Dec 2025 07:07:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3200.f3/</guid>

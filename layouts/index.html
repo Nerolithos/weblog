@@ -1,6 +1,8 @@
 {{ define "main" }}
 <div class="pa4">
-  <h1 class="f2">📚 Recent Blogs</h1>
+  {{ $all := .Site.RegularPages }}
+  {{ $count := len $all }}
+  <h1 class="f2">📚 Recent Blogs (Currently {{ $count }} blogs)</h1>
 
   {{ with .Content }}
   <section class="mb4">
@@ -9,7 +11,6 @@
   {{ end }}
 
   {{/* 先渲染「历史上的今天」，保证置顶 */}}
-  {{ $all := .Site.RegularPages }}
   {{ range where $all "File.BaseFileName" "history-today" }}
   <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ .RelPermalink }}">
     <!-- 左侧：标题 / 元信息 / 摘要 -->
