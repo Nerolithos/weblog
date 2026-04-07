@@ -12,11 +12,11 @@
 
   {{/* 先渲染「历史上的今天」，保证置顶 */}}
   {{ range where $all "File.BaseFileName" "history-today" }}
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ .RelPermalink }}">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">
     <!-- 左侧：标题 / 元信息 / 摘要 -->
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
-        <a class="link dark-gray dim" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <a class="link dark-gray dim" href="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">{{ .Title }}</a>
       </h2>
       <p class="gray f6 mb2">
         {{ if eq .File.BaseFileName "history-today" }}
@@ -63,11 +63,11 @@
   {{ range where $all "File.BaseFileName" "ne" "history-today" }}
   {{ $mdURL := printf "https://raw.githubusercontent.com/Nerolithos/weblog/main/content/%s" .File.Path }}
   {{ $mdB64 := printf "content/%s" .File.Path | readFile | base64Encode }}
-  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ .RelPermalink }}">
+  <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">
     <!-- 左侧：标题 / 元信息 / 摘要 -->
     <div class="w-100 w-two-thirds-l pr3">
       <h2 class="f3 fw6 mt0 mb2">
-        <a class="link dark-gray dim" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <a class="link dark-gray dim" href="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">{{ .Title }}</a>
       </h2>
       <p class="gray f6 mb2">
         {{ if eq .File.BaseFileName "history-today" }}

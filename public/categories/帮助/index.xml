@@ -6,8 +6,15 @@
     <description>Recent content in 帮助 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 07 Apr 2026 11:30:34 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 07 Apr 2026 19:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🎓 LGU 选课 AI 助手</title>
+      <link>http://localhost:1313/posts/courseai/</link>
+      <pubDate>Tue, 07 Apr 2026 19:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/courseai/</guid>
+      <description>基于卡园和开源平台扒下来的课程信息与免费的 Qwen LLM 构建的 LGU 选课辅助 AI ———— LGU courseai-2.0。</description>
+    </item>
     <item>
       <title>🛠️ GitHub Action Bot 自动化管理仓库入门</title>
       <link>http://localhost:1313/posts/gab/</link>
