@@ -111,7 +111,7 @@
         <button id="ask-btn">
           <span>🧠 开始咨询</span>
         </button>
-        <a class="link-btn" href="/courses.txt" download>
+        <a class="link-btn" href="#" id="download-guard">
           <button type="button" class="secondary">📄 下载 prompt 和 课程信息源数据</button>
         </a>
         <span id="status" class="status"></span>
@@ -246,6 +246,14 @@
         ask();
       }
     });
+
+    const downloadGuard = document.getElementById('download-guard');
+    if (downloadGuard) {
+      downloadGuard.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('Guests do NOT have Admin authorities. If you want raw data, contact the owner of this site via email or GitHub.');
+      });
+    }
   </script>
 </body>
 </html>
