@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8" />
+  <title>D3 · 全球可再生能源旋转地球</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/custom.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #ffffff;
+      color: #222222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .dda-page {
+      flex: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem;
+    }
+    .dda-header {
+      margin-bottom: 1.5rem;
+    }
+    .dda-header h1 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+    }
+    .dda-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 0.95rem;
+      color: #222222;
+      display: block;
+    }
+    .dda-globe-wrapper {
+      position: relative;
+      margin-top: 1.5rem;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .dda-globe-svg {
+      width: 100%;
+      max-width: 800px;
+      /* 在大屏上保持舒适高度，在小屏上跟随视口收缩 */
+      height: min(60vh, 640px);
+      display: block;
+      margin: 0 auto;
+    }
+    .dda-globe-sphere {
+      fill: #e6f2ff;
+      stroke: #4f83cc;
+      stroke-width: 1.2px;
+    }
+    .dda-globe-graticule {
+      fill: none;
+      stroke: rgba(120, 150, 200, 0.4);
+      stroke-width: 0.6px;
+      stroke-dasharray: 2 2;
+    }
+    .dda-globe-country {
+      stroke: rgba(255, 255, 255, 0.9);
+      stroke-width: 0.5px;
+      cursor: pointer;
+    }
+    .dda-globe-country:hover {
+      stroke-width: 1.0px;
+      stroke: #111;
+    }
+    .dda-legend {
+      position: absolute;
+      right: 1.75rem;
+      top: 1.75rem;
+      background: rgba(255,255,255,0.92);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      font-size: 0.8rem;
+    }
+    .dda-legend-title {
+      margin: 0 0 0.4rem;
+      font-weight: 600;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+    .dda-legend-bar {
+      width: 140px;
+      height: 10px;
+      border-radius: 6px;
+      background: linear-gradient(
+        to right,
+        #b30000 0%,   /* 0%   deep red */
+        #e55c00 16%,  /* 5%   orange */
+        #f6d32d 33%,  /* 10%  yellow */
+        #c5e1a5 66%,  /* 20%  light green */
+        #006837 100%  /* 30%+ pure green */
+      );
+      margin-bottom: 0.25rem;
+    }
+    .dda-legend-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      opacity: 0.8;
+    }
+    .dda-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.55rem 0.75rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.78rem;
+      color: #222;
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.12s ease-out;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    .dda-tooltip strong {
+      font-weight: 600;
+    }
+    .dda-slider-section {
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem 0.75rem;
+      border-radius: 12px;
+      background: #fafafa;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .dda-slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+      gap: 1rem;
+    }
+    .dda-slider-header-left {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+    .dda-current-year {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .dda-slider-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: #666;
+    }
+    .dda-slider-wrapper input[type="range"] {
+      flex: 1;
+    }
+    .dda-play-button {
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      background: #ffffff;
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: #111827;
+    }
+    .dda-play-button:hover {
+      background: rgba(148, 163, 184, 0.12);
+    }
+    .dda-info-panel {
+      margin-top: 0.9rem;
+      font-size: 0.85rem;
+      color: #444;
+    }
+    .dda-info-panel strong {
+      font-weight: 600;
+    }
+    .dda-backlink {
+      margin-top: 1.8rem;
+      font-size: 0.9rem;
+    }
+    .dda-backlink a {
+      color: #8ab4ff;
+      text-decoration: none;
+    }
+    .dda-backlink a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 640px) {
+      .dda-page {
+        padding: 1.25rem 0.75rem 1.75rem;
+      }
+      .dda-globe-svg {
+        height: min(50vh, 420px);
+      }
+      .dda-legend-bar {
+        width: 120px;
+      }
+    }
+
+    /* 适配矮屏幕，进一步压缩整体高度 */
+    @media (max-height: 720px) {
+      .dda-page {
+        padding-top: 1.25rem;
+        padding-bottom: 1.75rem;
+      }
+      .dda-globe-svg {
+        height: min(50vh, 520px);
+      }
+      .dda-slider-section {
+        margin-top: 1.25rem;
+        padding-top: 0.85rem;
+        padding-bottom: 0.65rem;
+      }
+      .dda-backlink {
+        margin-top: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dda-page">
+    <header class="dda-header">
+      <h1>Global Renewable Energy Share</h1>
+      <p>DDA3003-Group4 ——— 郑倩雨杭 · 孙珂瑶 · 朱霁安 · 李锦鸿 ——— Explore with hovering and clicking the countries.</p>
+    </header>
+
+    <section class="dda-globe-wrapper">
+      <svg id="dda-globe-svg" class="dda-globe-svg"></svg>
+      <div id="dda-tooltip" class="dda-tooltip"></div>
+      <div class="dda-legend">
+        <p class="dda-legend-title">Renewables share · color legend</p>
+        <div class="dda-legend-bar"></div>
+        <div class="dda-legend-labels">
+          <span>0%</span>
+          <span>5%</span>
+          <span>10%</span>
+          <span>15%</span>
+          <span>20%</span>
+          <span>25%</span>
+          <span>30%+</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="dda-slider-section">
+      <div class="dda-slider-header">
+        <div class="dda-slider-header-left">
+          <span>Move the slider to select a year:</span>
+        </div>
+        <div>
+          Current year: <span id="dda-current-year" class="dda-current-year">-</span>
+        </div>
+      </div>
+      <div class="dda-slider-wrapper">
+        <button id="dda-play-toggle" class="dda-play-button" type="button">Play</button>
+        <span id="dda-year-min">-</span>
+        <input id="dda-year-slider" type="range" min="0" max="0" step="1" value="0" />
+        <span id="dda-year-max">-</span>
+      </div>
+      <div id="dda-info-panel" class="dda-info-panel">
+        Hover over a country on the globe to see the year, country name, three-letter ISO code and renewable energy share for the selected year.
+      </div>
+    </section>
+
+    <div class="dda-backlink">
+      <a href="/">← Back to blog home</a>
+    </div>
+  </main>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // ==========================
+    // 布局与投影设置
+    // ==========================
+    const globeSvg = d3.select("#dda-globe-svg");
+    const globeNode = globeSvg.node();
+    const globeRect = globeNode.getBoundingClientRect();
+    const globeWidth = globeRect.width || globeNode.clientWidth || 800;
+    const globeHeight = globeRect.height || globeNode.clientHeight || 520;
+
+    const baseScale = Math.min(globeWidth, globeHeight) / 2.1;
+
+    const projection = d3.geoOrthographic()
+      .scale(baseScale)
+      .translate([globeWidth / 2, globeHeight / 2])
+      .clipAngle(90);
+
+    const geoPath = d3.geoPath(projection);
+    const graticule = d3.geoGraticule();
+
+    const globeGroup = globeSvg.append("g");
+
+    const sphere = globeGroup.append("path")
+      .datum({ type: "Sphere" })
+      .attr("class", "dda-globe-sphere");
+
+    const grat = globeGroup.append("path")
+      .datum(graticule())
+      .attr("class", "dda-globe-graticule");
+
+    let countryPaths = null;
+
+    // ==========================
+    // 数据结构
+    // ==========================
+    const yearSlider = document.getElementById("dda-year-slider");
+    const playButton = document.getElementById("dda-play-toggle");
+    const yearLabel = document.getElementById("dda-current-year");
+    const yearMinLabel = document.getElementById("dda-year-min");
+    const yearMaxLabel = document.getElementById("dda-year-max");
+    const infoPanel = document.getElementById("dda-info-panel");
+    const tooltipEl = document.getElementById("dda-tooltip");
+
+    let years = [];
+    let currentYear = null;
+    let dataByYearAndCode = new Map(); // Map<year, Map<code, { value, name }>>
+
+    let valueMin = Infinity;
+    let valueMax = -Infinity;
+
+    // Year playback state
+    let isPlayingYears = false;
+    let playTimer = null;
+    let playIndex = 0;
+
+    // Color scale: low = red, high = green, with more granularity
+    const colorScale = d3.scaleLinear()
+      .range([
+        "#b30000", // 0%
+        "#e55c00", // ~5%
+        "#f6d32d", // ~10%
+        "#c5e1a5", // ~20%
+        "#006837"  // 30%+
+      ]);
+
+    // ==========================
+    // 渲染函数
+    // ==========================
+    function renderGlobe() {
+      sphere.attr("d", geoPath);
+      grat.attr("d", geoPath);
+      if (countryPaths) {
+        countryPaths.attr("d", geoPath);
+      }
+    }
+
+    function getCountryValue(year, iso3) {
+      const yearMap = dataByYearAndCode.get(year);
+      if (!yearMap) return null;
+      return yearMap.get(iso3) || null;
+    }
+
+    function applyYearByIndex(index) {
+      if (!years.length) return;
+      const clamped = Math.max(0, Math.min(years.length - 1, index));
+      playIndex = clamped;
+      yearSlider.value = String(clamped);
+      const year = years[clamped];
+      updateColorsForYear(year);
+      updateInfoPanel(null);
+      hideTooltip();
+    }
+
+    function updateColorsForYear(year) {
+      if (!countryPaths) return;
+      currentYear = year;
+      yearLabel.textContent = year;
+
+      countryPaths
+        .attr("fill", d => {
+          const iso3 = d.properties && (d.properties.iso_a3 || d.properties.ISO_A3 || d.id);
+          const record = getCountryValue(year, iso3);
+          if (!record || record.value == null || isNaN(record.value)) {
+            return "#e0e0e0"; // 无数据
+          }
+          return colorScale(record.value);
+        });
+    }
+
+    function updateInfoPanel(feature) {
+      if (!feature) {
+        infoPanel.textContent = "Hover over a country on the globe to see the year, country name, three-letter ISO code and renewable energy share for the selected year.";
+        return;
+      }
+      const props = feature.properties || {};
+      const name = props.name || props.ADMIN || "Unknown country";
+      const iso3 = props.iso_a3 || props.ISO_A3 || feature.id || "?";
+      const record = currentYear ? getCountryValue(currentYear, iso3) : null;
+      if (!currentYear || !record || record.value == null || isNaN(record.value)) {
+        infoPanel.textContent = `${name} (${iso3}) · ${currentYear || "-"} · Renewables share: NAN`;
+      } else {
+        const value = record.value.toFixed(2);
+        infoPanel.textContent = `${currentYear} · ${name} (${iso3}) · Renewables share: ${value}%`;
+      }
+    }
+
+    function showTooltip(event, feature) {
+      if (!feature) return;
+      const props = feature.properties || {};
+      const name = props.name || props.ADMIN || "Unknown country";
+      const iso3 = props.iso_a3 || props.ISO_A3 || feature.id || "?";
+      const year = currentYear;
+      const record = year ? getCountryValue(year, iso3) : null;
+
+      let content = "";
+      if (!year || !record || record.value == null || isNaN(record.value)) {
+        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year || "-"} · Renewables share: NAN</div>`;
+      } else {
+        const value = record.value.toFixed(2);
+        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year} · Renewables share: ${value}%</div>`;
+      }
+
+      tooltipEl.innerHTML = content;
+
+      const wrapperRect = document.querySelector(".dda-globe-wrapper").getBoundingClientRect();
+      const x = event.clientX - wrapperRect.left;
+      const y = event.clientY - wrapperRect.top;
+
+      tooltipEl.style.left = `${x}px`;
+      tooltipEl.style.top = `${y}px`;
+      tooltipEl.style.opacity = "1";
+    }
+
+    function hideTooltip() {
+      tooltipEl.style.opacity = "0";
+    }
+
+    // ==========================
+    // 加载数据：GeoJSON + CSV
+    // ==========================
+    const worldGeoJsonUrl = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson";
+    const csvUrl = "renewable-share-energy.csv";
+
+    Promise.all([
+      d3.json(worldGeoJsonUrl),
+      d3.csv(csvUrl)
+    ]).then(([world, rows]) => {
+      if (!world || !world.features) {
+        console.error("World map data is not in the expected format", world);
+        return;
+      }
+
+      // 处理 CSV：Entity,Code,Year,Renewables (% equivalent primary energy)
+      rows.forEach(row => {
+        const code = row.Code && row.Code.trim();
+        const entity = row.Entity;
+        const year = +row.Year;
+        const valueRaw = row["Renewables (% equivalent primary energy)"];
+
+        if (!year || !code) return; // 忽略地区汇总行（没有 code）
+
+        const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
+
+        if (!isNaN(value)) {
+          if (value < valueMin) valueMin = value;
+          if (value > valueMax) valueMax = value;
+        }
+
+        if (!dataByYearAndCode.has(year)) {
+          dataByYearAndCode.set(year, new Map());
+        }
+        dataByYearAndCode.get(year).set(code, { value, name: entity });
+      });
+
+      years = Array.from(dataByYearAndCode.keys()).sort((a, b) => a - b);
+      if (years.length === 0) {
+        console.error("No valid yearly data parsed from CSV");
+        return;
+      }
+
+      // Color scale domain: more granular, only 30%+ is pure green
+      valueMin = 0;
+      valueMax = 30;
+      colorScale
+        .domain([
+          0,   // deep red
+          5,   // orange
+          10,  // yellow
+          20,  // light green
+          30   // pure green
+        ])
+        .clamp(true);
+
+      // 初始化滑块
+      yearSlider.min = 0;
+      yearSlider.max = years.length - 1;
+      yearSlider.step = 1;
+      yearSlider.value = years.length - 1; // 默认最新年份
+      yearMinLabel.textContent = years[0];
+      yearMaxLabel.textContent = years[years.length - 1];
+
+      const initialYear = years[years.length - 1];
+      currentYear = initialYear;
+      yearLabel.textContent = initialYear;
+
+      yearSlider.addEventListener("input", () => {
+        if (isPlayingYears) {
+          // Stop playback when user manually adjusts the slider
+          if (playTimer !== null) {
+            clearInterval(playTimer);
+            playTimer = null;
+          }
+          isPlayingYears = false;
+          playButton.textContent = "Play";
+        }
+        const idx = +yearSlider.value;
+        applyYearByIndex(idx);
+      });
+
+      function stopPlayback() {
+        if (playTimer !== null) {
+          clearInterval(playTimer);
+          playTimer = null;
+        }
+        isPlayingYears = false;
+        if (playButton) playButton.textContent = "Play";
+      }
+
+      if (playButton) {
+        playButton.addEventListener("click", () => {
+          if (!years.length) return;
+          if (!isPlayingYears) {
+            isPlayingYears = true;
+            playButton.textContent = "Pause";
+            // Start from current slider position or earliest year
+            const currentIndex = Number.isFinite(+yearSlider.value) ? +yearSlider.value : 0;
+            applyYearByIndex(currentIndex >= 0 && currentIndex < years.length ? currentIndex : 0);
+
+            playTimer = setInterval(() => {
+              let nextIndex = playIndex + 1;
+              if (nextIndex >= years.length) {
+                nextIndex = 0; // loop back to 1965
+              }
+              applyYearByIndex(nextIndex);
+            }, 900); // ~0.9s per year
+          } else {
+            stopPlayback();
+          }
+        });
+      }
+
+      // 绘制国家
+      countryPaths = globeGroup.append("g")
+        .selectAll("path")
+        .data(world.features)
+        .enter()
+        .append("path")
+        .attr("class", "dda-globe-country")
+        .on("mousemove", (event, d) => {
+          showTooltip(event, d);
+          updateInfoPanel(d);
+        })
+        .on("mouseout", () => {
+          hideTooltip();
+        })
+        .on("click", (event, d) => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          if (!iso3) return;
+          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          window.location.href = target;
+        });
+
+      // Initial render
+      renderGlobe();
+      updateColorsForYear(initialYear);
+    }).catch(err => {
+      console.error("Failed to load data", err);
+    });
+
+    // ==========================
+    // 旋转&拖拽交互
+    // ==========================
+    let isDraggingGlobe = false;
+    let lastRotation = projection.rotate();
+    let lastPos = null;
+
+    function updateRotation(lambda, phi) {
+      projection.rotate([lambda, phi]);
+      renderGlobe();
+    }
+
+    let baseLambda = 0;
+    let basePhi = -15;
+    updateRotation(baseLambda, basePhi);
+
+    // Use a single, slow, time-based rotation so speed is stable
+    const rotationSpeedDegPerMs = 0.008; // ~5° per second
+    let lastTickTime = Date.now();
+
+    const rotationInterval = d3.interval(() => {
+      if (isDraggingGlobe) {
+        lastTickTime = Date.now();
+        return;
+      }
+      const now = Date.now();
+      const dt = now - lastTickTime;
+      lastTickTime = now;
+      const deltaLambda = dt * rotationSpeedDegPerMs;
+      baseLambda = (baseLambda + deltaLambda) % 360;
+      updateRotation(baseLambda, basePhi);
+    }, 60);
+
+    const globeDrag = d3.drag()
+      .on("start", (event) => {
+        isDraggingGlobe = true;
+        lastRotation = projection.rotate();
+        lastPos = [event.x, event.y];
+      })
+      .on("drag", (event) => {
+        if (!lastPos) return;
+        const dx = event.x - lastPos[0];
+        const dy = event.y - lastPos[1];
+        const sensitivity = 0.25;
+        const lambda = lastRotation[0] + dx * sensitivity;
+        const phi = Math.max(-80, Math.min(80, lastRotation[1] - dy * sensitivity));
+        baseLambda = lambda;
+        basePhi = phi;
+        updateRotation(lambda, phi);
+      })
+      .on("end", () => {
+        isDraggingGlobe = false;
+        lastPos = null;
+      });
+
+    globeSvg.call(globeDrag);
+  </script>
+</body>
+</html>

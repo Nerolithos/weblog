@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Country Energy Cluster · D3 Globe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/custom.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #ffffff;
+      color: #222222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .country-page {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem;
+    }
+    .country-header {
+      margin-bottom: 1.5rem;
+    }
+    .country-header h1 {
+      margin: 0 0 0.4rem;
+      font-size: 2rem;
+    }
+    .country-header p {
+      margin: 0;
+      opacity: 0.85;
+      font-size: 0.95rem;
+    }
+    .country-layout {
+      display: flex;
+      gap: 1.75rem;
+      align-items: flex-start;
+      margin-top: 1.5rem;
+    }
+    .country-left,
+    .country-right {
+      flex: 1 1 50%;
+      min-width: 0;
+    }
+    .country-globe-card {
+      position: relative;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .country-globe-svg {
+      width: 100%;
+      max-width: 520px;
+      height: 520px;
+      display: block;
+      margin: 0 auto;
+    }
+    .globe-sphere {
+      fill: #e6f2ff;
+      stroke: #4f83cc;
+      stroke-width: 1.2px;
+    }
+    .globe-graticule {
+      fill: none;
+      stroke: rgba(120, 150, 200, 0.4);
+      stroke-width: 0.6px;
+      stroke-dasharray: 2 2;
+    }
+    .globe-country {
+      stroke: rgba(255, 255, 255, 0.9);
+      stroke-width: 0.5px;
+      cursor: default;
+    }
+    .globe-country--highlight {
+      fill: #1b9e77 !important;
+    }
+    .globe-country--selected {
+      stroke: #111111;
+      stroke-width: 1.2px;
+    }
+    .country-right-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem 1.5rem;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .country-title {
+      margin: 0 0 0.4rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    .country-cluster-summary {
+      margin: 0 0 0.6rem;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+    .country-cluster-detail {
+      margin: 0 0 1.1rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .country-cluster-detail strong {
+      font-weight: 600;
+    }
+    .pie-title {
+      margin: 0 0 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .pie-subtitle {
+      margin: 0 0 0.75rem;
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+    .pie-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .pie-svg {
+      width: 260px;
+      height: 260px;
+    }
+    .pie-legend {
+      font-size: 0.8rem;
+      max-width: 260px;
+    }
+    .pie-legend-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      margin-bottom: 0.25rem;
+    }
+    .pie-legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .country-back-arrow {
+      position: fixed;
+      top: 1.25rem;
+      left: 1.25rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: none;
+      background: #e5e7eb;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+      z-index: 50;
+    }
+    .country-back-arrow:hover {
+      background: #d1d5db;
+    }
+    .country-back-arrow:focus-visible {
+      outline: 2px solid #4b5563;
+      outline-offset: 2px;
+    }
+    @media (max-width: 900px) {
+      .country-layout {
+        flex-direction: column;
+      }
+      .country-globe-svg {
+        max-width: 100%;
+        height: 420px;
+      }
+      .pie-wrapper {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="country-back-arrow" type="button" onclick="window.history.back();">&#8592;</button>
+  <main class="country-page">
+    <header class="country-header">
+      <h1>Country Energy Cluster</h1>
+      <p>Clicking a country on the main globe opens this detail view. On the left you see all countries in the same cluster highlighted on a globe; on the right you see cluster characteristics and its average energy mix.</p>
+    </header>
+
+    <section class="country-layout">
+      <div class="country-left">
+        <div class="country-globe-card">
+          <svg id="country-globe-svg" class="country-globe-svg"></svg>
+        </div>
+      </div>
+      <div class="country-right">
+        <article class="country-right-card">
+          <h2 id="country-title" class="country-title">Selected country</h2>
+          <p id="country-cluster-summary" class="country-cluster-summary"></p>
+          <p id="country-cluster-detail" class="country-cluster-detail"></p>
+
+          <h3 class="pie-title">Average energy mix of this cluster</h3>
+          <p class="pie-subtitle">Shares are normalized to 1 across all products in the cluster.</p>
+          <div class="pie-wrapper">
+            <svg id="cluster-pie" class="pie-svg"></svg>
+            <div id="pie-legend" class="pie-legend"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+      </section>
+  </main>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // ==========================
+    // Cluster definitions
+    // ==========================
+    const clusters = {
+      0: {
+        id: 0,
+        label: "Cluster 0 – Nuclear-dominated countries",
+        description: "Electricity systems where nuclear power provides a large share of generation, complemented by hydro and other renewables.",
+        countries: [
+          { name: "Belgium", iso3: "BEL" },
+          { name: "Finland", iso3: "FIN" },
+          { name: "France", iso3: "FRA" },
+          { name: "Hungary", iso3: "HUN" },
+          { name: "Slovak Republic", iso3: "SVK" },
+          { name: "Slovenia", iso3: "SVN" },
+          { name: "Sweden", iso3: "SWE" },
+          { name: "Switzerland", iso3: "CHE" }
+        ],
+        mix: {
+          "Coal, Peat and Manufactured Gases": 0.035,
+          "Natural Gas": 0.037,
+          "Oil and Petroleum Products": 0.002,
+          "Nuclear": 0.176,
+          "Hydro": 0.086,
+          "Solar": 0.009,
+          "Wind": 0.016,
+          "Geothermal": 0.0,
+          "Combustible Renewables": 0.022
+        }
+      },
+      1: {
+        id: 1,
+        label: "Cluster 1 – Gas-based and diversified systems",
+        description: "Countries where natural gas is the main source but the power mix is relatively diversified across fuels and renewables.",
+        countries: [
+          { name: "Argentina", iso3: "ARG" },
+          { name: "Chile", iso3: "CHL" },
+          { name: "Cyprus", iso3: "CYP" },
+          { name: "Greece", iso3: "GRC" },
+          { name: "Ireland", iso3: "IRL" },
+          { name: "Italy", iso3: "ITA" },
+          { name: "Japan", iso3: "JPN" },
+          { name: "Malta", iso3: "MLT" },
+          { name: "Mexico", iso3: "MEX" },
+          { name: "Netherlands", iso3: "NLD" },
+          { name: "Spain", iso3: "ESP" },
+          { name: "Turkey", iso3: "TUR" },
+          { name: "United Kingdom", iso3: "GBR" },
+          { name: "United States", iso3: "USA" }
+        ],
+        mix: {
+          "Coal, Peat and Manufactured Gases": 0.059,
+          "Natural Gas": 0.130,
+          "Oil and Petroleum Products": 0.038,
+          "Nuclear": 0.019,
+          "Hydro": 0.034,
+          "Solar": 0.015,
+          "Wind": 0.029,
+          "Geothermal": 0.001,
+          "Combustible Renewables": 0.009
+        }
+      },
+      2: {
+        id: 2,
+        label: "Cluster 2 – Hydro / renewables-dominated countries",
+        description: "Power systems dominated by hydro and other renewables, with relatively low fossil and nuclear shares.",
+        countries: [
+          { name: "Austria", iso3: "AUT" },
+          { name: "Brazil", iso3: "BRA" },
+          { name: "Canada", iso3: "CAN" },
+          { name: "Colombia", iso3: "COL" },
+          { name: "Costa Rica", iso3: "CRI" },
+          { name: "Croatia", iso3: "HRV" },
+          { name: "Denmark", iso3: "DNK" },
+          { name: "Iceland", iso3: "ISL" },
+          { name: "Latvia", iso3: "LVA" },
+          { name: "Lithuania", iso3: "LTU" },
+          { name: "Luxembourg", iso3: "LUX" },
+          { name: "New Zealand", iso3: "NZL" },
+          { name: "Norway", iso3: "NOR" },
+          { name: "Peru", iso3: "PER" },
+          { name: "Portugal", iso3: "PRT" }
+        ],
+        mix: {
+          "Coal, Peat and Manufactured Gases": 0.018,
+          "Natural Gas": 0.057,
+          "Oil and Petroleum Products": 0.004,
+          "Nuclear": 0.004,
+          "Hydro": 0.176,
+          "Solar": 0.004,
+          "Wind": 0.035,
+          "Geothermal": 0.013,
+          "Combustible Renewables": 0.017
+        }
+      },
+      3: {
+        id: 3,
+        label: "Cluster 3 – Coal-dominated countries",
+        description: "Electricity mixes dominated by coal, with comparatively smaller contributions from gas and renewables.",
+        countries: [
+          { name: "Australia", iso3: "AUS" },
+          { name: "Bulgaria", iso3: "BGR" },
+          { name: "China", iso3: "CHN" },
+          { name: "Czech Republic", iso3: "CZE" },
+          { name: "Estonia", iso3: "EST" },
+          { name: "Germany", iso3: "DEU" },
+          { name: "India", iso3: "IND" },
+          { name: "Korea", iso3: "KOR" },
+          { name: "North Macedonia", iso3: "MKD" },
+          { name: "Poland", iso3: "POL" },
+          { name: "Serbia", iso3: "SRB" }
+        ],
+        mix: {
+          "Coal, Peat and Manufactured Gases": 0.194,
+          "Natural Gas": 0.031,
+          "Oil and Petroleum Products": 0.003,
+          "Nuclear": 0.040,
+          "Hydro": 0.035,
+          "Solar": 0.010,
+          "Wind": 0.017,
+          "Geothermal": 0.0,
+          "Combustible Renewables": 0.012
+        }
+      }
+    };
+
+    const countryByIso3 = {};
+    const clusterByIso3 = {};
+    Object.values(clusters).forEach(cluster => {
+      cluster.countries.forEach(c => {
+        countryByIso3[c.iso3] = c.name;
+        clusterByIso3[c.iso3] = cluster.id;
+      });
+    });
+
+    function getQueryParam(key) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(key);
+    }
+
+    const selectedIso3Raw = (getQueryParam("code") || "").toUpperCase();
+    const selectedIso3 = selectedIso3Raw || "";
+    const selectedClusterId = clusterByIso3[selectedIso3];
+    const selectedCluster = selectedClusterId !== undefined ? clusters[selectedClusterId] : null;
+    const selectedCountryName = countryByIso3[selectedIso3] || selectedIso3 || "Unknown country";
+
+    // ==========================
+    // Update right panel text
+    // ==========================
+    const titleEl = document.getElementById("country-title");
+    const summaryEl = document.getElementById("country-cluster-summary");
+    const detailEl = document.getElementById("country-cluster-detail");
+
+    titleEl.textContent = `${selectedCountryName} (${selectedIso3 || "N/A"})`;
+
+    if (!selectedCluster) {
+      summaryEl.textContent = "This country is not part of any predefined cluster in this view.";
+      detailEl.textContent = "You navigated here from the main globe, but cluster metadata is only defined for a subset of countries in the dataset.";
+    } else {
+      summaryEl.textContent = `${selectedCountryName} belongs to ${selectedCluster.label}.`;
+      const peerNames = selectedCluster.countries.map(c => c.name).join(", ");
+      detailEl.innerHTML = `<strong>Key characteristics:</strong> ${selectedCluster.description}<br/><strong>Countries in this cluster (${selectedCluster.countries.length}):</strong> ${peerNames}.`;
+    }
+
+    // ==========================
+    // Pie chart for cluster mix
+    // ==========================
+    const pieSvg = d3.select("#cluster-pie");
+    const pieWidth = 260;
+    const pieHeight = 260;
+    const pieRadius = Math.min(pieWidth, pieHeight) / 2 - 6;
+
+    const pieGroup = pieSvg
+      .attr("viewBox", `0 0 ${pieWidth} ${pieHeight}`)
+      .append("g")
+      .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
+
+    const pieLegendEl = document.getElementById("pie-legend");
+
+    if (selectedCluster) {
+      const entries = Object.entries(selectedCluster.mix);
+      const data = entries.map(([name, value]) => ({ name, value }));
+
+      const color = d3.scaleOrdinal()
+        .domain(data.map(d => d.name))
+        .range(["#6366f1", "#22c55e", "#f97316", "#e11d48", "#0ea5e9", "#a855f7", "#84cc16", "#eab308", "#64748b"]);
+
+      const pie = d3.pie()
+        .value(d => d.value)
+        .sort(null);
+
+      const arc = d3.arc()
+        .innerRadius(pieRadius * 0.45)
+        .outerRadius(pieRadius);
+
+      const arcs = pieGroup.selectAll("path")
+        .data(pie(data))
+        .enter()
+        .append("path")
+        .attr("d", arc)
+        .attr("fill", d => color(d.data.name))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.2);
+
+      pieLegendEl.innerHTML = "";
+      data.forEach(d => {
+        const percent = (d.value * 100).toFixed(1);
+        const row = document.createElement("div");
+        row.className = "pie-legend-item";
+        const swatch = document.createElement("span");
+        swatch.className = "pie-legend-swatch";
+        swatch.style.backgroundColor = color(d.name);
+        const text = document.createElement("span");
+        text.textContent = `${d.name}: ${percent}%`;
+        row.appendChild(swatch);
+        row.appendChild(text);
+        pieLegendEl.appendChild(row);
+      });
+    } else {
+      pieSvg.style("display", "none");
+      pieLegendEl.textContent = "No cluster information is available for this country.";
+    }
+
+    // ==========================
+    // Left globe highlighting same-cluster countries
+    // ==========================
+    const globeSvg = d3.select("#country-globe-svg");
+    const globeNode = globeSvg.node();
+    const rect = globeNode.getBoundingClientRect();
+    const globeWidth = rect.width || globeNode.clientWidth || 520;
+    const globeHeight = rect.height || globeNode.clientHeight || 520;
+
+    const projection = d3.geoOrthographic()
+      .scale(Math.min(globeWidth, globeHeight) / 2.1)
+      .translate([globeWidth / 2, globeHeight / 2])
+      .clipAngle(90);
+
+    const geoPath = d3.geoPath(projection);
+    const graticule = d3.geoGraticule();
+
+    const g = globeSvg.append("g");
+
+    g.append("path")
+      .datum({ type: "Sphere" })
+      .attr("class", "globe-sphere")
+      .attr("d", geoPath);
+
+    g.append("path")
+      .datum(graticule())
+      .attr("class", "globe-graticule")
+      .attr("d", geoPath);
+
+    function renderGlobe() {
+      g.selectAll("path").attr("d", geoPath);
+    }
+
+    function renderCountries(world) {
+      const features = world.features;
+      const group = g.append("g");
+
+      group.selectAll("path")
+        .data(features)
+        .enter()
+        .append("path")
+        .attr("class", d => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const inSameCluster = selectedCluster && clusterByIso3[iso3] === selectedCluster.id;
+          let cls = "globe-country";
+          if (inSameCluster) cls += " globe-country--highlight";
+          if (iso3 === selectedIso3) cls += " globe-country--selected";
+          return cls;
+        })
+        .attr("d", geoPath)
+        .attr("fill", d => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const inSameCluster = selectedCluster && clusterByIso3[iso3] === selectedCluster.id;
+          if (inSameCluster) return "#1b9e77";
+          return "#e0e0e0";
+        });
+    }
+
+    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(world => {
+      if (!world || !world.features) {
+        console.error("World map data is not in the expected format", world);
+        return;
+      }
+      renderCountries(world);
+      renderGlobe();
+    }).catch(err => {
+      console.error("Failed to load world geojson for country view", err);
+    });
+    // ==========================
+    // Rotation & drag interaction for country globe
+    // ==========================
+    let isDraggingGlobe = false;
+    let lastRotation = projection.rotate();
+    let lastPos = null;
+
+    function updateRotation(lambda, phi) {
+      projection.rotate([lambda, phi]);
+      renderGlobe();
+    }
+
+    let baseLambda = 0;
+    let basePhi = -15;
+    updateRotation(baseLambda, basePhi);
+
+    const rotationSpeedDegPerMs = 0.01; // match main globe speed (~5°/s)
+    let lastTickTime = Date.now();
+
+    const rotationInterval = d3.interval(() => {
+      if (isDraggingGlobe) {
+        lastTickTime = Date.now();
+        return;
+      }
+      const now = Date.now();
+      const dt = now - lastTickTime;
+      lastTickTime = now;
+      const deltaLambda = dt * rotationSpeedDegPerMs;
+      baseLambda = (baseLambda + deltaLambda) % 360;
+      updateRotation(baseLambda, basePhi);
+    }, 60);
+
+    const globeDrag = d3.drag()
+      .on("start", (event) => {
+        isDraggingGlobe = true;
+        lastRotation = projection.rotate();
+        lastPos = [event.x, event.y];
+      })
+      .on("drag", (event) => {
+        if (!lastPos) return;
+        const dx = event.x - lastPos[0];
+        const dy = event.y - lastPos[1];
+        const sensitivity = 0.25;
+        const lambda = lastRotation[0] + dx * sensitivity;
+        const phi = Math.max(-80, Math.min(80, lastRotation[1] - dy * sensitivity));
+        baseLambda = lambda;
+        basePhi = phi;
+        updateRotation(lambda, phi);
+      })
+      .on("end", () => {
+        isDraggingGlobe = false;
+        lastPos = null;
+      });
+
+    globeSvg.call(globeDrag);
+
+  </script>
+</body>
+</html>

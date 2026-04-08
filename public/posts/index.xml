@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 07 Apr 2026 19:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 08 Apr 2026 00:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DDA3003 · Global renewables D3 globe</title>
+      <link>http://localhost:1313/posts/dda3003/</link>
+      <pubDate>Wed, 08 Apr 2026 00:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/dda3003/</guid>
+      <description>Entry point to the DDA3003 global renewables share interactive D3 globe.</description>
+    </item>
     <item>
       <title>🎓 LGU 选课 AI 助手</title>
       <link>http://localhost:1313/posts/courseai/</link>
@@ -76,7 +83,7 @@
       <link>http://localhost:1313/posts/history-today/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/history-today/</guid>
-      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-07)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2022&lt;/strong&gt; — Ketanji Brown Jackson is confirmed for the Supreme Court of the United States, becoming the first black female justice.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2021&lt;/strong&gt; — COVID-19 pandemic: The Centers for Disease Control and Prevention announces that the SARS-CoV-2 Alpha variant has become the dominant strain of COVID-19 in the United States.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2020&lt;/strong&gt; — COVID-19 pandemic: China ends its lockdown in Wuhan.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2020&lt;/strong&gt; — COVID-19 pandemic: Acting Secretary of the Navy Thomas Modly resigns for his handling of the COVID-19 pandemic on USS Theodore Roosevelt and the dismissal of Brett Crozier.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2018&lt;/strong&gt; — Former Brazilian president, Luiz Inácio Lula da Silva, is arrested for corruption by determination of Judge Sérgio Moro, from the &amp;#34;Car-Wash Operation&amp;#34;. Lula stayed imprisoned for 580 days, after being released by the Brazilian Supreme Court.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
+      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-08)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2024&lt;/strong&gt; — Solar eclipse of April 8, 2024: A total solar eclipse takes place at the Moon&amp;#39;s ascending node, visible across North America.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2020&lt;/strong&gt; — Bernie Sanders ends his presidential campaign, leaving Joe Biden as the Democratic Party&amp;#39;s nominee.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2014&lt;/strong&gt; — Windows XP reaches its standard End Of Life and is no longer supported.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2010&lt;/strong&gt; — U.S. President Barack Obama and Russian President Dmitry Medvedev sign the New START Treaty.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2005&lt;/strong&gt; — A solar eclipse occurs, visible over areas of the Pacific Ocean and Latin American countries such as Costa Rica, Panama, Colombia and Venezuela.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
