@@ -127,6 +127,104 @@
     .dda-tooltip strong {
       font-weight: 600;
     }
+    .dda-linechart-toggle {
+      position: absolute;
+      left: 1.5rem;
+      bottom: 1.5rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      background: #ffffff;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: #111827;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      z-index: 15;
+    }
+    .dda-linechart-toggle:hover {
+      background: rgba(148, 163, 184, 0.12);
+    }
+
+    .dda-linechart-panel {
+      position: absolute;
+      inset: 0.75rem;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+      border: 1px solid rgba(0,0,0,0.08);
+      display: none;
+      flex-direction: column;
+      padding: 0.9rem 1.1rem 1.1rem;
+      z-index: 20;
+    }
+    .dda-linechart-panel--visible {
+      display: flex;
+    }
+    .dda-linechart-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .dda-linechart-back {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: none;
+      background: #e5e7eb;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .dda-linechart-back:hover {
+      background: #d1d5db;
+    }
+    .dda-linechart-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+    .dda-linechart-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      font-size: 0.8rem;
+    }
+    .dda-linechart-controls label {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .dda-linechart-controls select {
+      font-size: 0.8rem;
+      padding: 0.15rem 0.3rem;
+    }
+    .dda-linechart-draw {
+      padding: 0.25rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      background: #111827;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .dda-linechart-draw:hover {
+      background: #020617;
+    }
+    .dda-linechart-svg {
+      width: 100%;
+      height: 360px;
+      margin-top: 0.3rem;
+    }
+    .dda-linechart-empty {
+      font-size: 0.8rem;
+      color: #666666;
+      margin-top: 0.3rem;
+    }
     .dda-slider-section {
       margin-top: 1.5rem;
       padding: 1rem 1.25rem 0.75rem;
@@ -245,6 +343,28 @@
           <span>30%+</span>
         </div>
       </div>
+      <button id="dda-linechart-toggle" class="dda-linechart-toggle" type="button">Line chart</button>
+
+      <div id="dda-linechart-panel" class="dda-linechart-panel">
+        <div class="dda-linechart-header">
+          <button id="dda-linechart-back" class="dda-linechart-back" type="button">&#8592;</button>
+          <div class="dda-linechart-title">Renewables share over time (up to 3 countries)</div>
+        </div>
+        <div class="dda-linechart-controls">
+          <label>Country 1:
+            <select id="dda-lc-country1"></select>
+          </label>
+          <label>Country 2:
+            <select id="dda-lc-country2"></select>
+          </label>
+          <label>Country 3:
+            <select id="dda-lc-country3"></select>
+          </label>
+          <button id="dda-lc-draw" class="dda-linechart-draw" type="button">Draw</button>
+        </div>
+        <svg id="dda-linechart-svg" class="dda-linechart-svg"></svg>
+        <div id="dda-linechart-empty" class="dda-linechart-empty">Select up to three countries and click "Draw" to see their renewable energy share over time.</div>
+      </div>
     </section>
 
     <section class="dda-slider-section">
@@ -310,6 +430,15 @@
     // ==========================
     const yearSlider = document.getElementById("dda-year-slider");
     const playButton = document.getElementById("dda-play-toggle");
+    const linechartToggle = document.getElementById("dda-linechart-toggle");
+    const linechartPanel = document.getElementById("dda-linechart-panel");
+    const linechartBack = document.getElementById("dda-linechart-back");
+    const lcCountry1 = document.getElementById("dda-lc-country1");
+    const lcCountry2 = document.getElementById("dda-lc-country2");
+    const lcCountry3 = document.getElementById("dda-lc-country3");
+    const lcDrawBtn = document.getElementById("dda-lc-draw");
+    const lcSvg = d3.select("#dda-linechart-svg");
+    const lcEmpty = document.getElementById("dda-linechart-empty");
     const yearLabel = document.getElementById("dda-current-year");
     const yearMinLabel = document.getElementById("dda-year-min");
     const yearMaxLabel = document.getElementById("dda-year-max");
@@ -319,6 +448,7 @@
     let years = [];
     let currentYear = null;
     let dataByYearAndCode = new Map(); // Map<year, Map<code, { value, name }>>
+    let countryNameByCode = new Map(); // Map<code, name>
 
     let valueMin = Infinity;
     let valueMax = -Infinity;
@@ -430,6 +560,135 @@
       tooltipEl.style.opacity = "0";
     }
 
+    function showLinechartPanel() {
+      if (!linechartPanel) return;
+      linechartPanel.classList.add("dda-linechart-panel--visible");
+      hideTooltip();
+    }
+
+    function hideLinechartPanel() {
+      if (!linechartPanel) return;
+      linechartPanel.classList.remove("dda-linechart-panel--visible");
+    }
+
+    function populateCountrySelects() {
+      if (!lcCountry1 || !lcCountry2 || !lcCountry3) return;
+      if (!countryNameByCode.size) return;
+
+      const options = Array.from(countryNameByCode.entries())
+        .sort((a, b) => a[1].localeCompare(b[1]));
+
+      [lcCountry1, lcCountry2, lcCountry3].forEach(select => {
+        if (!select) return;
+        select.innerHTML = "";
+        const emptyOpt = document.createElement("option");
+        emptyOpt.value = "";
+        emptyOpt.textContent = "(none)";
+        select.appendChild(emptyOpt);
+        options.forEach(([code, name]) => {
+          const opt = document.createElement("option");
+          opt.value = code;
+          opt.textContent = `${name} (${code})`;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function drawLineChartForCountries(codes) {
+      if (!codes.length || !years.length) {
+        if (lcEmpty) lcEmpty.style.display = "block";
+        lcSvg.selectAll("*").remove();
+        return;
+      }
+      if (lcEmpty) lcEmpty.style.display = "none";
+
+      const svgNode = lcSvg.node();
+      const width = svgNode.clientWidth || 800;
+      const height = svgNode.clientHeight || 360;
+      lcSvg.attr("viewBox", `0 0 ${width} ${height}`);
+      lcSvg.selectAll("*").remove();
+
+      const margin = { top: 32, right: 110, bottom: 40, left: 56 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const g = lcSvg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const xScale = d3.scaleLinear()
+        .domain(d3.extent(years))
+        .range([0, innerWidth]);
+
+      const allValues = [];
+      const series = codes.map(code => {
+        const name = countryNameByCode.get(code) || code;
+        const values = years.map(year => {
+          const rec = getCountryValue(year, code);
+          const v = rec && !isNaN(rec.value) ? rec.value : null;
+          if (v != null) allValues.push(v);
+          return { year, value: v };
+        });
+        return { code, name, values };
+      });
+
+      const maxVal = allValues.length ? d3.max(allValues) : 1;
+      const yScale = d3.scaleLinear()
+        .domain([0, maxVal * 1.05])
+        .nice()
+        .range([innerHeight, 0]);
+
+      const line = d3.line()
+        .defined(d => d.value != null)
+        .x(d => xScale(d.year))
+        .y(d => yScale(d.value));
+
+      const color = d3.scaleOrdinal()
+        .domain(codes)
+        .range(["#2563eb", "#16a34a", "#f97316"]);
+
+      g.append("g")
+        .attr("transform", `translate(0,${innerHeight})`)
+        .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
+
+      g.append("g")
+        .call(d3.axisLeft(yScale));
+
+      g.append("text")
+        .attr("x", -innerHeight / 2)
+        .attr("y", -40)
+        .attr("transform", "rotate(-90)")
+        .attr("text-anchor", "middle")
+        .attr("font-size", 10)
+        .attr("fill", "#374151")
+        .text("Renewables share (%)");
+
+      series.forEach(s => {
+        g.append("path")
+          .datum(s.values)
+          .attr("fill", "none")
+          .attr("stroke", color(s.code))
+          .attr("stroke-width", 2)
+          .attr("d", line);
+      });
+
+      const legend = g.append("g")
+        .attr("transform", `translate(${innerWidth + 16}, 4)`);
+
+      series.forEach((s, i) => {
+        const row = legend.append("g")
+          .attr("transform", `translate(0, ${i * 18})`);
+        row.append("rect")
+          .attr("width", 10)
+          .attr("height", 10)
+          .attr("fill", color(s.code));
+        row.append("text")
+          .attr("x", 14)
+          .attr("y", 9)
+          .attr("font-size", 10)
+          .text(`${s.name} (${s.code})`);
+      });
+    }
+
     // ==========================
     // 加载数据：GeoJSON + CSV
     // ==========================
@@ -461,6 +720,10 @@
           if (value > valueMax) valueMax = value;
         }
 
+        if (code && entity && !countryNameByCode.has(code)) {
+          countryNameByCode.set(code, entity);
+        }
+
         if (!dataByYearAndCode.has(year)) {
           dataByYearAndCode.set(year, new Map());
         }
@@ -472,6 +735,9 @@
         console.error("No valid yearly data parsed from CSV");
         return;
       }
+
+      // Populate line chart country selectors once we know the countries
+      populateCountrySelects();
 
       // Color scale domain: more granular, only 30%+ is pure green
       valueMin = 0;
@@ -629,6 +895,27 @@
       });
 
     globeSvg.call(globeDrag);
+
+    if (linechartToggle) {
+      linechartToggle.addEventListener("click", () => {
+        showLinechartPanel();
+      });
+    }
+
+    if (linechartBack) {
+      linechartBack.addEventListener("click", () => {
+        hideLinechartPanel();
+      });
+    }
+
+    if (lcDrawBtn) {
+      lcDrawBtn.addEventListener("click", () => {
+        const codes = [lcCountry1.value, lcCountry2.value, lcCountry3.value]
+          .filter((v, idx, arr) => v && arr.indexOf(v) === idx) // non-empty & unique
+          .slice(0, 3);
+        drawLineChartForCountries(codes);
+      });
+    }
   </script>
 </body>
 </html>
