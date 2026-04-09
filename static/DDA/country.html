@@ -140,6 +140,10 @@
       stroke-width: 0.5px;
       cursor: pointer;
     }
+    .tile-country:hover {
+      stroke-width: 1.0px;
+      stroke: #111827;
+    }
     .tile-country--highlight {
       fill: #1b9e77 !important;
     }
@@ -1421,81 +1425,95 @@
       tileSvg.attr("viewBox", `0 0 ${width} ${height}`);
       tileSvg.selectAll("*").remove();
 
-      const rowsGrid = 15;
-      const colsGrid = 30;
-      const cellSize = Math.min(width / colsGrid, height / rowsGrid);
-      const xOffset = (width - colsGrid * cellSize) / 2;
-      const yOffset = (height - rowsGrid * cellSize) / 2;
+      // 为了让国家页的 tile map 与主页完全一致，这里也使用
+      // world-tile-grid.json 模板来确定每个国家的方块位置。
 
-      const centroids = world.features.map(f => ({
-        feature: f,
-        iso3: (f.properties && (f.properties.iso_a3 || f.properties.ISO_A3)) || f.id,
-        name: (f.properties && (f.properties.name || f.properties.ADMIN)) || (f.id || "")
-      })).filter(d => d.iso3);
-
-      // Match the global tile grid: fixed world extent and column-based placement
-      const lonScale = d3.scaleLinear().domain([-180, 180]).range([1, colsGrid - 2]);
-      const latScale = d3.scaleLinear().domain([80, -60]).range([1, rowsGrid - 2]);
-
-      const occupied = new Set();
-      function placeInColumn(col, row) {
-        col = Math.max(0, Math.min(colsGrid - 1, col));
-        row = Math.max(0, Math.min(rowsGrid - 1, row));
-        for (let r = row; r < rowsGrid; r++) {
-          const key = `${col},${r}`;
-          if (!occupied.has(key)) return [col, r];
-        }
-        for (let r = row - 1; r >= 0; r--) {
-          const key = `${col},${r}`;
-          if (!occupied.has(key)) return [col, r];
-        }
-        return null;
+      function nameKey(str) {
+        return String(str)
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z]/g, "");
       }
 
-      tilePositionsByIso3 = new Map();
-      centroids.forEach(d => {
-        const [lon, lat] = d3.geoCentroid(d.feature);
-        let col = Math.round(lonScale(lon));
-        let row = Math.round(latScale(lat));
-        const cell = placeInColumn(col, row);
-        if (!cell) return;
-        const [c, r] = cell;
-        occupied.add(`${c},${r}`);
-        tilePositionsByIso3.set(d.iso3, { col: c, row: r, name: d.name });
+      // 从 GeoJSON 中构建 name -> ISO3 的映射，供模板匹配使用
+      const nameToCode = new Map();
+      world.features.forEach(f => {
+        const props = f.properties || {};
+        const name = props.name || props.ADMIN;
+        const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+        if (!name || !iso3) return;
+        const k = nameKey(name);
+        if (!nameToCode.has(k)) {
+          nameToCode.set(k, iso3);
+        }
       });
 
-      const tileData = Array.from(tilePositionsByIso3.entries()).map(([iso3, pos]) => ({
-        code: iso3,
-        name: pos.name,
-        col: pos.col,
-        row: pos.row
-      }));
+      d3.json("world-tile-grid.json").then(tileTemplate => {
+        if (!Array.isArray(tileTemplate) || !tileTemplate.length) return;
 
-      const gTile = tileSvg.append("g");
+        const maxRow = d3.max(tileTemplate, d => d.row);
+        const maxCol = d3.max(tileTemplate, d => d.col);
+        const rowsGrid = maxRow + 1;
+        const colsGrid = maxCol + 1;
 
-      tileRects = gTile.selectAll("rect")
-        .data(tileData, d => d.code)
-        .enter()
-        .append("rect")
-        .attr("class", "tile-country")
-        .attr("rx", 2)
-        .attr("ry", 2)
-        .attr("x", d => xOffset + d.col * cellSize + 1)
-        .attr("y", d => yOffset + d.row * cellSize + 1)
-        .attr("width", cellSize - 2)
-        .attr("height", cellSize - 2)
-        .on("mousemove", (event, d) => {
-          const name = d.name || d.code || "Unknown country";
-          const iso3 = d.code || "";
-          showCountryTooltip(event, name, iso3);
-        })
-        .on("mouseout", () => {
-          hideCountryTooltip();
-        })
-        .on("click", (event, d) => {
-          const target = `country.html?code=${encodeURIComponent(d.code)}`;
-          window.location.href = target;
+        const cellSize = Math.min(width / colsGrid, height / rowsGrid);
+        const xOffset = (width - colsGrid * cellSize) / 2;
+        const yOffset = (height - rowsGrid * cellSize) / 2;
+
+        tilePositionsByIso3 = new Map();
+
+        const tileData = [];
+        tileTemplate.forEach(entry => {
+          const key = nameKey(entry.name);
+          let iso3 = nameToCode.get(key) || null;
+          if (!iso3) {
+            for (const [k, code] of nameToCode.entries()) {
+              if (k.includes(key) || key.includes(k)) {
+                iso3 = code;
+                break;
+              }
+            }
+          }
+
+          if (iso3) {
+            tilePositionsByIso3.set(iso3, { col: entry.col, row: entry.row, name: entry.name });
+          }
+
+          tileData.push({ code: iso3, name: entry.name, col: entry.col, row: entry.row });
         });
+
+        const gTile = tileSvg.append("g");
+
+        tileRects = gTile.selectAll("rect")
+          .data(tileData)
+          .enter()
+          .append("rect")
+          .attr("class", "tile-country")
+          .attr("rx", 2)
+          .attr("ry", 2)
+          .attr("x", d => xOffset + d.col * cellSize + 1)
+          .attr("y", d => yOffset + d.row * cellSize + 1)
+          .attr("width", cellSize - 2)
+          .attr("height", cellSize - 2)
+          .on("mousemove", (event, d) => {
+            const name = d.name || d.code || "Unknown country";
+            const iso3 = d.code || "";
+            showCountryTooltip(event, name, iso3);
+          })
+          .on("mouseout", () => {
+            hideCountryTooltip();
+          })
+          .on("click", (event, d) => {
+            if (!d.code) return;
+            const target = `country.html?code=${encodeURIComponent(d.code)}`;
+            window.location.href = target;
+          });
+
+        // 模板加载完之后再同步一次聚类高亮
+        updateCountryHighlighting();
+      }).catch(err => {
+        console.error("Failed to load world tile grid template for country view", err);
+      });
     }
 
     // ==========================
