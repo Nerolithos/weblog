@@ -20,10 +20,11 @@ featured_image: "/images/gab.jpg"
 - Hugo Anake 在构建时把这些数据渲染进页面；
 - GitHub Actions Bot 按定时任务跑脚本 + 触发 Cloudflare 重建整站；
 
-你需要注意：
+⚠️ 注意：
 
 1. 不要把密钥暴露到前端。
 2. 用 .gitignore 和工作流设计避免把自动生成的文件塞爆 Git 历史。
+3. 如果你使用 API (比如大模型服务)，最好在 Cloudflare 中为你的域增加一条安全规则，类型为托管质询
 
 
 
@@ -258,6 +259,15 @@ jobs:
 4. 脚本生成的内容，如果要暴露给前端，必须是**已经脱敏过的结果**：如请求 API 返回的数据本体，而不是 API 的返回 Token / Refresh Token / 私有 ID 等。
 
 (当然你也可以用 Cloudflare 的 Workers&Pages 新增一条 "Variables and Secrets" 来保存密钥)
+
+⚠️ 最后，在 Cloudflare 中为你的域增加一条 WAF 安全规则，以我的域名为例：
+
+```pseudocode
+当 (http.host eq "nero-lithos.com" or ends_with(http.host, ".nero-lithos.com"))
+然后 “托管质询“ ("Managed Challenge")
+```
+
+这个服务对于特定域是免费的，不要在仪表主页配置全局 WAF，否则要收钱。
 
 </br>
 

@@ -143,6 +143,79 @@
       border-radius: 3px;
       flex-shrink: 0;
     }
+    .country-energy-card {
+      margin-top: 1rem;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 0.9rem 1.1rem 1.1rem;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.85rem;
+      position: relative;
+    }
+    .country-energy-title {
+      margin: 0 0 0.3rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .country-energy-subtitle {
+      margin: 0 0 0.55rem;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+    .country-energy-slider-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      color: #374151;
+    }
+    .country-energy-slider-wrapper input[type="range"] {
+      flex: 1;
+    }
+    .country-energy-play-button {
+      padding: 0.26rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.6);
+      background: #111827;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .country-energy-play-button:hover {
+      background: #020617;
+    }
+    .country-energy-bar {
+      width: 100%;
+      height: 120px;
+      display: block;
+    }
+    .country-energy-empty {
+      margin-top: 0.4rem;
+      font-size: 0.78rem;
+      color: #6b7280;
+    }
+    .country-energy-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.4rem 0.6rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.78rem;
+      color: #111827;
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.12s ease-out;
+      z-index: 20;
+      white-space: nowrap;
+    }
     .country-back-arrow {
       position: fixed;
       top: 1.25rem;
@@ -179,6 +252,9 @@
       .pie-wrapper {
         justify-content: center;
       }
+      .country-energy-card {
+        margin-top: 0.85rem;
+      }
     }
   </style>
 </head>
@@ -194,6 +270,18 @@
       <div class="country-left">
         <div class="country-globe-card">
           <svg id="country-globe-svg" class="country-globe-svg"></svg>
+        </div>
+        <div class="country-energy-card">
+          <h3 class="country-energy-title">Annual Renewable vs Non-renewable Chart</h3>
+          <p class="country-energy-subtitle">The bar shows the share of nine renewable technologies and three types of non-renewable energy.</p>
+          <div class="country-energy-slider-wrapper">
+            <button id="country-energy-play-toggle" class="country-energy-play-button" type="button">▶</button>
+            <span>Year: <span id="country-energy-year-label">-</span></span>
+            <input id="country-energy-year-slider" type="range" min="0" max="0" step="1" value="0" />
+          </div>
+          <svg id="country-energy-bar" class="country-energy-bar"></svg>
+          <div id="country-energy-tooltip" class="country-energy-tooltip"></div>
+          <div id="country-energy-empty" class="country-energy-empty">Annual energy data is not available for this country.</div>
         </div>
       </div>
       <div class="country-right">
@@ -215,6 +303,7 @@
       </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script>
     // ==========================
@@ -363,6 +452,25 @@
     const selectedCluster = selectedClusterId !== undefined ? clusters[selectedClusterId] : null;
     const selectedCountryName = countryByIso3[selectedIso3] || selectedIso3 || "Unknown country";
 
+    // Elements for the annual energy bar chart
+    const energyYearLabel = document.getElementById("country-energy-year-label");
+    const energyYearSlider = document.getElementById("country-energy-year-slider");
+    const energyPlayButton = document.getElementById("country-energy-play-toggle");
+    const energyEmptyEl = document.getElementById("country-energy-empty");
+    const energyBarSvg = d3.select("#country-energy-bar");
+    const energyTooltipEl = document.getElementById("country-energy-tooltip");
+    const energyCardEl = document.querySelector(".country-energy-card");
+
+    const energyXlsxUrl = "Country_Annual_9Energy_2010_2023.xlsx";
+    let energyCountryField = null;
+    let energyYearField = null;
+    let energyDimensionFields = [];
+    let energyDataByCountry = new Map(); // Map<countryName, Array<{year, energies, sumRenewable}>>
+    let energyYearsForSelected = [];
+    let isEnergyPlaying = false;
+    let energyPlayTimer = null;
+    let energyPlayIndex = 0;
+
     // ==========================
     // Update right panel text
     // ==========================
@@ -379,6 +487,324 @@
       summaryEl.textContent = `${selectedCountryName} belongs to ${selectedCluster.label}.`;
       const peerNames = selectedCluster.countries.map(c => c.name).join(", ");
       detailEl.innerHTML = `<strong>Key characteristics:</strong> ${selectedCluster.description}<br/><strong>Countries in this cluster (${selectedCluster.countries.length}):</strong> ${peerNames}.`;
+    }
+
+    // ==========================
+    // Annual energy bar chart (Excel source)
+    // ==========================
+
+    function parseEnergyWorkbook(rows) {
+      if (!rows || !rows.length) return;
+      const sample = rows[0];
+      const keys = Object.keys(sample);
+      keys.forEach(k => {
+        const lower = k.toLowerCase();
+        if (!energyCountryField && lower.includes("country")) {
+          energyCountryField = k;
+        } else if (!energyYearField && lower.includes("year")) {
+          energyYearField = k;
+        }
+      });
+
+      if (!energyCountryField || !energyYearField) {
+        console.warn("Could not detect country/year fields in energy workbook");
+        return;
+      }
+
+      energyDimensionFields = keys.filter(k => k !== energyCountryField && k !== energyYearField);
+
+      rows.forEach(row => {
+        const country = row[energyCountryField];
+        const yearRaw = row[energyYearField];
+        const year = +yearRaw;
+        if (!country || !year) return;
+
+        const energies = {};
+        let sumRenewable = 0;
+        energyDimensionFields.forEach(f => {
+          const v = row[f];
+          const num = v === undefined || v === null || v === "" ? NaN : +v;
+          if (!isNaN(num)) {
+            energies[f] = num;
+            sumRenewable += num;
+          }
+        });
+
+        if (!energyDataByCountry.has(country)) {
+          energyDataByCountry.set(country, []);
+        }
+        energyDataByCountry.get(country).push({ year, energies, sumRenewable });
+      });
+
+      // Sort years within each country
+      energyDataByCountry.forEach(list => {
+        list.sort((a, b) => a.year - b.year);
+      });
+    }
+
+    function drawEnergyBar(countryName, year) {
+      if (!energyBarSvg || !energyBarSvg.node()) return;
+      const records = energyDataByCountry.get(countryName);
+      if (!records || !records.length) {
+        if (energyEmptyEl) energyEmptyEl.style.display = "block";
+        energyBarSvg.selectAll("*").remove();
+        if (energyYearLabel) energyYearLabel.textContent = "-";
+        return;
+      }
+
+      const rec = records.find(r => r.year === year) || records[records.length - 1];
+      if (energyYearLabel) energyYearLabel.textContent = rec.year;
+
+      const node = energyBarSvg.node();
+      const width = node.clientWidth || 520;
+      const height = node.clientHeight || 120;
+      energyBarSvg
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .selectAll("*").remove();
+
+      if (energyEmptyEl) energyEmptyEl.style.display = "none";
+
+      const margin = { top: 18, right: 10, bottom: 18, left: 110 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const g = energyBarSvg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      // Detect whether the original data is in 0–1 or 0–100 scale
+      const rawSumAll = d3.sum(energyDimensionFields, f => rec.energies[f] || 0);
+      const useFractionBase = rawSumAll > 0 && rawSumAll <= 1.01;
+      const factor = useFractionBase ? 100 : 1;
+
+      // Only treat specific technologies as renewables; exclude Renewable_Total
+      const renewableFieldSet = new Set([
+        "Nuclear",
+        "Hydro",
+        "Solar",
+        "Wind",
+        "Geothermal",
+        "Combustible_Renewables",
+        "Other_Renewables"
+      ]);
+
+      const renewableFields = energyDimensionFields.filter(f => renewableFieldSet.has(f));
+
+      // Detect non‑renewable detail fields by name patterns so that
+      // Coal / Natural Gas / Oil are all captured even if the exact
+      // column names differ slightly (e.g. "Natural_gas").
+      const coalField = energyDimensionFields.find(f => {
+        const l = f.toLowerCase();
+        return l.includes("coal");
+      });
+      const gasField = energyDimensionFields.find(f => {
+        const l = f.toLowerCase();
+        return l.includes("natural") && l.includes("gas");
+      });
+      const oilField = energyDimensionFields.find(f => {
+        const l = f.toLowerCase();
+        return l.includes("oil") && !l.includes("natural");
+      });
+
+      const segmentsRenewables = renewableFields.map(f => {
+        const v = rec.energies[f] || 0;
+        return { name: f, value: v * factor };
+      });
+
+      const nonRenewableComponents = [];
+      if (coalField) {
+        const v = rec.energies[coalField] || 0;
+        nonRenewableComponents.push({ name: "Coal", value: v * factor });
+      }
+      if (gasField) {
+        const v = rec.energies[gasField] || 0;
+        nonRenewableComponents.push({ name: "Natural Gas", value: v * factor });
+      }
+      if (oilField) {
+        const v = rec.energies[oilField] || 0;
+        nonRenewableComponents.push({ name: "Oil", value: v * factor });
+      }
+
+      const sumRenewableSegments = d3.sum(segmentsRenewables, d => d.value);
+      let sumNonRenewableSegments = d3.sum(nonRenewableComponents, d => d.value);
+
+      // Fallback: if non-renewable components are missing, treat remainder as non-renewables
+      if (!sumNonRenewableSegments && sumRenewableSegments) {
+        sumNonRenewableSegments = Math.max(0, 100 - sumRenewableSegments);
+      }
+
+      const segments = [...segmentsRenewables, { name: "Non-renewables", value: sumNonRenewableSegments }];
+
+      const total = sumRenewableSegments + sumNonRenewableSegments;
+      if (total <= 0) {
+        if (energyEmptyEl) energyEmptyEl.style.display = "block";
+        return;
+      }
+
+      const x = d3.scaleLinear()
+        .domain([0, total])
+        .range([0, innerWidth]);
+
+      const y = d3.scaleBand()
+        .domain([countryName])
+        .range([0, innerHeight])
+        .paddingInner(0.2);
+
+      const barHeight = y.bandwidth();
+
+      const color = d3.scaleOrdinal()
+        .domain(segmentsRenewables.map(d => d.name))
+        .range([
+          "#22c55e", "#0ea5e9", "#a855f7", "#f97316", "#e11d48",
+          "#6366f1", "#84cc16", "#facc15", "#10b981"
+        ]);
+
+      const nonRenewableColor = "#f472b6"; // pink for non-renewables
+
+      let offset = 0;
+      segments.forEach(seg => {
+        const segWidth = x(seg.value);
+        const fillColor = seg.name === "Non-renewables" ? nonRenewableColor : color(seg.name);
+
+        const percent = (seg.value / total) * 100;
+
+        const rect = g.append("rect")
+          .attr("x", offset)
+          .attr("y", y(countryName))
+          .attr("width", segWidth)
+          .attr("height", barHeight)
+          .attr("fill", fillColor);
+
+        if (energyTooltipEl && energyCardEl && percent > 0 && segWidth > 0) {
+          rect
+            .on("mousemove", (event) => {
+              const cardRect = energyCardEl.getBoundingClientRect();
+              const xPos = event.clientX - cardRect.left;
+              const yPos = event.clientY - cardRect.top;
+              energyTooltipEl.style.left = `${xPos}px`;
+              energyTooltipEl.style.top = `${yPos}px`;
+
+              if (seg.name === "Non-renewables" && nonRenewableComponents.length) {
+                const lines = nonRenewableComponents.map(c => {
+                  const pct = (c.value / total) * 100;
+                  return `${c.name}: ${pct.toFixed(1)}%`;
+                });
+                energyTooltipEl.innerHTML = `${rec.year} · Non-renewables<br>${lines.join("<br>")}`;
+              } else {
+                energyTooltipEl.innerHTML = `${rec.year} · ${seg.name}: ${percent.toFixed(1)}%`;
+              }
+
+              energyTooltipEl.style.opacity = "1";
+            })
+            .on("mouseout", () => {
+              energyTooltipEl.style.opacity = "0";
+            });
+        }
+
+        offset += segWidth;
+      });
+
+      // Determine the total renewable share for the underline.
+      // Draw country label on the left instead of a full axis frame
+      g.append("text")
+        .attr("x", -4)
+        .attr("y", y(countryName) + barHeight / 2 + 3)
+        .attr("text-anchor", "end")
+        .attr("font-size", 11)
+        .attr("fill", "#111827")
+        .text(countryName);
+
+    }
+
+    function applyEnergyYearByIndex(index) {
+      if (!energyYearsForSelected.length) return;
+      const clamped = Math.max(0, Math.min(energyYearsForSelected.length - 1, index));
+      energyPlayIndex = clamped;
+      energyYearSlider.value = String(clamped);
+      const year = energyYearsForSelected[clamped];
+      drawEnergyBar(selectedCountryName, year);
+    }
+
+    function initEnergyChart() {
+      if (!energyBarSvg || !energyBarSvg.node()) return;
+      fetch(energyXlsxUrl)
+        .then(resp => resp.arrayBuffer())
+        .then(buf => {
+          const workbook = XLSX.read(buf, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
+          parseEnergyWorkbook(rows);
+
+          const records = energyDataByCountry.get(selectedCountryName);
+          if (!records || !records.length) {
+            if (energyEmptyEl) energyEmptyEl.style.display = "block";
+            return;
+          }
+
+          energyYearsForSelected = records.map(r => r.year).sort((a, b) => a - b);
+          if (!energyYearsForSelected.length) return;
+
+          energyYearSlider.min = 0;
+          energyYearSlider.max = energyYearsForSelected.length - 1;
+          energyYearSlider.step = 1;
+          energyYearSlider.value = energyYearsForSelected.length - 1;
+
+          const initialYear = energyYearsForSelected[energyYearsForSelected.length - 1];
+          applyEnergyYearByIndex(energyYearsForSelected.length - 1);
+
+          energyYearSlider.addEventListener("input", () => {
+            if (isEnergyPlaying) {
+              if (energyPlayTimer !== null) {
+                clearInterval(energyPlayTimer);
+                energyPlayTimer = null;
+              }
+              isEnergyPlaying = false;
+              if (energyPlayButton) energyPlayButton.textContent = "▶";
+            }
+            const idx = +energyYearSlider.value;
+            applyEnergyYearByIndex(idx);
+          });
+
+          function stopEnergyPlayback() {
+            if (energyPlayTimer !== null) {
+              clearInterval(energyPlayTimer);
+              energyPlayTimer = null;
+            }
+            isEnergyPlaying = false;
+            if (energyPlayButton) energyPlayButton.textContent = "▶";
+          }
+
+          if (energyPlayButton) {
+            energyPlayButton.addEventListener("click", () => {
+              if (!energyYearsForSelected.length) return;
+              if (!isEnergyPlaying) {
+                isEnergyPlaying = true;
+                energyPlayButton.textContent = "❚❚";
+                const currentIndex = Number.isFinite(+energyYearSlider.value) ? +energyYearSlider.value : 0;
+                applyEnergyYearByIndex(
+                  currentIndex >= 0 && currentIndex < energyYearsForSelected.length ? currentIndex : 0
+                );
+
+                energyPlayTimer = setInterval(() => {
+                  let nextIndex = energyPlayIndex + 1;
+                  if (nextIndex >= energyYearsForSelected.length) {
+                    nextIndex = 0;
+                  }
+                  applyEnergyYearByIndex(nextIndex);
+                }, 900);
+              } else {
+                stopEnergyPlayback();
+              }
+            });
+          }
+        })
+        .catch(err => {
+          console.error("Failed to load energy Excel data", err);
+          if (energyEmptyEl) {
+            energyEmptyEl.style.display = "block";
+            energyEmptyEl.textContent = "Failed to load annual energy data.";
+          }
+        });
     }
 
     // ==========================
@@ -565,6 +991,9 @@
       });
 
     globeSvg.call(globeDrag);
+
+    // Initialize annual energy bar chart
+    initEnergyChart();
 
   </script>
 </body>

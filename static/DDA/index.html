@@ -258,16 +258,19 @@
       flex: 1;
     }
     .dda-play-button {
-      padding: 0.25rem 0.7rem;
+      padding: 0.28rem 0.8rem;
       border-radius: 999px;
-      border: 1px solid rgba(15, 23, 42, 0.18);
-      background: #ffffff;
-      font-size: 0.75rem;
+      border: 1px solid rgba(15, 23, 42, 0.6);
+      background: #111827;
+      font-size: 0.9rem;
       cursor: pointer;
-      color: #111827;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .dda-play-button:hover {
-      background: rgba(148, 163, 184, 0.12);
+      background: #020617;
     }
     .dda-info-panel {
       margin-top: 0.9rem;
@@ -377,7 +380,7 @@
         </div>
       </div>
       <div class="dda-slider-wrapper">
-        <button id="dda-play-toggle" class="dda-play-button" type="button">Play</button>
+        <button id="dda-play-toggle" class="dda-play-button" type="button">▶</button>
         <span id="dda-year-min">-</span>
         <input id="dda-year-slider" type="range" min="0" max="0" step="1" value="0" />
         <span id="dda-year-max">-</span>
@@ -765,14 +768,14 @@
       yearLabel.textContent = initialYear;
 
       yearSlider.addEventListener("input", () => {
-        if (isPlayingYears) {
+          if (isPlayingYears) {
           // Stop playback when user manually adjusts the slider
           if (playTimer !== null) {
             clearInterval(playTimer);
             playTimer = null;
           }
           isPlayingYears = false;
-          playButton.textContent = "Play";
+          playButton.textContent = "▶";
         }
         const idx = +yearSlider.value;
         applyYearByIndex(idx);
@@ -784,7 +787,7 @@
           playTimer = null;
         }
         isPlayingYears = false;
-        if (playButton) playButton.textContent = "Play";
+        if (playButton) playButton.textContent = "▶";
       }
 
       if (playButton) {
@@ -792,7 +795,7 @@
           if (!years.length) return;
           if (!isPlayingYears) {
             isPlayingYears = true;
-            playButton.textContent = "Pause";
+            playButton.textContent = "❚❚";
             // Start from current slider position or earliest year
             const currentIndex = Number.isFinite(+yearSlider.value) ? +yearSlider.value : 0;
             applyYearByIndex(currentIndex >= 0 && currentIndex < years.length ? currentIndex : 0);
