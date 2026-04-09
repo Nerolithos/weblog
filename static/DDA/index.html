@@ -72,6 +72,62 @@
       stroke-width: 1.0px;
       stroke: #111;
     }
+    .dda-search-container {
+      position: absolute;
+      left: 1.75rem;
+      top: 1.75rem;
+      z-index: 18;
+      width: 210px;
+      max-width: 55%;
+      font-size: 0.8rem;
+    }
+    .dda-search-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.25);
+      background: rgba(255,255,255,0.96);
+      color: #111827;
+      outline: none;
+    }
+    .dda-search-input::placeholder {
+      color: #9ca3af;
+    }
+    .dda-search-suggestions {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin-top: 0.25rem;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.16);
+      border: 1px solid rgba(0,0,0,0.06);
+      max-height: 240px;
+      overflow-y: auto;
+      display: none;
+    }
+    .dda-search-item {
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+    .dda-search-item span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dda-search-item-code {
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+    .dda-search-item:hover,
+    .dda-search-item--active {
+      background: #e5e7eb;
+    }
     .dda-legend {
       position: absolute;
       right: 1.75rem;
@@ -333,6 +389,16 @@
     <section class="dda-globe-wrapper">
       <svg id="dda-globe-svg" class="dda-globe-svg"></svg>
       <div id="dda-tooltip" class="dda-tooltip"></div>
+      <div class="dda-search-container">
+        <input
+          id="dda-country-search"
+          class="dda-search-input"
+          type="text"
+          placeholder="Search country..."
+          autocomplete="off"
+        />
+        <div id="dda-country-suggestions" class="dda-search-suggestions"></div>
+      </div>
       <div class="dda-legend">
         <p class="dda-legend-title">Renewables share · color legend</p>
         <div class="dda-legend-bar"></div>
@@ -447,6 +513,13 @@
     const yearMaxLabel = document.getElementById("dda-year-max");
     const infoPanel = document.getElementById("dda-info-panel");
     const tooltipEl = document.getElementById("dda-tooltip");
+
+    // Country search elements
+    const searchInput = document.getElementById("dda-country-search");
+    const searchSuggestionsEl = document.getElementById("dda-country-suggestions");
+    let searchOptions = [];
+    let searchMatches = [];
+    let searchActiveIndex = -1;
 
     let years = [];
     let currentYear = null;
@@ -693,6 +766,121 @@
     }
 
     // ==========================
+    // Country search (autocomplete + navigation)
+    // ==========================
+    function buildSearchOptions() {
+      if (!countryNameByCode.size) return;
+      searchOptions = Array.from(countryNameByCode.entries())
+        .map(([code, name]) => ({ code, name }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    function clearSearchSuggestions() {
+      if (!searchSuggestionsEl) return;
+      searchSuggestionsEl.innerHTML = "";
+      searchSuggestionsEl.style.display = "none";
+      searchMatches = [];
+      searchActiveIndex = -1;
+    }
+
+    function navigateToCountry(code) {
+      if (!code) return;
+      const target = `country.html?code=${encodeURIComponent(code)}`;
+      window.location.href = target;
+    }
+
+    function renderSearchSuggestions() {
+      if (!searchInput || !searchSuggestionsEl) return;
+      const query = searchInput.value.trim().toLowerCase();
+      clearSearchSuggestions();
+      if (!query) return;
+
+      searchMatches = searchOptions.filter(opt => {
+        const name = opt.name.toLowerCase();
+        const code = opt.code.toLowerCase();
+        return name.includes(query) || code.includes(query);
+      }).slice(0, 10);
+
+      if (!searchMatches.length) return;
+
+      searchMatches.forEach((opt, idx) => {
+        const item = document.createElement("div");
+        item.className = "dda-search-item";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = opt.name;
+        const codeSpan = document.createElement("span");
+        codeSpan.textContent = opt.code;
+        codeSpan.className = "dda-search-item-code";
+
+        item.appendChild(nameSpan);
+        item.appendChild(codeSpan);
+
+        item.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          navigateToCountry(opt.code);
+        });
+
+        searchSuggestionsEl.appendChild(item);
+      });
+
+      searchSuggestionsEl.style.display = "block";
+      searchActiveIndex = -1;
+    }
+
+    function moveSearchActive(delta) {
+      if (!searchMatches.length || !searchSuggestionsEl) return;
+      const items = Array.from(searchSuggestionsEl.children);
+      if (!items.length) return;
+
+      searchActiveIndex = (searchActiveIndex + delta + items.length) % items.length;
+      items.forEach((el, idx) => {
+        if (idx === searchActiveIndex) el.classList.add("dda-search-item--active");
+        else el.classList.remove("dda-search-item--active");
+      });
+    }
+
+    function selectActiveSearchMatch() {
+      if (!searchMatches.length) return;
+      if (searchActiveIndex < 0 || searchActiveIndex >= searchMatches.length) {
+        navigateToCountry(searchMatches[0].code);
+      } else {
+        navigateToCountry(searchMatches[searchActiveIndex].code);
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", () => {
+        renderSearchSuggestions();
+      });
+
+      searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          moveSearchActive(1);
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          moveSearchActive(-1);
+        } else if (event.key === "Enter") {
+          event.preventDefault();
+          selectActiveSearchMatch();
+        } else if (event.key === "Escape") {
+          clearSearchSuggestions();
+        }
+      });
+    }
+
+    if (searchSuggestionsEl) {
+      document.addEventListener("click", (event) => {
+        const container = document.querySelector(".dda-search-container");
+        if (!container) return;
+        if (!container.contains(event.target)) {
+          clearSearchSuggestions();
+        }
+      });
+    }
+
+    // ==========================
     // 加载数据：GeoJSON + CSV
     // ==========================
     const worldGeoJsonUrl = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson";
@@ -741,6 +929,8 @@
 
       // Populate line chart country selectors once we know the countries
       populateCountrySelects();
+      // Build autocomplete options for search
+      buildSearchOptions();
 
       // Color scale domain: more granular, only 30%+ is pure green
       valueMin = 0;
