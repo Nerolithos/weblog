@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Country Energy Cluster · D3 Globe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/css/custom.css" />
+  <link rel="stylesheet" href="../css/custom.css" />
   <style>
     body {
       margin: 0;
@@ -71,11 +71,45 @@
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
       border: 1px solid rgba(0,0,0,0.06);
     }
+    .country-view-toggle {
+      position: absolute;
+      left: 50%;
+      top: 0.9rem;
+      transform: translateX(-50%);
+      display: inline-flex;
+      background: rgba(255,255,255,0.95);
+      border-radius: 999px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border: 1px solid rgba(15,23,42,0.12);
+      overflow: hidden;
+      z-index: 10;
+      font-size: 0.8rem;
+    }
+    .country-view-toggle button {
+      padding: 0.2rem 0.8rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #374151;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+    .country-view-toggle button.country-view-toggle--active {
+      background: #111827;
+      color: #ffffff;
+    }
     .country-globe-svg {
       width: 100%;
       max-width: 520px;
       height: 520px;
       display: block;
+      margin: 0 auto;
+    }
+    .country-tile-svg {
+      width: 100%;
+      max-width: 520px;
+      height: 520px;
+      display: none;
       margin: 0 auto;
     }
     .globe-sphere {
@@ -92,12 +126,24 @@
     .globe-country {
       stroke: rgba(255, 255, 255, 0.9);
       stroke-width: 0.5px;
-      cursor: default;
+      cursor: pointer;
     }
     .globe-country--highlight {
       fill: #1b9e77 !important;
     }
     .globe-country--selected {
+      stroke: #111111;
+      stroke-width: 1.2px;
+    }
+    .tile-country {
+      stroke: #ffffff;
+      stroke-width: 0.5px;
+      cursor: pointer;
+    }
+    .tile-country--highlight {
+      fill: #1b9e77 !important;
+    }
+    .tile-country--selected {
       stroke: #111111;
       stroke-width: 1.2px;
     }
@@ -260,6 +306,22 @@
       outline: 2px solid #4b5563;
       outline-offset: 2px;
     }
+    .country-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.5rem 0.7rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.78rem;
+      color: #222;
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.12s ease-out;
+      z-index: 20;
+      white-space: nowrap;
+    }
     @media (max-width: 900px) {
       .country-layout {
         flex-direction: column;
@@ -288,7 +350,15 @@
     <section class="country-layout">
       <div class="country-left">
         <div class="country-globe-card">
+          <div class="country-view-toggle">
+            <button id="country-view-globe" type="button">Globe</button>
+            <button id="country-view-tiles" class="country-view-toggle--active" type="button">Tile map</button>
+            <button id="country-view-map" type="button">Map</button>
+          </div>
           <svg id="country-globe-svg" class="country-globe-svg"></svg>
+          <svg id="country-tile-svg" class="country-tile-svg"></svg>
+          <svg id="country-map-svg" class="country-tile-svg"></svg>
+          <div id="country-tooltip" class="country-tooltip"></div>
         </div>
         <div class="country-energy-card">
           <h3 class="country-energy-title">Annual Renewable vs Non-renewable Chart</h3>
@@ -450,6 +520,8 @@
         }
       }
     };
+
+    const VIEW_MODE_KEY = "dda_view_mode";
 
     const countryByIso3 = {};
     const clusterByIso3 = {};
@@ -957,6 +1029,7 @@
     // Left globe highlighting same-cluster countries
     // ==========================
     const globeSvg = d3.select("#country-globe-svg");
+    const mapSvg = d3.select("#country-map-svg");
     const globeNode = globeSvg.node();
     const rect = globeNode.getBoundingClientRect();
     const globeWidth = rect.width || globeNode.clientWidth || 520;
@@ -964,13 +1037,21 @@
 
     const projection = d3.geoOrthographic()
       .scale(Math.min(globeWidth, globeHeight) / 2.1)
-      .translate([globeWidth / 2, globeHeight / 2])
+      // 略微上移地球在卡片中的位置
+      .translate([globeWidth / 2, globeHeight / 2 - 20])
       .clipAngle(90);
 
+    const mapProjection = d3.geoNaturalEarth1()
+      // 在之前基础上再缩小约 20%，整体约为原来的 64%
+      .scale(Math.min(globeWidth, globeHeight) / 2.3 * 0.64)
+      .translate([globeWidth / 2, globeHeight / 2]);
+
     const geoPath = d3.geoPath(projection);
+    const mapPath = d3.geoPath(mapProjection);
     const graticule = d3.geoGraticule();
 
     const g = globeSvg.append("g");
+    const gMap = mapSvg.append("g");
 
     g.append("path")
       .datum({ type: "Sphere" })
@@ -982,11 +1063,24 @@
       .attr("class", "globe-graticule")
       .attr("d", geoPath);
 
+    const mapZoom = d3.zoom()
+      .scaleExtent([0.8, 4])
+      .on("zoom", (event) => {
+        gMap.attr("transform", event.transform);
+      });
+
+    mapSvg.call(mapZoom);
+
     let worldFeatures = null;
     let countryPathsSelection = null;
+    let mapCountryPathsSelection = null;
 
     function renderGlobe() {
       g.selectAll("path").attr("d", geoPath);
+    }
+
+    function renderMap() {
+      gMap.selectAll("path").attr("d", mapPath);
     }
 
     function updateCountryHighlighting() {
@@ -1025,6 +1119,98 @@
           if (inSameCluster) return "#1b9e77";
           return "#e0e0e0";
         });
+
+      // Sync tile colors as well if tiles are built
+      if (tileRects) {
+        tileRects
+          .attr("class", d => {
+            const iso3 = d.code;
+            let countryClusterId = null;
+            if (currentClusterYear != null) {
+              const dynId = getClusterIdForYear(currentClusterYear, iso3);
+              if (dynId !== undefined) countryClusterId = dynId;
+            }
+            if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+              countryClusterId = clusterByIso3[iso3];
+            }
+            const inSameCluster = clusterId != null && countryClusterId === clusterId;
+            let cls = "tile-country";
+            if (inSameCluster) cls += " tile-country--highlight";
+            if (iso3 === selectedIso3) cls += " tile-country--selected";
+            return cls;
+          })
+          .attr("fill", d => {
+            const iso3 = d.code;
+            let countryClusterId = null;
+            if (currentClusterYear != null) {
+              const dynId = getClusterIdForYear(currentClusterYear, iso3);
+              if (dynId !== undefined) countryClusterId = dynId;
+            }
+            if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+              countryClusterId = clusterByIso3[iso3];
+            }
+            const inSameCluster = clusterId != null && countryClusterId === clusterId;
+            if (inSameCluster) return "#1b9e77";
+            return "#e0e0e0";
+          });
+
+        // 同步平面地图上的高亮
+        if (mapCountryPathsSelection) {
+          mapCountryPathsSelection
+            .attr("class", d => {
+              const props = d.properties || {};
+              const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+              let countryClusterId = null;
+              if (currentClusterYear != null) {
+                const dynId = getClusterIdForYear(currentClusterYear, iso3);
+                if (dynId !== undefined) countryClusterId = dynId;
+              }
+              if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+                countryClusterId = clusterByIso3[iso3];
+              }
+              const inSameCluster = clusterId != null && countryClusterId === clusterId;
+              let cls = "globe-country";
+              if (inSameCluster) cls += " globe-country--highlight";
+              if (iso3 === selectedIso3) cls += " globe-country--selected";
+              return cls;
+            })
+            .attr("fill", d => {
+              const props = d.properties || {};
+              const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+              let countryClusterId = null;
+              if (currentClusterYear != null) {
+                const dynId = getClusterIdForYear(currentClusterYear, iso3);
+                if (dynId !== undefined) countryClusterId = dynId;
+              }
+              if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+                countryClusterId = clusterByIso3[iso3];
+              }
+              const inSameCluster = clusterId != null && countryClusterId === clusterId;
+              if (inSameCluster) return "#1b9e77";
+              return "#e0e0e0";
+            });
+        }
+      }
+    }
+
+    const countryTooltipEl = document.getElementById("country-tooltip");
+
+    function showCountryTooltip(event, name, iso3) {
+      if (!countryTooltipEl) return;
+      const wrapper = document.querySelector(".country-globe-card");
+      if (!wrapper) return;
+      const rect = wrapper.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      countryTooltipEl.innerHTML = `<div><strong>${name}</strong> (${iso3})</div>`;
+      countryTooltipEl.style.left = `${x}px`;
+      countryTooltipEl.style.top = `${y}px`;
+      countryTooltipEl.style.opacity = "1";
+    }
+
+    function hideCountryTooltip() {
+      if (!countryTooltipEl) return;
+      countryTooltipEl.style.opacity = "0";
     }
 
     function renderCountries(world) {
@@ -1035,7 +1221,48 @@
         .data(worldFeatures)
         .enter()
         .append("path")
-        .attr("d", geoPath);
+        .attr("d", geoPath)
+        .attr("class", "globe-country")
+        .on("mousemove", (event, d) => {
+          const props = d.properties || {};
+          const name = props.name || props.ADMIN || "Unknown country";
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          showCountryTooltip(event, name, iso3);
+        })
+        .on("mouseout", () => {
+          hideCountryTooltip();
+        })
+        .on("click", (event, d) => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          if (!iso3) return;
+          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          window.location.href = target;
+        });
+
+      // 平面投影国家路径
+      mapCountryPathsSelection = gMap.selectAll("path")
+        .data(worldFeatures)
+        .enter()
+        .append("path")
+        .attr("d", mapPath)
+        .attr("class", "globe-country")
+        .on("mousemove", (event, d) => {
+          const props = d.properties || {};
+          const name = props.name || props.ADMIN || "Unknown country";
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          showCountryTooltip(event, name, iso3);
+        })
+        .on("mouseout", () => {
+          hideCountryTooltip();
+        })
+        .on("click", (event, d) => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          if (!iso3) return;
+          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          window.location.href = target;
+        });
 
       updateCountryHighlighting();
     }
@@ -1047,6 +1274,9 @@
       }
       renderCountries(world);
       renderGlobe();
+      renderMap();
+      buildCountryTileGrid(world);
+      updateCountryHighlighting();
     }).catch(err => {
       console.error("Failed to load world geojson for country view", err);
     });
@@ -1105,6 +1335,168 @@
       });
 
     globeSvg.call(globeDrag);
+
+    // ==========================
+    // Tile map for same-cluster countries
+    // ==========================
+    const tileSvg = d3.select("#country-tile-svg");
+    let tileRects = null;
+    let tilePositionsByIso3 = new Map();
+    let countryViewMode = "tiles";
+
+    const viewGlobeBtn = document.getElementById("country-view-globe");
+    const viewTilesBtn = document.getElementById("country-view-tiles");
+    const viewMapBtn = document.getElementById("country-view-map");
+
+    // Tile 视图缩放：对内部 g 应用缩放变换
+    const tileZoom = d3.zoom()
+      .scaleExtent([0.8, 4])
+      .on("zoom", (event) => {
+        const gTile = tileSvg.select("g");
+        if (!gTile.empty()) {
+          gTile.attr("transform", event.transform);
+        }
+      });
+
+    tileSvg.call(tileZoom);
+
+    function setCountryViewMode(mode) {
+      countryViewMode = mode;
+      try {
+        if (window && window.localStorage) {
+          window.localStorage.setItem(VIEW_MODE_KEY, mode);
+        }
+      } catch (_) {}
+
+      const globeNodeEl = globeSvg.node();
+      const tileNodeEl = tileSvg.node();
+      const mapNodeEl = mapSvg.node();
+      if (!globeNodeEl || !tileNodeEl || !mapNodeEl) return;
+
+      globeNodeEl.style.display = mode === "globe" ? "block" : "none";
+      tileNodeEl.style.display = mode === "tiles" ? "block" : "none";
+      mapNodeEl.style.display = mode === "map" ? "block" : "none";
+
+      if (viewGlobeBtn) {
+        if (mode === "globe") viewGlobeBtn.classList.add("country-view-toggle--active");
+        else viewGlobeBtn.classList.remove("country-view-toggle--active");
+      }
+      if (viewTilesBtn) {
+        if (mode === "tiles") viewTilesBtn.classList.add("country-view-toggle--active");
+        else viewTilesBtn.classList.remove("country-view-toggle--active");
+      }
+      if (viewMapBtn) {
+        if (mode === "map") viewMapBtn.classList.add("country-view-toggle--active");
+        else viewMapBtn.classList.remove("country-view-toggle--active");
+      }
+    }
+
+    if (viewGlobeBtn) {
+      viewGlobeBtn.addEventListener("click", () => setCountryViewMode("globe"));
+    }
+    if (viewTilesBtn) {
+      viewTilesBtn.addEventListener("click", () => setCountryViewMode("tiles"));
+    }
+    if (viewMapBtn) {
+      viewMapBtn.addEventListener("click", () => setCountryViewMode("map"));
+    }
+
+    // 初次进入国家页面时，从全局视图偏好中读取默认模式；否则默认使用 tile 视图
+    (function initCountryViewMode() {
+      let initialMode = "tiles";
+      try {
+        const stored = window && window.localStorage ? window.localStorage.getItem(VIEW_MODE_KEY) : null;
+        if (stored === "globe" || stored === "tiles" || stored === "map") {
+          initialMode = stored;
+        }
+      } catch (_) {}
+      setCountryViewMode(initialMode);
+    })();
+
+    function buildCountryTileGrid(world) {
+      if (!tileSvg || !tileSvg.node()) return;
+      const svgNode = tileSvg.node();
+      const width = svgNode.clientWidth || 520;
+      const height = svgNode.clientHeight || 520;
+      tileSvg.attr("viewBox", `0 0 ${width} ${height}`);
+      tileSvg.selectAll("*").remove();
+
+      const rowsGrid = 15;
+      const colsGrid = 30;
+      const cellSize = Math.min(width / colsGrid, height / rowsGrid);
+      const xOffset = (width - colsGrid * cellSize) / 2;
+      const yOffset = (height - rowsGrid * cellSize) / 2;
+
+      const centroids = world.features.map(f => ({
+        feature: f,
+        iso3: (f.properties && (f.properties.iso_a3 || f.properties.ISO_A3)) || f.id,
+        name: (f.properties && (f.properties.name || f.properties.ADMIN)) || (f.id || "")
+      })).filter(d => d.iso3);
+
+      // Match the global tile grid: fixed world extent and column-based placement
+      const lonScale = d3.scaleLinear().domain([-180, 180]).range([1, colsGrid - 2]);
+      const latScale = d3.scaleLinear().domain([80, -60]).range([1, rowsGrid - 2]);
+
+      const occupied = new Set();
+      function placeInColumn(col, row) {
+        col = Math.max(0, Math.min(colsGrid - 1, col));
+        row = Math.max(0, Math.min(rowsGrid - 1, row));
+        for (let r = row; r < rowsGrid; r++) {
+          const key = `${col},${r}`;
+          if (!occupied.has(key)) return [col, r];
+        }
+        for (let r = row - 1; r >= 0; r--) {
+          const key = `${col},${r}`;
+          if (!occupied.has(key)) return [col, r];
+        }
+        return null;
+      }
+
+      tilePositionsByIso3 = new Map();
+      centroids.forEach(d => {
+        const [lon, lat] = d3.geoCentroid(d.feature);
+        let col = Math.round(lonScale(lon));
+        let row = Math.round(latScale(lat));
+        const cell = placeInColumn(col, row);
+        if (!cell) return;
+        const [c, r] = cell;
+        occupied.add(`${c},${r}`);
+        tilePositionsByIso3.set(d.iso3, { col: c, row: r, name: d.name });
+      });
+
+      const tileData = Array.from(tilePositionsByIso3.entries()).map(([iso3, pos]) => ({
+        code: iso3,
+        name: pos.name,
+        col: pos.col,
+        row: pos.row
+      }));
+
+      const gTile = tileSvg.append("g");
+
+      tileRects = gTile.selectAll("rect")
+        .data(tileData, d => d.code)
+        .enter()
+        .append("rect")
+        .attr("class", "tile-country")
+        .attr("rx", 2)
+        .attr("ry", 2)
+        .attr("x", d => xOffset + d.col * cellSize + 1)
+        .attr("y", d => yOffset + d.row * cellSize + 1)
+        .attr("width", cellSize - 2)
+        .attr("height", cellSize - 2)
+        .on("mousemove", (event, d) => {
+          const name = d.name || d.code || "Unknown country";
+          const iso3 = d.code || "";
+          showCountryTooltip(event, name, iso3);
+        })
+        .on("mouseout", () => {
+          hideCountryTooltip();
+        })
+        .on("click", (event, d) => {
+          const target = `country.html?code=${encodeURIComponent(d.code)}`;
+          window.location.href = target;
+        });
+    }
 
     // ==========================
     // Load year-specific cluster assignments

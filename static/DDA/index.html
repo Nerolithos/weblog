@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>D3 · 全球可再生能源旋转地球</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/css/custom.css" />
+  <link rel="stylesheet" href="../css/custom.css" />
   <style>
     body {
       margin: 0;
@@ -44,12 +44,53 @@
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
       border: 1px solid rgba(0,0,0,0.06);
     }
+    .dda-view-toggle {
+      position: absolute;
+      left: 50%;
+      top: 1.75rem;
+      transform: translateX(-50%);
+      display: inline-flex;
+      background: rgba(255,255,255,0.95);
+      border-radius: 999px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border: 1px solid rgba(15,23,42,0.12);
+      overflow: hidden;
+      z-index: 18;
+      font-size: 0.8rem;
+    }
+    .dda-view-toggle button {
+      padding: 0.25rem 0.85rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #374151;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+    .dda-view-toggle button.dda-view-toggle--active {
+      background: #111827;
+      color: #ffffff;
+    }
     .dda-globe-svg {
       width: 100%;
       max-width: 800px;
-      /* 在大屏上保持舒适高度，在小屏上跟随视口收缩 */
+      /* 在大屏上保持舒适高度，在小屏上跟随视口收缩，整体再缩小约 10% */
+      height: min(51vh, 547px);
+      display: none; /* 初次加载默认显示 tile 视图，由 JS 决定最终模式 */
+      margin: 0 auto;
+    }
+    .dda-tile-svg {
+      width: 100%;
+      max-width: 800px;
       height: min(60vh, 640px);
       display: block;
+      margin: 0 auto;
+    }
+    .dda-map-svg {
+      width: 100%;
+      max-width: 800px;
+      height: min(60vh, 640px);
+      display: none;
       margin: 0 auto;
     }
     .dda-globe-sphere {
@@ -71,6 +112,15 @@
     .dda-globe-country:hover {
       stroke-width: 1.0px;
       stroke: #111;
+    }
+    .dda-tile-country {
+      stroke: #ffffff;
+      stroke-width: 0.5px;
+      cursor: pointer;
+    }
+    .dda-tile-country:hover {
+      stroke-width: 1.0px;
+      stroke: #111827;
     }
     .dda-search-container {
       position: absolute;
@@ -352,7 +402,7 @@
         padding: 1.25rem 0.75rem 1.75rem;
       }
       .dda-globe-svg {
-        height: min(50vh, 420px);
+        height: min(42vh, 360px);
       }
       .dda-legend-bar {
         width: 120px;
@@ -366,7 +416,7 @@
         padding-bottom: 1.75rem;
       }
       .dda-globe-svg {
-        height: min(50vh, 520px);
+        height: min(42vh, 445px);
       }
       .dda-slider-section {
         margin-top: 1.25rem;
@@ -387,7 +437,14 @@
     </header>
 
     <section class="dda-globe-wrapper">
+      <div class="dda-view-toggle">
+        <button id="dda-view-globe" type="button">Globe</button>
+        <button id="dda-view-tiles" class="dda-view-toggle--active" type="button">Tile map</button>
+        <button id="dda-view-map" type="button">Map</button>
+      </div>
       <svg id="dda-globe-svg" class="dda-globe-svg"></svg>
+      <svg id="dda-tile-svg" class="dda-tile-svg"></svg>
+      <svg id="dda-map-svg" class="dda-map-svg"></svg>
       <div id="dda-tooltip" class="dda-tooltip"></div>
       <div class="dda-search-container">
         <input
@@ -467,6 +524,8 @@
     // 布局与投影设置
     // ==========================
     const globeSvg = d3.select("#dda-globe-svg");
+    const tileSvg = d3.select("#dda-tile-svg");
+    const mapSvg = d3.select("#dda-map-svg");
     const globeNode = globeSvg.node();
     const globeRect = globeNode.getBoundingClientRect();
     const globeWidth = globeRect.width || globeNode.clientWidth || 800;
@@ -476,13 +535,21 @@
 
     const projection = d3.geoOrthographic()
       .scale(baseScale)
-      .translate([globeWidth / 2, globeHeight / 2])
+      // 略微上移地球在 SVG 中的位置，让底部留出更多空间
+      .translate([globeWidth / 2, globeHeight / 2 - 20])
       .clipAngle(90);
 
+    const mapProjection = d3.geoNaturalEarth1()
+      // 稍微缩小比例，让地图不要贴满整个卡片
+      .scale(baseScale * 0.7)
+      .translate([globeWidth / 2, globeHeight / 2 + 10]);
+
     const geoPath = d3.geoPath(projection);
+    const mapPath = d3.geoPath(mapProjection);
     const graticule = d3.geoGraticule();
 
     const globeGroup = globeSvg.append("g");
+    const mapGroup = mapSvg.append("g");
 
     const sphere = globeGroup.append("path")
       .datum({ type: "Sphere" })
@@ -492,13 +559,27 @@
       .datum(graticule())
       .attr("class", "dda-globe-graticule");
 
+    const mapZoom = d3.zoom()
+      .scaleExtent([0.8, 4])
+      .on("zoom", (event) => {
+        mapGroup.attr("transform", event.transform);
+      });
+
+    mapSvg.call(mapZoom);
+
     let countryPaths = null;
+    let mapCountryPaths = null;
+    let tileRects = null;
+    let tilePositionsByIso3 = new Map(); // Map<iso3, {col,row,name}>
 
     // ==========================
     // 数据结构
     // ==========================
     const yearSlider = document.getElementById("dda-year-slider");
     const playButton = document.getElementById("dda-play-toggle");
+    const viewGlobeBtn = document.getElementById("dda-view-globe");
+    const viewTilesBtn = document.getElementById("dda-view-tiles");
+    const viewMapBtn = document.getElementById("dda-view-map");
     const linechartToggle = document.getElementById("dda-linechart-toggle");
     const linechartPanel = document.getElementById("dda-linechart-panel");
     const linechartBack = document.getElementById("dda-linechart-back");
@@ -529,10 +610,25 @@
     let valueMin = Infinity;
     let valueMax = -Infinity;
 
+    const VIEW_MODE_KEY = "dda_view_mode";
+    let viewMode = "tiles"; // "globe" | "tiles" | "map"
+
     // Year playback state
     let isPlayingYears = false;
     let playTimer = null;
     let playIndex = 0;
+
+    // Tile 视图缩放：在 tile 网格构建后对内部 g 进行缩放变换
+    const tileZoom = d3.zoom()
+      .scaleExtent([0.8, 4])
+      .on("zoom", (event) => {
+        const gTile = tileSvg.select("g");
+        if (!gTile.empty()) {
+          gTile.attr("transform", event.transform);
+        }
+      });
+
+    tileSvg.call(tileZoom);
 
     // Color scale: low = red, high = green, with more granularity
     const colorScale = d3.scaleLinear()
@@ -554,6 +650,10 @@
         countryPaths.attr("d", geoPath);
       }
     }
+    function renderMap() {
+      if (!mapCountryPaths) return;
+      mapCountryPaths.attr("d", mapPath);
+    }
 
     function getCountryValue(year, iso3) {
       const yearMap = dataByYearAndCode.get(year);
@@ -570,19 +670,47 @@
       updateColorsForYear(year);
       updateInfoPanel(null);
       hideTooltip();
+      updateTileColorsForYear(year);
     }
 
     function updateColorsForYear(year) {
-      if (!countryPaths) return;
+      if (!countryPaths && !mapCountryPaths) return;
       currentYear = year;
       yearLabel.textContent = year;
 
-      countryPaths
+      if (countryPaths) {
+        countryPaths
+          .attr("fill", d => {
+            const iso3 = d.properties && (d.properties.iso_a3 || d.properties.ISO_A3 || d.id);
+            const record = getCountryValue(year, iso3);
+            if (!record || record.value == null || isNaN(record.value)) {
+              return "#e0e0e0"; // 无数据
+            }
+            return colorScale(record.value);
+          });
+      }
+
+      if (mapCountryPaths) {
+        mapCountryPaths
+          .attr("fill", d => {
+            const iso3 = d.properties && (d.properties.iso_a3 || d.properties.ISO_A3 || d.id);
+            const record = getCountryValue(year, iso3);
+            if (!record || record.value == null || isNaN(record.value)) {
+              return "#e0e0e0"; // 无数据
+            }
+            return colorScale(record.value);
+          });
+      }
+    }
+    function updateTileColorsForYear(year) {
+      if (!tileRects) return;
+      currentYear = year;
+      tileRects
         .attr("fill", d => {
-          const iso3 = d.properties && (d.properties.iso_a3 || d.properties.ISO_A3 || d.id);
+          const iso3 = d.code;
           const record = getCountryValue(year, iso3);
           if (!record || record.value == null || isNaN(record.value)) {
-            return "#e0e0e0"; // 无数据
+            return "#e0e0e0";
           }
           return colorScale(record.value);
         });
@@ -766,6 +894,90 @@
     }
 
     // ==========================
+    // Tile grid construction (PolicyViz template)
+    // ==========================
+    function buildTileGridFromTemplate(tileTemplate, nameToCode) {
+      if (!tileSvg || !tileSvg.node()) return;
+      const svgNode = tileSvg.node();
+      const width = svgNode.clientWidth || 800;
+      const height = svgNode.clientHeight || 400;
+      tileSvg.attr("viewBox", `0 0 ${width} ${height}`);
+      tileSvg.selectAll("*").remove();
+
+      if (!Array.isArray(tileTemplate) || !tileTemplate.length) return;
+
+      const maxRow = d3.max(tileTemplate, d => d.row);
+      const maxCol = d3.max(tileTemplate, d => d.col);
+      const rowsGrid = maxRow + 1;
+      const colsGrid = maxCol + 1;
+
+      const cellSize = Math.min(width / colsGrid, height / rowsGrid);
+      const xOffset = (width - colsGrid * cellSize) / 2;
+      const yOffset = (height - rowsGrid * cellSize) / 2;
+
+      function nameKey(str) {
+        return String(str)
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z]/g, "");
+      }
+
+      tilePositionsByIso3 = new Map();
+
+      const tileData = [];
+      tileTemplate.forEach(entry => {
+        const key = nameKey(entry.name);
+        let iso3 = nameToCode.get(key) || null;
+        if (!iso3) {
+          for (const [k, code] of nameToCode.entries()) {
+            if (k.includes(key) || key.includes(k)) {
+              iso3 = code;
+              break;
+            }
+          }
+        }
+
+        if (iso3) {
+          tilePositionsByIso3.set(iso3, { col: entry.col, row: entry.row, name: entry.name });
+        }
+
+        tileData.push({ code: iso3, name: entry.name, col: entry.col, row: entry.row });
+      });
+
+      const g = tileSvg.append("g");
+
+      tileRects = g.selectAll("rect")
+        .data(tileData)
+        .enter()
+        .append("rect")
+        .attr("class", "dda-tile-country")
+        .attr("rx", 2)
+        .attr("ry", 2)
+        .attr("x", d => xOffset + d.col * cellSize + 1)
+        .attr("y", d => yOffset + d.row * cellSize + 1)
+        .attr("width", cellSize - 2)
+        .attr("height", cellSize - 2)
+        .on("mousemove", (event, d) => {
+          const fakeFeature = {
+            properties: {
+              name: d.name,
+              iso_a3: d.code
+            }
+          };
+          showTooltip(event, fakeFeature);
+          updateInfoPanel(fakeFeature);
+        })
+        .on("mouseout", () => {
+          hideTooltip();
+        })
+        .on("click", (event, d) => {
+          if (!d.code) return; // 无 ISO3 代码的 tile 只显示为灰色，不跳转
+          const target = `country.html?code=${encodeURIComponent(d.code)}`;
+          window.location.href = target;
+        });
+    }
+
+    // ==========================
     // Country search (autocomplete + navigation)
     // ==========================
     function buildSearchOptions() {
@@ -932,6 +1144,21 @@
       // Build autocomplete options for search
       buildSearchOptions();
 
+      // Build a name-key -> ISO3 map for tile template lookup
+      function nameKey(str) {
+        return String(str)
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z]/g, "");
+      }
+      const nameToCode = new Map();
+      countryNameByCode.forEach((name, code) => {
+        const k = nameKey(name);
+        if (!nameToCode.has(k)) {
+          nameToCode.set(k, code);
+        }
+      });
+
       // Color scale domain: more granular, only 30%+ is pure green
       valueMin = 0;
       valueMax = 30;
@@ -1003,7 +1230,7 @@
         });
       }
 
-      // 绘制国家
+      // 绘制国家（球面）
       countryPaths = globeGroup.append("g")
         .selectAll("path")
         .data(world.features)
@@ -1025,9 +1252,45 @@
           window.location.href = target;
         });
 
-      // Initial render
-      renderGlobe();
-      updateColorsForYear(initialYear);
+      // 绘制国家（平面投影 Natural Earth）
+      if (mapSvg && mapSvg.node()) {
+        mapCountryPaths = mapGroup.selectAll("path")
+          .data(world.features)
+          .enter()
+          .append("path")
+          .attr("class", "dda-globe-country")
+          .attr("d", mapPath)
+          .on("mousemove", (event, d) => {
+            showTooltip(event, d);
+            updateInfoPanel(d);
+          })
+          .on("mouseout", () => {
+            hideTooltip();
+          })
+          .on("click", (event, d) => {
+            const props = d.properties || {};
+            const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+            if (!iso3) return;
+            const target = `country.html?code=${encodeURIComponent(iso3)}`;
+            window.location.href = target;
+          });
+      }
+
+      // 构建 tile grid：使用 PolicyViz 提供的世界 tile grid 模板
+      d3.json("world-tile-grid.json").then(tileTemplate => {
+        buildTileGridFromTemplate(tileTemplate, nameToCode);
+        // Initial render
+        renderGlobe();
+        renderMap();
+        updateColorsForYear(initialYear);
+        updateTileColorsForYear(initialYear);
+      }).catch(err => {
+        console.error("Failed to load world tile grid template", err);
+        // 即使模板失败，也至少渲染球面视图
+        renderGlobe();
+        renderMap();
+        updateColorsForYear(initialYear);
+      });
     }).catch(err => {
       console.error("Failed to load data", err);
     });
@@ -1048,7 +1311,7 @@
     let basePhi = -15;
     updateRotation(baseLambda, basePhi);
 
-    // Use a single, slow, time-based rotation so speed is stable
+    // Use a single, slow, time-based rotation so speed is stable (globe only; map is static)
     const rotationSpeedDegPerMs = 0.008; // ~5° per second
     let lastTickTime = Date.now();
 
@@ -1088,6 +1351,59 @@
       });
 
     globeSvg.call(globeDrag);
+
+    // 初次进入页面时，从 localStorage 读取用户偏好；否则默认使用 tile 视图
+    (function initViewModeFromStorage() {
+      let initialMode = "tiles";
+      try {
+        const stored = window && window.localStorage ? window.localStorage.getItem(VIEW_MODE_KEY) : null;
+        if (stored === "globe" || stored === "tiles" || stored === "map") {
+          initialMode = stored;
+        }
+      } catch (_) {}
+      setViewMode(initialMode);
+    })();
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      try {
+        if (window && window.localStorage) {
+          window.localStorage.setItem(VIEW_MODE_KEY, mode);
+        }
+      } catch (_) {}
+
+      const globeNodeEl = globeSvg.node();
+      const tileNodeEl = tileSvg.node();
+      const mapNodeEl = mapSvg.node();
+      if (!globeNodeEl || !tileNodeEl || !mapNodeEl) return;
+
+      globeNodeEl.style.display = mode === "globe" ? "block" : "none";
+      tileNodeEl.style.display = mode === "tiles" ? "block" : "none";
+      mapNodeEl.style.display = mode === "map" ? "block" : "none";
+
+      if (viewGlobeBtn) {
+        if (mode === "globe") viewGlobeBtn.classList.add("dda-view-toggle--active");
+        else viewGlobeBtn.classList.remove("dda-view-toggle--active");
+      }
+      if (viewTilesBtn) {
+        if (mode === "tiles") viewTilesBtn.classList.add("dda-view-toggle--active");
+        else viewTilesBtn.classList.remove("dda-view-toggle--active");
+      }
+      if (viewMapBtn) {
+        if (mode === "map") viewMapBtn.classList.add("dda-view-toggle--active");
+        else viewMapBtn.classList.remove("dda-view-toggle--active");
+      }
+    }
+
+    if (viewGlobeBtn) {
+      viewGlobeBtn.addEventListener("click", () => setViewMode("globe"));
+    }
+    if (viewTilesBtn) {
+      viewTilesBtn.addEventListener("click", () => setViewMode("tiles"));
+    }
+    if (viewMapBtn) {
+      viewMapBtn.addEventListener("click", () => setViewMode("map"));
+    }
 
     if (linechartToggle) {
       linechartToggle.addEventListener("click", () => {
