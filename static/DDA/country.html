@@ -33,6 +33,25 @@
       opacity: 0.85;
       font-size: 0.95rem;
     }
+    .country-year-selector {
+      margin-top: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+    }
+    .country-year-selector label {
+      color: #374151;
+    }
+    .country-year-select {
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.25);
+      background: #111827;
+      color: #ffffff;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
     .country-layout {
       display: flex;
       gap: 1.75rem;
@@ -434,10 +453,16 @@
 
     const countryByIso3 = {};
     const clusterByIso3 = {};
+    const isoByCountryName = new Map();
     Object.values(clusters).forEach(cluster => {
       cluster.countries.forEach(c => {
         countryByIso3[c.iso3] = c.name;
         clusterByIso3[c.iso3] = cluster.id;
+        // Map country name back to ISO3 (case-insensitive) for
+        // parsing the Monthly_Cluster_Full_Report.xlsx file,
+        // which contains country names rather than ISO codes.
+        isoByCountryName.set(c.name, c.iso3);
+        isoByCountryName.set(c.name.toLowerCase(), c.iso3);
       });
     });
 
@@ -448,9 +473,14 @@
 
     const selectedIso3Raw = (getQueryParam("code") || "").toUpperCase();
     const selectedIso3 = selectedIso3Raw || "";
-    const selectedClusterId = clusterByIso3[selectedIso3];
-    const selectedCluster = selectedClusterId !== undefined ? clusters[selectedClusterId] : null;
     const selectedCountryName = countryByIso3[selectedIso3] || selectedIso3 || "Unknown country";
+
+    // Cluster assignments that change by year (loaded from Monthly_Cluster_Full_Report.xlsx)
+    const clusterXlsxUrl = "Monthly_Cluster_Full_Report.xlsx";
+    let clusterAssignmentsByYear = new Map(); // Map<number, Map<string, number>>
+    const clusterCountryNameByIso3 = new Map();
+    let clusterYearsForCountry = [];
+    let currentClusterYear = null;
 
     // Elements for the annual energy bar chart
     const energyYearLabel = document.getElementById("country-energy-year-label");
@@ -472,7 +502,7 @@
     let energyPlayIndex = 0;
 
     // ==========================
-    // Update right panel text
+    // Elements and helpers for cluster / right panel
     // ==========================
     const titleEl = document.getElementById("country-title");
     const summaryEl = document.getElementById("country-cluster-summary");
@@ -480,13 +510,107 @@
 
     titleEl.textContent = `${selectedCountryName} (${selectedIso3 || "N/A"})`;
 
-    if (!selectedCluster) {
-      summaryEl.textContent = "This country is not part of any predefined cluster in this view.";
-      detailEl.textContent = "You navigated here from the main globe, but cluster metadata is only defined for a subset of countries in the dataset.";
-    } else {
-      summaryEl.textContent = `${selectedCountryName} belongs to ${selectedCluster.label}.`;
-      const peerNames = selectedCluster.countries.map(c => c.name).join(", ");
-      detailEl.innerHTML = `<strong>Key characteristics:</strong> ${selectedCluster.description}<br/><strong>Countries in this cluster (${selectedCluster.countries.length}):</strong> ${peerNames}.`;
+    function getClusterIdForYear(year, iso3) {
+      if (year == null) return undefined;
+      const byIso = clusterAssignmentsByYear.get(year);
+      return byIso ? byIso.get(iso3) : undefined;
+    }
+
+    function computeCurrentCluster() {
+      let clusterId = null;
+      if (currentClusterYear != null) {
+        const id = getClusterIdForYear(currentClusterYear, selectedIso3);
+        if (id !== undefined) clusterId = id;
+      }
+      if (clusterId == null && clusterByIso3[selectedIso3] !== undefined) {
+        clusterId = clusterByIso3[selectedIso3];
+      }
+      const cluster = clusterId != null ? clusters[clusterId] : null;
+      return { clusterId, cluster };
+    }
+
+    function updateClusterTextAndPie() {
+      const { clusterId, cluster } = computeCurrentCluster();
+
+      if (!cluster) {
+        summaryEl.textContent = "This country is not part of any predefined cluster in this view.";
+        detailEl.textContent = "You navigated here from the main globe, but cluster metadata is only defined for a subset of countries in the dataset.";
+        // Hide pie chart
+        pieSvg.style("display", "none");
+        pieLegendEl.textContent = "No cluster information is available for this country.";
+        return;
+      }
+
+      const yearText = currentClusterYear != null ? `in ${currentClusterYear}` : "in this view";
+      summaryEl.textContent = `${selectedCountryName} belongs to ${cluster.label} ${yearText}.`;
+
+      // Build peer list from dynamic assignments if we have them
+      let peerNames = [];
+      if (currentClusterYear != null) {
+        const byIso = clusterAssignmentsByYear.get(currentClusterYear);
+        if (byIso) {
+          byIso.forEach((cid, iso3) => {
+            if (cid === clusterId) {
+              const name = clusterCountryNameByIso3.get(iso3) || countryByIso3[iso3] || iso3;
+              peerNames.push(name);
+            }
+          });
+        }
+      }
+      if (!peerNames.length && cluster.countries && cluster.countries.length) {
+        peerNames = cluster.countries.map(c => c.name);
+      }
+
+      detailEl.innerHTML = `<strong>Key characteristics:</strong> ${cluster.description}<br/><strong>Countries in this cluster (${peerNames.length}):</strong> ${peerNames.join(", ")}.`;
+
+      // Update pie chart for this cluster
+      const entries = Object.entries(cluster.mix || {});
+      const data = entries.map(([name, value]) => ({ name, value }));
+      if (!data.length) {
+        pieSvg.style("display", "none");
+        pieLegendEl.textContent = "No cluster information is available for this country.";
+        return;
+      }
+
+      pieSvg.style("display", "block");
+
+      const color = d3.scaleOrdinal()
+        .domain(data.map(d => d.name))
+        .range(["#6366f1", "#22c55e", "#f97316", "#e11d48", "#0ea5e9", "#a855f7", "#84cc16", "#eab308", "#64748b"]);
+
+      const pie = d3.pie()
+        .value(d => d.value)
+        .sort(null);
+
+      const arc = d3.arc()
+        .innerRadius(pieRadius * 0.45)
+        .outerRadius(pieRadius);
+
+      pieGroup.selectAll("path").remove();
+
+      pieGroup.selectAll("path")
+        .data(pie(data))
+        .enter()
+        .append("path")
+        .attr("d", arc)
+        .attr("fill", d => color(d.data.name))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.2);
+
+      pieLegendEl.innerHTML = "";
+      data.forEach(d => {
+        const percent = (d.value * 100).toFixed(1);
+        const row = document.createElement("div");
+        row.className = "pie-legend-item";
+        const swatch = document.createElement("span");
+        swatch.className = "pie-legend-swatch";
+        swatch.style.backgroundColor = color(d.name);
+        const text = document.createElement("span");
+        text.textContent = `${d.name}: ${percent}%`;
+        row.appendChild(swatch);
+        row.appendChild(text);
+        pieLegendEl.appendChild(row);
+      });
     }
 
     // ==========================
@@ -721,7 +845,14 @@
       energyPlayIndex = clamped;
       energyYearSlider.value = String(clamped);
       const year = energyYearsForSelected[clamped];
+
+      // Update the bar chart
       drawEnergyBar(selectedCountryName, year);
+
+      // Use the same year to drive cluster membership (globe + pie)
+      currentClusterYear = year;
+      updateClusterTextAndPie();
+      updateCountryHighlighting();
     }
 
     function initEnergyChart() {
@@ -822,50 +953,6 @@
 
     const pieLegendEl = document.getElementById("pie-legend");
 
-    if (selectedCluster) {
-      const entries = Object.entries(selectedCluster.mix);
-      const data = entries.map(([name, value]) => ({ name, value }));
-
-      const color = d3.scaleOrdinal()
-        .domain(data.map(d => d.name))
-        .range(["#6366f1", "#22c55e", "#f97316", "#e11d48", "#0ea5e9", "#a855f7", "#84cc16", "#eab308", "#64748b"]);
-
-      const pie = d3.pie()
-        .value(d => d.value)
-        .sort(null);
-
-      const arc = d3.arc()
-        .innerRadius(pieRadius * 0.45)
-        .outerRadius(pieRadius);
-
-      const arcs = pieGroup.selectAll("path")
-        .data(pie(data))
-        .enter()
-        .append("path")
-        .attr("d", arc)
-        .attr("fill", d => color(d.data.name))
-        .attr("stroke", "#ffffff")
-        .attr("stroke-width", 1.2);
-
-      pieLegendEl.innerHTML = "";
-      data.forEach(d => {
-        const percent = (d.value * 100).toFixed(1);
-        const row = document.createElement("div");
-        row.className = "pie-legend-item";
-        const swatch = document.createElement("span");
-        swatch.className = "pie-legend-swatch";
-        swatch.style.backgroundColor = color(d.name);
-        const text = document.createElement("span");
-        text.textContent = `${d.name}: ${percent}%`;
-        row.appendChild(swatch);
-        row.appendChild(text);
-        pieLegendEl.appendChild(row);
-      });
-    } else {
-      pieSvg.style("display", "none");
-      pieLegendEl.textContent = "No cluster information is available for this country.";
-    }
-
     // ==========================
     // Left globe highlighting same-cluster countries
     // ==========================
@@ -895,35 +982,62 @@
       .attr("class", "globe-graticule")
       .attr("d", geoPath);
 
+    let worldFeatures = null;
+    let countryPathsSelection = null;
+
     function renderGlobe() {
       g.selectAll("path").attr("d", geoPath);
     }
 
-    function renderCountries(world) {
-      const features = world.features;
-      const group = g.append("g");
-
-      group.selectAll("path")
-        .data(features)
-        .enter()
-        .append("path")
+    function updateCountryHighlighting() {
+      if (!countryPathsSelection) return;
+      const { clusterId } = computeCurrentCluster();
+      countryPathsSelection
         .attr("class", d => {
           const props = d.properties || {};
           const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
-          const inSameCluster = selectedCluster && clusterByIso3[iso3] === selectedCluster.id;
+          let countryClusterId = null;
+          if (currentClusterYear != null) {
+            const dynId = getClusterIdForYear(currentClusterYear, iso3);
+            if (dynId !== undefined) countryClusterId = dynId;
+          }
+          if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+            countryClusterId = clusterByIso3[iso3];
+          }
+          const inSameCluster = clusterId != null && countryClusterId === clusterId;
           let cls = "globe-country";
           if (inSameCluster) cls += " globe-country--highlight";
           if (iso3 === selectedIso3) cls += " globe-country--selected";
           return cls;
         })
-        .attr("d", geoPath)
         .attr("fill", d => {
           const props = d.properties || {};
           const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
-          const inSameCluster = selectedCluster && clusterByIso3[iso3] === selectedCluster.id;
+          let countryClusterId = null;
+          if (currentClusterYear != null) {
+            const dynId = getClusterIdForYear(currentClusterYear, iso3);
+            if (dynId !== undefined) countryClusterId = dynId;
+          }
+          if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+            countryClusterId = clusterByIso3[iso3];
+          }
+          const inSameCluster = clusterId != null && countryClusterId === clusterId;
           if (inSameCluster) return "#1b9e77";
           return "#e0e0e0";
         });
+    }
+
+    function renderCountries(world) {
+      worldFeatures = world.features;
+      const group = g.append("g");
+
+      countryPathsSelection = group.selectAll("path")
+        .data(worldFeatures)
+        .enter()
+        .append("path")
+        .attr("d", geoPath);
+
+      updateCountryHighlighting();
     }
 
     d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(world => {
@@ -992,8 +1106,136 @@
 
     globeSvg.call(globeDrag);
 
+    // ==========================
+    // Load year-specific cluster assignments
+    // ==========================
+
+    function parseClusterWorkbook(rows) {
+      if (!rows || !rows.length) {
+        updateClusterTextAndPie();
+        updateCountryHighlighting();
+        return;
+      }
+
+      // The Monthly_Cluster_Full_Report.xlsx file has the structure:
+      //   Year-Month, Cluster, Countries_in_Cluster, ...
+      // where Countries_in_Cluster is a comma-separated list of
+      // country names. We collapse months to years by taking the
+      // last month in each year, then map names -> ISO3 using
+      // isoByCountryName.
+
+      const sample = rows[0];
+      const keys = Object.keys(sample);
+
+      let yearMonthField = null;
+      let clusterField = null;
+      let listField = null;
+
+      keys.forEach(k => {
+        const lower = k.toLowerCase();
+        if (!yearMonthField && lower.includes("year") && lower.includes("month")) {
+          yearMonthField = k;
+        } else if (!clusterField && lower.includes("cluster")) {
+          clusterField = k;
+        } else if (!listField && (lower.includes("countries_in_cluster") || (lower.includes("countries") && lower.includes("cluster")))) {
+          listField = k;
+        }
+      });
+
+      if (!yearMonthField || !clusterField || !listField) {
+        console.warn("Could not detect Year-Month/Cluster/Countries_in_Cluster fields in cluster workbook", {
+          keys,
+          sample
+        });
+        currentClusterYear = null;
+        updateClusterTextAndPie();
+        updateCountryHighlighting();
+        return;
+      }
+
+      // year -> Map<countryName, clusterId> (last month in that year wins)
+      const yearCountryMap = new Map();
+
+      rows.forEach(row => {
+        const ymRaw = row[yearMonthField];
+        const clusterRaw = row[clusterField];
+        const listRaw = row[listField];
+        if (!ymRaw || !listRaw || clusterRaw === undefined || clusterRaw === null || clusterRaw === "") return;
+
+        const m = String(ymRaw).match(/(\d{4})/);
+        if (!m) return;
+        const year = +m[1];
+        if (!year) return;
+
+        let clusterId = parseInt(clusterRaw, 10);
+        if (isNaN(clusterId)) {
+          const mm = String(clusterRaw).match(/(\d+)/);
+          if (mm) clusterId = parseInt(mm[1], 10);
+        }
+        if (isNaN(clusterId)) return;
+
+        if (!yearCountryMap.has(year)) yearCountryMap.set(year, new Map());
+        const byName = yearCountryMap.get(year);
+
+        String(listRaw)
+          .split(",")
+          .map(s => s.trim())
+          .filter(Boolean)
+          .forEach(name => {
+            byName.set(name, clusterId);
+          });
+      });
+
+      // Convert to year -> Map<ISO3, clusterId>
+      clusterAssignmentsByYear = new Map();
+      yearCountryMap.forEach((byName, year) => {
+        const byIso = new Map();
+        byName.forEach((clusterId, name) => {
+          const iso3 = isoByCountryName.get(name) || isoByCountryName.get(name.toLowerCase());
+          if (!iso3) return;
+          byIso.set(iso3, clusterId);
+          if (!clusterCountryNameByIso3.has(iso3)) {
+            clusterCountryNameByIso3.set(iso3, name);
+          }
+        });
+        if (byIso.size) {
+          clusterAssignmentsByYear.set(year, byIso);
+        }
+      });
+
+      // Cache which years exist for the selected country (for potential future use)
+      const yearsForCountry = [];
+      clusterAssignmentsByYear.forEach((byIso, year) => {
+        if (byIso.has(selectedIso3)) yearsForCountry.push(year);
+      });
+      clusterYearsForCountry = yearsForCountry.sort((a, b) => a - b);
+
+      // currentClusterYear is driven by the energy-year slider; once
+      // the assignments are available, re-render using whatever year
+      // is currently active (or static fallback if null).
+      updateClusterTextAndPie();
+      updateCountryHighlighting();
+    }
+
     // Initialize annual energy bar chart
     initEnergyChart();
+
+    // Load cluster workbook after everything else is wired
+    fetch(clusterXlsxUrl)
+      .then(resp => resp.arrayBuffer())
+      .then(buf => {
+        const workbook = XLSX.read(buf, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
+        parseClusterWorkbook(rows);
+      })
+      .catch(err => {
+        console.error("Failed to load cluster workbook", err);
+        // Fall back to static cluster info if dynamic data is unavailable
+        updateClusterTextAndPie();
+        updateCountryHighlighting();
+      });
 
   </script>
 </body>
