@@ -74,8 +74,8 @@
     .dda-globe-svg {
       width: 100%;
       max-width: 800px;
-      /* 在大屏上保持舒适高度，在小屏上跟随视口收缩，整体再缩小约 10% */
-      height: min(51vh, 547px);
+      /* 与 tile / map 视图保持一致的显示高度 */
+      height: min(60vh, 640px);
       display: none; /* 初次加载默认显示 tile 视图，由 JS 决定最终模式 */
       margin: 0 auto;
     }
@@ -110,7 +110,7 @@
       cursor: pointer;
     }
     .dda-globe-country:hover {
-      stroke-width: 1.0px;
+      stroke-width: 2px;
       stroke: #111;
     }
     .dda-tile-country {
@@ -119,7 +119,7 @@
       cursor: pointer;
     }
     .dda-tile-country:hover {
-      stroke-width: 1.0px;
+      stroke-width: 2px;
       stroke: #111827;
     }
     .dda-search-container {
@@ -179,29 +179,25 @@
       background: #e5e7eb;
     }
     .dda-legend {
-      position: absolute;
-      right: 1.75rem;
-      top: 1.75rem;
+      /* 放在图片区域下方，不再遮挡地图 */
+      position: static;
+      margin: 0.35rem auto 0;
       background: rgba(255,255,255,0.92);
       border-radius: 8px;
-      padding: 0.65rem 0.85rem;
+      /* 上边距略小、下边距略大一点，保证数字完全在白框内 */
+      padding: 0.35rem 1rem 1.2rem;
       box-shadow: 0 4px 14px rgba(0,0,0,0.1);
       font-size: 0.8rem;
-    }
-    .dda-legend-title {
-      margin: 0 0 0.4rem;
-      font-weight: 600;
-      font-size: 0.78rem;
-      white-space: nowrap;
+      max-width: 420px;
     }
     .dda-legend-bar {
-      width: 140px;
+      /* 由 D3 动态绘制 SVG 渐变色带，这里只负责占位尺寸 */
+      width: 100%;
       height: 10px;
       border-radius: 6px;
-      background: linear-gradient(
-        to right,
-        #b30000 0%,   /* 0%   deep red */
-        #e55c00 16%,  /* 5%   orange */
+      overflow: hidden;
+      margin-bottom: 0.15rem;
+    }
         #f6d32d 33%,  /* 10%  yellow */
         #c5e1a5 66%,  /* 20%  light green */
         #006837 100%  /* 30%+ pure green */
@@ -209,10 +205,12 @@
       margin-bottom: 0.25rem;
     }
     .dda-legend-labels {
-      display: flex;
-      justify-content: space-between;
+      position: relative;
+      display: block;
       font-size: 0.72rem;
       opacity: 0.8;
+      margin-top: 0.15rem;
+      height: 1.1rem;
     }
     .dda-tooltip {
       position: absolute;
@@ -401,11 +399,10 @@
       .dda-page {
         padding: 1.25rem 0.75rem 1.75rem;
       }
-      .dda-globe-svg {
+      .dda-globe-svg,
+      .dda-tile-svg,
+      .dda-map-svg {
         height: min(42vh, 360px);
-      }
-      .dda-legend-bar {
-        width: 120px;
       }
     }
 
@@ -415,7 +412,9 @@
         padding-top: 1.25rem;
         padding-bottom: 1.75rem;
       }
-      .dda-globe-svg {
+      .dda-globe-svg,
+      .dda-tile-svg,
+      .dda-map-svg {
         height: min(42vh, 445px);
       }
       .dda-slider-section {
@@ -456,19 +455,6 @@
         />
         <div id="dda-country-suggestions" class="dda-search-suggestions"></div>
       </div>
-      <div class="dda-legend">
-        <p class="dda-legend-title">Renewables share · color legend</p>
-        <div class="dda-legend-bar"></div>
-        <div class="dda-legend-labels">
-          <span>0%</span>
-          <span>5%</span>
-          <span>10%</span>
-          <span>15%</span>
-          <span>20%</span>
-          <span>25%</span>
-          <span>30%+</span>
-        </div>
-      </div>
       <button id="dda-linechart-toggle" class="dda-linechart-toggle" type="button">Line chart</button>
 
       <div id="dda-linechart-panel" class="dda-linechart-panel">
@@ -490,6 +476,18 @@
         </div>
         <svg id="dda-linechart-svg" class="dda-linechart-svg"></svg>
         <div id="dda-linechart-empty" class="dda-linechart-empty">Select up to three countries and click "Draw" to see their renewable energy share over time.</div>
+      </div>
+      <div class="dda-legend">
+        <div class="dda-legend-bar"></div>
+        <div class="dda-legend-labels">
+          <span>0%</span>
+          <span>5%</span>
+          <span>10%</span>
+          <span>15%</span>
+          <span>20%</span>
+          <span>25%</span>
+          <span>30%+</span>
+        </div>
       </div>
     </section>
 
@@ -534,9 +532,9 @@
     const baseScale = Math.min(globeWidth, globeHeight) / 2.1;
 
     const projection = d3.geoOrthographic()
-      .scale(baseScale)
-      // 略微上移地球在 SVG 中的位置，让底部留出更多空间
-      .translate([globeWidth / 2, globeHeight / 2 - 20])
+      // 地球仪整体缩小约 10%，并进一步上移，避免被下方元素遮挡
+      .scale(baseScale * 0.9)
+      .translate([globeWidth / 2, globeHeight / 2 - 10])
       .clipAngle(90);
 
     const mapProjection = d3.geoNaturalEarth1()
@@ -639,6 +637,70 @@
         "#c5e1a5", // ~20%
         "#006837"  // 30%+
       ]);
+
+    function renderLegendGradient() {
+      const barContainer = d3.select(".dda-legend-bar");
+      const labelsContainer = d3.select(".dda-legend-labels");
+      if (barContainer.empty() || labelsContainer.empty()) return;
+
+      barContainer.selectAll("*").remove();
+      labelsContainer.selectAll("*").remove();
+
+      const barNode = barContainer.node();
+      const width = barNode.clientWidth || 260;
+      const height = barNode.clientHeight || 10;
+
+      const svg = barContainer.append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      const defs = svg.append("defs");
+      const gradient = defs.append("linearGradient")
+        .attr("id", "dda-legend-gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%");
+
+      const domain = colorScale.domain();
+      if (!domain.length) return;
+      const min = domain[0];
+      const max = domain[domain.length - 1];
+
+      domain.forEach(v => {
+        const t = (v - min) / (max - min || 1);
+        gradient.append("stop")
+          .attr("offset", `${t * 100}%`)
+          .attr("stop-color", colorScale(v));
+      });
+
+      svg.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", height)
+        .attr("fill", "url(#dda-legend-gradient)");
+
+      // 按数值比例放置刻度标签，使其与颜色条对应
+      const tickValues = [0, 5, 10, 15, 20, 25, 30];
+      const labelScale = d3.scaleLinear()
+        .domain([0, 30])
+        // 两端各预留 5% 边距，避免文字顶出白色框
+        .range([5, 95]);
+
+      const labelsNode = labelsContainer.node();
+      const labelSelection = labelsContainer
+        .style("position", "relative")
+        .selectAll("span")
+        .data(tickValues)
+        .enter()
+        .append("span")
+        .style("position", "absolute")
+        .style("transform", "translateX(-50%)")
+        .style("left", d => `${labelScale(d)}%`);
+
+      labelSelection.text(d => d === 30 ? "30%+" : `${d}%`);
+    }
 
     // ==========================
     // 渲染函数
@@ -1171,6 +1233,10 @@
           30   // pure green
         ])
         .clamp(true);
+
+      // 在确定好 domain 之后，根据 colorScale 动态绘制图例色带，
+      // 确保图例颜色和地图着色严格一致。
+      renderLegendGradient();
 
       // 初始化滑块
       yearSlider.min = 0;
