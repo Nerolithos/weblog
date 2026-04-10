@@ -414,6 +414,39 @@
       padding: 18px 20px 20px;
       overflow: hidden;
     }
+    #tuning-glitch {
+      position: absolute;
+      inset: 0;
+      display: none;
+      opacity: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255, 20, 147, 0.28), rgba(0, 255, 163, 0.18) 18%, rgba(159, 84, 255, 0.24) 38%, rgba(255, 255, 255, 0.1) 52%, rgba(95, 255, 73, 0.26) 70%, rgba(255, 0, 102, 0.22) 100%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.08) 0 2px, rgba(0,0,0,0) 2px 5px),
+        radial-gradient(circle at 20% 25%, rgba(0,255,163,0.26), rgba(0,0,0,0) 30%),
+        radial-gradient(circle at 80% 65%, rgba(255,0,153,0.24), rgba(0,0,0,0) 28%),
+        radial-gradient(circle at 50% 50%, rgba(170, 110, 255, 0.2), rgba(0,0,0,0.84) 64%);
+      mix-blend-mode: screen;
+      background-size: 180% 180%, auto, auto, auto, auto;
+      transition: opacity 1.8s ease-out;
+      animation: ending-glitch-flicker 120ms steps(2, end) infinite;
+    }
+    #tuning-glitch::before,
+    #tuning-glitch::after {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.16) 0 8px, rgba(0,0,0,0) 8px 18px),
+        linear-gradient(180deg, rgba(0, 255, 170, 0.22), rgba(255, 0, 153, 0.22) 40%, rgba(180, 0, 255, 0.18));
+      opacity: 0.72;
+    }
+    #tuning-glitch::before {
+      animation: ending-glitch-shift-a 180ms steps(2, end) infinite, ending-glitch-hue 900ms linear infinite;
+    }
+    #tuning-glitch::after {
+      animation: ending-glitch-shift-b 240ms steps(2, end) infinite, ending-glitch-hue 700ms linear infinite reverse;
+    }
     #tuning-code {
       position: absolute;
       inset: 12px 20px 20px 20px;
@@ -438,6 +471,154 @@
       opacity: 0;
       transition: opacity 3s ease-in 0.5s;
       white-space: pre-line;
+    }
+    @keyframes ending-glitch-flicker {
+      0% { opacity: 0.15; filter: contrast(1.3) saturate(1.7) blur(0px); }
+      15% { opacity: 1; filter: contrast(2.4) saturate(2.8) blur(0.5px); }
+      35% { opacity: 0.38; filter: contrast(1.5) saturate(1.8) blur(0px); }
+      55% { opacity: 0.96; filter: contrast(2.8) saturate(3.3) blur(1px); }
+      75% { opacity: 0.44; filter: contrast(1.6) saturate(1.9) blur(0px); }
+      100% { opacity: 0.22; filter: contrast(1.4) saturate(1.6) blur(0px); }
+    }
+    @keyframes ending-glitch-shift-a {
+      0% { transform: translate(-18px, 0) skewX(0deg) scaleX(1); }
+      25% { transform: translate(24px, -7px) skewX(16deg) scaleX(1.04); }
+      50% { transform: translate(-12px, 8px) skewX(-12deg) scaleX(0.98); }
+      75% { transform: translate(16px, 4px) skewX(14deg) scaleX(1.06); }
+      100% { transform: translate(-8px, -3px) skewX(-8deg) scaleX(1); }
+    }
+    @keyframes ending-glitch-shift-b {
+      0% { transform: translate(14px, 0) skewY(0deg) scaleY(1); }
+      20% { transform: translate(-28px, 5px) skewY(-8deg) scaleY(1.04); }
+      55% { transform: translate(12px, -10px) skewY(12deg) scaleY(0.97); }
+      80% { transform: translate(-18px, 7px) skewY(-10deg) scaleY(1.05); }
+      100% { transform: translate(8px, -2px) skewY(4deg) scaleY(1); }
+    }
+    @keyframes ending-glitch-hue {
+      0% { filter: hue-rotate(0deg) saturate(1.1); }
+      50% { filter: hue-rotate(120deg) saturate(1.7); }
+      100% { filter: hue-rotate(300deg) saturate(1.2); }
+    }
+    #system-kill-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 78;
+      pointer-events: none;
+    }
+    #system-kill-dialog {
+      position: absolute;
+      left: 220px;
+      top: 120px;
+      width: min(460px, calc(100vw - 32px));
+      background: #ffffff;
+      color: #000000;
+      border: 1px solid #000000;
+      border-radius: 8px;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      overflow: hidden;
+      pointer-events: auto;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    #system-kill-dialog .system-kill-titlebar {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      height: 24px;
+      box-sizing: border-box;
+      background: #f0f0f0;
+      border-bottom: 1px solid #000000;
+      user-select: none;
+      cursor: move;
+    }
+    #system-kill-dialog .system-kill-title-text {
+      font-size: 11px;
+      color: #444444;
+      margin-left: 6px;
+      flex: 1;
+      text-align: center;
+    }
+    #system-kill-dialog .system-kill-body {
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    #system-kill-dialog .system-kill-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    #system-kill-dialog label {
+      font-weight: 600;
+    }
+    #system-kill-dialog input {
+      height: 34px;
+      padding: 6px 8px;
+      border: 1px solid #000000;
+      border-radius: 0;
+      background: #ffffff;
+      color: #000000;
+      font: inherit;
+      box-sizing: border-box;
+    }
+    #system-kill-dialog input:focus {
+      outline: 2px solid #000000;
+      outline-offset: 1px;
+    }
+    #system-kill-dialog .system-kill-actions {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    #system-kill-status {
+      min-height: 18px;
+      color: #c40000;
+      font-size: 12px;
+      line-height: 1.3;
+      flex: 1;
+    }
+    #system-kill-submit {
+      min-width: 100px;
+      height: 34px;
+      border: 1px solid #000000;
+      background: #ffffff;
+      color: #000000;
+      font: inherit;
+      cursor: pointer;
+    }
+    #system-kill-submit:hover {
+      background: #f2f2f2;
+    }
+    #tuning-ending-overlay.glitch-intense {
+      animation: ending-glitch-screen 90ms steps(2, end) infinite;
+    }
+    #tuning-ending-overlay.glitch-intense #tuning-code,
+    #tuning-ending-overlay.glitch-intense #tuning-ending-center {
+      animation: ending-glitch-jump 110ms steps(2, end) infinite;
+      text-shadow: -6px 0 rgba(255, 0, 0, 0.9), 6px 0 rgba(0, 255, 255, 0.9), 0 0 18px rgba(255,255,255,0.3);
+    }
+    @keyframes ending-glitch-screen {
+      0% { transform: translate(0, 0); filter: brightness(1) contrast(1.1); }
+      20% { transform: translate(-4px, 2px); filter: brightness(1.25) contrast(1.8); }
+      40% { transform: translate(5px, -3px); filter: brightness(0.9) contrast(1.5); }
+      60% { transform: translate(-3px, -2px); filter: brightness(1.35) contrast(2.2); }
+      80% { transform: translate(4px, 3px); filter: brightness(0.95) contrast(1.6); }
+      100% { transform: translate(0, 0); filter: brightness(1) contrast(1.1); }
+    }
+    @keyframes ending-glitch-jump {
+      0% { transform: translate(0, 0) skewX(0deg); }
+      25% { transform: translate(-10px, 2px) skewX(-6deg); }
+      50% { transform: translate(14px, -3px) skewX(9deg); }
+      75% { transform: translate(-8px, -2px) skewX(-4deg); }
+      100% { transform: translate(0, 0) skewX(0deg); }
     }
     /* 简易记事本窗口（同样作为悬浮窗口） */
     #notes-window {
@@ -1194,10 +1375,39 @@
   </div>
   <!-- 最终黑屏结局：技术风 CLI 输出 + 结局文案 -->
   <div id="tuning-ending-overlay">
+    <div id="tuning-glitch"></div>
     <pre id="tuning-code"></pre>
     <div id="tuning-ending-center">ENDING 2: FOREVER TOGETHER
-You joined the two pets, a third soul was added to the collection. They were never terminal patients or cats according to Mr. Clyde, rather trapped souls of abducted kids, now you know the truth, Mr. Hiro, but for what?  You'll never get to tell the tale...
+SoulContainer.exe was activated. Your soul was added to the collection. Those 'pets' were never terminal patients or cats according to Mr. Clyde, rather trapped souls of abducted kids, now you know the truth, Mr. Hiro, but for what?  You'll never get to tell the tale...
 (Property of SoulContainer Inc., pseudogryph L.T.D.)</div>
+  </div>
+  <div id="system-kill-overlay">
+    <div id="system-kill-dialog">
+      <div class="system-kill-titlebar">
+        <div class="ark-term-title-buttons">
+          <div class="ark-term-btn min system-kill-min"></div>
+        </div>
+        <div class="system-kill-title-text">System</div>
+      </div>
+      <div class="system-kill-body">
+        <div class="system-kill-field">
+          <label for="system-kill-name">1. Who are you?</label>
+          <input id="system-kill-name" type="text" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="system-kill-field">
+          <label for="system-kill-room">2. What room are you currently in?</label>
+          <input id="system-kill-room" type="text" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="system-kill-field">
+          <label for="system-kill-password">3. Enter your password:</label>
+          <input id="system-kill-password" type="password" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="system-kill-actions">
+          <div id="system-kill-status"></div>
+          <button id="system-kill-submit" type="button">Submit</button>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- 摄像头视频覆盖层 -->
   <video id="camera-stream" autoplay playsinline muted></video>
