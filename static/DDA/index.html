@@ -1214,12 +1214,52 @@
           .replace(/[^a-z]/g, "");
       }
       const nameToCode = new Map();
+      let unitedKingdomCode = null;
+      let czechCode = null;
+      let slovakiaCode = null;
       countryNameByCode.forEach((name, code) => {
         const k = nameKey(name);
         if (!nameToCode.has(k)) {
           nameToCode.set(k, code);
         }
+
+        // 记录 United Kingdom (GBR) 的代码，用于 tile 特殊映射
+        if (k === "unitedkingdom" || code === "GBR") {
+          unitedKingdomCode = code;
+        }
+
+        // 记录捷克和斯洛伐克的代码
+        if (code === "CZE") {
+          czechCode = code;
+        }
+        if (code === "SVK") {
+          slovakiaCode = code;
+        }
       });
+
+      // 特殊处理：tile 模板中使用 "Great Britain"，但数据中是 "United Kingdom (GBR)"
+      // 如果找到了英国的代码，则把 "Great Britain" 也映射到同一个代码
+      if (unitedKingdomCode && !nameToCode.has("greatbritain")) {
+        nameToCode.set("greatbritain", unitedKingdomCode);
+      }
+
+      // 特殊处理：可能存在 "Czechia"、"Czech Rep." 等别名
+      if (czechCode) {
+        ["czechia", "czechrep", "czechrepublic"].forEach(alias => {
+          if (!nameToCode.has(alias)) {
+            nameToCode.set(alias, czechCode);
+          }
+        });
+      }
+
+      // 特殊处理：可能存在 "Slovak Rep."、"Slovak Republic" 等别名
+      if (slovakiaCode) {
+        ["slovakia", "slovakrep", "slovakrepublic"].forEach(alias => {
+          if (!nameToCode.has(alias)) {
+            nameToCode.set(alias, slovakiaCode);
+          }
+        });
+      }
 
       // Color scale domain: more granular, only 30%+ is pure green
       valueMin = 0;
