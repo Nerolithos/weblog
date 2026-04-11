@@ -605,6 +605,18 @@
     let dataByYearAndCode = new Map(); // Map<year, Map<code, { value, name }>>
     let countryNameByCode = new Map(); // Map<code, name>
 
+    // Africa aggregate: 用 CSV 中 "Africa" 这一行的数值
+    // 给除 Morocco(EGY)、Egypt(EGY)、Algeria(DZA)、South Africa(ZAF)
+    // 以外的非洲国家着色。
+    const africaAggregateIso3 = new Set([
+      "AGO","BEN","BWA","BFA","BDI","CMR","CPV","CAF","TCD","COM",
+      "COD","COG","CIV","DJI","GNQ","ERI","SWZ","ETH","GAB","GMB",
+      "GHA","GIN","GNB","KEN","LSO","LBR","LBY","MDG","MWI","MLI",
+      "MRT","MUS","MOZ","NAM","NER","NGA","RWA","STP","SEN","SLE",
+      "SOM","SSD","SDS","SDN","TZA","TGO","TUN","UGA","ZMB","ZWE","SYC","ABV"
+    ]);
+    let africaAggregateByYear = new Map(); // Map<year, value>
+
     let valueMin = Infinity;
     let valueMax = -Infinity;
 
@@ -719,8 +731,19 @@
 
     function getCountryValue(year, iso3) {
       const yearMap = dataByYearAndCode.get(year);
-      if (!yearMap) return null;
-      return yearMap.get(iso3) || null;
+      let record = yearMap ? (yearMap.get(iso3) || null) : null;
+
+      // 若该国家没有有效数据（包括 NaN），但属于 Africa aggregate 分组，
+      // 则使用 CSV 中 "Africa" 这一行对应年份的汇总数值。
+      const hasValidValue = record && record.value != null && !isNaN(record.value);
+      if (!hasValidValue && africaAggregateIso3.has(iso3)) {
+        const aggValue = africaAggregateByYear.get(year);
+        if (aggValue != null && !isNaN(aggValue)) {
+          record = { value: aggValue, name: "Africa Aggregate" };
+        }
+      }
+
+      return record;
     }
 
     function applyYearByIndex(index) {
@@ -791,7 +814,8 @@
         infoPanel.textContent = `${name} (${iso3}) · ${currentYear || "-"} · Renewables share: NAN`;
       } else {
         const value = record.value.toFixed(2);
-        infoPanel.textContent = `${currentYear} · ${name} (${iso3}) · Renewables share: ${value}%`;
+        const suffix = record.name === "Africa Aggregate" ? " · Africa Aggregate" : "";
+        infoPanel.textContent = `${currentYear} · ${name} (${iso3}) · Renewables share: ${value}%${suffix}`;
       }
     }
 
@@ -808,7 +832,8 @@
         content = `<div><strong>${name}</strong> (${iso3})</div><div>${year || "-"} · Renewables share: NAN</div>`;
       } else {
         const value = record.value.toFixed(2);
-        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year} · Renewables share: ${value}%</div>`;
+        const suffix = record.name === "Africa Aggregate" ? " · Africa Aggregate" : "";
+        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year} · Renewables share: ${value}%${suffix}</div>`;
       }
 
       tooltipEl.innerHTML = content;
@@ -1172,13 +1197,21 @@
       // 处理 CSV：Entity,Code,Year,Renewables (% equivalent primary energy)
       rows.forEach(row => {
         const code = row.Code && row.Code.trim();
-        const entity = row.Entity;
+        const entity = row.Entity && row.Entity.trim();
         const year = +row.Year;
         const valueRaw = row["Renewables (% equivalent primary energy)"];
 
-        if (!year || !code) return; // 忽略地区汇总行（没有 code）
+        if (!year) return;
 
         const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
+
+        // 单独记录 "Africa" 这一行，用于非洲汇总着色
+        if (entity === "Africa" && !isNaN(value)) {
+          africaAggregateByYear.set(year, value);
+        }
+
+        // 没有 code 的行（例如 Africa 区域汇总）到此结束
+        if (!code) return;
 
         if (!isNaN(value)) {
           if (value < valueMin) valueMin = value;
@@ -1217,6 +1250,8 @@
       let unitedKingdomCode = null;
       let czechCode = null;
       let slovakiaCode = null;
+      let southKoreaCode = null;
+      let uaeCode = null;
       countryNameByCode.forEach((name, code) => {
         const k = nameKey(name);
         if (!nameToCode.has(k)) {
@@ -1234,6 +1269,16 @@
         }
         if (code === "SVK") {
           slovakiaCode = code;
+        }
+
+        // 记录韩国（KOR）的代码，用于 tile 特殊映射 "S. Korea"
+        if (code === "KOR") {
+          southKoreaCode = code;
+        }
+
+        // 记录阿联酋（ARE）的代码，用于 tile 特殊映射 "UAE"
+        if (code === "ARE") {
+          uaeCode = code;
         }
       });
 
@@ -1260,6 +1305,84 @@
           }
         });
       }
+
+      // 特殊处理：tile 模板中使用 "S. Korea"，数据中是 South Korea (KOR)
+      if (southKoreaCode) {
+        const aliasKey = "skorea"; // "S. Korea" 经过 nameKey 处理后的形式
+        if (!nameToCode.has(aliasKey)) {
+          nameToCode.set(aliasKey, southKoreaCode);
+        }
+      }
+
+      // 特殊处理：tile 模板中使用 "UAE"，数据中是 United Arab Emirates (ARE)
+      if (uaeCode) {
+        const aliasKey = "uae"; // "UAE" 经过 nameKey 处理后的形式
+        if (!nameToCode.has(aliasKey)) {
+          nameToCode.set(aliasKey, uaeCode);
+        }
+      }
+
+      // 补充一些非洲国家在 tile 模板中的名称 -> ISO3 的映射。
+      // 其中部分国家在 CSV 里没有单独的 Code 行，但我们仍然
+      // 希望它们的 tile 能映射到一个 ISO3，以便使用 Africa Aggregate 着色。
+      const africaManualMappings = [
+        ["Libya", "LBY"],
+        ["Tunisia", "TUN"],
+        ["Togo", "TGO"],
+        ["Benin", "BEN"],
+        ["Liberia", "LBR"],
+        ["Ghana", "GHA"],
+        ["Central African Republic", "CAF"],
+        ["Uganda", "UGA"],
+        ["Kenya", "KEN"],
+        ["Mauritania", "MRT"],
+        ["Gambia", "GMB"],
+        ["Senegal", "SEN"],
+        ["Mali", "MLI"],
+        ["Niger", "NER"],
+        ["Sudan", "SDN"],
+        ["South Sudan", "SSD"],
+        ["Eritrea", "ERI"],
+        ["Djibouti", "DJI"],
+        ["Guinea-Bissau", "GNB"],
+        ["Sierra Leone", "SLE"],
+        ["Burkina Faso", "BFA"],
+        ["Chad", "TCD"],
+        ["Ethiopia", "ETH"],
+        ["Somalia", "SOM"],
+        ["Cabo Verde", "CPV"],
+        ["Cote d'Ivoire", "CIV"],
+        ["Nigeria", "NGA"],
+        ["Cameroon", "CMR"],
+        ["Democratic Republic of Congo", "COD"],
+        ["Republic of the Congo", "COG"],
+        ["Burundi", "BDI"],
+        ["Rwanda", "RWA"],
+        ["Tanzania", "TZA"],
+        ["Angola", "AGO"],
+        ["Gabon", "GAB"],
+        ["Malawi", "MWI"],
+        ["Mozambique", "MOZ"],
+        ["Seychelles", "SYC"],
+        ["Zambia", "ZMB"],
+        ["Botswana", "BWA"],
+        ["Zimbabwe", "ZWE"],
+        ["Comoros", "COM"],
+        ["Swaziland", "SWZ"],
+        ["Lesotho", "LSO"],
+        ["Madagascar", "MDG"],
+        ["Namibia", "NAM"],
+        ["Mauritius", "MUS"],
+        ["Sao Tome and Principe", "STP"],
+        ["Equatorial Guinea", "GNQ"]
+      ];
+
+      africaManualMappings.forEach(([label, code]) => {
+        const k2 = nameKey(label);
+        if (!nameToCode.has(k2)) {
+          nameToCode.set(k2, code);
+        }
+      });
 
       // Color scale domain: more granular, only 30%+ is pure green
       valueMin = 0;

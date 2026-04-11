@@ -643,7 +643,17 @@
         "#c5e1a5", // ~20%
         "#006837"  // 30%+
       ]);
-    let shareLatestByIso3 = new Map(); // Map<iso3, value>
+    // 每一年、每个国家的可再生能源占比：Map<year, Map<iso3, value>>
+    let shareDataByYearAndIso3 = new Map();
+    // Africa aggregate: 使用 CSV 中 "Africa" 的行作为汇总
+    const africaAggregateIso3 = new Set([
+      "AGO","BEN","BWA","BFA","BDI","CMR","CPV","CAF","TCD","COM",
+      "COD","COG","CIV","DJI","GNQ","ERI","SWZ","ETH","GAB","GMB",
+      "GHA","GIN","GNB","KEN","LSO","LBR","LBY","MDG","MWI","MLI",
+      "MRT","MUS","MOZ","NAM","NER","NGA","RWA","STP","SEN","SLE",
+      "SOM","SSD","SDS","SDN","TZA","TGO","TUN","UGA","ZMB","ZWE","SYC","ABV"
+    ]);
+    let shareAfricaAggregateByYear = new Map(); // Map<year, value>
     let shareColorReady = false;
 
     // Elements for the annual energy bar chart
@@ -1168,8 +1178,19 @@
     let mapCountryPathsSelection = null;
 
     function getShareColorForIso3(iso3) {
-      if (!shareColorReady || !iso3) return "#e0e0e0";
-      const value = shareLatestByIso3.get(iso3);
+      if (!shareColorReady || !iso3 || currentClusterYear == null) return "#e0e0e0";
+      const byIso = shareDataByYearAndIso3.get(currentClusterYear);
+      let value = byIso ? byIso.get(iso3) : undefined;
+
+      // 若该国家没有有效数据（包括 NaN），但属于 Africa aggregate 分组，
+      // 则使用 CSV 中 "Africa" 这一行对应年份的汇总数值。
+      if ((value == null || isNaN(value)) && africaAggregateIso3.has(iso3)) {
+        const aggValue = shareAfricaAggregateByYear.get(currentClusterYear);
+        if (aggValue != null && !isNaN(aggValue)) {
+          value = aggValue;
+        }
+      }
+
       if (value == null || isNaN(value)) return "#e0e0e0";
       return shareColorScale(value);
     }
@@ -1611,6 +1632,8 @@
 
       // 从 GeoJSON 中构建 name -> ISO3 的映射，供模板匹配使用
       const nameToCode = new Map();
+      let southKoreaCode = null;
+      let uaeCode = null;
       world.features.forEach(f => {
         const props = f.properties || {};
         const name = props.name || props.ADMIN;
@@ -1620,7 +1643,33 @@
         if (!nameToCode.has(k)) {
           nameToCode.set(k, iso3);
         }
+
+        // 记录韩国（KOR）的代码，用于 tile 模板中的 "S. Korea"
+        if (iso3 === "KOR") {
+          southKoreaCode = iso3;
+        }
+
+        // 记录阿联酋（ARE）的代码，用于 tile 模板中的 "UAE"
+        if (iso3 === "ARE") {
+          uaeCode = iso3;
+        }
       });
+
+      // 补充 tile 模板名称 "S. Korea" -> KOR 的映射
+      if (southKoreaCode) {
+        const aliasKey = "skorea"; // "S. Korea" 经过 nameKey 处理后的形式
+        if (!nameToCode.has(aliasKey)) {
+          nameToCode.set(aliasKey, southKoreaCode);
+        }
+      }
+
+      // 补充 tile 模板名称 "UAE" -> ARE 的映射
+      if (uaeCode) {
+        const aliasKey = "uae"; // "UAE" 经过 nameKey 处理后的形式
+        if (!nameToCode.has(aliasKey)) {
+          nameToCode.set(aliasKey, uaeCode);
+        }
+      }
 
       d3.json("world-tile-grid.json").then(tileTemplate => {
         if (!Array.isArray(tileTemplate) || !tileTemplate.length) return;
@@ -1892,26 +1941,28 @@
       d3.csv(shareCsvUrl).then(rows => {
         if (!rows || !rows.length) return;
 
-        const latestPerCode = new Map(); // Map<code, {year, value}>
+        const yearMap = new Map(); // Map<year, Map<code, value>>
 
         rows.forEach(row => {
           const code = row.Code && row.Code.trim();
+          const entity = row.Entity && row.Entity.trim();
           const year = +row.Year;
           const valueRaw = row["Renewables (% equivalent primary energy)"];
-          if (!code || !year) return;
+          if (!year) return;
           const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
-          if (!isNaN(value)) {
-            const existing = latestPerCode.get(code);
-            if (!existing || year > existing.year) {
-              latestPerCode.set(code, { year, value });
-            }
+          if (isNaN(value)) return;
+
+          // 记录 "Africa" 区域汇总，用于非洲国家统一着色
+          if (entity === "Africa") {
+            shareAfricaAggregateByYear.set(year, value);
           }
+
+          if (!code) return;
+          if (!yearMap.has(year)) yearMap.set(year, new Map());
+          yearMap.get(year).set(code, value);
         });
 
-        shareLatestByIso3 = new Map();
-        latestPerCode.forEach((rec, code) => {
-          shareLatestByIso3.set(code, rec.value);
-        });
+        shareDataByYearAndIso3 = yearMap;
 
         // 与主页保持相同的 domain 设置
         shareColorScale
