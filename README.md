@@ -4,7 +4,7 @@
 
 想要 CUHKSZ 课程讲解、考卷/作业分析？[点击此处转至我的 CUHKSZ blog 网站主页](https://blog.nero-lithos.com/)
 
-想要玩神人小游戏？[点击此处转至解密游戏（260409: 更新了两个结局和聊天功能）](https://blog.nero-lithos.com/pet)
+想要玩神人小游戏？[模拟计算机解密游戏（260411: 更新了第三个结局）](https://blog.nero-lithos.com/pet)
 
 想要 cat 历史上今天发生了啥？[点击此处转至 “历史上的今天”](https://blog.nero-lithos.com/posts/history-today/)
 
