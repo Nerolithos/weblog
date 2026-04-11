@@ -1,5 +1,5 @@
 ---
-title: "Interactive Periodic Table"
+title: "🧪 Interactive Periodic Table"
 date: 2026-04-11T20:08:00+08:00
 draft: false
 categories:
