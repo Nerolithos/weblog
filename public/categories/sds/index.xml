@@ -6,14 +6,21 @@
     <description>Recent content in SDS on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 08 Apr 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 11 Apr 2026 07:00:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/sds/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>DDA3003 · Global renewables D3 globe</title>
+      <title>🐈 ArkPets suspense puzzle game (final version)</title>
+      <link>http://localhost:1313/posts/pet/</link>
+      <pubDate>Sat, 11 Apr 2026 07:00:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/pet/</guid>
+      <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
+    </item>
+    <item>
+      <title>🎨 DDA3003 Visual Analytics of Global Energy Transition Patterns (Prototype)</title>
       <link>http://localhost:1313/posts/dda3003/</link>
-      <pubDate>Wed, 08 Apr 2026 00:00:00 +0800</pubDate>
+      <pubDate>Wed, 08 Apr 2026 10:16:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/dda3003/</guid>
-      <description>Entry point to the DDA3003 global renewables share interactive D3 globe.</description>
+      <description>DDA3003 Group4 Project Prototype, show global and country-wise renewable energy share on D3 globe, and cluster analysis.</description>
     </item>
     <item>
       <title>💯 CSC3060 Quiz Q&amp;A</title>
@@ -21,13 +28,6 @@
       <pubDate>Tue, 07 Apr 2026 13:30:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3060q/</guid>
       <description>Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.</description>
-    </item>
-    <item>
-      <title>🐈 ArkPets suspense puzzle game</title>
-      <link>http://localhost:1313/posts/pet/</link>
-      <pubDate>Mon, 06 Apr 2026 10:51:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/pet/</guid>
-      <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>

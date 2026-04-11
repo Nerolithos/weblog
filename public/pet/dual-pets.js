@@ -38,8 +38,18 @@
     var containClarityRangeEl = document.getElementById("contain-clarity-range");
     // 最终黑屏结局 DOM
     var tuningOverlayEl = document.getElementById("tuning-ending-overlay");
+    var tuningGlitchEl = document.getElementById("tuning-glitch");
     var tuningCodeEl = document.getElementById("tuning-code");
     var tuningCenterEl = document.getElementById("tuning-ending-center");
+
+    // sudo --kill 触发的身份校验窗口
+    var systemKillOverlayEl = document.getElementById("system-kill-overlay");
+    var systemKillDialogEl = document.getElementById("system-kill-dialog");
+    var systemKillNameEl = document.getElementById("system-kill-name");
+    var systemKillRoomEl = document.getElementById("system-kill-room");
+    var systemKillPasswordEl = document.getElementById("system-kill-password");
+    var systemKillStatusEl = document.getElementById("system-kill-status");
+    var systemKillSubmitEl = document.getElementById("system-kill-submit");
 
     // KeyVault 窗口与访客提示框
     var keyVaultWindowEl = document.getElementById("keyvault-window");
@@ -675,6 +685,7 @@
     var containPuzzleSolved = false;
     // 最终结局只触发一次
     var tuningEndingStarted = false;
+    var tuningEndingDefaultText = tuningCenterEl ? tuningCenterEl.textContent : "";
 
     // KeyVault 数字华容道（15-puzzle）状态
     var keyVaultPuzzleInitialized = false;
@@ -1260,11 +1271,60 @@
       drawPuzzle();
     }
 
+    function normalizeLooseText(str) {
+      return String(str || "").replace(/\s+/g, " ").trim().toLowerCase();
+    }
+
+    function isClydeKillIdentity(str) {
+      var value = normalizeLooseText(str);
+      return value === "clyde j. rothschild" ||
+        value === "clyde rothschild" ||
+        value === "clyde" ||
+        value === "rothschild";
+    }
+
+    function isHiroKillIdentity(str) {
+      var value = normalizeLooseText(str);
+      return value === "hiro" ||
+        value === "hiro pleighman" ||
+        value === "pleighman";
+    }
+
+    function isValidKillRoom(str) {
+      var value = normalizeLooseText(str);
+      return value === "42c" || value === "room 42c";
+    }
+
+    function closeSystemKillDialog() {
+      if (!systemKillOverlayEl) return;
+      systemKillOverlayEl.style.display = "none";
+    }
+
+    function setSystemKillStatus(message) {
+      if (!systemKillStatusEl) return;
+      systemKillStatusEl.textContent = message || "";
+    }
+
+    function startHappyEnding() {
+      startTuningEnding({
+        showCode: false,
+        glitchMode: true,
+        glitchDuration: 7000,
+        centerText: "ENDING 3: HAPPY ENDING?\nYou destroyed the Soul Container by pretending to be Clyde. The trapped souls faded away into eternal tranquility..."
+      });
+    }
+
     // 最终黑屏结局：技术风 CLI 输出 + 结局字幕
-    function startTuningEnding() {
+    function startTuningEnding(options) {
       if (!tuningOverlayEl || !tuningCodeEl || !tuningCenterEl) return;
       if (tuningEndingStarted) return;
       tuningEndingStarted = true;
+
+      options = options || {};
+      var showCode = options.showCode !== false;
+      var glitchMode = !!options.glitchMode;
+      var glitchDuration = typeof options.glitchDuration === "number" ? options.glitchDuration : 7000;
+      var centerText = typeof options.centerText === "string" ? options.centerText : tuningEndingDefaultText;
 
       // 显示覆盖层并启动缓慢黑屏
       tuningOverlayEl.style.display = "block";
@@ -1272,10 +1332,44 @@
       void tuningOverlayEl.offsetWidth;
       tuningOverlayEl.style.opacity = "1";
 
+      tuningCenterEl.textContent = centerText;
+      tuningCenterEl.style.opacity = "0";
+        tuningCenterEl.style.textShadow = "none";
+        tuningOverlayEl.classList.remove("glitch-intense");
       tuningCodeEl.textContent = "";
+      tuningCodeEl.style.display = showCode ? "block" : "none";
+      tuningCodeEl.style.opacity = showCode ? "1" : "0";
+      tuningCodeEl.style.color = options.codeColor || "#33ff66";
+
+      if (tuningGlitchEl) {
+        tuningGlitchEl.style.display = glitchMode ? "block" : "none";
+        tuningGlitchEl.style.opacity = glitchMode ? "1" : "0";
+      }
+
+      if (glitchMode) {
+        tuningOverlayEl.classList.add("glitch-intense");
+        setTimeout(function () {
+          if (tuningGlitchEl) {
+            tuningGlitchEl.style.opacity = "0.96";
+          }
+        }, 40);
+        setTimeout(function () {
+          if (tuningGlitchEl) {
+            tuningGlitchEl.style.opacity = "0";
+          }
+        }, Math.max(0, glitchDuration - 1600));
+        setTimeout(function () {
+          tuningOverlayEl.classList.remove("glitch-intense");
+          if (tuningGlitchEl) {
+            tuningGlitchEl.style.display = "none";
+          }
+          tuningCenterEl.style.opacity = "1";
+        }, glitchDuration);
+        return;
+      }
 
       // 一组“技术风 / 黑客风”行模板，稍后循环输出到 200+ 行
-      var patterns = [
+      var patterns = options.patterns || [
         "[SC-CORE] bootstrapping soul-container runtime... seq=",
         "[SC-CORE] validating arkpet descriptors... ok :: id=ark-",
         "[SC-I/O ] streaming soul fragment blocks... bytes=",
@@ -1309,7 +1403,7 @@
         "[SC-END ] waiting for silence..."
       ];
 
-      var totalLines = 240;
+      var totalLines = typeof options.totalLines === "number" ? options.totalLines : 240;
       var i = 0;
 
       function appendNext() {
@@ -1334,6 +1428,140 @@
 
       // 稍等一瞬再开始刷屏，配合黑屏渐显
       setTimeout(appendNext, 800);
+    }
+
+    function openSystemKillDialog() {
+      if (!systemKillOverlayEl || !systemKillSubmitEl || !systemKillDialogEl) return;
+      if (systemKillNameEl) systemKillNameEl.value = "";
+      if (systemKillRoomEl) systemKillRoomEl.value = "";
+      if (systemKillPasswordEl) systemKillPasswordEl.value = "";
+      setSystemKillStatus("");
+      systemKillOverlayEl.style.display = "block";
+      systemKillDialogEl.style.display = "flex";
+      systemKillDialogEl.style.transform = "";
+      centerWindowInViewport(systemKillDialogEl);
+      bringToFront(systemKillDialogEl);
+      setTimeout(function () {
+        if (systemKillNameEl) {
+          try { systemKillNameEl.focus(); } catch (e) {}
+        }
+      }, 0);
+    }
+
+    function initSystemKillDialog() {
+      if (!systemKillOverlayEl || !systemKillSubmitEl || !systemKillDialogEl) return;
+
+      var titleBar = systemKillDialogEl.querySelector(".system-kill-titlebar");
+      var minBtn = systemKillDialogEl.querySelector(".system-kill-min");
+      var dragging = false;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      function onMouseDown(ev) {
+        if (ev.button !== 0) return;
+        bringToFront(systemKillDialogEl);
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        var m = (systemKillDialogEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        } else {
+          baseX = 0;
+          baseY = 0;
+        }
+        ev.preventDefault();
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(ev) {
+        if (!dragging) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        systemKillDialogEl.style.transform = "translate(" + (baseX + dx) + "px," + (baseY + dy) + "px)";
+        clampWindowToViewport(systemKillDialogEl);
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        var m = (systemKillDialogEl.style.transform || "").match(/translate\(([-0-9.]+)px,\s*([-0-9.]+)px\)/);
+        if (m) {
+          baseX = parseFloat(m[1]) || 0;
+          baseY = parseFloat(m[2]) || 0;
+        }
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      if (titleBar) {
+        titleBar.addEventListener("mousedown", onMouseDown);
+      }
+
+      systemKillDialogEl.addEventListener("mousedown", function (ev) {
+        if (ev.button !== 0) return;
+        bringToFront(systemKillDialogEl);
+      });
+
+      if (minBtn) {
+        minBtn.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          closeSystemKillDialog();
+        });
+      }
+
+      function submitSystemKill() {
+        var name = systemKillNameEl ? systemKillNameEl.value : "";
+        var room = systemKillRoomEl ? systemKillRoomEl.value : "";
+        var password = systemKillPasswordEl ? systemKillPasswordEl.value : "";
+
+        if (!String(name || "").trim() || !String(room || "").trim() || !String(password || "").trim()) {
+          setSystemKillStatus("Please complete all fields.");
+          if (systemKillPasswordEl) {
+            systemKillPasswordEl.value = "";
+            try { systemKillPasswordEl.focus(); } catch (e) {}
+          }
+          return;
+        }
+
+        if (isHiroKillIdentity(name)) {
+          closeSystemKillDialog();
+          startTuningEnding();
+          return;
+        }
+
+        if (isClydeKillIdentity(name) && isValidKillRoom(room) && String(password || "").trim() === "5G16H9IC") {
+          closeSystemKillDialog();
+          startHappyEnding();
+          return;
+        }
+
+        setSystemKillStatus("Authentication failed, please try again.");
+        if (systemKillPasswordEl) {
+          systemKillPasswordEl.value = "";
+          try { systemKillPasswordEl.focus(); } catch (e) {}
+        }
+      }
+
+      systemKillSubmitEl.addEventListener("click", submitSystemKill);
+
+      var inputs = [systemKillNameEl, systemKillRoomEl, systemKillPasswordEl];
+      for (var i = 0; i < inputs.length; i++) {
+        if (!inputs[i]) continue;
+        inputs[i].addEventListener("input", function () {
+          setSystemKillStatus("");
+        });
+        inputs[i].addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter") {
+            ev.preventDefault();
+            submitSystemKill();
+          }
+        });
+      }
     }
 
     // KeyVault 内部：D3 数字华容道（4x4 15-puzzle）
@@ -2395,6 +2623,19 @@
         } else if (trimmed === "rm SoulContainer.exe" && cwd === "Resources") {
           html += '<span style="color:#ff0000">WARNING</span>: Security level low, at minimum, level 4 is required to delete core document.<br>';
           html += 'Try to elevate privileges through visiting <span style="color:#33ff66">KeyVault</span>.<br>';
+          html += 'Then, run sudo --kill.<br>';
+        } else if (trimmed === "sudo --kill" && cwd === "Resources") {
+          if (!keyVaultPuzzleCompleted) {
+            html += '<span style="color:#ff0000">Authentication failed, please try again.</span><br>';
+            html += 'Unlock <span style="color:#33ff66">KeyVault</span> to retrieve level 4 credentials.<br>';
+            appendHtml(html);
+            heartsStreamIfReady();
+            return;
+          }
+          appendHtml(html);
+          heartsStreamIfReady();
+          openSystemKillDialog();
+          return;
         } else if (trimmed !== "") {
           // 其他未定义命令：模仿 zsh 的 command not found 提示
           html += "zsh: command not found: " + escapeHtml(cmd) + "<br>";
@@ -3573,6 +3814,7 @@
     initChatApWindow();
     initDesktopIcons();
     initNotesWindow();
+    initSystemKillDialog();
     initTaskbarHome();
     // 初始状态：ArkPets、Terminal、Notes 均视为已打开，显示在任务栏
     if (openApps) {

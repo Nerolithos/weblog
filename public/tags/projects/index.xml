@@ -6,21 +6,21 @@
     <description>Recent content in Projects on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 08 Apr 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 11 Apr 2026 07:00:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/projects/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>DDA3003 · Global renewables D3 globe</title>
-      <link>http://localhost:1313/posts/dda3003/</link>
-      <pubDate>Wed, 08 Apr 2026 00:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/dda3003/</guid>
-      <description>Entry point to the DDA3003 global renewables share interactive D3 globe.</description>
-    </item>
-    <item>
-      <title>🐈 ArkPets suspense puzzle game</title>
+      <title>🐈 ArkPets suspense puzzle game (final version)</title>
       <link>http://localhost:1313/posts/pet/</link>
-      <pubDate>Mon, 06 Apr 2026 10:51:34 +0800</pubDate>
+      <pubDate>Sat, 11 Apr 2026 07:00:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/pet/</guid>
       <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
+    </item>
+    <item>
+      <title>🎨 DDA3003 Visual Analytics of Global Energy Transition Patterns (Prototype)</title>
+      <link>http://localhost:1313/posts/dda3003/</link>
+      <pubDate>Wed, 08 Apr 2026 10:16:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/dda3003/</guid>
+      <description>DDA3003 Group4 Project Prototype, show global and country-wise renewable energy share on D3 globe, and cluster analysis.</description>
     </item>
     <item>
       <title>🎮 Super &#39;Emojio&#39;</title>
