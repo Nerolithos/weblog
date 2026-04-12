@@ -1493,6 +1493,23 @@
         }
       });
 
+      // 额外补充 tile 模板中特殊写法到 ISO3 的映射，
+      // 确保 Dominican Republic (DOM) 和 N. Korea (PRK) 在 tile 视图中有数据。
+      const extraTileMappings = [
+        ["Dominican Republic", "DOM"],
+        ["N. Korea", "PRK"],
+        ["Kyrgyz Republic", "KGZ"],
+        ["Laos", "LAO"],
+        ["Dominica", "DMA"]
+      ];
+
+      extraTileMappings.forEach(([label, code]) => {
+        const k2 = nameKey(label);
+        if (!nameToCode.has(k2)) {
+          nameToCode.set(k2, code);
+        }
+      });
+
       // Color scale domain: 0–75%+, with more steps
       valueMin = 0;
       valueMax = 75;
