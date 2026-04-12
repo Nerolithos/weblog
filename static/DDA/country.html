@@ -598,6 +598,21 @@
 
     const VIEW_MODE_KEY = "dda_view_mode";
 
+    // Display-name overrides for sensitive entities (UI only; ISO3 and data remain unchanged)
+    const COUNTRY_NAME_OVERRIDES = new Map([
+      ["HKG", "HongKong, China SAR"],
+      ["MAC", "Macau, China SAR"],
+      ["TWN", "Taiwan, China RoC"]
+    ]);
+
+    function getDisplayCountryName(iso3, fallbackName) {
+      const code = (iso3 || "").toUpperCase();
+      if (COUNTRY_NAME_OVERRIDES.has(code)) {
+        return COUNTRY_NAME_OVERRIDES.get(code);
+      }
+      return fallbackName;
+    }
+
     const countryByIso3 = {};
     const clusterByIso3 = {};
     const isoByCountryName = new Map();
@@ -620,7 +635,8 @@
 
     const selectedIso3Raw = (getQueryParam("code") || "").toUpperCase();
     const selectedIso3 = selectedIso3Raw || "";
-    const selectedCountryName = countryByIso3[selectedIso3] || selectedIso3 || "Unknown country";
+    const baseSelectedCountryName = countryByIso3[selectedIso3] || selectedIso3 || "Unknown country";
+    const selectedCountryName = getDisplayCountryName(selectedIso3, baseSelectedCountryName);
 
     // 颜色模式：cluster 高亮（当前逻辑）或使用主页中的可再生能源占比颜色
     const COUNTRY_COLOR_MODE_KEY = "dda_country_color_mode";
@@ -1283,7 +1299,8 @@
       const rect = wrapper.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      let content = `<div><strong>${name}</strong> (${iso3})</div>`;
+      const displayName = getDisplayCountryName(iso3, name);
+      let content = `<div><strong>${displayName}</strong> (${iso3})</div>`;
 
       // 在国家聚类页中，同样展示当前年份的 renewable share 百分比，
       // 逻辑与主页一致：优先使用国家自身数据，若缺失且属于 Africa aggregate

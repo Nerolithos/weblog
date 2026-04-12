@@ -613,6 +613,21 @@
     let dataByYearAndCode = new Map(); // Map<year, Map<code, { value, name }>>
     let countryNameByCode = new Map(); // Map<code, name>
 
+    // Display-name overrides for sensitive entities (UI only; ISO3 and data remain unchanged)
+    const DISPLAY_NAME_OVERRIDES = new Map([
+      ["HKG", "HongKong, China SAR"],
+      ["MAC", "Macau, China SAR"],
+      ["TWN", "Taiwan, China RoC"]
+    ]);
+
+    function getDisplayCountryName(iso3, fallbackName) {
+      const code = (iso3 || "").toUpperCase();
+      if (DISPLAY_NAME_OVERRIDES.has(code)) {
+        return DISPLAY_NAME_OVERRIDES.get(code);
+      }
+      return fallbackName;
+    }
+
     // Africa aggregate: 用 CSV 中 "Africa" 这一行的数值
     // 给除 Morocco(EGY)、Egypt(EGY)、Algeria(DZA)、South Africa(ZAF)
     // 以外的非洲国家着色。
@@ -816,8 +831,9 @@
         return;
       }
       const props = feature.properties || {};
-      const name = props.name || props.ADMIN || "Unknown country";
       const iso3 = props.iso_a3 || props.ISO_A3 || feature.id || "?";
+      const rawName = props.name || props.ADMIN || "Unknown country";
+      const name = getDisplayCountryName(iso3, rawName);
       const record = currentYear ? getCountryValue(currentYear, iso3) : null;
       if (!currentYear || !record || record.value == null || isNaN(record.value)) {
         infoPanel.textContent = `${name} (${iso3}) · ${currentYear || "-"} · Renewables share: NAN`;
@@ -831,8 +847,9 @@
     function showTooltip(event, feature) {
       if (!feature) return;
       const props = feature.properties || {};
-      const name = props.name || props.ADMIN || "Unknown country";
       const iso3 = props.iso_a3 || props.ISO_A3 || feature.id || "?";
+      const rawName = props.name || props.ADMIN || "Unknown country";
+      const name = getDisplayCountryName(iso3, rawName);
       const year = currentYear;
       const record = year ? getCountryValue(year, iso3) : null;
 
@@ -921,7 +938,8 @@
 
       const allValues = [];
       const series = codes.map(code => {
-        const name = countryNameByCode.get(code) || code;
+        const baseName = countryNameByCode.get(code) || code;
+        const name = getDisplayCountryName(code, baseName);
         const values = years.map(year => {
           const rec = getCountryValue(year, code);
           const v = rec && !isNaN(rec.value) ? rec.value : null;
@@ -1079,7 +1097,10 @@
     function buildSearchOptions() {
       if (!countryNameByCode.size) return;
       searchOptions = Array.from(countryNameByCode.entries())
-        .map(([code, name]) => ({ code, name }))
+        .map(([code, name]) => {
+          const displayName = getDisplayCountryName(code, name);
+          return { code, name: displayName };
+        })
         .sort((a, b) => a.name.localeCompare(b.name));
     }
 
