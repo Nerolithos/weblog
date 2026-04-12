@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Bohr-Style Periodic Table</title>
+  <link rel="stylesheet" href="element_hues.css" />
   <style>
     :root {
       color-scheme: light dark;
@@ -14,7 +15,8 @@
       --accent: #4fc3f7;
       --accent-soft: rgba(79, 195, 247, 0.15);
       --border: rgba(255, 255, 255, 0.08);
-      --tile-size: 2.4rem;
+      /* 略微减小元素格子尺寸，让整张表在常见屏幕高度下一屏可见 */
+      --tile-size: 2.2rem;
       --transition-fast: 120ms ease-out;
       --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.45);
     }
@@ -26,22 +28,20 @@
     }
 
     html, body {
-      height: 100%;
+      height: auto;
     }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
       background: radial-gradient(circle at top left, #202849, #050814 55%, #000 100%);
       color: var(--fg);
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
       padding: 1.5rem;
     }
 
     .app-shell {
       width: 100%;
       max-width: 1320px;
+      margin: 0 auto;
       background: linear-gradient(145deg, rgba(15, 20, 40, 0.98), rgba(6, 10, 26, 0.98));
       border-radius: 22px;
       border: 1px solid rgba(255, 255, 255, 0.06);
@@ -100,7 +100,8 @@
     main.layout {
       display: grid;
       grid-template-columns: minmax(0, 2.3fr) minmax(260px, 0.7fr);
-      grid-template-rows: minmax(0, 1.6fr) auto;
+      /* 两行高度都由内容决定，允许整个页面垂直滚动 */
+      grid-template-rows: auto auto;
       gap: 0.9rem;
       align-items: stretch;
       min-height: 0;
@@ -109,6 +110,8 @@
     .panel-ptable {
       grid-column: 1 / 2;
       grid-row: 1 / 2;
+      /* 让高度由内容自然决定，避免额外撑高造成整屏看不到底部行 */
+      padding-bottom: 1.0rem;
     }
 
     .panel-bohr {
@@ -215,8 +218,8 @@
     /* Periodic table grid */
     .ptable-wrapper {
       position: relative;
-      flex: 1;
-      overflow: auto;
+      overflow-x: auto;
+      overflow-y: visible;
       padding: 0.25rem 0.1rem 0.15rem;
     }
 
@@ -225,9 +228,9 @@
       display: grid;
       grid-template-columns: repeat(18, minmax(2rem, var(--tile-size)));
       grid-auto-rows: var(--tile-size);
-      gap: 0.12rem;
+      gap: 0.08rem;
       justify-content: center;
-      padding-bottom: 0.3rem;
+      padding-bottom: 0.15rem;
       min-width: max-content;
       font-size: 0.7rem;
     }
@@ -403,6 +406,40 @@
                   border-color var(--transition-fast),
                   background 160ms ease-out;
       overflow: hidden;
+    }
+
+    /* 金属光泽：左上高光、右下阴影的叠加层（仅 Hue 模式下启用） */
+    .mode-hue .el-tile.metallic::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.5) 26%,
+        rgba(255, 255, 255, 0.1) 46%,
+        rgba(0, 0, 0, 0.32) 72%,
+        rgba(0, 0, 0, 0.7) 100%
+      );
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .mode-hue .el-tile.metallic::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: radial-gradient(circle at 130% 130%, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.55) 32%, rgba(0, 0, 0, 0) 70%);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    /* 半径模式下只看圆，不要金属高光叠加避免干扰 */
+    .el-tile.metallic.radius-mode::before,
+    .el-tile.metallic.radius-mode::after {
+      display: none;
     }
 
     .el-tile.small {
@@ -678,10 +715,11 @@
         <div class="panel-header">
           <h2>Periodic Table</h2>
           <div class="panel-tabs" aria-label="Color encoding mode">
-            <button type="button" class="panel-tab active" data-mode="names">Grouping</button>
+            <button type="button" class="panel-tab" data-mode="names">Grouping</button>
             <button type="button" class="panel-tab" data-mode="en">Electronegativity</button>
             <button type="button" class="panel-tab" data-mode="ionization">1st Ionization</button>
             <button type="button" class="panel-tab" data-mode="radius">Atomic radius</button>
+            <button type="button" class="panel-tab active" data-mode="hue">Hue</button>
           </div>
         </div>
         <div class="mode-legend" id="mode-legend" aria-hidden="true">
@@ -999,6 +1037,26 @@
     // Semi-metals singled out for separate coloring in Grouping mode
     const Z_SEMI_METAL = new Set([5, 14, 32, 33, 51, 52]); // B, Si, Ge, As, Sb, Te
 
+    // 具有“金属光泽”高光效果的基础集合：金、所有准金属，以及 Si / Se / I / Te / As 指定元素
+    const Z_METALLIC_LUSTER = new Set([
+      79, // Au
+      5, 14, 32, 33, 51, 52, // 准金属：B, Si, Ge, As, Sb, Te
+      34, // Se
+      53  // I
+    ]);
+
+    // 判断某个元素是否应视作“金属 / 金属光泽”
+    function hasMetallicLuster(el) {
+      const z = el.z;
+      // 显式指定的一定有金属光泽
+      if (Z_METALLIC_LUSTER.has(z)) return true;
+      // 明确的非金属或惰性气体、卤素（不包括 I）默认不加金属高光
+      if (Z_NOBLE.has(z) || Z_HALOGEN.has(z) || Z_NONMETAL.has(z)) return false;
+      // 其它（大部分 s/d/f 以及金属 p 区元素）都按“金属”处理
+      if (z === 1) return false; // 氢特殊排除
+      return z >= 3 && z <= 83;
+    }
+
     // Platinum-group elements: Ru, Rh, Pd, Os, Ir, Pt
     const Z_PLATINUM_GROUP = new Set([44, 45, 46, 76, 77, 78]);
 
@@ -1058,7 +1116,10 @@
       80: 151, 81: 148, 82: 147, 83: 146
     };
 
-    let currentMode = "names"; // "names" | "en" | "ionization" | "radius"
+    let currentMode = "hue"; // "names" | "en" | "ionization" | "radius" | "hue"
+
+    // 外部 Hue 配色表：从 CSS 变量 --el-N 载入
+    const HUE_MAP = new Map();
 
     async function loadValenceData() {
       try {
@@ -1097,6 +1158,22 @@
       }
     }
 
+    function loadHueFromCSSVars() {
+      try {
+        const style = getComputedStyle(document.documentElement);
+        for (let z = 1; z <= 83; z++) {
+          const varName = `--el-${z}`;
+          let val = style.getPropertyValue(varName);
+          if (!val) continue;
+          val = val.trim();
+          if (!val || val.toUpperCase() === "NAN") continue;
+          HUE_MAP.set(z, val);
+        }
+      } catch (err) {
+        console.warn("Failed to load hues from CSS vars", err);
+      }
+    }
+
     function modeColor(el) {
       const z = el.z;
       if (currentMode === "en") {
@@ -1132,6 +1209,15 @@
         }
         // Radius mode: color no longer encodes size, use neutral tile color
         return "linear-gradient(135deg,#78909c,#455a64)";
+      }
+      if (currentMode === "hue") {
+        const base = HUE_MAP.get(z);
+        if (!base) {
+          // fallback: 用 Grouping 的颜色
+          return tileColor(el);
+        }
+        // 用单色为主，轻微加一点高光渐变
+        return `linear-gradient(135deg,${base},${base})`;
       }
       // default: family colors
       return tileColor(el);
@@ -1280,11 +1366,20 @@
           tick.appendChild(label);
           ticksEl.appendChild(tick);
         }
+      } else if (currentMode === "hue") {
+        // Hue: 只显示说明文字，不需要渐变条或分类 chip
+        titleEl.textContent = "Hue (per-element color)";
+        minEl.textContent = "";
+        maxEl.textContent = "";
+        gradEl.style.visibility = "hidden";
+        catEl.style.display = "none";
+        ticksEl.style.display = "none";
+        ticksEl.innerHTML = "";
       }
     }
 
     function setMode(mode) {
-      if (mode !== "names" && mode !== "en" && mode !== "ionization" && mode !== "radius") return;
+      if (mode !== "names" && mode !== "en" && mode !== "ionization" && mode !== "radius" && mode !== "hue") return;
       currentMode = mode;
 
       document.querySelectorAll(".panel-tab").forEach(btn => {
@@ -1292,6 +1387,9 @@
         if (m === mode) btn.classList.add("active");
         else btn.classList.remove("active");
       });
+
+      // 只在 Hue 模式下启用金属高光 / 阴影效果
+      document.documentElement.classList.toggle("mode-hue", mode === "hue");
 
       updateLegend();
       refreshTileColors();
@@ -1321,6 +1419,9 @@
         const v = ATOMIC_RADIUS[z];
         const vStr = v == null ? "n/a" : `${v} pm`;
         label += ` – Atomic radius: ${vStr}`;
+      } else if (currentMode === "hue") {
+        const c = HUE_MAP.get(z) || "(default group color)";
+        label += ` – Hue color: ${c}`;
       }
 
       tooltip.textContent = label;
@@ -1411,7 +1512,11 @@
       for (const el of ELEMENTS) {
         const tile = document.createElement("button");
         tile.type = "button";
-        tile.className = "el-tile" + (el.y >= 8 ? " small" : "");
+        let tileClass = "el-tile" + (el.y >= 8 ? " small" : "");
+        if (hasMetallicLuster(el)) {
+          tileClass += " metallic";
+        }
+        tile.className = tileClass;
         tile.style.gridColumn = String(el.x + 1); // +1 because col1 is row label
         tile.style.gridRow = String(el.y);
         tile.dataset.z = String(el.z);
@@ -1656,11 +1761,14 @@
         });
       });
 
+      // 先从 CSS 变量载入 Hue 颜色，保证你在 element_hues.css 里调的颜色立即生效
+      loadHueFromCSSVars();
+
       Promise.allSettled([
         loadValenceData(),
         loadElementNotes()
       ]).finally(() => {
-        setMode("names");
+        setMode("hue");
         // Default select hydrogen
         applySelection(1);
         const firstTile = document.querySelector('.el-tile[data-z="1"]');
