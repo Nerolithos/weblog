@@ -476,8 +476,8 @@
     const clusters = {
       0: {
         id: 0,
-        label: "Cluster 0 – Nuclear-dominated countries",
-        description: "Electricity systems where nuclear power provides a large share of generation, complemented by hydro and other renewables.",
+        label: "Cluster 0 - Coal- or gas-dominated countries",
+          description: "Electricity systems where coal or natural gas provides the main share of generation.",
         countries: [
           { name: "Belgium", iso3: "BEL" },
           { name: "Finland", iso3: "FIN" },
@@ -502,8 +502,8 @@
       },
       1: {
         id: 1,
-        label: "Cluster 1 – Gas-based and diversified systems",
-        description: "Countries where natural gas is the main source but the power mix is relatively diversified across fuels and renewables.",
+        label: "Cluster 1 - High-renewables, low-fossil countries",
+          description: "Countries with a high share of renewable electricity and comparatively low fossil generation.",
         countries: [
           { name: "Argentina", iso3: "ARG" },
           { name: "Chile", iso3: "CHL" },
@@ -534,8 +534,8 @@
       },
       2: {
         id: 2,
-        label: "Cluster 2 – Hydro / renewables-dominated countries",
-        description: "Power systems dominated by hydro and other renewables, with relatively low fossil and nuclear shares.",
+          label: "Cluster 2 - Nuclear-dominated countries",
+          description: "Electricity systems where nuclear power is the primary source of generation.",
         countries: [
           { name: "Austria", iso3: "AUT" },
           { name: "Brazil", iso3: "BRA" },
@@ -567,8 +567,8 @@
       },
       3: {
         id: 3,
-        label: "Cluster 3 – Coal-dominated countries",
-        description: "Electricity mixes dominated by coal, with comparatively smaller contributions from gas and renewables.",
+          label: "Cluster 3 - Mixed, average-structure systems",
+          description: "Power systems with a more mixed and average structure across fossil and renewable generation.",
         countries: [
           { name: "Australia", iso3: "AUS" },
           { name: "Bulgaria", iso3: "BGR" },
@@ -642,8 +642,8 @@
     const COUNTRY_COLOR_MODE_KEY = "dda_country_color_mode";
     let countryColorMode = "cluster"; // "cluster" | "share"
 
-    // Cluster assignments that change by year (loaded from Monthly_Cluster_Full_Report.xlsx)
-    const clusterXlsxUrl = "Monthly_Cluster_Full_Report.xlsx";
+    // Cluster assignments that change by year (loaded from new_Cluster.xlsx)
+    const clusterXlsxUrl = "new_Cluster.xlsx";
     let clusterAssignmentsByYear = new Map(); // Map<number, Map<string, number>>
     const clusterCountryNameByIso3 = new Map();
     let clusterYearsForCountry = [];
@@ -734,8 +734,12 @@
         return;
       }
 
-      const yearText = currentClusterYear != null ? `in ${currentClusterYear}` : "in this view";
-      summaryEl.textContent = `${selectedCountryName} belongs to ${cluster.label} ${yearText}.`;
+      const hasYear = currentClusterYear != null;
+      if (hasYear) {
+        summaryEl.innerHTML = `${selectedCountryName} belongs to <strong>${cluster.label}</strong> in <strong>${currentClusterYear}</strong>.`;
+      } else {
+        summaryEl.innerHTML = `${selectedCountryName} belongs to <strong>${cluster.label}</strong> in this view.`;
+      }
 
       // Build peer list from dynamic assignments if we have them
       let peerNames = [];
@@ -1794,24 +1798,23 @@
         return;
       }
 
-      // The Monthly_Cluster_Full_Report.xlsx file has the structure:
-      //   Year-Month, Cluster, Countries_in_Cluster, ...
+      // The new_Cluster.xlsx file has the structure:
+      //   Year, Cluster, Countries_in_Cluster, Country_Count_in_Cluster, Total_Countries_In_Year
       // where Countries_in_Cluster is a comma-separated list of
-      // country names. We collapse months to years by taking the
-      // last month in each year, then map names -> ISO3 using
-      // isoByCountryName.
+      // country or region names. We map names -> ISO3 using
+      // isoByCountryName and keep assignments by year.
 
       const sample = rows[0];
       const keys = Object.keys(sample);
 
-      let yearMonthField = null;
+      let yearField = null;
       let clusterField = null;
       let listField = null;
 
       keys.forEach(k => {
         const lower = k.toLowerCase();
-        if (!yearMonthField && lower.includes("year") && lower.includes("month")) {
-          yearMonthField = k;
+        if (!yearField && lower.includes("year")) {
+          yearField = k;
         } else if (!clusterField && lower.includes("cluster")) {
           clusterField = k;
         } else if (!listField && (lower.includes("countries_in_cluster") || (lower.includes("countries") && lower.includes("cluster")))) {
@@ -1819,8 +1822,8 @@
         }
       });
 
-      if (!yearMonthField || !clusterField || !listField) {
-        console.warn("Could not detect Year-Month/Cluster/Countries_in_Cluster fields in cluster workbook", {
+      if (!yearField || !clusterField || !listField) {
+        console.warn("Could not detect Year/Cluster/Countries_in_Cluster fields in new_Cluster workbook", {
           keys,
           sample
         });
@@ -1830,18 +1833,16 @@
         return;
       }
 
-      // year -> Map<countryName, clusterId> (last month in that year wins)
+      // year -> Map<countryName, clusterId>
       const yearCountryMap = new Map();
 
       rows.forEach(row => {
-        const ymRaw = row[yearMonthField];
+        const yearRaw = row[yearField];
         const clusterRaw = row[clusterField];
         const listRaw = row[listField];
-        if (!ymRaw || !listRaw || clusterRaw === undefined || clusterRaw === null || clusterRaw === "") return;
+        if (!yearRaw || !listRaw || clusterRaw === undefined || clusterRaw === null || clusterRaw === "") return;
 
-        const m = String(ymRaw).match(/(\d{4})/);
-        if (!m) return;
-        const year = +m[1];
+        const year = +yearRaw;
         if (!year) return;
 
         let clusterId = parseInt(clusterRaw, 10);
