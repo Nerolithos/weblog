@@ -495,7 +495,7 @@
           <span>25%</span>
           <span>30%+</span>
         </div>
-        <div class="dda-legend-caption">Metric: renewables share of primary energy (TPES)</div>
+        <div class="dda-legend-caption">Metric: renewables share of electricity production</div>
       </div>
     </section>
 
@@ -648,14 +648,15 @@
 
     tileSvg.call(tileZoom);
 
-    // Color scale: low = red, high = green, with more granularity
+    // Color scale: low = red, high = green, new 0–75%+ scale
     const colorScale = d3.scaleLinear()
       .range([
         "#b30000", // 0%
-        "#e55c00", // ~5%
-        "#f6d32d", // ~10%
-        "#c5e1a5", // ~20%
-        "#006837"  // 30%+
+        "#e55c00", // ~15%
+        "#f6d32d", // ~30%
+        "#c5e1a5", // ~45%
+        "#2e7d32", // ~60%
+        "#006837"  // 75%+
       ]);
 
     function renderLegendGradient() {
@@ -702,9 +703,9 @@
         .attr("fill", "url(#dda-legend-gradient)");
 
       // 按数值比例放置刻度标签，使其与颜色条对应
-      const tickValues = [0, 5, 10, 15, 20, 25, 30];
+      const tickValues = [0, 15, 30, 45, 60, 75];
       const labelScale = d3.scaleLinear()
-        .domain([0, 30])
+        .domain([0, 75])
         // 两端各预留 5% 边距，避免文字顶出白色框
         .range([5, 95]);
 
@@ -719,7 +720,7 @@
         .style("transform", "translateX(-50%)")
         .style("left", d => `${labelScale(d)}%`);
 
-      labelSelection.text(d => d === 30 ? "30%+" : `${d}%`);
+      labelSelection.text(d => d === 75 ? "75%+" : `${d}%`);
     }
 
     // ==========================
@@ -1188,21 +1189,25 @@
     }
 
     // ==========================
-    // 加载数据：GeoJSON + CSV
+    // 加载数据：GeoJSON + 旧/新两份 CSV
     // ==========================
     const worldGeoJsonUrl = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson";
-    const csvUrl = "renewable-share-energy.csv";
+    const csvUrl = "renewable-share-energy.csv";       // 原始 TPES 占比（1965–2023）
+    const newCsvUrl = "new_renewable_share.csv";       // 新版 TPES 数据（2000–2024），需要覆盖 2000–2024
+    const electricityShareCsvUrl = "share-of-electricity-production-from-renewable-sources.csv"; // 电力可再生占比（用于 1985–1999 覆盖）
 
     Promise.all([
       d3.json(worldGeoJsonUrl),
-      d3.csv(csvUrl)
-    ]).then(([world, rows]) => {
+      d3.csv(csvUrl),
+      d3.csv(newCsvUrl),
+      d3.csv(electricityShareCsvUrl)
+    ]).then(([world, rows, newRows, elecRows]) => {
       if (!world || !world.features) {
         console.error("World map data is not in the expected format", world);
         return;
       }
 
-      // 处理 CSV：Entity,Code,Year,Renewables (% equivalent primary energy)
+      // 先处理旧 CSV：Entity,Code,Year,Renewables (% equivalent primary energy)
       rows.forEach(row => {
         const code = row.Code && row.Code.trim();
         const entity = row.Entity && row.Entity.trim();
@@ -1213,8 +1218,9 @@
 
         const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
 
-        // 单独记录 "Africa" 这一行，用于非洲汇总着色
-        if (entity === "Africa" && !isNaN(value)) {
+        // 单独记录 "Africa" 这一行，用于非洲汇总着色。
+        // 仅保留 2000 年及之后的聚合值，早期年份数据不可信，因此不使用。
+        if (entity === "Africa" && !isNaN(value) && year >= 2000) {
           africaAggregateByYear.set(year, value);
         }
 
@@ -1236,7 +1242,102 @@
         dataByYearAndCode.get(year).set(code, { value, name: entity });
       });
 
-      years = Array.from(dataByYearAndCode.keys()).sort((a, b) => a - b);
+      // 再处理新 CSV：Area, ISO 3 code, Year, Energy_source, Share
+      // 先按「年份 + 国家」汇总 5 个可再生能源类别的占比之和，
+      // 仅用于 2000–2024，之后覆盖旧数据中对应年份的值。
+      const renewableSources = new Set([
+        "Bioenergy",
+        "Hydro",
+        "Other Renewables",
+        "Solar",
+        "Wind"
+      ]);
+
+      const newYearCodeMap = new Map(); // Map<year, Map<code, { value, name }>>
+      const newAfricaAggregate = new Map(); // Map<year, value>
+
+      if (Array.isArray(newRows)) {
+        newRows.forEach(row => {
+          const area = (row["Area"] || "").trim();
+          const code = (row["ISO 3 code"] || "").trim();
+          const year = +row["Year"];
+          const source = (row["Energy_source"] || "").trim();
+          const shareRaw = row["Share"];
+
+          if (!year || year < 2000 || year > 2024) return; // 仅 2000–2024 使用新数据
+          if (!renewableSources.has(source)) return;
+
+          const share = shareRaw === undefined || shareRaw === "" ? NaN : +shareRaw;
+          if (isNaN(share)) return;
+
+          // Africa 区域汇总（没有 ISO 代码）
+          if (!code && area === "Africa") {
+            const prevAgg = newAfricaAggregate.get(year) || 0;
+            newAfricaAggregate.set(year, prevAgg + share);
+          }
+
+          // 只有有 ISO3 代码的行才用于国家着色
+          if (!code) return;
+
+          if (!newYearCodeMap.has(year)) newYearCodeMap.set(year, new Map());
+          const byCode = newYearCodeMap.get(year);
+          const prev = byCode.get(code) || { value: 0, name: area || code };
+          prev.value += share;
+          if (area) prev.name = area;
+          byCode.set(code, prev);
+
+          // 补充代码到国家名称映射，防止新 CSV 中出现旧 CSV 未包含的国家
+          if (area && !countryNameByCode.has(code)) {
+            countryNameByCode.set(code, area);
+          }
+        });
+      }
+
+      // 用新 CSV 结果覆盖 2000–2024 年的国家数值
+      newYearCodeMap.forEach((byCode, year) => {
+        if (!dataByYearAndCode.has(year)) {
+          dataByYearAndCode.set(year, new Map());
+        }
+        const target = dataByYearAndCode.get(year);
+        byCode.forEach((rec, code) => {
+          target.set(code, { value: rec.value, name: rec.name });
+        });
+      });
+
+      // 覆盖 2000–2024 年的 Africa 汇总占比，其它年份仍使用旧 CSV
+      newAfricaAggregate.forEach((val, year) => {
+        africaAggregateByYear.set(year, val);
+      });
+
+      // 第三份 CSV：share-of-electricity-production-from-renewable-sources.csv
+      // 仅使用 1985–1999 年约 100 个国家的电力可再生占比覆盖旧 TPES 数据，
+      // 其他年份保持原有逻辑不变。
+      if (Array.isArray(elecRows)) {
+        elecRows.forEach(row => {
+          const code = row.Code && row.Code.trim();
+          const entity = row.Entity && row.Entity.trim();
+          const year = +row.Year;
+          const valueRaw = row.Renewables;
+
+          if (!code || !year || year < 1985 || year > 1999) return;
+          const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
+          if (isNaN(value)) return;
+
+          if (!dataByYearAndCode.has(year)) {
+            dataByYearAndCode.set(year, new Map());
+          }
+          const byCode = dataByYearAndCode.get(year);
+          byCode.set(code, { value, name: entity || code });
+
+          if (entity && !countryNameByCode.has(code)) {
+            countryNameByCode.set(code, entity);
+          }
+        });
+      }
+
+      years = Array.from(dataByYearAndCode.keys())
+        .filter(y => y >= 1985) // 仅保留 1985 年及之后的年份
+        .sort((a, b) => a - b);
       if (years.length === 0) {
         console.error("No valid yearly data parsed from CSV");
         return;
@@ -1392,16 +1493,17 @@
         }
       });
 
-      // Color scale domain: more granular, only 30%+ is pure green
+      // Color scale domain: 0–75%+, with more steps
       valueMin = 0;
-      valueMax = 30;
+      valueMax = 75;
       colorScale
         .domain([
           0,   // deep red
-          5,   // orange
-          10,  // yellow
-          20,  // light green
-          30   // pure green
+          15,  // orange
+          30,  // yellow
+          45,  // light green
+          60,  // medium green
+          75   // deep green (75%+)
         ])
         .clamp(true);
 
@@ -1409,15 +1511,15 @@
       // 确保图例颜色和地图着色严格一致。
       renderLegendGradient();
 
-      // 初始化滑块
+      // 初始化滑块（从最早的 1985 年开始）
       yearSlider.min = 0;
       yearSlider.max = years.length - 1;
       yearSlider.step = 1;
-      yearSlider.value = years.length - 1; // 默认最新年份
+      yearSlider.value = 0; // 默认指向最早年份（1985）
       yearMinLabel.textContent = years[0];
       yearMaxLabel.textContent = years[years.length - 1];
 
-      const initialYear = years[years.length - 1];
+      const initialYear = years[0];
       currentYear = initialYear;
       yearLabel.textContent = initialYear;
 
@@ -1444,28 +1546,40 @@
         if (playButton) playButton.textContent = "▶";
       }
 
+      function startPlayback(initialIndex) {
+        if (!years.length) return;
+        stopPlayback();
+        isPlayingYears = true;
+        if (playButton) playButton.textContent = "❚❚";
+
+        const idx = Number.isFinite(+initialIndex) ? +initialIndex : 0;
+        const clampedIndex = Math.max(0, Math.min(years.length - 1, idx));
+        applyYearByIndex(clampedIndex);
+
+        playTimer = setInterval(() => {
+          let nextIndex = playIndex + 1;
+          if (nextIndex >= years.length) {
+            nextIndex = 0; // loop back to earliest year
+          }
+          applyYearByIndex(nextIndex);
+        }, 100); // ~0.1s per year，播放更快
+      }
+
       if (playButton) {
         playButton.addEventListener("click", () => {
           if (!years.length) return;
           if (!isPlayingYears) {
-            isPlayingYears = true;
-            playButton.textContent = "❚❚";
             // Start from current slider position or earliest year
             const currentIndex = Number.isFinite(+yearSlider.value) ? +yearSlider.value : 0;
-            applyYearByIndex(currentIndex >= 0 && currentIndex < years.length ? currentIndex : 0);
-
-            playTimer = setInterval(() => {
-              let nextIndex = playIndex + 1;
-              if (nextIndex >= years.length) {
-                nextIndex = 0; // loop back to 1965
-              }
-              applyYearByIndex(nextIndex);
-            }, 900); // ~0.9s per year
+            startPlayback(currentIndex >= 0 && currentIndex < years.length ? currentIndex : 0);
           } else {
             stopPlayback();
           }
         });
       }
+
+      // 页面首次打开时，自动从 1985 年开始播放
+      startPlayback(0);
 
       // 绘制国家（球面）
       countryPaths = globeGroup.append("g")

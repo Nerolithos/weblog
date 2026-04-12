@@ -437,7 +437,7 @@
         </div>
         <div class="country-energy-card">
           <h3 class="country-energy-title">Annual renewable vs non-renewable electricity production</h3>
-          <p class="country-energy-subtitle">Bar chart shows renewable share of electricity production by technology (not primary energy).</p>
+          <p class="country-energy-subtitle">Bar chart shows renewable share of total electricity production.</p>
           <div class="country-energy-slider-wrapper">
             <button id="country-energy-play-toggle" class="country-energy-play-button" type="button">▶</button>
             <span>Year: <span id="country-energy-year-label">-</span></span>
@@ -634,14 +634,17 @@
     let currentClusterYear = null;
 
     // 与主页一致的可再生能源占比颜色刻度和数据
-    const shareCsvUrl = "renewable-share-energy.csv";
+    const shareCsvUrl = "renewable-share-energy.csv";   // 旧 TPES 占比（1965–2023）
+    const newShareCsvUrl = "new_renewable_share.csv";    // 新 TPES 数据（2000–2024）
+    const shareElecCsvUrl = "share-of-electricity-production-from-renewable-sources.csv"; // 电力可再生占比（1985–1999 覆盖）
     const shareColorScale = d3.scaleLinear()
       .range([
         "#b30000", // 0%
-        "#e55c00", // ~5%
-        "#f6d32d", // ~10%
-        "#c5e1a5", // ~20%
-        "#006837"  // 30%+
+        "#e55c00", // ~15%
+        "#f6d32d", // ~30%
+        "#c5e1a5", // ~45%
+        "#2e7d32", // ~60%
+        "#006837"  // 75%+
       ]);
     // 每一年、每个国家的可再生能源占比：Map<year, Map<iso3, value>>
     let shareDataByYearAndIso3 = new Map();
@@ -665,11 +668,11 @@
     const energyTooltipEl = document.getElementById("country-energy-tooltip");
     const energyCardEl = document.querySelector(".country-energy-card");
 
-    const energyXlsxUrl = "Country_Annual_9Energy_2010_2023.xlsx";
-    let energyCountryField = null;
-    let energyYearField = null;
+    // Annual energy bar chart now uses new_renewable_share.csv
+    const energyCsvUrl = "new_renewable_share.csv";
     let energyDimensionFields = [];
-    let energyDataByCountry = new Map(); // Map<countryName, Array<{year, energies, sumRenewable}>>
+    // Map<ISO3, Array<{year, energies}>>
+    let energyDataByCountry = new Map();
     let energyYearsForSelected = [];
     let isEnergyPlaying = false;
     let energyPlayTimer = null;
@@ -788,61 +791,48 @@
     }
 
     // ==========================
-    // Annual energy bar chart (Excel source)
+    // Annual energy bar chart (from new_renewable_share.csv)
     // ==========================
 
     function parseEnergyWorkbook(rows) {
       if (!rows || !rows.length) return;
-      const sample = rows[0];
-      const keys = Object.keys(sample);
-      keys.forEach(k => {
-        const lower = k.toLowerCase();
-        if (!energyCountryField && lower.includes("country")) {
-          energyCountryField = k;
-        } else if (!energyYearField && lower.includes("year")) {
-          energyYearField = k;
-        }
-      });
 
-      if (!energyCountryField || !energyYearField) {
-        console.warn("Could not detect country/year fields in energy workbook");
-        return;
-      }
+      energyDataByCountry = new Map();
+      energyDimensionFields = [];
 
-      energyDimensionFields = keys.filter(k => k !== energyCountryField && k !== energyYearField);
+      const dimSet = new Set();
+      const byYear = new Map(); // Map<year, { year, energies }>
 
       rows.forEach(row => {
-        const country = row[energyCountryField];
-        const yearRaw = row[energyYearField];
-        const year = +yearRaw;
-        if (!country || !year) return;
+        const iso3 = (row["ISO 3 code"] || "").trim().toUpperCase();
+        const year = +row["Year"];
+        const source = (row["Energy_source"] || "").trim();
+        const shareRaw = row["Share"];
 
-        const energies = {};
-        let sumRenewable = 0;
-        energyDimensionFields.forEach(f => {
-          const v = row[f];
-          const num = v === undefined || v === null || v === "" ? NaN : +v;
-          if (!isNaN(num)) {
-            energies[f] = num;
-            sumRenewable += num;
-          }
-        });
+        if (!iso3 || iso3 !== selectedIso3) return;
+        if (!year || year < 2000 || year > 2024) return;
 
-        if (!energyDataByCountry.has(country)) {
-          energyDataByCountry.set(country, []);
+        const value = shareRaw === undefined || shareRaw === "" ? NaN : +shareRaw;
+        if (isNaN(value)) return;
+
+        if (!byYear.has(year)) {
+          byYear.set(year, { year, energies: {} });
         }
-        energyDataByCountry.get(country).push({ year, energies, sumRenewable });
+        const rec = byYear.get(year);
+        rec.energies[source] = (rec.energies[source] || 0) + value;
+        dimSet.add(source);
       });
 
-      // Sort years within each country
-      energyDataByCountry.forEach(list => {
-        list.sort((a, b) => a.year - b.year);
-      });
+      energyDimensionFields = Array.from(dimSet);
+      const records = Array.from(byYear.values()).sort((a, b) => a.year - b.year);
+      if (records.length) {
+        energyDataByCountry.set(selectedIso3, records);
+      }
     }
 
-    function drawEnergyBar(countryName, year) {
+    function drawEnergyBar(year) {
       if (!energyBarSvg || !energyBarSvg.node()) return;
-      const records = energyDataByCountry.get(countryName);
+      const records = energyDataByCountry.get(selectedIso3);
       if (!records || !records.length) {
         if (energyEmptyEl) energyEmptyEl.style.display = "block";
         energyBarSvg.selectAll("*").remove();
@@ -869,70 +859,28 @@
       const g = energyBarSvg.append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      // Detect whether the original data is in 0–1 or 0–100 scale
-      const rawSumAll = d3.sum(energyDimensionFields, f => rec.energies[f] || 0);
-      const useFractionBase = rawSumAll > 0 && rawSumAll <= 1.01;
-      const factor = useFractionBase ? 100 : 1;
-
-      // Only treat specific technologies as renewables; exclude Renewable_Total
-      const renewableFieldSet = new Set([
-        "Nuclear",
+      // 在 new_renewable_share.csv 中，可再生能源由以下几类组成，单位为百分比：
+      // Bioenergy, Hydro, Other Renewables, Solar, Wind
+      const renewableSources = [
+        "Bioenergy",
         "Hydro",
+        "Other Renewables",
         "Solar",
-        "Wind",
-        "Geothermal",
-        "Combustible_Renewables",
-        "Other_Renewables"
-      ]);
+        "Wind"
+      ];
 
-      const renewableFields = energyDimensionFields.filter(f => renewableFieldSet.has(f));
-
-      // Detect non‑renewable detail fields by name patterns so that
-      // Coal / Natural Gas / Oil are all captured even if the exact
-      // column names differ slightly (e.g. "Natural_gas").
-      const coalField = energyDimensionFields.find(f => {
-        const l = f.toLowerCase();
-        return l.includes("coal");
+      const segmentsRenewables = renewableSources.map(name => {
+        const v = rec.energies[name] || 0;
+        return { name, value: v };
       });
-      const gasField = energyDimensionFields.find(f => {
-        const l = f.toLowerCase();
-        return l.includes("natural") && l.includes("gas");
-      });
-      const oilField = energyDimensionFields.find(f => {
-        const l = f.toLowerCase();
-        return l.includes("oil") && !l.includes("natural");
-      });
-
-      const segmentsRenewables = renewableFields.map(f => {
-        const v = rec.energies[f] || 0;
-        return { name: f, value: v * factor };
-      });
-
-      const nonRenewableComponents = [];
-      if (coalField) {
-        const v = rec.energies[coalField] || 0;
-        nonRenewableComponents.push({ name: "Coal", value: v * factor });
-      }
-      if (gasField) {
-        const v = rec.energies[gasField] || 0;
-        nonRenewableComponents.push({ name: "Natural Gas", value: v * factor });
-      }
-      if (oilField) {
-        const v = rec.energies[oilField] || 0;
-        nonRenewableComponents.push({ name: "Oil", value: v * factor });
-      }
 
       const sumRenewableSegments = d3.sum(segmentsRenewables, d => d.value);
-      let sumNonRenewableSegments = d3.sum(nonRenewableComponents, d => d.value);
-
-      // Fallback: if non-renewable components are missing, treat remainder as non-renewables
-      if (!sumNonRenewableSegments && sumRenewableSegments) {
-        sumNonRenewableSegments = Math.max(0, 100 - sumRenewableSegments);
-      }
+      // 不可再生能源按 1 - 可再生占比计算（保持百分比刻度）
+      const sumNonRenewableSegments = Math.max(0, 100 - sumRenewableSegments);
 
       const segments = [...segmentsRenewables, { name: "Non-renewables", value: sumNonRenewableSegments }];
 
-      const total = sumRenewableSegments + sumNonRenewableSegments;
+      const total = 100; // 以 0–100% 为固定刻度
       if (total <= 0) {
         if (energyEmptyEl) energyEmptyEl.style.display = "block";
         return;
@@ -943,7 +891,7 @@
         .range([0, innerWidth]);
 
       const y = d3.scaleBand()
-        .domain([countryName])
+        .domain([selectedCountryName])
         .range([0, innerHeight])
         .paddingInner(0.2);
 
@@ -962,12 +910,11 @@
       segments.forEach(seg => {
         const segWidth = x(seg.value);
         const fillColor = seg.name === "Non-renewables" ? nonRenewableColor : color(seg.name);
-
         const percent = (seg.value / total) * 100;
 
         const rect = g.append("rect")
           .attr("x", offset)
-          .attr("y", y(countryName))
+          .attr("y", y(selectedCountryName))
           .attr("width", segWidth)
           .attr("height", barHeight)
           .attr("fill", fillColor);
@@ -981,15 +928,8 @@
               energyTooltipEl.style.left = `${xPos}px`;
               energyTooltipEl.style.top = `${yPos}px`;
 
-              if (seg.name === "Non-renewables" && nonRenewableComponents.length) {
-                const lines = nonRenewableComponents.map(c => {
-                  const pct = (c.value / total) * 100;
-                  return `${c.name}: ${pct.toFixed(1)}%`;
-                });
-                energyTooltipEl.innerHTML = `${rec.year} · Non-renewables<br>${lines.join("<br>")}`;
-              } else {
-                energyTooltipEl.innerHTML = `${rec.year} · ${seg.name}: ${percent.toFixed(1)}%`;
-              }
+              // 悬浮时显示该段的百分比；粉色段即为不可再生能源占比
+              energyTooltipEl.innerHTML = `${rec.year} · ${seg.name}: ${percent.toFixed(1)}%`;
 
               energyTooltipEl.style.opacity = "1";
             })
@@ -1005,11 +945,11 @@
       // Draw country label on the left instead of a full axis frame
       g.append("text")
         .attr("x", -4)
-        .attr("y", y(countryName) + barHeight / 2 + 3)
+        .attr("y", y(selectedCountryName) + barHeight / 2 + 3)
         .attr("text-anchor", "end")
         .attr("font-size", 11)
         .attr("fill", "#111827")
-        .text(countryName);
+        .text(selectedCountryName);
 
     }
 
@@ -1021,7 +961,7 @@
       const year = energyYearsForSelected[clamped];
 
       // Update the bar chart
-      drawEnergyBar(selectedCountryName, year);
+      drawEnergyBar(year);
 
       // Use the same year to drive cluster membership (globe + pie)
       currentClusterYear = year;
@@ -1031,16 +971,11 @@
 
     function initEnergyChart() {
       if (!energyBarSvg || !energyBarSvg.node()) return;
-      fetch(energyXlsxUrl)
-        .then(resp => resp.arrayBuffer())
-        .then(buf => {
-          const workbook = XLSX.read(buf, { type: "array" });
-          const sheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[sheetName];
-          const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
+      d3.csv(energyCsvUrl)
+        .then(rows => {
           parseEnergyWorkbook(rows);
 
-          const records = energyDataByCountry.get(selectedCountryName);
+          const records = energyDataByCountry.get(selectedIso3);
           if (!records || !records.length) {
             if (energyEmptyEl) energyEmptyEl.style.display = "block";
             return;
@@ -1096,7 +1031,7 @@
                     nextIndex = 0;
                   }
                   applyEnergyYearByIndex(nextIndex);
-                }, 900);
+                }, 100); // 约 0.1s 每年
               } else {
                 stopEnergyPlayback();
               }
@@ -1785,9 +1720,9 @@
         .attr("height", height)
         .attr("fill", "url(#country-legend-gradient)");
 
-      const tickValues = [0, 5, 10, 15, 20, 25, 30];
+      const tickValues = [0, 15, 30, 45, 60, 75];
       const labelScale = d3.scaleLinear()
-        .domain([0, 30])
+        .domain([0, 75])
         .range([5, 95]);
 
       const labelSelection = labelsContainer
@@ -1800,7 +1735,7 @@
         .style("transform", "translateX(-50%)")
         .style("left", d => `${labelScale(d)}%`);
 
-      labelSelection.text(d => d === 30 ? "30%+" : `${d}%`);
+      labelSelection.text(d => d === 75 ? "75%+" : `${d}%`);
     }
 
     // ==========================
@@ -1935,14 +1870,19 @@
       });
 
     // ==========================
-    // Load renewables-share CSV for color mode "share"
+    // Load renewables-share CSVs for color mode "share"
     // ==========================
     function initShareColors() {
-      d3.csv(shareCsvUrl).then(rows => {
+      Promise.all([
+        d3.csv(shareCsvUrl),
+        d3.csv(newShareCsvUrl),
+        d3.csv(shareElecCsvUrl)
+      ]).then(([rows, newRows, elecRows]) => {
         if (!rows || !rows.length) return;
 
         const yearMap = new Map(); // Map<year, Map<code, value>>
 
+        // 先加载旧 CSV，得到基础的 1965–2023 数据
         rows.forEach(row => {
           const code = row.Code && row.Code.trim();
           const entity = row.Entity && row.Entity.trim();
@@ -1952,8 +1892,9 @@
           const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
           if (isNaN(value)) return;
 
-          // 记录 "Africa" 区域汇总，用于非洲国家统一着色
-          if (entity === "Africa") {
+          // 记录 "Africa" 区域汇总，用于非洲国家统一着色。
+          // 仅 2000 年及之后启用 Africa Aggregate，1999 年及以前认为不可信，不写入。
+          if (entity === "Africa" && year >= 2000) {
             shareAfricaAggregateByYear.set(year, value);
           }
 
@@ -1962,11 +1903,90 @@
           yearMap.get(year).set(code, value);
         });
 
+        // 再解析新 CSV：Area, ISO 3 code, Year, Energy_source, Share
+        const renewableSources = new Set([
+          "Bioenergy",
+          "Hydro",
+          "Other Renewables",
+          "Solar",
+          "Wind"
+        ]);
+
+        const newYearCodeMap = new Map(); // Map<year, Map<code, value>>
+        const newAfricaAggregate = new Map(); // Map<year, value>
+
+        if (Array.isArray(newRows)) {
+          newRows.forEach(row => {
+            const area = (row["Area"] || "").trim();
+            const code = (row["ISO 3 code"] || "").trim();
+            const year = +row["Year"];
+            const source = (row["Energy_source"] || "").trim();
+            const shareRaw = row["Share"];
+
+            if (!year || year < 2000 || year > 2024) return; // 仅 2000–2024 使用新数据
+            if (!renewableSources.has(source)) return;
+
+            const share = shareRaw === undefined || shareRaw === "" ? NaN : +shareRaw;
+            if (isNaN(share)) return;
+
+            // Africa 区域汇总（无 ISO 代码）
+            if (!code && area === "Africa") {
+              const prevAgg = newAfricaAggregate.get(year) || 0;
+              newAfricaAggregate.set(year, prevAgg + share);
+            }
+
+            if (!code) return; // 只对有 ISO3 的国家累加
+
+            if (!newYearCodeMap.has(year)) newYearCodeMap.set(year, new Map());
+            const byCode = newYearCodeMap.get(year);
+            const prev = byCode.get(code) || 0;
+            byCode.set(code, prev + share);
+          });
+        }
+
+        // 覆盖 2000–2024 年的国家数值
+        newYearCodeMap.forEach((byCode, year) => {
+          if (!yearMap.has(year)) yearMap.set(year, new Map());
+          const target = yearMap.get(year);
+          byCode.forEach((val, code) => {
+            target.set(code, val);
+          });
+        });
+
+        // 覆盖 2000–2024 年的 Africa 汇总
+        newAfricaAggregate.forEach((val, year) => {
+          shareAfricaAggregateByYear.set(year, val);
+        });
+
+        // 第三份 CSV：电力可再生占比，仅用于 1985–1999 年覆盖旧数据
+        if (Array.isArray(elecRows)) {
+          elecRows.forEach(row => {
+            const code = row.Code && row.Code.trim();
+            const year = +row.Year;
+            const valueRaw = row.Renewables;
+
+            if (!code || !year || year < 1985 || year > 1999) return;
+            const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
+            if (isNaN(value)) return;
+
+            if (!yearMap.has(year)) yearMap.set(year, new Map());
+            const target = yearMap.get(year);
+            target.set(code, value);
+          });
+        }
+
+        // 删除 1985 年以前的年份，避免在占比视图中使用 1965–1984 年的不可信数据
+        Array.from(yearMap.keys()).forEach(year => {
+          if (year < 1985) {
+            yearMap.delete(year);
+          }
+        });
+
         shareDataByYearAndIso3 = yearMap;
 
-        // 与主页保持相同的 domain 设置
+        // 与主页保持相同的 0–75%+ domain 设置
         shareColorScale
-          .domain([0, 5, 10, 20, 30])
+          .domain([0, 15, 30, 45, 60, 75])
           .clamp(true);
 
         shareColorReady = true;
