@@ -471,129 +471,43 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script>
     // ==========================
-    // Cluster definitions
+    // Helpers
     // ==========================
-    const clusters = {
-      0: {
-        id: 0,
-        label: "Cluster 0 - Coal- or gas-dominated countries",
-          description: "Electricity systems where coal or natural gas provides the main share of generation.",
-        countries: [
-          { name: "Belgium", iso3: "BEL" },
-          { name: "Finland", iso3: "FIN" },
-          { name: "France", iso3: "FRA" },
-          { name: "Hungary", iso3: "HUN" },
-          { name: "Slovak Republic", iso3: "SVK" },
-          { name: "Slovenia", iso3: "SVN" },
-          { name: "Sweden", iso3: "SWE" },
-          { name: "Switzerland", iso3: "CHE" }
-        ],
-        mix: {
-          "Coal, Peat and Manufactured Gases": 0.035,
-          "Natural Gas": 0.037,
-          "Oil and Petroleum Products": 0.002,
-          "Nuclear": 0.176,
-          "Hydro": 0.086,
-          "Solar": 0.009,
-          "Wind": 0.016,
-          "Geothermal": 0.0,
-          "Combustible Renewables": 0.022
-        }
-      },
-      1: {
-        id: 1,
-        label: "Cluster 1 - High-renewables, low-fossil countries",
-          description: "Countries with a high share of renewable electricity and comparatively low fossil generation.",
-        countries: [
-          { name: "Argentina", iso3: "ARG" },
-          { name: "Chile", iso3: "CHL" },
-          { name: "Cyprus", iso3: "CYP" },
-          { name: "Greece", iso3: "GRC" },
-          { name: "Ireland", iso3: "IRL" },
-          { name: "Italy", iso3: "ITA" },
-          { name: "Japan", iso3: "JPN" },
-          { name: "Malta", iso3: "MLT" },
-          { name: "Mexico", iso3: "MEX" },
-          { name: "Netherlands", iso3: "NLD" },
-          { name: "Spain", iso3: "ESP" },
-          { name: "Turkey", iso3: "TUR" },
-          { name: "United Kingdom", iso3: "GBR" },
-          { name: "United States", iso3: "USA" }
-        ],
-        mix: {
-          "Coal, Peat and Manufactured Gases": 0.059,
-          "Natural Gas": 0.130,
-          "Oil and Petroleum Products": 0.038,
-          "Nuclear": 0.019,
-          "Hydro": 0.034,
-          "Solar": 0.015,
-          "Wind": 0.029,
-          "Geothermal": 0.001,
-          "Combustible Renewables": 0.009
-        }
-      },
-      2: {
-        id: 2,
-          label: "Cluster 2 - Nuclear-dominated countries",
-          description: "Electricity systems where nuclear power is the primary source of generation.",
-        countries: [
-          { name: "Austria", iso3: "AUT" },
-          { name: "Brazil", iso3: "BRA" },
-          { name: "Canada", iso3: "CAN" },
-          { name: "Colombia", iso3: "COL" },
-          { name: "Costa Rica", iso3: "CRI" },
-          { name: "Croatia", iso3: "HRV" },
-          { name: "Denmark", iso3: "DNK" },
-          { name: "Iceland", iso3: "ISL" },
-          { name: "Latvia", iso3: "LVA" },
-          { name: "Lithuania", iso3: "LTU" },
-          { name: "Luxembourg", iso3: "LUX" },
-          { name: "New Zealand", iso3: "NZL" },
-          { name: "Norway", iso3: "NOR" },
-          { name: "Peru", iso3: "PER" },
-          { name: "Portugal", iso3: "PRT" }
-        ],
-        mix: {
-          "Coal, Peat and Manufactured Gases": 0.018,
-          "Natural Gas": 0.057,
-          "Oil and Petroleum Products": 0.004,
-          "Nuclear": 0.004,
-          "Hydro": 0.176,
-          "Solar": 0.004,
-          "Wind": 0.035,
-          "Geothermal": 0.013,
-          "Combustible Renewables": 0.017
-        }
-      },
-      3: {
-        id: 3,
-          label: "Cluster 3 - Mixed, average-structure systems",
-          description: "Power systems with a more mixed and average structure across fossil and renewable generation.",
-        countries: [
-          { name: "Australia", iso3: "AUS" },
-          { name: "Bulgaria", iso3: "BGR" },
-          { name: "China", iso3: "CHN" },
-          { name: "Czech Republic", iso3: "CZE" },
-          { name: "Estonia", iso3: "EST" },
-          { name: "Germany", iso3: "DEU" },
-          { name: "India", iso3: "IND" },
-          { name: "Korea", iso3: "KOR" },
-          { name: "North Macedonia", iso3: "MKD" },
-          { name: "Poland", iso3: "POL" },
-          { name: "Serbia", iso3: "SRB" }
-        ],
-        mix: {
-          "Coal, Peat and Manufactured Gases": 0.194,
-          "Natural Gas": 0.031,
-          "Oil and Petroleum Products": 0.003,
-          "Nuclear": 0.040,
-          "Hydro": 0.035,
-          "Solar": 0.010,
-          "Wind": 0.017,
-          "Geothermal": 0.0,
-          "Combustible Renewables": 0.012
-        }
-      }
+    function makeCountryKey(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/&/g, "and")
+        .replace(/[^a-z]/g, "");
+    }
+
+    // ==========================
+    // Cluster definitions (populated from true_clustering.csv)
+    // ==========================
+    const clusters = {};
+
+    // English labels and descriptions for clusters defined in true_clustering.csv
+    const CLUSTER_NAME_EN = {
+      "C1": "Nuclear-dominated systems",
+      "C2": "Coal-dominated systems",
+      "C3": "Oil/other-fossil dominated systems",
+      "C4": "Hydro-led diversified systems",
+      "C5": "Gas-led mixed systems",
+      "C6": "High-hydro dominated systems",
+      "C7": "Hydro–oil dual-peak systems",
+      "C8": "Oil/other-fossil mixed systems",
+      "C9": "High-gas dominated systems"
+    };
+
+    const CLUSTER_DESC_EN = {
+      "C1": "Average mix: nuclear 38.6%, coal 21.0%, gas 14.6%, renewables around 22.4%. Typically countries with high nuclear shares such as France, Belgium and Slovakia.",
+      "C2": "Average mix: coal 67.0%, hydro 9.4%, gas 9.3%. Typically large economies or resource-based economies where coal generation dominates.",
+      "C3": "Average mix: other fossil 96.4%, all other sources are almost negligible. Mostly small economies or islands where diesel or fuel oil generation is overwhelmingly dominant.",
+      "C4": "Average mix: hydro 51.6%, gas 13.6%, coal 12.9%, renewables around 64.7%. Hydro provides the main share, but some fossil generation remains in a diversified structure.",
+      "C5": "Average mix: gas 50.4%, hydro 14.7%, other fossil 12.7%, coal 10.5%. Gas is the primary source but the system remains a mixed, multi-source structure.",
+      "C6": "Average mix: hydro 89.0%, renewables around 92.2%. Almost all electricity is supplied by hydropower in these high-hydro countries.",
+      "C7": "Average mix: hydro 50.1%, other fossil 41.8%. Both hydro and oil-fired generation are important, forming a dual-peak structure.",
+      "C8": "Average mix: other fossil 62.5%, hydro 12.3%, gas 8.8%, solar 3.6%. Oil-fired generation is dominant but the system is more diversified than Cluster C3.",
+      "C9": "Average mix: gas 89.5%, with other sources playing much smaller roles. These countries are highly dependent on gas-fired generation."
     };
 
     const VIEW_MODE_KEY = "dda_view_mode";
@@ -616,17 +530,22 @@
     const countryByIso3 = {};
     const clusterByIso3 = {};
     const isoByCountryName = new Map();
-    Object.values(clusters).forEach(cluster => {
-      cluster.countries.forEach(c => {
-        countryByIso3[c.iso3] = c.name;
-        clusterByIso3[c.iso3] = cluster.id;
-        // Map country name back to ISO3 (case-insensitive) for
-        // parsing the Monthly_Cluster_Full_Report.xlsx file,
-        // which contains country names rather than ISO codes.
-        isoByCountryName.set(c.name, c.iso3);
-        isoByCountryName.set(c.name.toLowerCase(), c.iso3);
-      });
-    });
+
+    function registerIsoMapping(name, iso3) {
+      if (!name || !iso3) return;
+      const cleanName = String(name).trim();
+      const cleanIso = String(iso3).trim().toUpperCase();
+      if (!cleanName || !cleanIso) return;
+
+      countryByIso3[cleanIso] = cleanName;
+      isoByCountryName.set(cleanName, cleanIso);
+      isoByCountryName.set(cleanName.toLowerCase(), cleanIso);
+
+      const key = makeCountryKey(cleanName);
+      if (key) {
+        isoByCountryName.set(key, cleanIso);
+      }
+    }
 
     function getQueryParam(key) {
       const params = new URLSearchParams(window.location.search);
@@ -642,9 +561,9 @@
     const COUNTRY_COLOR_MODE_KEY = "dda_country_color_mode";
     let countryColorMode = "cluster"; // "cluster" | "share"
 
-    // Cluster assignments that change by year (loaded from new_Cluster.xlsx)
-    const clusterXlsxUrl = "new_Cluster.xlsx";
-    let clusterAssignmentsByYear = new Map(); // Map<number, Map<string, number>>
+    // Cluster assignments that change by year (loaded from true_clustering.csv)
+    const clusterCsvUrl = "true_clustering.csv";
+    let clusterAssignmentsByYear = new Map(); // Map<number, Map<string, string>>
     const clusterCountryNameByIso3 = new Map();
     let clusterYearsForCountry = [];
     let currentClusterYear = null;
@@ -760,9 +679,28 @@
 
       detailEl.innerHTML = `<strong>Key characteristics:</strong> ${cluster.description}<br/><strong>Countries in this cluster (${peerNames.length}):</strong> ${peerNames.join(", ")}.`;
 
-      // Update pie chart for this cluster
+      // Update pie chart for this cluster using mix parsed from true_clustering.csv
+      let data = [];
       const entries = Object.entries(cluster.mix || {});
-      const data = entries.map(([name, value]) => ({ name, value }));
+      data = entries.map(([name, value]) => ({ name, value }));
+
+      // Ensure the donut closes: if the extracted mix does not sum to 1,
+      // add an "Others" slice for the remainder; if it is slightly above 1,
+      // renormalize back to 1.
+      let total = d3.sum(data, d => d.value);
+      if (total > 0) {
+        if (total < 0.995) {
+          const remaining = Math.max(0, 1 - total);
+          if (remaining > 0.001) {
+            data.push({ name: "Others", value: remaining });
+            total += remaining;
+          }
+        } else if (total > 1.005) {
+          data = data.map(d => ({ name: d.name, value: d.value / total }));
+          total = 1;
+        }
+      }
+
       if (!data.length) {
         pieSvg.style("display", "none");
         pieLegendEl.textContent = "No cluster information is available for this country.";
@@ -1345,6 +1283,17 @@
 
     function renderCountries(world) {
       worldFeatures = world.features;
+
+      // Build name -> ISO3 mappings for later lookups when parsing
+      // true_clustering.csv (which is keyed by country names).
+      worldFeatures.forEach(f => {
+        const props = f.properties || {};
+        const name = props.name || props.ADMIN;
+        const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+        if (!name || !iso3) return;
+        registerIsoMapping(name, iso3);
+      });
+
       const group = g.append("g");
 
       countryPathsSelection = group.selectAll("path")
@@ -1407,6 +1356,18 @@
       renderMap();
       buildCountryTileGrid(world);
       updateCountryHighlighting();
+
+      // Once world names/ISO codes are available, load true_clustering.csv
+      // and build year-specific cluster assignments and energy mixes.
+      d3.csv(clusterCsvUrl)
+        .then(rows => {
+          parseTrueClusteringCsv(rows);
+        })
+        .catch(err => {
+          console.error("Failed to load true_clustering.csv", err);
+          updateClusterTextAndPie();
+          updateCountryHighlighting();
+        });
     }).catch(err => {
       console.error("Failed to load world geojson for country view", err);
     });
@@ -1788,132 +1749,140 @@
     }
 
     // ==========================
-    // Load year-specific cluster assignments
+    // Load year-specific cluster assignments from true_clustering.csv
     // ==========================
 
-    function parseClusterWorkbook(rows) {
+    function parseClusterDescriptionToMix(desc) {
+      const mix = {};
+      if (!desc) return mix;
+
+      const re = /([A-Za-z\u4e00-\u9fff\/\s]+?)(\d+(?:\.\d+)?)%/g;
+      let m;
+      const seen = new Set();
+
+      while ((m = re.exec(desc)) !== null) {
+        const rawLabel = (m[1] || "").trim();
+        const pct = parseFloat(m[2]);
+        if (!isFinite(pct) || pct <= 0) continue;
+
+        const lower = rawLabel.toLowerCase();
+        let fuel = null;
+        if (rawLabel.includes("核") || lower.includes("nuclear")) fuel = "Nuclear";
+        else if (rawLabel.includes("煤") || lower.includes("coal")) fuel = "Coal";
+        else if (rawLabel.includes("气") || lower.includes("gas")) fuel = "Gas";
+        else if (rawLabel.includes("水") || lower.includes("hydro")) fuel = "Hydro";
+        else if (rawLabel.includes("风") || lower.includes("wind")) fuel = "Wind";
+        else if (rawLabel.includes("太阳") || lower.includes("solar")) fuel = "Solar";
+        else if (rawLabel.includes("生物") || lower.includes("bio")) fuel = "Bioenergy";
+        else if (lower.includes("other fossil")) fuel = "Other Fossil";
+        else if (rawLabel.includes("可再生") || lower.includes("renewable")) fuel = "Other Renewables";
+
+        if (!fuel) continue;
+
+        // Skip aggregate "renewables" line if we already captured
+        // more detailed renewable categories like Hydro/Solar/Wind/Bioenergy.
+        if (fuel === "Other Renewables" && (
+          seen.has("Hydro") ||
+          seen.has("Solar") ||
+          seen.has("Wind") ||
+          seen.has("Bioenergy")
+        )) {
+          continue;
+        }
+
+        const frac = pct / 100;
+        mix[fuel] = (mix[fuel] || 0) + frac;
+        seen.add(fuel);
+      }
+
+      return mix;
+    }
+
+    function parseTrueClusteringCsv(rows) {
       if (!rows || !rows.length) {
         updateClusterTextAndPie();
         updateCountryHighlighting();
         return;
       }
 
-      // The new_Cluster.xlsx file has the structure:
-      //   Year, Cluster, Countries_in_Cluster, Country_Count_in_Cluster, Total_Countries_In_Year
-      // where Countries_in_Cluster is a comma-separated list of
-      // country or region names. We map names -> ISO3 using
-      // isoByCountryName and keep assignments by year.
+      // Reset dynamic structures
+      clusterAssignmentsByYear = new Map();
+      clusterYearsForCountry = [];
+      clusterCountryNameByIso3.clear();
 
-      const sample = rows[0];
-      const keys = Object.keys(sample);
-
-      let yearField = null;
-      let clusterField = null;
-      let listField = null;
-
-      keys.forEach(k => {
-        const lower = k.toLowerCase();
-        if (!yearField && lower.includes("year")) {
-          yearField = k;
-        } else if (!clusterField && lower.includes("cluster")) {
-          clusterField = k;
-        } else if (!listField && (lower.includes("countries_in_cluster") || (lower.includes("countries") && lower.includes("cluster")))) {
-          listField = k;
-        }
-      });
-
-      if (!yearField || !clusterField || !listField) {
-        console.warn("Could not detect Year/Cluster/Countries_in_Cluster fields in new_Cluster workbook", {
-          keys,
-          sample
-        });
-        currentClusterYear = null;
-        updateClusterTextAndPie();
-        updateCountryHighlighting();
-        return;
-      }
-
-      // year -> Map<countryName, clusterId>
-      const yearCountryMap = new Map();
-
+      // Populate clusters and yearly assignments from true_clustering.csv
       rows.forEach(row => {
-        const yearRaw = row[yearField];
-        const clusterRaw = row[clusterField];
-        const listRaw = row[listField];
-        if (!yearRaw || !listRaw || clusterRaw === undefined || clusterRaw === null || clusterRaw === "") return;
+        const yearRaw = row["Year"];
+        const clusterIdRaw = row["Cluster_ID"];
+        const clusterName = row["Cluster_Name"] || "";
+        const clusterDesc = row["Cluster_Desc"] || "";
+        const countriesRaw = row["Countries"];
+
+        if (!yearRaw || !clusterIdRaw || !countriesRaw) return;
 
         const year = +yearRaw;
         if (!year) return;
 
-        let clusterId = parseInt(clusterRaw, 10);
-        if (isNaN(clusterId)) {
-          const mm = String(clusterRaw).match(/(\d+)/);
-          if (mm) clusterId = parseInt(mm[1], 10);
+        const clusterId = String(clusterIdRaw).trim(); // e.g. "C1"
+        if (!clusterId) return;
+
+        // Ensure cluster metadata exists
+        if (!clusters[clusterId]) {
+          const labelEn = CLUSTER_NAME_EN[clusterId] || clusterName;
+          const descEn = CLUSTER_DESC_EN[clusterId] || clusterDesc;
+          clusters[clusterId] = {
+            id: clusterId,
+            label: `${clusterId} - ${labelEn}`.trim(),
+            description: descEn,
+            countries: [],
+            // Use original (possibly Chinese) description to infer the
+            // energy mix; this is independent from the display language.
+            mix: parseClusterDescriptionToMix(clusterDesc)
+          };
         }
-        if (isNaN(clusterId)) return;
 
-        if (!yearCountryMap.has(year)) yearCountryMap.set(year, new Map());
-        const byName = yearCountryMap.get(year);
+        if (!clusterAssignmentsByYear.has(year)) clusterAssignmentsByYear.set(year, new Map());
+        const byIso = clusterAssignmentsByYear.get(year);
 
-        String(listRaw)
-          .split(",")
+        String(countriesRaw)
+          .split(";")
           .map(s => s.trim())
           .filter(Boolean)
           .forEach(name => {
-            byName.set(name, clusterId);
+            const key = makeCountryKey(name);
+            const iso3 =
+              isoByCountryName.get(name) ||
+              isoByCountryName.get(name.toLowerCase()) ||
+              isoByCountryName.get(key);
+            if (!iso3) return;
+
+            byIso.set(iso3, clusterId);
+            if (!clusterCountryNameByIso3.has(iso3)) {
+              clusterCountryNameByIso3.set(iso3, name);
+            }
+
+            const cluster = clusters[clusterId];
+            if (cluster && !cluster.countries.some(c => c.iso3 === iso3)) {
+              cluster.countries.push({ name, iso3 });
+            }
+
+            clusterByIso3[iso3] = clusterId;
           });
       });
 
-      // Convert to year -> Map<ISO3, clusterId>
-      clusterAssignmentsByYear = new Map();
-      yearCountryMap.forEach((byName, year) => {
-        const byIso = new Map();
-        byName.forEach((clusterId, name) => {
-          const iso3 = isoByCountryName.get(name) || isoByCountryName.get(name.toLowerCase());
-          if (!iso3) return;
-          byIso.set(iso3, clusterId);
-          if (!clusterCountryNameByIso3.has(iso3)) {
-            clusterCountryNameByIso3.set(iso3, name);
-          }
-        });
-        if (byIso.size) {
-          clusterAssignmentsByYear.set(year, byIso);
-        }
-      });
-
-      // Cache which years exist for the selected country (for potential future use)
+      // Cache which years exist for the selected country
       const yearsForCountry = [];
       clusterAssignmentsByYear.forEach((byIso, year) => {
         if (byIso.has(selectedIso3)) yearsForCountry.push(year);
       });
       clusterYearsForCountry = yearsForCountry.sort((a, b) => a - b);
 
-      // currentClusterYear is driven by the energy-year slider; once
-      // the assignments are available, re-render using whatever year
-      // is currently active (or static fallback if null).
       updateClusterTextAndPie();
       updateCountryHighlighting();
     }
 
     // Initialize annual energy bar chart
     initEnergyChart();
-
-    // Load cluster workbook after everything else is wired
-    fetch(clusterXlsxUrl)
-      .then(resp => resp.arrayBuffer())
-      .then(buf => {
-        const workbook = XLSX.read(buf, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
-        parseClusterWorkbook(rows);
-      })
-      .catch(err => {
-        console.error("Failed to load cluster workbook", err);
-        // Fall back to static cluster info if dynamic data is unavailable
-        updateClusterTextAndPie();
-        updateCountryHighlighting();
-      });
 
     // ==========================
     // Load renewables-share CSVs for color mode "share"
