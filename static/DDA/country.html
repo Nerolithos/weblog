@@ -1283,7 +1283,35 @@
       const rect = wrapper.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      countryTooltipEl.innerHTML = `<div><strong>${name}</strong> (${iso3})</div>`;
+      let content = `<div><strong>${name}</strong> (${iso3})</div>`;
+
+      // 在国家聚类页中，同样展示当前年份的 renewable share 百分比，
+      // 逻辑与主页一致：优先使用国家自身数据，若缺失且属于 Africa aggregate
+      // 分组，则回退到 Africa 汇总值。
+      const year = currentClusterYear;
+      if (shareColorReady && year != null && iso3) {
+        const byIso = shareDataByYearAndIso3.get(year);
+        let value = byIso ? byIso.get(iso3) : undefined;
+        let usedAfricaAggregate = false;
+
+        if ((value == null || isNaN(value)) && africaAggregateIso3.has(iso3)) {
+          const aggValue = shareAfricaAggregateByYear.get(year);
+          if (aggValue != null && !isNaN(aggValue)) {
+            value = aggValue;
+            usedAfricaAggregate = true;
+          }
+        }
+
+        if (value == null || isNaN(value)) {
+          content += `<div>${year} · Renewables share: NAN</div>`;
+        } else {
+          const v = value.toFixed(2);
+          const suffix = usedAfricaAggregate ? " · Africa Aggregate" : "";
+          content += `<div>${year} · Renewables share: ${v}%${suffix}</div>`;
+        }
+      }
+
+      countryTooltipEl.innerHTML = content;
       countryTooltipEl.style.left = `${x}px`;
       countryTooltipEl.style.top = `${y}px`;
       countryTooltipEl.style.opacity = "1";
