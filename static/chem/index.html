@@ -215,6 +215,81 @@
       color: var(--accent);
     }
 
+    /* Thermal sub-modes: m.p. / b.p. / temp. bar */
+    .thermal-controls {
+      margin-top: 0.3rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .thermal-controls.active {
+      display: flex;
+    }
+
+    .thermal-subtabs {
+      display: inline-flex;
+      gap: 0.25rem;
+      background: rgba(5, 8, 18, 0.85);
+      padding: 0.12rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .thermal-tab {
+      font-size: 0.68rem;
+      padding: 0.14rem 0.5rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .thermal-tab.active {
+      background: rgba(255, 255, 255, 0.09);
+      color: #ffe082;
+    }
+
+    .thermal-bar {
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.15rem;
+    }
+
+    .thermal-bar.active {
+      display: flex;
+    }
+
+    .thermal-play {
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(5, 8, 18, 0.9);
+      color: var(--fg);
+      border-radius: 999px;
+      width: 1.6rem;
+      height: 1.35rem;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .thermal-slider {
+      flex: 1;
+      accent-color: #ffb74d;
+    }
+
+    .thermal-temp-label {
+      min-width: 4.2rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
     /* Periodic table grid */
     .ptable-wrapper {
       position: relative;
@@ -719,7 +794,8 @@
             <button type="button" class="panel-tab" data-mode="en">Electronegativity</button>
             <button type="button" class="panel-tab" data-mode="ionization">1st Ionization</button>
             <button type="button" class="panel-tab" data-mode="radius">Atomic radius</button>
-            <button type="button" class="panel-tab" data-mode="melting">Melting point</button>
+            <button type="button" class="panel-tab" data-mode="melting">m./b. point</button>
+            <button type="button" class="panel-tab" data-mode="crust">Crust abundance</button>
             <button type="button" class="panel-tab active" data-mode="hue">Hue</button>
           </div>
         </div>
@@ -749,6 +825,18 @@
         </div>
         <div class="ptable-wrapper">
           <div id="ptable" class="ptable-grid" aria-label="Periodic table grid"></div>
+        </div>
+        <div class="thermal-controls" id="thermal-controls" aria-hidden="true">
+          <div class="thermal-subtabs" id="thermal-subtabs">
+            <button type="button" class="thermal-tab active" data-thermal="mp">m.p.</button>
+            <button type="button" class="thermal-tab" data-thermal="bp">b.p.</button>
+            <button type="button" class="thermal-tab" data-thermal="bar">temp. bar</button>
+          </div>
+          <div class="thermal-bar" id="thermal-bar">
+            <button type="button" class="thermal-play" id="thermal-play" aria-label="Play/pause temperature animation">▶</button>
+            <input type="range" class="thermal-slider" id="thermal-slider" min="-273" max="5700" step="1" />
+            <div class="thermal-temp-label"><span id="thermal-temp-value"></span> °C</div>
+          </div>
         </div>
       </section>
       <section class="panel panel-bohr" aria-label="Bohr model details">
@@ -1205,7 +1293,192 @@
       83: 271.5
     };
 
-    let currentMode = "hue"; // "names" | "en" | "ionization" | "radius" | "melting" | "hue"
+    // Boiling points in Celsius (approximate values for teaching use)
+    // null 表示在 1 atm 下没有稳定沸点或数据不常用
+    const BOILING_POINT_C = {
+      1:   -252.9,
+      2:   -268.9,
+      3:   1342,
+      4:   2471,
+      5:   3927,
+      6:   3825,
+      7:   -195.8,
+      8:   -182.9,
+      9:   -188.1,
+      10:  -246.1,
+      11:  883,
+      12:  1090,
+      13:  2470,
+      14:  3265,
+      15:  280,
+      16:  444.6,
+      17:  -34.0,
+      18:  -185.8,
+      19:  759,
+      20:  1484,
+      21:  2831,
+      22:  3287,
+      23:  3407,
+      24:  2671,
+      25:  2061,
+      26:  2862,
+      27:  2927,
+      28:  2913,
+      29:  2562,
+      30:  907,
+      31:  2204,
+      32:  2833,
+      33:  613,
+      34:  685,
+      35:  58.8,
+      36:  -153.4,
+      37:  688,
+      38:  1382,
+      39:  3338,
+      40:  4377,
+      41:  4744,
+      42:  4639,
+      43:  4265,
+      44:  4150,
+      45:  3727,
+      46:  2963,
+      47:  2162,
+      48:  767,
+      49:  2072,
+      50:  2602,
+      51:  1587,
+      52:  988,
+      53:  184.3,
+      54:  -108.1,
+      55:  671,
+      56:  1870,
+      57:  3464,
+      58:  3360,
+      59:  3520,
+      60:  3074,
+      61:  3130,
+      62:  1900,
+      63:  1597,
+      64:  3273,
+      65:  3123,
+      66:  2562,
+      67:  2700,
+      68:  2868,
+      69:  1950,
+      70:  1196,
+      71:  3464,
+      72:  4603,
+      73:  5458,
+      74:  5555,
+      75:  5596,
+      76:  5285,
+      77:  4428,
+      78:  3825,
+      79:  2856,
+      80:  356.7,
+      81:  1473,
+      82:  1749,
+      83:  1564
+    };
+
+    // Crustal abundance in Earth's continental crust (ppm by mass, ~mg/kg)
+    // 数据主要参考 Wikipedia Abundance of elements in Earth's crust 表格；
+    // 只覆盖 Z ≤ 83 的常见元素，极罕见/合成元素留空 (null)。
+    const CRUST_ABUND_PPM = {
+      1:   1400,
+      2:   0.008,
+      3:   20,
+      4:   2.8,
+      5:   10,
+      6:   200,
+      7:   19,
+      8:   461000,
+      9:   585,
+      10:  0.005,
+      11: 23600,
+      12: 23300,
+      13: 82300,
+      14: 282000,
+      15: 1050,
+      16: 350,
+      17: 145,
+      18: 3.5,
+      19: 20900,
+      20: 41500,
+      21: 22,
+      22: 5650,
+      23: 120,
+      24: 102,
+      25: 950,
+      26: 56300,
+      27: 25,
+      28: 84,
+      29: 60,
+      30: 70,
+      31: 19,
+      32: 1.5,
+      33: 1.8,
+      34: 0.05,
+      35: 2.4,
+      36: 0.0001,
+      37: 90,
+      38: 370,
+      39: 33,
+      40: 165,
+      41: 20,
+      42: 1.2,
+      43: null,
+      44: 0.001,
+      45: 0.001,
+      46: 0.015,
+      47: 0.075,
+      48: 0.15,
+      49: 0.25,
+      50: 2.3,
+      51: 0.2,
+      52: 0.001,
+      53: 0.45,
+      54: 0.00003,
+      55: 3.0,
+      56: 425,
+      57: 39,
+      58: 66.5,
+      59: 9.2,
+      60: 41.5,
+      61: null,
+      62: 7.05,
+      63: 2.0,
+      64: 6.2,
+      65: 1.2,
+      66: 5.2,
+      67: 1.3,
+      68: 3.5,
+      69: 0.52,
+      70: 3.2,
+      71: 0.8,
+      72: 3.0,
+      73: 2.0,
+      74: 1.25,
+      75: 0.0007,
+      76: 0.0015,
+      77: 0.001,
+      78: 0.005,
+      79: 0.004,
+      80: 0.085,
+      81: 0.85,
+      82: 14,
+      83: 0.0085
+    };
+
+    let currentMode = "hue"; // "names" | "en" | "ionization" | "radius" | "melting" | "crust" | "hue"
+
+    // Thermal visualization sub-mode: "mp" (melting point), "bp" (boiling point), "bar" (phase vs temperature)
+    let thermalMode = "mp";
+
+    const ABS_ZERO_C = -273.15;
+    const MAX_BOIL_C = 5710; // 略高于最高沸点，用于温度条上限
+    let currentTempC = 25;   // 默认从室温开始
+    let tempBarTimer = null;
 
     // 外部 Hue 配色表：从 CSS 变量 --el-N 载入
     const HUE_MAP = new Map();
@@ -1263,6 +1536,25 @@
       }
     }
 
+    function getPhaseAtTempC(z, tC) {
+      const mp = MELTING_POINT_C[z];
+      const bp = BOILING_POINT_C[z];
+      if ((mp == null || !isFinite(mp)) && (bp == null || !isFinite(bp))) {
+        return "unknown";
+      }
+      if (bp != null && isFinite(bp)) {
+        const mVal = (mp != null && isFinite(mp)) ? mp : bp - 1; // 对升华元素给一个窄的“固体区”
+        if (tC < mVal) return "solid";
+        if (tC < bp) return "liquid";
+        return "gas";
+      }
+      // 只有熔点：低于熔点视为固体，高于则视为气体
+      if (mp != null && isFinite(mp)) {
+        return tC < mp ? "solid" : "gas";
+      }
+      return "unknown";
+    }
+
     function modeColor(el) {
       const z = el.z;
       if (currentMode === "en") {
@@ -1299,15 +1591,68 @@
         // Radius mode: color no longer encodes size, use neutral tile color
         return "linear-gradient(135deg,#78909c,#455a64)";
       }
+      if (currentMode === "crust") {
+        const v = CRUST_ABUND_PPM[z];
+        if (v == null || !isFinite(v) || v <= 0) {
+          return "linear-gradient(135deg,#424242,#212121)";
+        }
+        // 使用对数刻度把宽范围的丰度压缩到 0–1
+        const logV = Math.log10(v);
+        const minLog = -4;  // ≈ 1e-4 ppm
+        const maxLog = 6;   // ≈ 1e6 ppm
+        let t = (logV - minLog) / (maxLog - minLog);
+        if (!isFinite(t)) t = 0;
+        t = Math.min(1, Math.max(0, t));
+        // 白 → 黄 → 橙 → 红 渐变：稀少几乎白，越丰富颜色越暖越深
+        // 为了拉开稀有元素层次，适当放大白～黄的占比
+        // 关键颜色点：0.00 白 (#ffffff)；0.25 黄 (#fff176)；0.65 橙 (#ffb74d)；1.00 红 (#e53935)
+        let r, g, b;
+        if (t <= 0.25) {
+          const u = t / 0.25;
+          const r0 = 0xff, g0 = 0xff, b0 = 0xff;      // 白
+          const r1 = 0xff, g1 = 0xf1, b1 = 0x76;      // 黄
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        } else if (t <= 0.65) {
+          const u = (t - 0.25) / (0.65 - 0.25);
+          const r0 = 0xff, g0 = 0xf1, b0 = 0x76;      // 黄
+          const r1 = 0xff, g1 = 0xb7, b1 = 0x4d;      // 橙
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        } else {
+          const u = (t - 0.65) / (1.00 - 0.65);
+          const r0 = 0xff, g0 = 0xb7, b0 = 0x4d;      // 橙
+          const r1 = 0xe5, g1 = 0x39, b1 = 0x35;      // 红
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        }
+        const base = `rgb(${r},${g},${b})`;
+        return `linear-gradient(135deg,${base},${base})`;
+      }
       if (currentMode === "melting") {
-        const mp = MELTING_POINT_C[z];
-        if (mp == null || !isFinite(mp)) {
+        if (thermalMode === "bar") {
+          const phase = getPhaseAtTempC(z, currentTempC);
+          if (phase === "solid") {
+            return "linear-gradient(135deg,#ffffff,#f5f5f5)";
+          } else if (phase === "liquid") {
+            return "linear-gradient(135deg,#ffcc80,#ffb74d)";
+          } else if (phase === "gas") {
+            return "linear-gradient(135deg,#ef5350,#e53935)";
+          }
+          return "linear-gradient(135deg,#424242,#212121)";
+        }
+        const table = thermalMode === "bp" ? BOILING_POINT_C : MELTING_POINT_C;
+        const v = table[z];
+        if (v == null || !isFinite(v)) {
           return "linear-gradient(135deg,#424242,#212121)";
         }
         // 白 → 黄 → 橙 → 红 渐变：缩小白色和黄色区间，扩展橙/红区间
         const minC = -260;
-        const maxC = 3400;
-        let t = (mp - minC) / (maxC - minC);
+        const maxC = thermalMode === "bp" ? 5600 : 3400;
+        let t = (v - minC) / (maxC - minC);
         if (!isFinite(t)) t = 0;
         t = Math.min(1, Math.max(0, t));
         // 关键颜色点：
@@ -1497,10 +1842,55 @@
           tick.appendChild(label);
           ticksEl.appendChild(tick);
         }
+      } else if (currentMode === "crust") {
+        titleEl.textContent = "Crustal abundance (ppm, log10)";
+        minEl.textContent = "low (≈10⁻⁴)";
+        maxEl.textContent = "high (≈10⁶)";
+        // 白 → 黄 → 橙 → 红 渐变，与格子颜色一致
+        gradEl.style.backgroundImage = "linear-gradient(90deg,#ffffff 0%,#fff176 12%,#ffb74d 45%,#e53935 100%)";
+        gradEl.style.visibility = "visible";
+        catEl.style.display = "none";
+        ticksEl.style.display = "flex";
+        ticksEl.innerHTML = "";
+        const minLog = -4;
+        const maxLog = 6;
+        const n = 7;
+        for (let i = 0; i < n; i++) {
+          const t = i / (n - 1);
+          const logV = minLog + t * (maxLog - minLog);
+          const v = Math.pow(10, logV);
+          const tick = document.createElement("div");
+          tick.className = "legend-tick";
+          const line = document.createElement("div");
+          line.className = "legend-tick-line";
+          const label = document.createElement("div");
+          label.className = "legend-tick-label";
+          if (v >= 1000) {
+            // 用科学计数法表示
+            const exp = Math.round(logV);
+            label.textContent = "1e" + exp.toString();
+          } else if (v >= 1) {
+            label.textContent = v.toFixed(0);
+          } else {
+            const exp = Math.round(logV);
+            label.textContent = "1e" + exp.toString();
+          }
+          tick.appendChild(line);
+          tick.appendChild(label);
+          ticksEl.appendChild(tick);
+        }
       } else if (currentMode === "melting") {
-        titleEl.textContent = "Melting point (°C)";
+        if (thermalMode === "bar") {
+          // 温度条模式下，数值图例意义不大，交给温度条控件
+          legend.classList.remove("active");
+          legend.setAttribute("aria-hidden", "true");
+          ticksEl.style.display = "none";
+          return;
+        }
+        const isBP = thermalMode === "bp";
+        titleEl.textContent = isBP ? "Boiling point (°C)" : "Melting point (°C)";
         minEl.textContent = "low (≈ -260)";
-        maxEl.textContent = "high (≈ 3400)";
+        maxEl.textContent = isBP ? "high (≈ 5600)" : "high (≈ 3400)";
         // 白 → 黄 → 橙 → 红 的连续渐变，与单元格颜色一致（黄占比较小，橙/红更长）
         gradEl.style.backgroundImage = "linear-gradient(90deg,#ffffff 0%,#fff176 12%,#ffb74d 45%,#e53935 100%)";
         gradEl.style.visibility = "visible";
@@ -1508,7 +1898,7 @@
         ticksEl.style.display = "flex";
         ticksEl.innerHTML = "";
         const minV = -260;
-        const maxV = 3400;
+        const maxV = isBP ? 5600 : 3400;
         const n = 7;
         for (let i = 0; i < n; i++) {
           const t = i / (n - 1);
@@ -1537,7 +1927,8 @@
     }
 
     function setMode(mode) {
-      if (mode !== "names" && mode !== "en" && mode !== "ionization" && mode !== "radius" && mode !== "melting" && mode !== "hue") return;
+      if (mode !== "names" && mode !== "en" && mode !== "ionization" && mode !== "radius" && mode !== "melting" && mode !== "crust" && mode !== "hue") return;
+      const prevMode = currentMode;
       currentMode = mode;
 
       document.querySelectorAll(".panel-tab").forEach(btn => {
@@ -1549,9 +1940,87 @@
       // 只在 Hue 模式下启用金属高光 / 阴影效果
       document.documentElement.classList.toggle("mode-hue", mode === "hue");
 
+      // 进入 m./b. point 模式时，默认切到 temp. bar 并自动播放
+      if (mode === "melting") {
+        if (prevMode !== "melting") {
+          setThermalMode("bar");
+          startTempBarAnimation();
+        }
+      } else {
+        // 离开 m./b. point 时停止动画
+        stopTempBarAnimation();
+      }
+
       updateLegend();
       refreshTileColors();
       updateRadiusVisuals();
+      updateThermalUI();
+    }
+
+    function updateThermalUI() {
+      const controls = document.getElementById("thermal-controls");
+      const bar = document.getElementById("thermal-bar");
+      const slider = document.getElementById("thermal-slider");
+      const tempLabel = document.getElementById("thermal-temp-value");
+      const playBtn = document.getElementById("thermal-play");
+      if (!controls || !bar || !slider || !tempLabel || !playBtn) return;
+
+      const inThermalMode = currentMode === "melting";
+      controls.classList.toggle("active", inThermalMode);
+      controls.setAttribute("aria-hidden", inThermalMode ? "false" : "true");
+
+      const showBar = inThermalMode && thermalMode === "bar";
+      bar.classList.toggle("active", showBar);
+
+      slider.min = Math.round(ABS_ZERO_C).toString();
+      slider.max = Math.round(MAX_BOIL_C).toString();
+      slider.value = Math.round(currentTempC).toString();
+      tempLabel.textContent = `${Math.round(currentTempC)}`;
+
+      // 播放按钮图标：有定时器时显示暂停，反之显示播放
+      playBtn.textContent = tempBarTimer ? "❚❚" : "▶";
+    }
+
+    function setThermalMode(mode) {
+      if (mode !== "mp" && mode !== "bp" && mode !== "bar") return;
+      if (thermalMode === mode) return;
+      thermalMode = mode;
+
+      document.querySelectorAll(".thermal-tab").forEach(btn => {
+        const m = btn.getAttribute("data-thermal");
+        if (m === mode) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+
+      if (thermalMode !== "bar") {
+        stopTempBarAnimation();
+      }
+
+      updateLegend();
+      refreshTileColors();
+      updateThermalUI();
+    }
+
+    function startTempBarAnimation() {
+      if (tempBarTimer) return;
+      tempBarTimer = setInterval(() => {
+        if (currentMode !== "melting" || thermalMode !== "bar") {
+          stopTempBarAnimation();
+          return;
+        }
+        currentTempC += 40;
+        if (currentTempC > MAX_BOIL_C) currentTempC = ABS_ZERO_C;
+        refreshTileColors();
+        updateThermalUI();
+      }, 80);
+      updateThermalUI();
+    }
+
+    function stopTempBarAnimation() {
+      if (!tempBarTimer) return;
+      clearInterval(tempBarTimer);
+      tempBarTimer = null;
+      updateThermalUI();
     }
 
     // --- Tooltip helpers ---
@@ -1577,14 +2046,50 @@
         const v = ATOMIC_RADIUS[z];
         const vStr = v == null ? "n/a" : `${v} pm`;
         label += ` – Atomic radius: ${vStr}`;
+      } else if (currentMode === "crust") {
+        const v = CRUST_ABUND_PPM[z];
+        if (v == null || !isFinite(v) || v <= 0) {
+          label += " – Crustal abundance: n/a";
+        } else if (v >= 10000) {
+          const pct = (v / 10000).toFixed(2);
+          label += ` – Crustal abundance: ${v.toLocaleString()} ppm (~${pct}%)`;
+        } else if (v >= 1) {
+          label += ` – Crustal abundance: ${v.toFixed(1)} ppm`;
+        } else {
+          // 极低丰度，用科学计数法标出 ppm 值
+          const exp = Math.floor(Math.log10(v));
+          const mant = v / Math.pow(10, exp);
+          label += ` – Crustal abundance: ${mant.toFixed(1)}e${exp} ppm`;
+        }
       } else if (currentMode === "melting") {
-        const v = MELTING_POINT_C[z];
-        const vStr = v == null || !isFinite(v)
-          ? "n/a"
-          : (Math.abs(v) < 100 ? v.toFixed(2) : v.toFixed(0)) + " °C";
-        label += ` – Melting point: ${vStr}`;
-        if (z === 6 || z === 33) {
-          label += " (sublimes at 1 atm)";
+        if (thermalMode === "bar") {
+          const phase = getPhaseAtTempC(z, currentTempC);
+          let phaseLabel;
+          if (phase === "solid") phaseLabel = "solid";
+          else if (phase === "liquid") phaseLabel = "liquid";
+          else if (phase === "gas") phaseLabel = "gas";
+          else phaseLabel = "unknown";
+          label += ` – Phase at ${Math.round(currentTempC)} °C: ${phaseLabel}`;
+          const mp = MELTING_POINT_C[z];
+          const bp = BOILING_POINT_C[z];
+          const mpStr = mp == null || !isFinite(mp) ? "n/a" : (Math.abs(mp) < 100 ? mp.toFixed(2) : mp.toFixed(0)) + " °C";
+          const bpStr = bp == null || !isFinite(bp) ? "n/a" : (Math.abs(bp) < 100 ? bp.toFixed(2) : bp.toFixed(0)) + " °C";
+          label += ` (m.p.: ${mpStr}, b.p.: ${bpStr})`;
+        } else if (thermalMode === "bp") {
+          const v = BOILING_POINT_C[z];
+          const vStr = v == null || !isFinite(v)
+            ? "n/a"
+            : (Math.abs(v) < 100 ? v.toFixed(2) : v.toFixed(0)) + " °C";
+          label += ` – Boiling point: ${vStr}`;
+        } else {
+          const v = MELTING_POINT_C[z];
+          const vStr = v == null || !isFinite(v)
+            ? "n/a"
+            : (Math.abs(v) < 100 ? v.toFixed(2) : v.toFixed(0)) + " °C";
+          label += ` – Melting point: ${vStr}`;
+          if (z === 6 || z === 33) {
+            label += " (sublimes at 1 atm)";
+          }
         }
       } else if (currentMode === "hue") {
         const c = HUE_MAP.get(z) || "(default group color)";
@@ -1928,6 +2433,40 @@
         });
       });
 
+      document.querySelectorAll(".thermal-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const mode = btn.getAttribute("data-thermal");
+          setThermalMode(mode);
+        });
+      });
+
+      const slider = document.getElementById("thermal-slider");
+      const playBtn = document.getElementById("thermal-play");
+      if (slider) {
+        slider.addEventListener("input", () => {
+          const v = Number(slider.value);
+          if (!Number.isNaN(v)) {
+            currentTempC = v;
+            stopTempBarAnimation();
+            if (currentMode === "melting" && thermalMode === "bar") {
+              refreshTileColors();
+            }
+            updateThermalUI();
+          }
+        });
+      }
+      if (playBtn) {
+        playBtn.addEventListener("click", () => {
+          if (tempBarTimer) {
+            stopTempBarAnimation();
+          } else {
+            if (currentMode !== "melting") setMode("melting");
+            setThermalMode("bar");
+            startTempBarAnimation();
+          }
+        });
+      }
+
       // 先从 CSS 变量载入 Hue 颜色，保证你在 element_hues.css 里调的颜色立即生效
       loadHueFromCSSVars();
 
@@ -1935,8 +2474,9 @@
         loadValenceData(),
         loadElementNotes()
       ]).finally(() => {
+        // 默认进入 Hue 模式，m./b. point 在切换时自动进入 temp. bar
         setMode("hue");
-        // Default select hydrogen
+        // 默认选中氢元素
         applySelection(1);
         const firstTile = document.querySelector('.el-tile[data-z="1"]');
         if (firstTile) firstTile.classList.add("selected");
