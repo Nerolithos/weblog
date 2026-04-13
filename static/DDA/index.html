@@ -232,7 +232,7 @@
       opacity: 0;
       transform: translate(-50%, -110%);
       transition: opacity 0.12s ease-out;
-      z-index: 10;
+      z-index: 30;
       white-space: nowrap;
     }
     .dda-tooltip strong {
@@ -244,8 +244,8 @@
     }
     .dda-linechart-toggle {
       position: absolute;
-      left: 1.5rem;
-      bottom: 1.5rem;
+      left: 1.75rem;
+      top: 4.1rem;
       padding: 0.35rem 0.85rem;
       border-radius: 999px;
       border: 1px solid rgba(15, 23, 42, 0.18);
@@ -851,11 +851,6 @@
         .nice()
         .range([innerHeight, 0]);
 
-      const line = d3.line()
-        .defined(d => d.value != null && !isNaN(d.value))
-        .x(d => x(d.year))
-        .y(d => y(d.value));
-
       // 简单坐标轴：左侧竖线，标注 0% 和最大值
       g.append("line")
         .attr("x1", 0)
@@ -889,21 +884,44 @@
         .attr("stroke", "#e5e7eb")
         .attr("stroke-width", 1);
 
-      g.append("path")
-        .datum(smoothed)
-        .attr("fill", "none")
-        .attr("stroke", "#2563eb")
+      // 根据每一年的数值，用与主地图相同的颜色刻度为折线分段着色
+      const segments = [];
+      for (let i = 1; i < smoothed.length; i++) {
+        const a = smoothed[i - 1];
+        const b = smoothed[i];
+        if (a.value == null || b.value == null || isNaN(a.value) || isNaN(b.value)) continue;
+        const midVal = (a.value + b.value) / 2;
+        segments.push({
+          x1: x(a.year),
+          y1: y(a.value),
+          x2: x(b.year),
+          y2: y(b.value),
+          color: colorScale(midVal)
+        });
+      }
+
+      g.selectAll(".dda-tooltip-sparkline-seg")
+        .data(segments)
+        .enter()
+        .append("line")
+        .attr("class", "dda-tooltip-sparkline-seg")
+        .attr("x1", d => d.x1)
+        .attr("y1", d => d.y1)
+        .attr("x2", d => d.x2)
+        .attr("y2", d => d.y2)
+        .attr("stroke", d => d.color)
         .attr("stroke-width", 1.4)
-        .attr("d", line);
+        .attr("stroke-linecap", "round");
 
       if (currentYear != null) {
         const point = smoothed.find(d => d.year === currentYear && d.value != null && !isNaN(d.value));
         if (point) {
+          const pointColor = colorScale(point.value);
           g.append("circle")
             .attr("cx", x(point.year))
             .attr("cy", y(point.value))
             .attr("r", 2.5)
-            .attr("fill", "#111827")
+            .attr("fill", pointColor)
             .attr("stroke", "#ffffff")
             .attr("stroke-width", 1);
         }
@@ -941,9 +959,10 @@
       const year = years[clamped];
       updateColorsForYear(year);
       updateInfoPanel(null);
-      if (!isHoveringCountry) {
+      const linechartVisible = linechartPanel && linechartPanel.classList.contains("dda-linechart-panel--visible");
+      if (!isHoveringCountry && !linechartVisible) {
         hideTooltip();
-      } else {
+      } else if (isHoveringCountry && !linechartVisible) {
         // 鼠标悬浮在国家上时，保持 tooltip 可见，但根据新的年份刷新其中的内容和折线图上的点
         refreshTooltipForCurrentYear();
       }
