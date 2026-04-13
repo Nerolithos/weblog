@@ -547,6 +547,104 @@
       }
     }
 
+    // Manual aliases for countries whose names differ between
+    // true_clustering.csv and the world/tile datasets.
+    const ISO_MANUAL_ALIASES = [
+      ["United Kingdom", "GBR"],
+      ["Great Britain", "GBR"],
+      ["Czechia", "CZE"],
+      ["Czech Republic", "CZE"],
+      ["Russian Federation (the)", "RUS"],
+      ["Russian Federation", "RUS"],
+      ["United States of America", "USA"],
+      ["United States", "USA"],
+      ["Viet Nam", "VNM"],
+      ["Vietnam", "VNM"],
+      ["Lao People's Democratic Republic (the)", "LAO"],
+      ["Lao People's Democratic Republic", "LAO"],
+      ["Laos", "LAO"],
+      ["Congo (the Democratic Republic of the)", "COD"],
+      ["Democratic Republic of the Congo", "COD"],
+      ["Democratic Republic of Congo", "COD"],
+      ["Congo (the)", "COG"],
+      ["Republic of the Congo", "COG"],
+      ["Republic of the Congo", "COG"],
+      ["Congo", "COG"],
+      ["Cote d'Ivoire", "CIV"],
+      ["Côte d'Ivoire", "CIV"],
+      ["Bahamas (the)", "BHS"],
+      ["Bahamas", "BHS"],
+      ["Dominican Republic (the)", "DOM"],
+      ["Dominican Republic", "DOM"],
+      ["Central African Republic (the)", "CAF"],
+      ["Central African Republic", "CAF"],
+      ["Gambia (the)", "GMB"],
+      ["Gambia", "GMB"],
+      ["Niger (the)", "NER"],
+      ["Niger", "NER"],
+      ["Sudan (the)", "SDN"],
+      ["Sudan", "SDN"],
+      ["Syrian Arab Republic (the)", "SYR"],
+      ["Syrian Arab Republic", "SYR"],
+      ["Syria", "SYR"],
+      ["Philippines (the)", "PHL"],
+      ["Philippines", "PHL"],
+      ["Turks and Caicos Islands (the)", "TCA"],
+      ["Turks and Caicos Islands", "TCA"],
+      ["Virgin Islands (British)", "VGB"],
+      ["British Virgin Islands", "VGB"],
+      ["Virgin Islands (U.S.)", "VIR"],
+      ["United States Virgin Islands", "VIR"],
+      ["Venezuela (Bolivarian Republic of)", "VEN"],
+      ["Venezuela", "VEN"],
+      ["Palestine, State of", "PSE"],
+      ["State of Palestine", "PSE"],
+      ["Eswatini", "SWZ"],
+      ["Swaziland", "SWZ"],
+      ["Timor-Leste", "TLS"],
+      ["East Timor", "TLS"],
+      ["Antigua and Barbuda", "ATG"],
+      ["Antigua & Barbuda", "ATG"],
+      ["Barbados", "BRB"],
+      ["Mauritius", "MUS"],
+      ["Comoros", "COM"],
+      ["Comoros (the)", "COM"],
+      ["Seychelles", "SYC"],
+      ["Maldives", "MDV"],
+      ["Singapore", "SGP"],
+      ["Palau", "PLW"],
+      ["Micronesia", "FSM"],
+      ["Micronesia (Federated States of)", "FSM"],
+      ["Federated States of Micronesia", "FSM"],
+      ["Marshall Islands", "MHL"],
+      ["Nauru", "NRU"],
+      ["Kiribati", "KIR"],
+      ["Tuvalu", "TUV"],
+      ["Samoa", "WSM"],
+      ["Tonga", "TON"],
+      ["Bahrain", "BHR"],
+      ["Grenada", "GRD"],
+      ["Kyrgyz Republic", "KGZ"],
+      ["Kyrgyzstan", "KGZ"],
+      ["Cabo Verde", "CPV"],
+      ["Cape Verde", "CPV"],
+      ["Korea (the Democratic People's Republic of)", "PRK"],
+      ["Democratic People's Republic of Korea", "PRK"],
+      ["N. Korea", "PRK"],
+      ["Korea (the Republic of)", "KOR"],
+      ["Republic of Korea", "KOR"],
+      ["S. Korea", "KOR"],
+      ["United Arab Emirates", "ARE"],
+      ["UAE", "ARE"],
+      ["Tanzania, the United Republic of", "TZA"],
+      ["United Republic of Tanzania", "TZA"],
+      ["Tanzania", "TZA"]
+    ];
+
+    ISO_MANUAL_ALIASES.forEach(([name, iso3]) => {
+      registerIsoMapping(name, iso3);
+    });
+
     function getQueryParam(key) {
       const params = new URLSearchParams(window.location.search);
       return params.get(key);
@@ -1577,8 +1675,6 @@
 
       // 从 GeoJSON 中构建 name -> ISO3 的映射，供模板匹配使用
       const nameToCode = new Map();
-      let southKoreaCode = null;
-      let uaeCode = null;
       world.features.forEach(f => {
         const props = f.properties || {};
         const name = props.name || props.ADMIN;
@@ -1588,33 +1684,16 @@
         if (!nameToCode.has(k)) {
           nameToCode.set(k, iso3);
         }
-
-        // 记录韩国（KOR）的代码，用于 tile 模板中的 "S. Korea"
-        if (iso3 === "KOR") {
-          southKoreaCode = iso3;
-        }
-
-        // 记录阿联酋（ARE）的代码，用于 tile 模板中的 "UAE"
-        if (iso3 === "ARE") {
-          uaeCode = iso3;
-        }
       });
 
-      // 补充 tile 模板名称 "S. Korea" -> KOR 的映射
-      if (southKoreaCode) {
-        const aliasKey = "skorea"; // "S. Korea" 经过 nameKey 处理后的形式
-        if (!nameToCode.has(aliasKey)) {
-          nameToCode.set(aliasKey, southKoreaCode);
+      // 结合已有的 ISO_MANUAL_ALIASES（包含 "N. Korea"、"S. Korea"、"UAE" 等），
+      // 为 tile 模板中的别名补充映射，避免这些国家缺少 ISO3 代码。
+      ISO_MANUAL_ALIASES.forEach(([aliasName, iso3]) => {
+        const k = nameKey(aliasName);
+        if (!nameToCode.has(k)) {
+          nameToCode.set(k, iso3.toUpperCase());
         }
-      }
-
-      // 补充 tile 模板名称 "UAE" -> ARE 的映射
-      if (uaeCode) {
-        const aliasKey = "uae"; // "UAE" 经过 nameKey 处理后的形式
-        if (!nameToCode.has(aliasKey)) {
-          nameToCode.set(aliasKey, uaeCode);
-        }
-      }
+      });
 
       d3.json("world-tile-grid.json").then(tileTemplate => {
         if (!Array.isArray(tileTemplate) || !tileTemplate.length) return;
