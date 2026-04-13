@@ -73,22 +73,14 @@
       background: #ffffff; /* 纯白色进度条 */
       transform-origin: left center;
       transform: scaleX(0);
-      animation: ark-loading-bar-loop 2.4s ease-in-out infinite;
     }
     body.ark-loading-finished #ark-loading-overlay {
       opacity: 0;
       pointer-events: none;
     }
     body.ark-loading-finished #ark-loading-bar {
-      animation: none;
       transform: scaleX(1);
       transition: transform 0.6s ease-out;
-    }
-    @keyframes ark-loading-bar-loop {
-      0% { transform: scaleX(0.08); }
-      35% { transform: scaleX(0.55); }
-      65% { transform: scaleX(0.82); }
-      100% { transform: scaleX(0.96); }
     }
     @keyframes ark-loading-diamond-pulse {
       0% { transform: rotate(45deg) scale(1); opacity: 0.7; box-shadow: 0 0 12px rgba(255,255,255,0.18); }
@@ -1585,8 +1577,42 @@ You did not answered the call of the trapped souls, soon, some security officers
       var bar = document.getElementById('ark-loading-bar');
       if (!overlay || !bar) return;
 
+      var progress = 0;              // 0.0 ~ 1.0
+      var preLoadMax = 0.9;          // 未触发 load 事件前的最大进度
+      var tickMs = 120;              // 更新节奏
+      var timerId = null;
+
+      function applyProgress() {
+        var clamped = Math.max(0, Math.min(1, progress));
+        bar.style.transform = 'scaleX(' + clamped + ')';
+      }
+
+      function startFakeProgress() {
+        if (timerId !== null) return;
+        timerId = setInterval(function () {
+          if (document.body.classList.contains('ark-loading-finished')) {
+            clearInterval(timerId);
+            timerId = null;
+            return;
+          }
+          // 逐步接近 preLoadMax，但永远不回退、不重置
+          var delta = 0.02 + Math.random() * 0.03; // 每帧增加 2% ~ 5%
+          progress = Math.min(preLoadMax, progress + delta);
+          applyProgress();
+        }, tickMs);
+      }
+
+      startFakeProgress();
+
       function finishLoading() {
         if (document.body.classList.contains('ark-loading-finished')) return;
+        if (timerId !== null) {
+          clearInterval(timerId);
+          timerId = null;
+        }
+        // 先把进度条推到 100%
+        progress = 1;
+        applyProgress();
         document.body.classList.add('ark-loading-finished');
         // 在进度条补满与淡出动画结束后，彻底移除节点，避免干扰后续交互
         setTimeout(function () {

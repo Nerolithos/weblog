@@ -5,7 +5,7 @@ draft: false
 categories:
   - 帮助
 redirect: "/chem"
-summary: "交互式元素周期表，展示元素的第一电离能、电负性、原子半径、波义耳电子排布、化合价、冷知识等等。"
+summary: "交互式元素周期表，展示单质颜色、熔沸点、第一电离能、电负性、原子半径、波义耳电子排布、化合价、冷知识等等。"
 featured_image: "/images/chemistry.jpg"
 ---
 
