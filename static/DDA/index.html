@@ -238,6 +238,10 @@
     .dda-tooltip strong {
       font-weight: 600;
     }
+    .dda-tooltip-sparkline {
+      margin-top: 0.4rem;
+      display: block;
+    }
     .dda-linechart-toggle {
       position: absolute;
       left: 1.5rem;
@@ -577,6 +581,9 @@
     let mapCountryPaths = null;
     let tileRects = null;
     let tilePositionsByIso3 = new Map(); // Map<iso3, {col,row,name}>
+    let isHoveringCountry = false; // 在播放年份时，避免移入国家时 tooltip 被反复隐藏
+    let lastTooltipIso3 = null;
+    let lastTooltipName = null;
 
     // ==========================
     // 数据结构
@@ -612,6 +619,7 @@
     let currentYear = null;
     let dataByYearAndCode = new Map(); // Map<year, Map<code, { value, name }>>
     let countryNameByCode = new Map(); // Map<code, name>
+    let countrySeriesCache = new Map(); // Map<code, Array<{year, value}>>
 
     // Display-name overrides for sensitive entities (UI only; ISO3 and data remain unchanged)
     const DISPLAY_NAME_OVERRIDES = new Map([
@@ -770,6 +778,161 @@
       return record;
     }
 
+    function getCountrySeries(iso3) {
+      if (!iso3 || !years.length) return null;
+      const code = String(iso3).toUpperCase();
+      if (countrySeriesCache.has(code)) return countrySeriesCache.get(code);
+
+      const series = years.map(year => {
+        const rec = getCountryValue(year, code);
+        const value = rec && !isNaN(rec.value) ? rec.value : null;
+        return { year, value };
+      });
+
+      countrySeriesCache.set(code, series);
+      return series;
+    }
+
+    function smoothSeries(series) {
+      if (!Array.isArray(series) || !series.length) return series || [];
+      const windowSize = 3;
+      const half = Math.floor(windowSize / 2);
+      return series.map((d, i) => {
+        let sum = 0;
+        let count = 0;
+        for (let j = i - half; j <= i + half; j++) {
+          if (j < 0 || j >= series.length) continue;
+          const v = series[j].value;
+          if (v != null && !isNaN(v)) {
+            sum += v;
+            count++;
+          }
+        }
+        if (!count) return { year: d.year, value: null };
+        return { year: d.year, value: sum / count };
+      });
+    }
+
+    function renderTooltipSparklineForCountry(iso3) {
+      if (!iso3 || !years.length) return;
+      const container = d3.select(tooltipEl).select(".dda-tooltip-sparkline");
+      if (container.empty()) return;
+      container.selectAll("*").remove();
+
+      const rawSeries = getCountrySeries(iso3);
+      if (!rawSeries) return;
+      const smoothed = smoothSeries(rawSeries);
+      const values = smoothed
+        .map(d => d.value)
+        .filter(v => v != null && !isNaN(v));
+      if (!values.length) return;
+
+      const width = 170;
+      const height = 60;
+      const margin = { top: 6, right: 4, bottom: 14, left: 4 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const svg = container.append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const x = d3.scaleLinear()
+        .domain(d3.extent(years))
+        .range([0, innerWidth]);
+
+      const maxVal = d3.max(values);
+
+      const y = d3.scaleLinear()
+        .domain([0, maxVal * 1.05])
+        .nice()
+        .range([innerHeight, 0]);
+
+      const line = d3.line()
+        .defined(d => d.value != null && !isNaN(d.value))
+        .x(d => x(d.year))
+        .y(d => y(d.value));
+
+      // 简单坐标轴：左侧竖线，标注 0% 和最大值
+      g.append("line")
+        .attr("x1", 0)
+        .attr("x2", 0)
+        .attr("y1", 0)
+        .attr("y2", innerHeight)
+        .attr("stroke", "#e5e7eb")
+        .attr("stroke-width", 1);
+
+      g.append("text")
+        .attr("x", 2)
+        .attr("y", innerHeight)
+        .attr("dy", -2)
+        .attr("font-size", 8)
+        .attr("fill", "#6b7280")
+        .text("0%");
+
+      g.append("text")
+        .attr("x", 2)
+        .attr("y", y(maxVal))
+        .attr("dy", -1)
+        .attr("font-size", 8)
+        .attr("fill", "#6b7280")
+        .text(`${maxVal.toFixed(0)}%`);
+
+      g.append("line")
+        .attr("x1", 0)
+        .attr("x2", innerWidth)
+        .attr("y1", innerHeight)
+        .attr("y2", innerHeight)
+        .attr("stroke", "#e5e7eb")
+        .attr("stroke-width", 1);
+
+      g.append("path")
+        .datum(smoothed)
+        .attr("fill", "none")
+        .attr("stroke", "#2563eb")
+        .attr("stroke-width", 1.4)
+        .attr("d", line);
+
+      if (currentYear != null) {
+        const point = smoothed.find(d => d.year === currentYear && d.value != null && !isNaN(d.value));
+        if (point) {
+          g.append("circle")
+            .attr("cx", x(point.year))
+            .attr("cy", y(point.value))
+            .attr("r", 2.5)
+            .attr("fill", "#111827")
+            .attr("stroke", "#ffffff")
+            .attr("stroke-width", 1);
+        }
+      }
+    }
+
+    function setTooltipContentForCountry(iso3, name) {
+      if (!iso3) return;
+      const year = currentYear;
+      const record = year ? getCountryValue(year, iso3) : null;
+
+      let content = "";
+      if (!year || !record || record.value == null || isNaN(record.value)) {
+        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year || "-"} · Renewables share: NAN</div>`;
+      } else {
+        const value = record.value.toFixed(2);
+        const suffix = record.name === "Africa Aggregate" ? " · Africa Aggregate" : "";
+        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year} · Renewables share: ${value}%${suffix}</div>`;
+      }
+
+      tooltipEl.innerHTML = content + '<div class="dda-tooltip-sparkline"></div>';
+      renderTooltipSparklineForCountry(iso3);
+    }
+
+    function refreshTooltipForCurrentYear() {
+      if (!isHoveringCountry || !lastTooltipIso3 || !lastTooltipName) return;
+      setTooltipContentForCountry(lastTooltipIso3, lastTooltipName);
+    }
+
     function applyYearByIndex(index) {
       if (!years.length) return;
       const clamped = Math.max(0, Math.min(years.length - 1, index));
@@ -778,7 +941,12 @@
       const year = years[clamped];
       updateColorsForYear(year);
       updateInfoPanel(null);
-      hideTooltip();
+      if (!isHoveringCountry) {
+        hideTooltip();
+      } else {
+        // 鼠标悬浮在国家上时，保持 tooltip 可见，但根据新的年份刷新其中的内容和折线图上的点
+        refreshTooltipForCurrentYear();
+      }
       updateTileColorsForYear(year);
     }
 
@@ -850,19 +1018,10 @@
       const iso3 = props.iso_a3 || props.ISO_A3 || feature.id || "?";
       const rawName = props.name || props.ADMIN || "Unknown country";
       const name = getDisplayCountryName(iso3, rawName);
-      const year = currentYear;
-      const record = year ? getCountryValue(year, iso3) : null;
+      lastTooltipIso3 = iso3;
+      lastTooltipName = name;
 
-      let content = "";
-      if (!year || !record || record.value == null || isNaN(record.value)) {
-        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year || "-"} · Renewables share: NAN</div>`;
-      } else {
-        const value = record.value.toFixed(2);
-        const suffix = record.name === "Africa Aggregate" ? " · Africa Aggregate" : "";
-        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year} · Renewables share: ${value}%${suffix}</div>`;
-      }
-
-      tooltipEl.innerHTML = content;
+      setTooltipContentForCountry(iso3, name);
 
       const wrapperRect = document.querySelector(".dda-globe-wrapper").getBoundingClientRect();
       const x = event.clientX - wrapperRect.left;
@@ -875,6 +1034,28 @@
 
     function hideTooltip() {
       tooltipEl.style.opacity = "0";
+    }
+
+    function showLinechartTooltip(event, year, points) {
+      if (!points || !points.length) {
+        hideTooltip();
+        return;
+      }
+
+      let content = `<div><strong>${year}</strong></div>`;
+      points.forEach(p => {
+        content += `<div>${p.name} (${p.code}): ${p.value.toFixed(2)}%</div>`;
+      });
+
+      tooltipEl.innerHTML = content;
+
+      const wrapperRect = document.querySelector(".dda-globe-wrapper").getBoundingClientRect();
+      const x = event.clientX - wrapperRect.left;
+      const y = event.clientY - wrapperRect.top;
+
+      tooltipEl.style.left = `${x}px`;
+      tooltipEl.style.top = `${y}px`;
+      tooltipEl.style.opacity = "1";
     }
 
     function showLinechartPanel() {
@@ -1005,6 +1186,57 @@
           .attr("font-size", 10)
           .text(`${s.name} (${s.code})`);
       });
+
+      // 交互：在折线图上移动鼠标时，显示每个国家在最接近年份的数值
+      const focusLine = g.append("line")
+        .attr("stroke", "#9ca3af")
+        .attr("stroke-width", 1)
+        .attr("y1", 0)
+        .attr("y2", innerHeight)
+        .style("opacity", 0);
+
+      g.append("rect")
+        .attr("width", innerWidth)
+        .attr("height", innerHeight)
+        .attr("fill", "transparent")
+        .on("mousemove", (event) => {
+          const [mx] = d3.pointer(event, g.node());
+          const xYear = xScale.invert(mx);
+
+          // 找到与鼠标位置最接近的整数年份
+          let nearestYear = years[0];
+          let minDiff = Math.abs(nearestYear - xYear);
+          for (let i = 1; i < years.length; i++) {
+            const diff = Math.abs(years[i] - xYear);
+            if (diff < minDiff) {
+              minDiff = diff;
+              nearestYear = years[i];
+            }
+          }
+
+          const points = series.map(s => {
+            const match = s.values.find(v => v.year === nearestYear && v.value != null && !isNaN(v.value));
+            if (!match) return null;
+            return { code: s.code, name: s.name, value: match.value };
+          }).filter(Boolean);
+
+          if (!points.length) {
+            hideTooltip();
+            focusLine.style("opacity", 0);
+            return;
+          }
+
+          focusLine
+            .attr("x1", xScale(nearestYear))
+            .attr("x2", xScale(nearestYear))
+            .style("opacity", 1);
+
+          showLinechartTooltip(event, nearestYear, points);
+        })
+        .on("mouseout", () => {
+          hideTooltip();
+          focusLine.style("opacity", 0);
+        });
     }
 
     // ==========================
@@ -1072,6 +1304,7 @@
         .attr("width", cellSize - 2)
         .attr("height", cellSize - 2)
         .on("mousemove", (event, d) => {
+          isHoveringCountry = true;
           const fakeFeature = {
             properties: {
               name: d.name,
@@ -1082,6 +1315,7 @@
           updateInfoPanel(fakeFeature);
         })
         .on("mouseout", () => {
+          isHoveringCountry = false;
           hideTooltip();
         })
         .on("click", (event, d) => {
@@ -1627,10 +1861,12 @@
         .append("path")
         .attr("class", "dda-globe-country")
         .on("mousemove", (event, d) => {
+          isHoveringCountry = true;
           showTooltip(event, d);
           updateInfoPanel(d);
         })
         .on("mouseout", () => {
+          isHoveringCountry = false;
           hideTooltip();
         })
         .on("click", (event, d) => {
@@ -1650,10 +1886,12 @@
           .attr("class", "dda-globe-country")
           .attr("d", mapPath)
           .on("mousemove", (event, d) => {
+            isHoveringCountry = true;
             showTooltip(event, d);
             updateInfoPanel(d);
           })
           .on("mouseout", () => {
+            isHoveringCountry = false;
             hideTooltip();
           })
           .on("click", (event, d) => {
