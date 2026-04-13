@@ -1,0 +1,15 @@
+{{- /* Build a simple search index of all posts */ -}}
+{{- $pages := where .Site.RegularPages "Section" "posts" -}}
+{{- $index := slice -}}
+{{- range $pages -}}
+  {{- $item := dict
+    "title" .Title
+    "permalink" .Permalink
+    "summary" (.Summary | plainify)
+    "content" (.Plain | plainify)
+    "date" (.Date.Format "2006-01-02")
+    "tags" .Params.tags
+  -}}
+  {{- $index = $index | append $item -}}
+{{- end -}}
+{{- $index | jsonify -}}

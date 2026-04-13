@@ -8,6 +8,9 @@ hasCJKLanguage = true
 canonifyurls = true
 pagination.pagerSize = 6
 
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
 googleAnalytics = ""
 enableRobotsTXT = true
 
