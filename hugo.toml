@@ -22,8 +22,10 @@ enableRobotsTXT = true
   # 仍然保留页脚链接
   footer_links = [
     { name = "💻 GitHub", url = "https://github.com/Nerolithos" },
-    { name = "🎨 Pixiv", url = "https://www.pixiv.net/users/107379421" },
-    { name = "🎮 EmojiGame",  url = "https://blog.nero-lithos.com/emoji" },
+    { name = "🎨 Pixiv", url = "/pixiv/" },
+    { name = "📊 EnergyVis", url = "https://blog.nero-lithos.com/DDA/" },
+    { name = "⚗️ ChemVis", url = "https://blog.nero-lithos.com/chem/" },
+    { name = "🤖 LGU CourseAI", url = "https://blog.nero-lithos.com/courseai/" },
     { name = "🐈 ArkPet", url = "https://blog.nero-lithos.com/pet" }
   ]
 
@@ -35,16 +37,24 @@ enableRobotsTXT = true
     weight = 1
   [[menu.main]]
     name = "🎨 Pixiv"
-    url  = "https://www.pixiv.net/users/107379421"
+    url  = "/pixiv/"
     weight = 2
   [[menu.main]]
-    name = "🎮 EmojiGame"
-    url  = "https://blog.nero-lithos.com/emoji"
+    name = "📊 EnergyVis"
+    url  = "https://blog.nero-lithos.com/DDA/"
     weight = 3
+  [[menu.main]]
+    name = "⚗️ ChemVis"
+    url  = "https://blog.nero-lithos.com/chem/"
+    weight = 4
+  [[menu.main]]
+    name = "🤖 LGU CourseAI"
+    url  = "https://blog.nero-lithos.com/courseai/"
+    weight = 5
   [[menu.main]]
     name = "🐈 ArkPet"
     url  = "https://blog.nero-lithos.com/pet"
-    weight = 4
+    weight = 6
 
 [services]
   [services.disqus]

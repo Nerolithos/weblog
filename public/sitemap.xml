@@ -5,13 +5,13 @@
     <loc>http://localhost:1313/categories/</loc>
     <lastmod>2026-04-11T20:08:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/chemistry/</loc>
-    <lastmod>2026-04-11T20:08:00+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/</loc>
     <lastmod>2026-04-11T20:08:00+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-04-11T20:08:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/chemistry/</loc>
     <lastmod>2026-04-11T20:08:00+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</loc>
