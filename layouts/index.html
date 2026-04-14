@@ -1,22 +1,5 @@
 {{ define "main" }}
 
-<section class="bg-near-white pv4 bb b--black-10">
-  <div class="tc ph3">
-    <form class="mw6 center flex items-center justify-center" role="search" method="get" action="{{ "search/" | relURL }}">
-      <input
-        type="search"
-        name="q"
-        placeholder="Explore site with keywords ..."
-        class="pa2 br2 ba b--black-20 w-80 mr2"
-        style="max-width: 420px;"
-      />
-      <button type="submit" class="pa2 ph3 br2 bn white bg-black-80 hover-bg-black">
-        Search
-      </button>
-    </form>
-  </div>
-</section>
-
 <div class="pa4">
   {{ $all := .Site.RegularPages }}
   {{ $count := len $all }}

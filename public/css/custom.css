@@ -156,6 +156,163 @@
   letter-spacing: 0.02em;
 }
 
+/* 首页 hero 区域中的搜索条：稍微拉高背景区域 */
+.home-hero-search {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.home-hero-search form {
+  /* 去掉横向深色背景条，只保留输入框和按钮本身 */
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+
+.home-hero-search input[type="search"] {
+  background-color: #ffffff;
+}
+
+body.dark-mode .home-hero-search form {
+  background: transparent;
+}
+
+/* 首页 hero 内部整体上移一点，下面多留空间给人物 */
+.home-hero-inner {
+  padding-top: 3rem;
+  padding-bottom: 11rem;
+}
+
+@media (min-width: 960px) {
+  .home-hero-inner {
+    padding-top: 3.5rem;
+    padding-bottom: 15rem;
+  }
+}
+
+/* 顶部固定导航栏：始终可见 */
+.site-nav-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 980;
+  background-color: rgba(15, 23, 42, 0.96); /* 默认深色底 */
+  color: #f9fafb;
+}
+
+.site-nav-fixed a {
+  color: #f9fafb;
+  text-decoration: underline;
+}
+
+.site-nav-fixed .site-nav-title {
+  text-decoration: none;
+}
+
+/* 顶部导航：菜单链接悬浮特效，提醒可点击 */
+.site-nav-fixed .site-nav-link {
+  position: relative;
+  padding: 0.1rem 0.2rem;
+  border-radius: 999px;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.site-nav-fixed .site-nav-link:hover {
+  transform: translateY(-1px);
+}
+
+.site-nav-fixed a:hover {
+  color: #ffffff;
+}
+
+/* 让页面内容不被顶部导航遮住 */
+body {
+  padding-top: 3.8rem;
+}
+
+/* 亮/暗模式下导航栏背景切换 */
+body.dark-mode .site-nav-fixed {
+  background-color: rgba(15, 23, 42, 0.96);
+  color: #f9fafb;
+}
+
+body.dark-mode .site-nav-fixed a {
+  color: #f9fafb;
+  text-decoration: underline;
+}
+
+body.dark-mode .site-nav-fixed .site-nav-link:hover {
+  background-color: rgba(148, 163, 184, 0.35);
+}
+
+body.dark-mode .site-nav-fixed .site-nav-title {
+  text-decoration: none;
+}
+
+body:not(.dark-mode) .site-nav-fixed {
+  background-color: rgba(249, 250, 251, 0.98); /* 亮色：近白色 */
+  color: #111827;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+}
+
+body:not(.dark-mode) .site-nav-fixed a {
+  color: #111827;
+  text-decoration: underline;
+}
+
+body:not(.dark-mode) .site-nav-fixed .site-nav-title {
+  text-decoration: none;
+}
+
+body:not(.dark-mode) .site-nav-fixed .site-nav-link:hover {
+  background-color: rgba(15, 23, 42, 0.08);
+}
+
+/* 顶部导航右侧搜索框：根据深浅模式反色显示 */
+.site-nav-fixed .site-nav-search {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-nav-fixed .site-nav-search input[type="search"] {
+  border-radius: 999px;
+  padding: 0.1rem 1.6rem 0.1rem 0.5rem; /* 右侧多留出空间给 emoji */
+  border: 1px solid transparent;
+}
+
+.site-nav-fixed .site-nav-search-emoji {
+  position: absolute;
+  right: 0.55rem;
+  font-size: 1.50rem;
+  pointer-events: none;
+}
+
+body.dark-mode .site-nav-fixed .site-nav-search-emoji {
+  color: #111827; /* 深色模式：符号为深色，配白底 */
+}
+
+body:not(.dark-mode) .site-nav-fixed .site-nav-search-emoji {
+  color: #f9fafb; /* 浅色模式：符号为浅色，配深底 */
+}
+
+body.dark-mode .site-nav-fixed .site-nav-search input[type="search"] {
+  background-color: #ffffff;
+  color: #111827;
+  border-color: rgba(148, 163, 184, 0.8);
+}
+
+body:not(.dark-mode) .site-nav-fixed .site-nav-search input[type="search"] {
+  background-color: #31343a;
+  color: #f9fafb;
+  border-color: rgba(0, 0, 0, 0.85);
+}
+
+body:not(.dark-mode) .site-nav-fixed a:hover {
+  color: #000000;
+}
+
 /* 文章页右侧目录（TOC）悬浮卡片 */
 .post-toc {
   position: fixed;

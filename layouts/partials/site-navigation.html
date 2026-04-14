@@ -1,6 +1,6 @@
-<nav class="pv3 ph3 ph4-ns" role="navigation">
+<nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="{{ .Site.Home.RelPermalink }}" class="f3 fw2 hover-white no-underline white-90 dib">
+    <a href="{{ .Site.Home.RelPermalink }}" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
       {{ with .Site.Params.site_logo }}
         <img src="{{ relURL . }}" class="w100 mw5-ns" alt="{{ $.Site.Title }}" />
       {{ else }}
@@ -13,7 +13,7 @@
         <ul class="{{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0 mr3" }}">
           {{ range .Site.Menus.main }}
           <li class="list f5 f4-ns fw4 dib {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }}">
-            <a class="hover-white no-underline white-90" href="{{ .URL }}" title="{{ i18n "pageTitle" . }}">
+            <a class="hover-white no-underline white-90 site-nav-link" href="{{ .URL }}" title="{{ i18n "pageTitle" . }}">
               {{ .Name }}
             </a>
           </li>
@@ -21,7 +21,7 @@
         </ul>
       {{ end }}
       {{ if not .IsHome }}
-      <form class="dn db-ns ml3" role="search" method="get" action="{{ "search/" | relURL }}">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="{{ "search/" | relURL }}">
         <input
           type="search"
           name="q"
@@ -29,6 +29,7 @@
           class="pa1 br2 bn"
           style="font-size: 0.85rem; min-width: 140px;"
         />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
       </form>
       {{ end }}
       {{ partialCached "social-follow.html" . }}
