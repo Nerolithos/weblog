@@ -472,3 +472,12 @@ body.dark-mode .history-today-list li {
 body.dark-mode .history-today p[style] {
   color: #9ca3af !important;
 }
+
+/* Disqus 区域在亮/暗模式下的文字颜色（本地占位提示 + 外层容器） */
+body.dark-mode #disqus_thread {
+  color: #e5e7eb;
+}
+
+body:not(.dark-mode) #disqus_thread {
+  color: #111827;
+}

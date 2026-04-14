@@ -193,15 +193,26 @@
 		var body = document.body;
 		var storageKey = 'site-theme-mode';
 
-		function applyTheme(mode) {
+		// 只负责在当前页面应用样式
+		function applyThemeClass(mode) {
 			if (mode === 'dark') {
 				body.classList.add('dark-mode');
 			} else {
 				body.classList.remove('dark-mode');
 			}
+		}
+
+		// 只负责把选择写入 localStorage
+		function saveTheme(mode) {
 			try {
 				localStorage.setItem(storageKey, mode);
 			} catch (e) {}
+		}
+
+		// 应用并持久化用户选择
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
 		}
 
 		function initTheme() {
@@ -210,15 +221,18 @@
 				saved = localStorage.getItem(storageKey);
 			} catch (e) {}
 			if (saved === 'dark' || saved === 'light') {
-				applyTheme(saved);
+				// 初始化时只根据已有记录设置样式，不重复写入
+				applyThemeClass(saved);
 			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-				applyTheme('dark');
+				// 没有记录时，根据系统偏好设置一次样式，但不写入
+				applyThemeClass('dark');
 			}
 		}
 
 		function toggleTheme() {
 			var isDark = body.classList.contains('dark-mode');
-			applyTheme(isDark ? 'light' : 'dark');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
 		}
 
 		// 初始化主题：无论当前页面是否有任务坞都执行
@@ -227,8 +241,10 @@
 		// 监听其它标签页对主题的修改，实现多页面同步
 		window.addEventListener('storage', function (event) {
 			if (event.key !== storageKey) return;
-			var mode = event.newValue === 'dark' ? 'dark' : 'light';
-			applyTheme(mode);
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			// 来自其它页面的修改，仅在当前页更新样式，避免写入死循环
+			applyThemeClass(mode);
 		});
 
 		// 若页面没有任务坞，仅保留主题记忆功能

@@ -255,15 +255,26 @@
 		var body = document.body;
 		var storageKey = 'site-theme-mode';
 
-		function applyTheme(mode) {
+		
+		function applyThemeClass(mode) {
 			if (mode === 'dark') {
 				body.classList.add('dark-mode');
 			} else {
 				body.classList.remove('dark-mode');
 			}
+		}
+
+		
+		function saveTheme(mode) {
 			try {
 				localStorage.setItem(storageKey, mode);
 			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
 		}
 
 		function initTheme() {
@@ -272,28 +283,18 @@
 				saved = localStorage.getItem(storageKey);
 			} catch (e) {}
 			if (saved === 'dark' || saved === 'light') {
-				applyTheme(saved);
-			} else {
 				
-				try {
-					var now = new Date();
-					var utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
-					var bj = new Date(utcMs + 8 * 60 * 60000); 
-					var h = bj.getHours();
-					if (h >= 19 || h < 7) {
-						applyTheme('dark');
-					} else {
-						applyTheme('light');
-					}
-				} catch (e) {
-					applyTheme('light');
-				}
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
 			}
 		}
 
 		function toggleTheme() {
 			var isDark = body.classList.contains('dark-mode');
-			applyTheme(isDark ? 'light' : 'dark');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
 		}
 
 		
@@ -302,8 +303,10 @@
 		
 		window.addEventListener('storage', function (event) {
 			if (event.key !== storageKey) return;
-			var mode = event.newValue === 'dark' ? 'dark' : 'light';
-			applyTheme(mode);
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
 		});
 
 		
