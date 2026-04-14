@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -811,6 +863,61 @@
     </div>
 
     <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#csc3200-lec-1-2--cpp-入门">CSC3200 LEC 1-2  CPP 入门</a>
+      <ul>
+        <li><a href="#一怎么运行">一、怎么运行？</a>
+          <ul>
+            <li><a href="#多项目运行">多项目运行</a></li>
+          </ul>
+        </li>
+        <li><a href="#二数据类型计算符与命名规则">二、数据类型、计算符与命名规则</a>
+          <ul>
+            <li><a href="#数据类型">数据类型</a></li>
+            <li><a href="#计算符">计算符</a></li>
+            <li><a href="#命名规则">命名规则</a></li>
+          </ul>
+        </li>
+        <li><a href="#三standard-io">三、Standard I/O</a>
+          <ul>
+            <li><a href="#cout">cout</a></li>
+            <li><a href="#--流输出运算符">&laquo;  (流输出运算符)</a></li>
+            <li><a href="#endl">endl</a></li>
+            <li><a href="#--流提取运算符">&raquo;  (流提取运算符)</a></li>
+          </ul>
+        </li>
+        <li><a href="#四函数定义与调用">四、函数定义与调用</a></li>
+        <li><a href="#五条件结构">五、条件结构</a></li>
+        <li><a href="#六循环结构">六、循环结构</a>
+          <ul>
+            <li><a href="#for-循环">for 循环</a></li>
+            <li><a href="#while-循环">while 循环</a></li>
+            <li><a href="#do-while-循环">do-while 循环</a></li>
+          </ul>
+        </li>
+        <li><a href="#七地址指针引用和传递">七、地址，指针，引用和传递</a></li>
+        <li><a href="#八类与对象实例oop">八、类与对象(实例)——OOP</a>
+          <ul>
+            <li><a href="#接口-实现-分离">接口-实现 分离</a></li>
+            <li><a href="#this-指针">this 指针</a></li>
+            <li><a href="#rule-of-three">Rule of Three</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
 
 
 

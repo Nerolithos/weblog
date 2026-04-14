@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -536,18 +588,73 @@ $$∀x \in \mathbb{Z}, \ x &gt; 1,\ (∃p_1, p_2, \dots, p_n \in \mathbb{Z}^+, ;
     <aside class="w-30-l mt6-l">
 
 
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ln2-sets-and-fol-集合论与谓词逻辑">LN2 Sets and FOL 集合论与谓词逻辑</a></li>
+    <li><a href="#ii1-集合论">II.1 集合论</a>
+      <ul>
+        <li><a href="#集合的基本定义">集合的基本定义</a></li>
+        <li><a href="#集合运算">集合运算</a>
+          <ul>
+            <li><a href="#partition-of-sets集合的划分">partition of sets(集合的划分)</a></li>
+            <li><a href="#cartesian-product笛卡尔积">cartesian product(笛卡尔积)</a></li>
+          </ul>
+        </li>
+        <li><a href="#集合恒等式identities">集合恒等式(Identities)</a></li>
+      </ul>
+    </li>
+    <li><a href="#ii2-谓词逻辑first-order-logic">II.2 谓词逻辑(First Order Logic)</a>
+      <ul>
+        <li><a href="#predicates谓词">Predicates(谓词)</a></li>
+        <li><a href="#quantifiers量词">Quantifiers(量词)</a>
+          <ul>
+            <li><a href="#universal-quantifier全称量词-">Universal Quantifier(全称量词 ∀)</a></li>
+            <li><a href="#existential-quantifier存在量词-">Existential Quantifier(存在量词 ∃)</a></li>
+          </ul>
+        </li>
+        <li><a href="#翻译">翻译</a>
+          <ul>
+            <li><a href="#费马大定理">费马大定理</a></li>
+            <li><a href="#哥德巴赫猜想">哥德巴赫猜想</a></li>
+            <li><a href="#素数的定义">素数的定义</a></li>
+          </ul>
+        </li>
+        <li><a href="#量词语句的否定">量词语句的否定</a></li>
+        <li><a href="#多重量词与其否定">多重量词与其否定</a></li>
+        <li><a href="#更多翻译">更多翻译</a></li>
+      </ul>
+    </li>
+    <li><a href="#ln3-basic-prove-methods-基本证明法">LN3 Basic Prove Methods 基本证明法</a>
+      <ul>
+        <li><a href="#proof-by-contrapositive">Proof by Contrapositive</a></li>
+        <li><a href="#proof-by-contradiction">Proof by Contradiction</a></li>
+        <li><a href="#proof-by-cases">Proof by Cases</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
+
+
 
 
   <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
     <p class="f5 b mb3"></p>
     <ul class="pa0 list">
-	   
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
         </li>
-	    
+      
     </ul>
-</div>
+  </div>
 
 </aside>
 

@@ -116,3 +116,55 @@
 		});
 	});
 </script>
+
+{{/* 文章页目录 scrollspy：高亮当前章节 */}}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; // 提前一点高亮当前小节
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		// 初次计算
+		onScroll();
+	});
+</script>

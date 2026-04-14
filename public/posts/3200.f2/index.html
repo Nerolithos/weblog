@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -267,6 +319,7 @@
           
         </ul>
       
+      
       <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
@@ -276,6 +329,7 @@
           style="font-size: 0.85rem; min-width: 140px;"
         />
       </form>
+      
       
 <div class="ananke-socials">
   
@@ -1562,26 +1616,153 @@ a) <code>[a, c, f, e, b, d, h, g]</code> 或 <code>[a, b, d, c, g, f, e, h]</cod
     <aside class="w-30-l mt6-l">
 
 
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#c-数据结构非线性-树堆图">C++ 数据结构(非线性) ：树、堆、图</a></li>
+    <li><a href="#六树-tree">六、树 Tree</a>
+      <ul>
+        <li><a href="#树的抽象定义">树的抽象定义</a></li>
+        <li><a href="#树的基础实现">树的基础实现</a></li>
+        <li><a href="#树与递归">树与递归</a></li>
+        <li><a href="#树的遍历顺序">树的遍历顺序</a>
+          <ul>
+            <li><a href="#前序-preorder-逻辑"><strong>前序 (preorder)</strong> 逻辑：</a></li>
+            <li><a href="#后序-postorder-逻辑"><strong>后序 (postorder)</strong> 逻辑：</a></li>
+            <li><a href="#中序-inorder-逻辑"><strong>中序 (inorder)</strong> 逻辑：</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#七二叉树-binary-tree">七、二叉树 Binary Tree</a>
+      <ul>
+        <li><a href="#高度与高度-节点定律">高度与高度-节点定律</a>
+          <ul>
+            <li><a href="#最大最小高度的结论">最大/最小高度的结论</a></li>
+          </ul>
+        </li>
+        <li><a href="#二叉搜索树-bst">二叉搜索树 BST</a>
+          <ul>
+            <li><a href="#二叉节点类">二叉节点类</a></li>
+            <li><a href="#查找-findx-t-函数">查找 find(x, t) 函数</a></li>
+            <li><a href="#找最小最大项函数">找最小、最大项函数</a></li>
+            <li><a href="#插入-insertx-t-函数">插入 insert(x, t) 函数</a></li>
+            <li><a href="#删除-removex-t-函数的三种情况">删除 remove(x, t) 函数的三种情况</a></li>
+            <li><a href="#bst-的效率与退化">BST 的效率与退化</a></li>
+          </ul>
+        </li>
+        <li><a href="#treesort用树进行二分法排序">TreeSort——用树进行二分法排序</a></li>
+      </ul>
+    </li>
+    <li><a href="#八平衡二叉搜索树-avl">八、平衡二叉搜索树 AVL</a>
+      <ul>
+        <li><a href="#通过左右旋转-保持平衡">通过左右<strong>旋转</strong> “保持平衡”</a>
+          <ul>
+            <li><a href="#左右旋">左右旋</a></li>
+            <li><a href="#四种情况与-顺反结构">四种情况与 “顺反结构”</a></li>
+            <li><a href="#avl-的插入删除函数">AVL 的插入/删除函数</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#九红黑二叉搜索树">九、红黑二叉搜索树</a>
+      <ul>
+        <li><a href="#抽象定义">抽象定义</a>
+          <ul>
+            <li><a href="#rbtree-和-avl-的关系">RBTree 和 AVL 的关系</a></li>
+            <li><a href="#红黑树的五条性质">红黑树的五条性质</a></li>
+            <li><a href="#红黑树的节点结构">红黑树的节点结构</a></li>
+          </ul>
+        </li>
+        <li><a href="#左右旋与-movedown-辅助函数">左右旋与 moveDown 辅助函数</a></li>
+        <li><a href="#插入函数先按-bst-插再修颜色--旋转">插入函数：先按 BST 插，再“修颜色 + 旋转”</a>
+          <ul>
+            <li><a href="#修复颜色冲突-fixcolor">修复颜色冲突 fixColor</a></li>
+          </ul>
+        </li>
+        <li><a href="#删除函数双黑-double-black-思路">删除函数：双黑 (double black) 思路</a></li>
+        <li><a href="#对比-avl-与红黑树">对比 AVL 与红黑树</a></li>
+      </ul>
+    </li>
+    <li><a href="#十回溯-backtracking-与-隐式树">十、回溯 (Backtracking) 与 “隐式树”</a></li>
+    <li><a href="#十一堆-heap-优先队列priority-queue">十一、堆 Heap： 优先队列(Priority Queue)</a>
+      <ul>
+        <li><a href="#抽象定义-1">抽象定义</a></li>
+        <li><a href="#三种实现的对比">三种实现的对比</a></li>
+        <li><a href="#二叉堆-binary-heap">二叉堆 (Binary Heap)</a>
+          <ul>
+            <li><a href="#结构性数组表示">结构性：数组表示</a></li>
+            <li><a href="#有序性-heap-order-property">有序性 (heap-order property)</a></li>
+          </ul>
+        </li>
+        <li><a href="#二叉堆类接口">二叉堆类接口</a>
+          <ul>
+            <li><a href="#插入-push-与上滤-siftup-函数">插入 (push) 与上滤 (siftUp) 函数</a></li>
+            <li><a href="#删最小值与下滤-siftdown-函数">删最小值与下滤 (siftDown) 函数</a></li>
+            <li><a href="#建堆函数-buildheap">建堆函数 (BuildHeap)</a></li>
+          </ul>
+        </li>
+        <li><a href="#堆排序-heapsort">堆排序 heapsort</a></li>
+        <li><a href="#注意点">注意点</a></li>
+      </ul>
+    </li>
+    <li><a href="#十二图-graph">十二、图 graph</a>
+      <ul>
+        <li><a href="#抽象定义-2">抽象定义</a></li>
+        <li><a href="#两种实现邻接矩阵和邻接表">两种实现：邻接矩阵和邻接表</a>
+          <ul>
+            <li><a href="#邻接矩阵-adjacency-matrix">邻接矩阵 adjacency matrix</a></li>
+            <li><a href="#邻接表-adjacency-list">邻接表 adjacency list</a></li>
+          </ul>
+        </li>
+        <li><a href="#图遍历dfs-与-bfs">图遍历：DFS 与 BFS</a>
+          <ul>
+            <li><a href="#深度优先搜索-depth-first-search">深度优先搜索 Depth First Search</a></li>
+            <li><a href="#广度优先搜索-breadth-first-search">广度优先搜索 Breadth First Search</a></li>
+          </ul>
+        </li>
+        <li><a href="#路由最短路问题">路由：最短路问题</a>
+          <ul>
+            <li><a href="#无权最短路">无权最短路</a></li>
+            <li><a href="#有权最短路dijkstra-算法">有权最短路：Dijkstra 算法</a></li>
+          </ul>
+        </li>
+        <li><a href="#拓扑排序-topological-sort">拓扑排序 Topological Sort</a></li>
+        <li><a href="#注意点-1">注意点</a></li>
+      </ul>
+    </li>
+    <li><a href="#小练习">小练习</a></li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
+
+
 
 
   <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
     <p class="f5 b mb3"></p>
     <ul class="pa0 list">
-	   
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3200.f1/">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
         </li>
-	    
+      
     </ul>
-</div>
+  </div>
 
 </aside>
 

@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -625,18 +677,60 @@
     <aside class="w-30-l mt6-l">
 
 
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#csc3200-lec-3-4-数组指针流">CSC3200 LEC 3-4 数组、指针、流</a>
+      <ul>
+        <li><a href="#数组和指针">数组和指针</a>
+          <ul>
+            <li><a href="#c-风格的字符数组">C 风格的字符数组</a></li>
+            <li><a href="#strlen-的定义">strlen 的定义</a></li>
+            <li><a href="#指针作为数组">指针&quot;作为&quot;数组</a></li>
+            <li><a href="#数组作为指针">数组&quot;作为&quot;指针</a></li>
+            <li><a href="#数组不等价于指针">数组不等价于指针</a></li>
+          </ul>
+        </li>
+        <li><a href="#c-标准库拷贝函数-strncpy">C 标准库拷贝函数 <code>strncpy</code></a>
+          <ul>
+            <li><a href="#在实现-string-类定义中的使用">在实现 String 类定义中的使用</a></li>
+            <li><a href="#用指针自增实现-strncpy">用指针自增实现 <code>strncpy</code></a></li>
+          </ul>
+        </li>
+        <li><a href="#iostream-与-cstdio"><code>&lt;iostream&gt;</code> 与 <code>&lt;cstdio&gt;</code></a>
+          <ul>
+            <li><a href="#输出时保留小数">输出时保留小数</a></li>
+          </ul>
+        </li>
+        <li><a href="#filestream">FileStream</a></li>
+        <li><a href="#stringstream">StringStream</a></li>
+        <li><a href="#内存分配">内存分配</a></li>
+        <li><a href="#const-和-static">const 和 static</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
+
+
 
 
   <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
     <p class="f5 b mb3"></p>
     <ul class="pa0 list">
-	   
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
         </li>
-	    
+      
     </ul>
-</div>
+  </div>
 
 </aside>
 

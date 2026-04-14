@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -521,6 +573,34 @@ Modus Tollens(否定式)：(¬Q, P→Q) → ¬P
     </div>
 
     <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#离散数学-discrete-mathematics">离散数学 Discrete Mathematics</a>
+      <ul>
+        <li><a href="#ln1-propositions-and-operations-命题与算子">LN1 Propositions and Operations 命题与算子</a>
+          <ul>
+            <li><a href="#induction-数学归纳法命题逻辑-propositional-logic">Induction 数学归纳法：命题逻辑 (Propositional Logic)</a></li>
+            <li><a href="#boolean-algebra-布尔代数">Boolean Algebra 布尔代数</a></li>
+            <li><a href="#logic-operators-逻辑算子">Logic Operators 逻辑算子</a></li>
+            <li><a href="#de-morgans-law-of-equivalence-德摩根律">De Morgan&rsquo;s Law of Equivalence 德摩根律</a></li>
+            <li><a href="#conditional-statements-条件命题">Conditional Statements 条件命题</a></li>
+            <li><a href="#arguments-论证">Arguments 论证</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
 
 
 

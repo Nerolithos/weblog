@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -906,6 +958,66 @@ W 眼中：10.0.0.0/8      → 方向 A
     </div>
 
     <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week-1--introduction">Week 1  Introduction</a>
+      <ul>
+        <li><a href="#why-binary">Why Binary?</a></li>
+        <li><a href="#硬件cpu">硬件：CPU</a></li>
+        <li><a href="#硬件bus-总线">硬件：Bus (总线)</a></li>
+        <li><a href="#硬件记忆分区">硬件：记忆分区</a>
+          <ul>
+            <li><a href="#memory-hierarchy">Memory Hierarchy</a></li>
+            <li><a href="#主存-dram">主存 (DRAM)</a></li>
+            <li><a href="#cpu-缓存-sram">CPU 缓存 (SRAM)</a></li>
+          </ul>
+        </li>
+        <li><a href="#program-lifetime">Program Lifetime</a></li>
+        <li><a href="#软件操作系统">软件：操作系统</a></li>
+        <li><a href="#amdahls-law">Amdahl&rsquo;s Law</a></li>
+      </ul>
+    </li>
+    <li><a href="#week-2--storage-of-data">Week 2  Storage of Data</a>
+      <ul>
+        <li><a href="#进制">进制</a></li>
+        <li><a href="#整数的表达">整数的表达</a>
+          <ul>
+            <li><a href="#unsigned-integer">Unsigned Integer</a></li>
+            <li><a href="#signed-integer-补码">Signed Integer (补码)</a></li>
+            <li><a href="#天坑强转换">天坑：强转换</a></li>
+            <li><a href="#史诗级-bug---">史诗级 bug . . .</a></li>
+          </ul>
+        </li>
+        <li><a href="#浮点数的表达">浮点数的表达</a></li>
+        <li><a href="#字符串">字符串</a>
+          <ul>
+            <li><a href="#代码">代码</a></li>
+          </ul>
+        </li>
+        <li><a href="#字数据大小">字数据大小</a></li>
+        <li><a href="#寻址和字节序">寻址和字节序</a></li>
+        <li><a href="#布尔代数">布尔代数</a>
+          <ul>
+            <li><a href="#位运算">位运算</a></li>
+            <li><a href="#移位运算">移位运算</a></li>
+            <li><a href="#可选-网络掩码">(可选) 网络掩码</a></li>
+            <li><a href="#逻辑运算">逻辑运算</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
 
 
 

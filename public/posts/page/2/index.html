@@ -178,6 +178,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -451,18 +503,18 @@
             </p>
             <div class="lh-copy mid-gray">
               <div class="history-today">
-      <h2>历史上的今天 (04-13)</h2>
+      <h2>历史上的今天 (04-14)</h2>
       <ul class="history-today-list">
         
-          <li style="margin-bottom: 1em;"><strong>2025</strong> — Rory McIlroy wins the Masters Tournament, becoming just the sixth person to complete the Grand Slam in golf.</li>
+          <li style="margin-bottom: 1em;"><strong>2024</strong> — Flooding in the Persian Gulf starts, killing 19 in Oman.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2024</strong> — Six people and the perpetrator are killed and twelve others injured in a mass stabbing at Westfield Bondi Junction shopping centre in Sydney, Australia.</li>
+          <li style="margin-bottom: 1em;"><strong>2023</strong> — The Jupiter Icy Moons Explorer (JUICE) is launched by the European Space Agency.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2023</strong> — The house of Jack Teixeira is raided in an investigation into leaked Pentagon documents; he is arrested on the same day.</li>
+          <li style="margin-bottom: 1em;"><strong>2022</strong> — 2022 Russian invasion of Ukraine: The Russian warship Moskva sinks.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2014</strong> — Three people are killed in a shooting in Overland Park, Kansas.</li>
+          <li style="margin-bottom: 1em;"><strong>2016</strong> — The foreshock of a major earthquake occurs in Kumamoto, Japan.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2013</strong> — Salam Fayyad resigns as Prime Minister of the Palestinian National Authority following an ongoing dispute with the President Mahmoud Abbas.</li>
+          <li style="margin-bottom: 1em;"><strong>2014</strong> — Two bombs detonate at a bus station in Nyanya, Nigeria, killing at least 88 people and injuring hundreds. Boko Haram claims responsibility.</li>
         
       </ul>
       <p style="margin-top: 2em; font-size: 0.9rem; color: #666;">

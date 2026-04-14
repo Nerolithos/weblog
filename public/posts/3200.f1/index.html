@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -267,6 +319,7 @@
           
         </ul>
       
+      
       <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
@@ -276,6 +329,7 @@
           style="font-size: 0.85rem; min-width: 140px;"
         />
       </form>
+      
       
 <div class="ananke-socials">
   
@@ -1130,22 +1184,93 @@
     <aside class="w-30-l mt6-l">
 
 
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#c-数据结构线性-链表栈队列映射集合">C++ 数据结构(线性) ：链表、栈、队列、映射、集合</a></li>
+    <li><a href="#一链表-linkedlist数组-vs-链表与指针操作">一、链表 LinkedList：“数组 vs 链表”与指针操作</a>
+      <ul>
+        <li><a href="#抽象定义">抽象定义</a></li>
+        <li><a href="#核心代码模板">核心代码模板</a></li>
+        <li><a href="#典型成员函数">典型成员函数</a>
+          <ul>
+            <li><a href="#在结点-p-之后插入-data">在结点 p 之后插入 data</a></li>
+            <li><a href="#查找值为-data-的节点的指针">查找值为 data 的节点(的指针)</a></li>
+            <li><a href="#删除值为-data-的节点先需要先找到前驱结点">删除值为 data 的节点，先需要先找到<strong>前驱结点</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#和数组的对比复杂度">和数组的对比复杂度</a></li>
+        <li><a href="#注意点">注意点</a></li>
+      </ul>
+    </li>
+    <li><a href="#二栈-stacklifo数组--链表版">二、栈 Stack：LIFO、数组 &amp; 链表版</a>
+      <ul>
+        <li><a href="#抽象定义-1">抽象定义</a></li>
+        <li><a href="#栈类的结构模板">栈类的结构模板</a></li>
+        <li><a href="#数组实现-顺序栈">数组实现 (顺序栈)</a></li>
+        <li><a href="#链表实现-链栈">链表实现 (链栈)</a></li>
+        <li><a href="#注意点-1">注意点</a></li>
+      </ul>
+    </li>
+    <li><a href="#三队列-queuefifo循环数组--链表版">三、队列 Queue：FIFO、循环数组 &amp; 链表版</a>
+      <ul>
+        <li><a href="#抽象定义-2">抽象定义</a></li>
+        <li><a href="#链表实现-带-frontback-指针">链表实现 (带 front/back 指针)</a></li>
+        <li><a href="#循环数组实现-顺序队列">循环数组实现 (顺序队列)</a></li>
+        <li><a href="#注意点-2">注意点</a></li>
+      </ul>
+    </li>
+    <li><a href="#四映射-map键值对哈希函数与桶">四、映射 Map：键值对、哈希函数与桶</a>
+      <ul>
+        <li><a href="#抽象定义-3">抽象定义</a></li>
+        <li><a href="#向量-动态数组-实现线性查找--二分查找">向量 (动态数组) 实现：线性查找 / 二分查找</a></li>
+        <li><a href="#哈希表-unordered_map-实现">哈希表 (unordered_map) 实现</a></li>
+        <li><a href="#哈希表-stdunordered_map-的实例化">哈希表 std::unordered_map 的实例化</a></li>
+        <li><a href="#map-实现方式对比">Map 实现方式对比</a></li>
+        <li><a href="#注意点-3">注意点</a></li>
+      </ul>
+    </li>
+    <li><a href="#五集合-set集合运算--实现">五、集合 Set：集合运算 &amp; 实现</a>
+      <ul>
+        <li><a href="#抽象定义-4">抽象定义</a></li>
+        <li><a href="#四种实现方式对比">四种实现方式对比</a>
+          <ul>
+            <li><a href="#1-指针-链表-实现">1. 指针 (链表) 实现</a></li>
+            <li><a href="#2--bst-实现-标准库-stdset">2.  BST 实现 (标准库 std::set)：</a></li>
+            <li><a href="#3-哈希函数实现-stdunordered_set">3. 哈希函数实现 (std::unordered_set)：</a></li>
+            <li><a href="#4-位向量集合-stdbitset-与集合运算">4. 位向量集合 (std::bitset) 与集合运算：</a></li>
+          </ul>
+        </li>
+        <li><a href="#注意点-4">注意点</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
+
+
 
 
   <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
     <p class="f5 b mb3"></p>
     <ul class="pa0 list">
-	   
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
         </li>
-	    
+      
     </ul>
-</div>
+  </div>
 
 </aside>
 

@@ -1,0 +1,32 @@
+{{/*
+  Right-side in-article navigation: per-post table of contents + related posts.
+  Uses Hugo's native .TableOfContents and related content.
+*/}}
+
+{{ if eq .Section "posts" }}
+  {{ with .TableOfContents }}
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      {{ . }}
+    </div>
+  </nav>
+  {{ end }}
+{{ end }}
+
+{{ $related := .Site.RegularPages.Related . | first 15 }}
+
+{{ with $related }}
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">{{ i18n "related" }}</p>
+    <ul class="pa0 list">
+      {{ range . }}
+        <li class="mb2">
+          <a href="{{ .RelPermalink }}">
+            {{- .Title -}}
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+{{ end }}

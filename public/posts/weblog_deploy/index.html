@@ -178,6 +178,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -262,6 +314,7 @@
           
         </ul>
       
+      
       <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
@@ -271,6 +324,7 @@
           style="font-size: 0.85rem; min-width: 140px;"
         />
       </form>
+      
       
 <div class="ananke-socials">
   
@@ -586,26 +640,70 @@ title, date, draft, featured_picture, summary, tag 等等。</p>
     <aside class="w-30-l mt6-l">
 
 
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#前言">前言</a></li>
+        <li><a href="#一hugo-init-博客项目">一、hugo init 博客项目</a>
+          <ul>
+            <li><a href="#安装-hugo">安装 hugo</a></li>
+            <li><a href="#创建-hugo-站点">创建 hugo 站点</a></li>
+            <li><a href="#配置-hugo-主题">配置 hugo 主题</a></li>
+            <li><a href="#拉取-主题-仓库到本地">拉取 主题 仓库到本地</a></li>
+          </ul>
+        </li>
+        <li><a href="#二上传-github">二、上传 github</a>
+          <ul>
+            <li><a href="#1生成-repository">1、生成 repository</a></li>
+            <li><a href="#2create-a-new-repository-on-the-command-line">2、create a new repository on the command line</a></li>
+          </ul>
+        </li>
+        <li><a href="#三设置-cloudflare">三、设置 cloudflare</a></li>
+        <li><a href="#四绑定域名">四、绑定域名</a></li>
+        <li><a href="#五图片设置">五、图片设置</a>
+          <ul>
+            <li><a href="#为首页设置-hero-图">为首页设置 “Hero” 图</a></li>
+            <li><a href="#为-post-设置-特写-图">为 post 设置 “特写” 图</a></li>
+            <li><a href="#文章中的普通图片">文章中的普通图片</a></li>
+          </ul>
+        </li>
+        <li><a href="#六评论功能">六、评论功能</a></li>
+        <li><a href="#reference">Reference</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
+
+
 
 
   <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
     <p class="f5 b mb3"></p>
     <ul class="pa0 list">
-	   
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/gab/">🛠️ GitHub Action Bot 自动化管理仓库入门</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/whisper/">📢 如何快速批量地将音频转文字？</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/outlook/">🌐 龙大邮箱抓取尝试</a>
         </li>
-	    
+      
     </ul>
-</div>
+  </div>
 
 </aside>
 

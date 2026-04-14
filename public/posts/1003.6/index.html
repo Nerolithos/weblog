@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -620,38 +672,73 @@
     <aside class="w-30-l mt6-l">
 
 
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#csc-final">CSC Final</a>
+      <ul>
+        <li><a href="#字符串的处理">字符串的处理</a>
+          <ul>
+            <li><a href="#areplaceb-c"><code>a.replace(b, c)</code></a></li>
+            <li><a href="#astartwithb-和-aendwithc"><code>a.startWith(b)</code> 和 <code>a.endWith(c)</code></a></li>
+            <li><a href="#asubstringb-c"><code>a.substring(b, c)</code></a></li>
+            <li><a href="#acontainschar-b"><code>a.contains(Char b)</code></a></li>
+            <li><a href="#aindexofchar-b和-aindexofstring-b"><code>a.IndexOf(Char b)</code>和 <code>a.IndexOf(String b)</code></a></li>
+          </ul>
+        </li>
+        <li><a href="#易错用法">易错用法</a>
+          <ul>
+            <li><a href="#alength-和-alength"><code>a.length</code> 和 <code>a.length()</code></a></li>
+            <li><a href="#type-b-和-integerparseintb"><code>(&lt;type&gt;) b</code> 和 <code>Integer.parseInt(b)</code></a></li>
+            <li><a href="#关于-return-和方法递归">关于 <code>return</code> 和方法递归</a></li>
+          </ul>
+        </li>
+        <li><a href="#oop-和-dt">OOP 和 DT</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
+
+
 
 
   <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
     <p class="f5 b mb3"></p>
     <ul class="pa0 list">
-	   
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/assignment2/">💻 CSC1003 Assignment2 二维数组</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/1003.5/">💻 CSC1003 LEC13-15 递归</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/assignment1/">💻 CSC1003 Assignment1 OJPractice</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/1003.2/">💻 CSC1003 TBL1 网络与计算机史</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/1003.1/">💻 CSC1003 LEC1~3 函数、数据类型与计算</a>
         </li>
-	    
+      
     </ul>
-</div>
+  </div>
 
 </aside>
 

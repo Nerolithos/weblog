@@ -155,3 +155,66 @@
 .home-post-download-text {
   letter-spacing: 0.02em;
 }
+
+/* 文章页右侧目录（TOC）悬浮卡片 */
+.post-toc {
+  position: fixed;
+  bottom: 2rem;
+  right: 1.5rem;
+  width: 260px;
+  max-height: 45vh;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  border-radius: 6px;
+  z-index: 900;
+}
+
+.post-toc-inner nav > ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.post-toc-inner ul {
+  list-style: none;
+  padding-left: 0.8rem;
+}
+
+.post-toc-inner a {
+  text-decoration: none;
+}
+
+.post-toc-inner a:hover {
+  text-decoration: underline;
+}
+
+.post-toc-inner a.post-toc-active {
+  color: #0f766e;
+  font-weight: 600;
+  border-left: 2px solid #0f766e;
+  padding-left: 0.4rem;
+}
+
+/* 目录层级样式：h1 / h2 / h3 区分 */
+.post-toc-inner #TableOfContents > ul > li > a {
+  font-size: 0.95rem;   /* 一级标题稍大 */
+  font-weight: 600;
+}
+
+.post-toc-inner #TableOfContents > ul > li > ul > li > a {
+  font-size: 0.9rem;    /* 二级标题中等 */
+  font-weight: 500;
+}
+
+.post-toc-inner #TableOfContents ul ul ul > li > a {
+  font-size: 0.85rem;   /* 三级标题更小 */
+  font-weight: 400;
+}
+
+@media (max-width: 960px) {
+  .post-toc {
+    display: none;
+  }
+}

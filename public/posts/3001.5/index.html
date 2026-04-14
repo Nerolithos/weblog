@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -532,30 +584,65 @@ gcd(a, b)= min{ |sa + tb| &gt; 0}  (最小正整线性组合，s 或 t 可以为
     <aside class="w-30-l mt6-l">
 
 
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ln6-gcd-最大公因数">LN6 GCD 最大公因数</a>
+      <ul>
+        <li><a href="#基础知识">基础知识</a></li>
+        <li><a href="#euclids-algorithm-欧几里得算法">Euclid’s Algorithm 欧几里得算法</a></li>
+        <li><a href="#bézouts-identity">Bézout&rsquo;s Identity</a></li>
+        <li><a href="#extended-euclid">Extended Euclid</a></li>
+        <li><a href="#素数整除性质pd-与算术基本定理fta">素数整除性质(PD) 与算术基本定理(FTA)</a></li>
+        <li><a href="#die-hard取水问题-不变量法--线性组合">“Die Hard”取水问题 (不变量法 &amp; 线性组合)</a></li>
+      </ul>
+    </li>
+    <li><a href="#ln7-modular-arithmetic-模运算">LN7 Modular Arithmetic 模运算</a>
+      <ul>
+        <li><a href="#同余">同余</a></li>
+        <li><a href="#模加法与模乘法">模加法与模乘法</a></li>
+        <li><a href="#模运算应用整除性判别">模运算应用：整除性判别</a></li>
+        <li><a href="#模运算应用华容道问题">模运算应用：华容道问题</a></li>
+        <li><a href="#乘法逆元-multiplicative-inverse">乘法逆元 (Multiplicative Inverse)</a></li>
+        <li><a href="#费马小定理--威尔逊定理">费马小定理 &amp; 威尔逊定理</a></li>
+        <li><a href="#一元线性同余方程-ax--b-mod-n">一元线性同余方程 ax ≡ b (mod n)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
+
+
 
 
   <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
     <p class="f5 b mb3"></p>
     <ul class="pa0 list">
-	   
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3001.4/">🧮 CSC3001 LEC8-10 递归</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3001.3/">🧮 CSC3001 LEC6-7 数学归纳法</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3001.2/">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</a>
         </li>
-	    
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
         </li>
-	    
+      
     </ul>
-</div>
+  </div>
 
 </aside>
 

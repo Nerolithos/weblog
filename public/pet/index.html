@@ -18,6 +18,75 @@
       justify-content: center;
       overflow: hidden; /* 整个屏幕不可滚动，防止上下拖动页面 */
     }
+    /* 启动时的全屏加载覆盖层：深黑背景 + 中央镂空菱形 + 底部进度条 */
+    #ark-loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000000;
+      color: #ffffff;
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+      opacity: 1;
+      transition: opacity 0.6s ease-out;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    #ark-loading-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+    #ark-loading-diamond {
+      width: 80px;
+      height: 80px;
+      border: 2px solid #ffffff;
+      border-radius: 2px;
+      background: transparent;
+      transform: rotate(45deg);
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.28);
+      animation: ark-loading-diamond-pulse 1.6s ease-in-out infinite;
+    }
+    #ark-loading-brand {
+      font-size: 15px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #ffffff;
+      opacity: 0.88;
+    }
+    #ark-loading-progress {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    #ark-loading-bar {
+      width: 100%;
+      height: 100%;
+      background: #ffffff; /* 纯白色进度条 */
+      transform-origin: left center;
+      transform: scaleX(0);
+    }
+    body.ark-loading-finished #ark-loading-overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+    body.ark-loading-finished #ark-loading-bar {
+      transform: scaleX(1);
+      transition: transform 0.6s ease-out;
+    }
+    @keyframes ark-loading-diamond-pulse {
+      0% { transform: rotate(45deg) scale(1); opacity: 0.7; box-shadow: 0 0 12px rgba(255,255,255,0.18); }
+      40% { transform: rotate(45deg) scale(1.05); opacity: 1; box-shadow: 0 0 20px rgba(255,255,255,0.4); }
+      100% { transform: rotate(45deg) scale(1); opacity: 0.7; box-shadow: 0 0 12px rgba(255,255,255,0.18); }
+    }
     #matrix-bg {
       position: fixed;
       inset: 0;
@@ -1166,6 +1235,16 @@
   </style>
 </head>
 <body>
+  <!-- 启动加载窗口：深黑背景 + 镂空菱形 + 进度条 -->
+  <div id="ark-loading-overlay">
+    <div id="ark-loading-center">
+      <div id="ark-loading-diamond"></div>
+      <div id="ark-loading-brand">Soul Container Corp.</div>
+    </div>
+    <div id="ark-loading-progress">
+      <div id="ark-loading-bar"></div>
+    </div>
+  </div>
   <!-- 背景 Matrix 字符雨画布（在宠物 canvas 之外，不影响交互） -->
   <canvas id="matrix-bg"></canvas>
   <div id="desktop-area">
@@ -1490,6 +1569,67 @@ You did not answered the call of the trapped souls, soon, some security officers
       <div id="system-warning-dialog-body"></div>
     </div>
   </div>
+
+  <!-- 加载窗口控制逻辑：在所有资源与主程序就绪后淡出 -->
+  <script>
+    (function () {
+      var overlay = document.getElementById('ark-loading-overlay');
+      var bar = document.getElementById('ark-loading-bar');
+      if (!overlay || !bar) return;
+
+      var progress = 0;              // 0.0 ~ 1.0
+      var preLoadMax = 0.9;          // 未触发 load 事件前的最大进度
+      var tickMs = 120;              // 更新节奏
+      var timerId = null;
+
+      function applyProgress() {
+        var clamped = Math.max(0, Math.min(1, progress));
+        bar.style.transform = 'scaleX(' + clamped + ')';
+      }
+
+      function startFakeProgress() {
+        if (timerId !== null) return;
+        timerId = setInterval(function () {
+          if (document.body.classList.contains('ark-loading-finished')) {
+            clearInterval(timerId);
+            timerId = null;
+            return;
+          }
+          // 逐步接近 preLoadMax，但永远不回退、不重置
+          var delta = 0.02 + Math.random() * 0.03; // 每帧增加 2% ~ 5%
+          progress = Math.min(preLoadMax, progress + delta);
+          applyProgress();
+        }, tickMs);
+      }
+
+      startFakeProgress();
+
+      function finishLoading() {
+        if (document.body.classList.contains('ark-loading-finished')) return;
+        if (timerId !== null) {
+          clearInterval(timerId);
+          timerId = null;
+        }
+        // 先把进度条推到 100%
+        progress = 1;
+        applyProgress();
+        document.body.classList.add('ark-loading-finished');
+        // 在进度条补满与淡出动画结束后，彻底移除节点，避免干扰后续交互
+        setTimeout(function () {
+          if (overlay && overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+          }
+        }, 900);
+      }
+
+      if (document.readyState === 'complete') {
+        // 所有资源已加载完成（包括图片 / spine ts / JS 等）
+        finishLoading();
+      } else {
+        window.addEventListener('load', finishLoading);
+      }
+    })();
+  </script>
 
   <!-- Spine webgl runtime built locally from Spine 3.8 runtimes (spine-ts/build/spine-webgl.js) -->
   <script src="spine-webgl-3.8.js"></script>

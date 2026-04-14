@@ -182,6 +182,58 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -778,18 +830,77 @@
     <aside class="w-30-l mt6-l">
 
 
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week-3--process-of-data">Week 3  Process of Data</a>
+      <ul>
+        <li><a href="#整数运算-integer-arithmetics">整数运算 (Integer Arithmetics)</a>
+          <ul>
+            <li><a href="#1-bit-全加器和加减法">1-bit 全加器和加减法</a></li>
+            <li><a href="#乘法器">乘法器</a></li>
+            <li><a href="#除法器">除法器</a></li>
+          </ul>
+        </li>
+        <li><a href="#浮点数和浮点数运算">浮点数和浮点数运算</a>
+          <ul>
+            <li><a href="#何为浮点数">何为浮点数？</a></li>
+            <li><a href="#二进制展开">二进制展开</a></li>
+            <li><a href="#rounding-近似">Rounding (近似)</a></li>
+            <li><a href="#浮点数运算">浮点数运算</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#week-4--machine-level-programming">Week 4  Machine-level Programming</a>
+      <ul>
+        <li><a href="#通过汇编看机器级语言">通过汇编看机器级语言</a></li>
+        <li><a href="#x86-64-可选">x86-64 (可选)</a>
+          <ul>
+            <li><a href="#访问信息寄存器">访问信息——寄存器</a></li>
+            <li><a href="#x86-64-常见汇编指令">x86-64 常见汇编指令</a></li>
+            <li><a href="#x86-64-操作数与寻址">x86-64 操作数与寻址</a></li>
+          </ul>
+        </li>
+        <li><a href="#risc-v">RISC-V</a>
+          <ul>
+            <li><a href="#rv32i-指令分类">RV32I 指令分类</a></li>
+            <li><a href="#alu-指令">ALU 指令</a></li>
+            <li><a href="#load-指令">Load 指令</a></li>
+            <li><a href="#store-指令">Store 指令</a></li>
+            <li><a href="#branch-指令"><strong>Branch</strong> 指令</a></li>
+            <li><a href="#lui--auipc-指令">LUI &amp; AUIPC 指令</a></li>
+            <li><a href="#jump-指令">Jump 指令</a></li>
+            <li><a href="#csr-指令">CSR 指令</a></li>
+            <li><a href="#exception-handling"><strong>Exception Handling</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#rv32i-abi">RV32I ABI</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  
+
+
+
 
 
   <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
     <p class="f5 b mb3"></p>
     <ul class="pa0 list">
-	   
-	     <li  class="mb2">
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
         </li>
-	    
+      
     </ul>
-</div>
+  </div>
 
 </aside>
 
