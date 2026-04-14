@@ -279,3 +279,196 @@
     display: none !important;
   }
 }
+
+/* 左下角 Liquid Glass 任务坞 */
+.liquid-dock {
+  position: fixed;
+  left: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 950;
+}
+
+.liquid-dock-main,
+.liquid-dock-item {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.9), rgba(148,163,184,0.25)));
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.55);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  color: #e5e7eb;
+}
+
+.liquid-dock-main {
+  position: relative;
+}
+
+.liquid-dock-main-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #ffffff, #e5e7eb);
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.liquid-dock-menu {
+  position: absolute;
+  left: 4px;
+  bottom: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  pointer-events: none;
+}
+
+.liquid-dock-item {
+  opacity: 0;
+  transform: translateY(14px) scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+}
+
+.liquid-dock.dock-open .liquid-dock-item {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.liquid-dock-icon {
+  font-size: 1.1rem;
+}
+
+.liquid-dock-icon-text {
+  font-size: 0.7rem;
+}
+
+.liquid-dock-main:hover,
+.liquid-dock-item:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+}
+
+@media (max-width: 640px) {
+  .liquid-dock {
+    left: 1rem;
+    bottom: 1rem;
+  }
+
+  .liquid-dock-main,
+  .liquid-dock-item {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+/* 简单深色模式：通过 body.dark-mode 切换 */
+body.dark-mode {
+  background-color: #020617;
+  color: #e5e7eb;
+}
+
+body.dark-mode a {
+  color: #38bdf8;
+}
+
+/* 暗色模式下：顶部搜索条和首页卡片背景调整 */
+body.dark-mode .bg-near-white,
+body.dark-mode .bg-white {
+  background-color: #020617 !important;
+}
+
+body.dark-mode .b--black-10 {
+  border-color: rgba(148, 163, 184, 0.4) !important;
+}
+
+body.dark-mode .home-post-card {
+  background: rgba(15, 23, 42, 0.96);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode .home-post-card:hover {
+  background: rgba(15, 23, 42, 1);
+}
+
+body.dark-mode .home-post-card .dark-gray,
+body.dark-mode .home-post-card .link.dark-gray {
+  color: #e5e7eb;
+}
+
+body.dark-mode .home-post-card .gray,
+body.dark-mode .home-post-card .mid-gray {
+  color: #9ca3af;
+}
+
+body.dark-mode .home-post-download-btn {
+  border-color: rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+}
+
+body.dark-mode .home-post-download-btn:hover {
+  background: rgba(15, 23, 42, 1);
+  border-color: rgba(148, 163, 184, 0.9);
+}
+
+/* 暗色模式下：顶部搜索框与按钮 */
+body.dark-mode input[type="search"] {
+  background-color: #020617;
+  color: #e5e7eb;
+  border-color: rgba(148, 163, 184, 0.7);
+}
+
+body.dark-mode input[type="search"]::placeholder {
+  color: #6b7280;
+}
+
+body.dark-mode .bg-black-80 {
+  background-color: #111827 !important;
+}
+
+/* 暗色模式下：单篇 blog 正文区域 */
+body.dark-mode .nested-copy-line-height {
+  color: #e5e7eb;
+}
+
+body.dark-mode .nested-copy-line-height h1,
+body.dark-mode .nested-copy-line-height h2,
+body.dark-mode .nested-copy-line-height h3,
+body.dark-mode .nested-copy-line-height h4,
+body.dark-mode .nested-copy-line-height h5,
+body.dark-mode .nested-copy-line-height h6 {
+  color: #f9fafb;
+}
+
+body.dark-mode .nested-copy-line-height code,
+body.dark-mode .nested-copy-line-height pre {
+  background-color: #020617;
+  color: #e5e7eb;
+}
+
+/* 暗色模式下：「历史上的今天」短代码块 */
+body.dark-mode .history-today {
+  background-color: rgba(15, 23, 42, 0.9);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+}
+
+body.dark-mode .history-today h2 {
+  color: #f9fafb;
+}
+
+body.dark-mode .history-today-list li {
+  color: #e5e7eb;
+}
+
+body.dark-mode .history-today p[style] {
+  color: #9ca3af !important;
+}

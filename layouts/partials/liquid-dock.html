@@ -1,0 +1,17 @@
+{{/* 左下角 Liquid Glass 任务坞，仅在首页和文章页通过 baseof 调用 */}}
+<div class="liquid-dock" data-liquid-dock data-search-url="{{ "/search/" | relURL }}">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>

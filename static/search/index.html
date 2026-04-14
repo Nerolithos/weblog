@@ -18,6 +18,39 @@
     .result-meta { font-size: .8rem; color: #888; margin-bottom: .25rem; }
     .status { font-size: .9rem; color: #666; margin-bottom: .75rem; }
     mark { background: #ffe58f; }
+
+    /* 搜索页暗色模式细节调整，继承全站 dark-mode 方案 */
+    body.dark-mode {
+      background-color: #020617;
+      color: #e5e7eb;
+    }
+
+    body.dark-mode .search-input {
+      background-color: #020617;
+      color: #e5e7eb;
+      border-color: rgba(148,163,184,0.7);
+    }
+
+    body.dark-mode .search-input::placeholder {
+      color: #6b7280;
+    }
+
+    body.dark-mode .search-button {
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    body.dark-mode .result-item {
+      border-color: rgba(55,65,81,0.8);
+    }
+
+    body.dark-mode .result-snippet {
+      color: #9ca3af;
+    }
+
+    body.dark-mode .status {
+      color: #9ca3af;
+    }
   </style>
 </head>
 <body>
@@ -32,6 +65,34 @@
   </div>
 
   <script>
+  // 根据全站的 localStorage 主题设置同步搜索页的亮/暗模式
+  (function() {
+    var storageKey = 'site-theme-mode';
+    function applyThemeFromStorage() {
+      try {
+        var saved = localStorage.getItem(storageKey);
+        if (saved === 'dark' || saved === 'light') {
+          if (saved === 'dark') {
+            document.body.classList.add('dark-mode');
+          } else {
+            document.body.classList.remove('dark-mode');
+          }
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.body.classList.add('dark-mode');
+        } else {
+          document.body.classList.remove('dark-mode');
+        }
+      } catch (e) {}
+    }
+
+    applyThemeFromStorage();
+
+    window.addEventListener('storage', function (event) {
+      if (event.key !== storageKey) return;
+      applyThemeFromStorage();
+    });
+  })();
+
   (function() {
     const input = document.getElementById('search-input');
     const form = document.getElementById('search-form');

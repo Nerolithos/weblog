@@ -90,6 +90,9 @@
     <main class="pb7" role="main">
       {{ block "main" . }}{{ end }}
     </main>
+    {{ if or .IsHome (eq .Section "posts") }}
+      {{ partial "liquid-dock.html" . }}
+    {{ end }}
     {{ block "footer" . }}{{ partialCached "site-footer.html" . }}{{ end }}
   </body>
 </html>

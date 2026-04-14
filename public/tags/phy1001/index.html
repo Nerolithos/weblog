@@ -248,6 +248,112 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else {
+				
+				try {
+					var now = new Date();
+					var utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+					var bj = new Date(utcMs + 8 * 60 * 60000); 
+					var h = bj.getHours();
+					if (h >= 19 || h < 7) {
+						applyTheme('dark');
+					} else {
+						applyTheme('light');
+					}
+				} catch (e) {
+					applyTheme('light');
+				}
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -417,6 +523,7 @@
   </div>
 
     </main>
+    
     <footer class="custom-footer">
   <p>&copy; Lithos&#39; Blog 2026</p>
 

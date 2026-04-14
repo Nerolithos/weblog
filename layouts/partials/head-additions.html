@@ -186,3 +186,96 @@
 		}
 	});
 </script>
+
+{{/* 左下角 Liquid Glass 任务坞：站内搜索 + 深浅模式切换 */}}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		// 初始化主题：无论当前页面是否有任务坞都执行
+		initTheme();
+
+		// 监听其它标签页对主题的修改，实现多页面同步
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		// 若页面没有任务坞，仅保留主题记忆功能
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					// 预留：中英切换暂未实现
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
