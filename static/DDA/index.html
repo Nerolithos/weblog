@@ -73,23 +73,23 @@
     }
     .dda-globe-svg {
       width: 100%;
-      max-width: 800px;
-      /* 与 tile / map 视图保持一致的显示高度 */
-      height: min(60vh, 640px);
+      max-width: 900px;
+      /* 与 tile / map 视图保持一致的显示高度，尽量占满视口 */
+      height: min(70vh, 720px);
       display: none; /* 初次加载默认显示 tile 视图，由 JS 决定最终模式 */
       margin: 0 auto;
     }
     .dda-tile-svg {
       width: 100%;
-      max-width: 800px;
-      height: min(60vh, 640px);
+      max-width: 900px;
+      height: min(70vh, 720px);
       display: block;
       margin: 0 auto;
     }
     .dda-map-svg {
       width: 100%;
-      max-width: 800px;
-      height: min(60vh, 640px);
+      max-width: 900px;
+      height: min(70vh, 720px);
       display: none;
       margin: 0 auto;
     }
@@ -413,11 +413,11 @@
       .dda-globe-svg,
       .dda-tile-svg,
       .dda-map-svg {
-        height: min(42vh, 360px);
+        height: min(60vh, 420px);
       }
     }
 
-    /* 适配矮屏幕，进一步压缩整体高度 */
+    /* 适配矮屏幕，仍尽量保持较大可视区域 */
     @media (max-height: 720px) {
       .dda-page {
         padding-top: 0;
@@ -426,15 +426,12 @@
       .dda-globe-svg,
       .dda-tile-svg,
       .dda-map-svg {
-        height: min(42vh, 445px);
+        height: min(65vh, 520px);
       }
       .dda-slider-section {
         margin-top: 1.25rem;
         padding-top: 0.85rem;
         padding-bottom: 0.65rem;
-      }
-      .dda-backlink {
-        margin-top: 1.25rem;
       }
     }
   </style>
@@ -520,10 +517,6 @@
         <div class="dda-legend-caption">Metric: renewables share of electricity production</div>
       </div>
     </section>
-
-    <div class="dda-backlink">
-      <a href="/">← Back to blog home</a>
-    </div>
   </main>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
