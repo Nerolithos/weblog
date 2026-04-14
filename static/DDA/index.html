@@ -19,7 +19,7 @@
       flex: 1;
       max-width: 960px;
       margin: 0 auto;
-      padding: 2rem 1rem 3rem;
+      padding: 0 1rem 3rem;
     }
     .dda-header {
       margin-bottom: 1.5rem;
@@ -408,7 +408,7 @@
     }
     @media (max-width: 640px) {
       .dda-page {
-        padding: 1.25rem 0.75rem 1.75rem;
+        padding: 0 0.75rem 1.75rem;
       }
       .dda-globe-svg,
       .dda-tile-svg,
@@ -420,7 +420,7 @@
     /* 适配矮屏幕，进一步压缩整体高度 */
     @media (max-height: 720px) {
       .dda-page {
-        padding-top: 1.25rem;
+        padding-top: 0;
         padding-bottom: 1.75rem;
       }
       .dda-globe-svg,
@@ -445,6 +445,24 @@
       <h1>Global Renewable Energy Share</h1>
       <p>DDA3003 Group4 ——— Visual Analytics of Global Energy Transition Patterns ——— Explore with hovering and clicking the countries.</p>
     </header>
+
+    <section class="dda-slider-section">
+      <div class="dda-slider-header">
+        <div class="dda-slider-header-left"></div>
+        <div style="display: none;">
+          <span id="dda-current-year" class="dda-current-year">-</span>
+        </div>
+      </div>
+      <div class="dda-slider-wrapper">
+        <button id="dda-play-toggle" class="dda-play-button" type="button">▶</button>
+        <span id="dda-year-min">-</span>
+        <input id="dda-year-slider" type="range" min="0" max="0" step="1" value="0" />
+        <span id="dda-year-max">-</span>
+      </div>
+      <div id="dda-info-panel" class="dda-info-panel">
+        Current year: -. Hover or click country to see details.
+      </div>
+    </section>
 
     <section class="dda-globe-wrapper">
       <div class="dda-view-toggle">
@@ -500,26 +518,6 @@
           <span>30%+</span>
         </div>
         <div class="dda-legend-caption">Metric: renewables share of electricity production</div>
-      </div>
-    </section>
-
-    <section class="dda-slider-section">
-      <div class="dda-slider-header">
-        <div class="dda-slider-header-left">
-          <span>Move the slider to select a year:</span>
-        </div>
-        <div>
-          Current year: <span id="dda-current-year" class="dda-current-year">-</span>
-        </div>
-      </div>
-      <div class="dda-slider-wrapper">
-        <button id="dda-play-toggle" class="dda-play-button" type="button">▶</button>
-        <span id="dda-year-min">-</span>
-        <input id="dda-year-slider" type="range" min="0" max="0" step="1" value="0" />
-        <span id="dda-year-max">-</span>
-      </div>
-      <div id="dda-info-panel" class="dda-info-panel">
-        Hover over a country on the globe to see the year, country name, three-letter ISO code and renewable energy share for the selected year.
       </div>
     </section>
 
@@ -1013,22 +1011,8 @@
     }
 
     function updateInfoPanel(feature) {
-      if (!feature) {
-        infoPanel.textContent = "Hover over a country on the globe to see the year, country name, three-letter ISO code and renewable energy share for the selected year.";
-        return;
-      }
-      const props = feature.properties || {};
-      const iso3 = props.iso_a3 || props.ISO_A3 || feature.id || "?";
-      const rawName = props.name || props.ADMIN || "Unknown country";
-      const name = getDisplayCountryName(iso3, rawName);
-      const record = currentYear ? getCountryValue(currentYear, iso3) : null;
-      if (!currentYear || !record || record.value == null || isNaN(record.value)) {
-        infoPanel.textContent = `${name} (${iso3}) · ${currentYear || "-"} · Renewables share: NAN`;
-      } else {
-        const value = record.value.toFixed(2);
-        const suffix = record.name === "Africa Aggregate" ? " · Africa Aggregate" : "";
-        infoPanel.textContent = `${currentYear} · ${name} (${iso3}) · Renewables share: ${value}%${suffix}`;
-      }
+      const yearText = currentYear != null ? currentYear : "-";
+      infoPanel.innerHTML = `Current year: <strong>${yearText}</strong>. Hover or click country to see details.`;
     }
 
     function showTooltip(event, feature) {

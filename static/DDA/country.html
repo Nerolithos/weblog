@@ -19,7 +19,7 @@
       flex: 1;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 2rem 1rem 3rem;
+      padding: 0 1rem 3rem;
     }
     .country-header {
       margin-bottom: 1.5rem;
@@ -1391,6 +1391,26 @@
         if (!name || !iso3) return;
         registerIsoMapping(name, iso3);
       });
+
+      // After GeoJSON is loaded and mappings are registered, update the
+      // right‑hand title to always show "Country name (ISO3)".
+      // This avoids cases like "GBR (GBR)" when we only had the code.
+      if (selectedIso3) {
+        let displayName = selectedCountryName;
+        const featureForSelected = worldFeatures.find(f => {
+          const props = f.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+          return iso3 === selectedIso3;
+        });
+        if (featureForSelected) {
+          const props = featureForSelected.properties || {};
+          const rawName = props.name || props.ADMIN || baseSelectedCountryName;
+          displayName = getDisplayCountryName(selectedIso3, rawName);
+        }
+        if (titleEl) {
+          titleEl.textContent = `${displayName} (${selectedIso3 || "N/A"})`;
+        }
+      }
 
       const group = g.append("g");
 
