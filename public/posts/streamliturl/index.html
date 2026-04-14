@@ -230,6 +230,24 @@
 		window.addEventListener('resize', onScroll);
 		
 		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
 	});
 </script>
 
@@ -476,6 +494,7 @@ Cloudflare 会随机生成一个 CNAME 记录，等待一会应该就可以访�
 
   
   <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
     <p class="f5 b mb2">目录</p>
     <div class="post-toc-inner">
       <nav id="TableOfContents">
@@ -490,6 +509,7 @@ Cloudflare 会随机生成一个 CNAME 记录，等待一会应该就可以访�
 </nav>
     </div>
   </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
   
 
 

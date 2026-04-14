@@ -6,11 +6,16 @@
 {{ if eq .Section "posts" }}
   {{ with .TableOfContents }}
   <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
     <p class="f5 b mb2">目录</p>
     <div class="post-toc-inner">
       {{ . }}
     </div>
   </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
   {{ end }}
 {{ end }}
 

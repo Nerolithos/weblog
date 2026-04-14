@@ -166,5 +166,23 @@
 		window.addEventListener('resize', onScroll);
 		// 初次计算
 		onScroll();
+
+		// 目录最小化/展开逻辑
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
 	});
 </script>
