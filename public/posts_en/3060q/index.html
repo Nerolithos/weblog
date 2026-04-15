@@ -353,58 +353,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -495,9 +443,7 @@
         </ul>
       
       
-      
-      
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
           name="q"
@@ -1221,37 +1167,6 @@ b) BTB (branch target buffer) <strong>(Answer)</strong></p>
     <aside class="w-30-l mt6-l">
 
 
-  
-  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
-    <div class="post-toc-header">
-      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
-      <span class="post-toc-header-title">menu</span>
-    </div>
-    <p class="f5 b mb2">目录</p>
-    <div class="post-toc-inner">
-      <nav id="TableOfContents">
-  <ul>
-    <li><a href="#csc3060-2026spring-quiz1">CSC3060 2026Spring Quiz1</a>
-      <ul>
-        <li><a href="#section-i-30-points-select-the-best-answer-the-answer-is-shown-after-each-question">Section I (30 points): Select the best answer. The answer is shown after each question.</a></li>
-        <li><a href="#section-ii-40-points-multiple-choice-one-or-more-correct-answers--put-all-correct-letters-the-answers-are-shown-in-parentheses">Section II (40 points): Multiple choice (one or more correct answers).  Put all correct letters; the answers are shown in parentheses.</a></li>
-        <li><a href="#section-iii-50-points-short-and-brief-answers--provide-concise-explanations">Section III (50 points): Short and brief answers.  Provide concise explanations.</a></li>
-      </ul>
-    </li>
-    <li><a href="#csc3060-2026spring-quiz2">CSC3060 2026Spring Quiz2</a>
-      <ul>
-        <li><a href="#section-i-30-points-select-the-best-answer-the-answer-is-shown-after-each-question-1">Section I (30 points): Select the best answer. The answer is shown after each question.</a></li>
-        <li><a href="#section-ii-40-points-multiple-choice-one-or-more-correct-answers-put-all-correct-letters-the-answers-are-shown-in-parentheses">Section II (40 points): Multiple Choice (one or more correct answers). Put all correct letters; the answers are shown in parentheses.</a></li>
-        <li><a href="#section-iii-50-points-short-and-brief-answers--provide-concise-explanations-1">Section III (50 points): Short and brief answers.  Provide concise explanations.</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-    </div>
-  </nav>
-  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
-  
-
 
 
 
@@ -1265,15 +1180,11 @@ b) BTB (branch target buffer) <strong>(Answer)</strong></p>
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
-        </li>
-      
-        <li class="mb2">
           <a href="http://localhost:1313/posts_en/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+          <a href="http://localhost:1313/posts/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
         </li>
       
         <li class="mb2">
@@ -1281,11 +1192,15 @@ b) BTB (branch target buffer) <strong>(Answer)</strong></p>
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+          <a href="http://localhost:1313/posts_en/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
         </li>
       
         <li class="mb2">
           <a href="http://localhost:1313/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
         </li>
       
         <li class="mb2">
@@ -1297,15 +1212,11 @@ b) BTB (branch target buffer) <strong>(Answer)</strong></p>
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
-        </li>
-      
-        <li class="mb2">
           <a href="http://localhost:1313/posts_en/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
         </li>
       
         <li class="mb2">
@@ -1313,11 +1224,15 @@ b) BTB (branch target buffer) <strong>(Answer)</strong></p>
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
         </li>
       
         <li class="mb2">
           <a href="http://localhost:1313/posts_en/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
         </li>
       
     </ul>
@@ -1328,25 +1243,6 @@ b) BTB (branch target buffer) <strong>(Answer)</strong></p>
   </article>
 
     </main>
-    
-      
-<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
-  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
-    <span class="liquid-dock-main-dot"></span>
-  </button>
-  <div class="liquid-dock-menu">
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
-      <span class="liquid-dock-icon">🔍</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
-      <span class="liquid-dock-icon">☾</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
-      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
-    </button>
-  </div>
-</div>
-
     
     <footer class="custom-footer">
   <p>&copy; Lithos&#39; Blog 2026</p>

@@ -353,58 +353,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -495,9 +443,7 @@
         </ul>
       
       
-      
-      
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
           name="q"
@@ -712,35 +658,6 @@ By choosing a special point as the axis for taking torques (typically the contac
     <aside class="w-30-l mt6-l">
 
 
-  
-  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
-    <div class="post-toc-header">
-      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
-      <span class="post-toc-header-title">menu</span>
-    </div>
-    <p class="f5 b mb2">目录</p>
-    <div class="post-toc-inner">
-      <nav id="TableOfContents">
-  <ul>
-    <li><a href="#rotational-motion">Rotational Motion</a>
-      <ul>
-        <li><a href="#basics">Basics</a></li>
-        <li><a href="#rollingsliding-problems-two-cases">Rolling/Sliding Problems: Two Cases</a>
-          <ul>
-            <li><a href="#example-1-a-rolling-object-of-radius-r-is-pulled-by-a-force-f-applied-at-distance-d-from-the-center-and-experiences-f_s-assume-no-slipping">Example 1: A rolling object of radius $R$ is pulled by a force $F$ applied at distance $d$ from the center, and experiences $f_s$. Assume no slipping.</a></li>
-            <li><a href="#example-2-a-spinning-ball-with-angular-velocity-omega_0-is-thrown-onto-a-table-and-experiences-kinetic-friction-f_k-in-the-direction-of-motion">Example 2: A spinning ball with angular velocity $\omega_0$ is thrown onto a table and experiences kinetic friction $f_k$ in the direction of motion</a></li>
-          </ul>
-        </li>
-        <li><a href="#force--and-torque-balance-problems">Force- and Torque-Balance Problems</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-    </div>
-  </nav>
-  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
-  
-
 
 
 
@@ -769,25 +686,6 @@ By choosing a special point as the axis for taking torques (typically the contac
   </article>
 
     </main>
-    
-      
-<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
-  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
-    <span class="liquid-dock-main-dot"></span>
-  </button>
-  <div class="liquid-dock-menu">
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
-      <span class="liquid-dock-icon">🔍</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
-      <span class="liquid-dock-icon">☾</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
-      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
-    </button>
-  </div>
-</div>
-
     
     <footer class="custom-footer">
   <p>&copy; Lithos&#39; Blog 2026</p>

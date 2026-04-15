@@ -349,58 +349,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -434,7 +382,6 @@
     
 
     
-
 
   
   <header>
@@ -491,8 +438,6 @@
         </ul>
       
       
-      
-      
       <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
@@ -515,14 +460,8 @@
 
       <div class="tc-l pv3 ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-          
-            DDA
-          
+          DDA
         </h1>
-        
-          
-        
-        
         
         
       </div>
@@ -566,29 +505,6 @@
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3003.2/" class="link black dim">
-        🎨 DDA3003 Midterm revision
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-26 |
-      📝 2893 字 |
-      ⏱️ 14 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.
-    </div>
-    <a href="http://localhost:1313/posts_en/3003.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3003.1/" class="link black dim">
@@ -604,29 +520,6 @@
       CUHKSZ 选修课程 DDA3003 Visualization，介绍 D3.js ——— 一种 HTML 可视化工具
     </div>
     <a href="http://localhost:1313/posts/3003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3003.1/" class="link black dim">
-        🎨 DDA3003 Introduction to D3
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-01-22 |
-      📝 762 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introduction to D3.js in CUHKSZ elective DDA3003 Visualization — an HTML-based visualization tool.
-    </div>
-    <a href="http://localhost:1313/posts_en/3003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 

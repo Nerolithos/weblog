@@ -493,6 +493,14 @@ body:not(.dark-mode) .site-nav-fixed a:hover {
   transition: opacity 0.22s ease-out, transform 0.22s ease-out;
 }
 
+/* Ensure anchor-based dock items (like the 🫧 link) have no underline but keep their circular border */
+.liquid-dock a.liquid-dock-item,
+.liquid-dock a.liquid-dock-item:hover,
+.liquid-dock a.liquid-dock-item:focus {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
 .liquid-dock.dock-open .liquid-dock-item {
   opacity: 1;
   transform: translateY(0) scale(1);

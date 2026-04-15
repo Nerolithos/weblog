@@ -52,8 +52,8 @@
   <meta property="og:type" content="website">
 
   <meta itemprop="name" content="Posts_ENs">
-  <meta itemprop="datePublished" content="2026-04-07T13:30:34+08:00">
-  <meta itemprop="dateModified" content="2026-04-07T13:30:34+08:00">
+  <meta itemprop="datePublished" content="2026-04-11T20:08:00+08:00">
+  <meta itemprop="dateModified" content="2026-04-11T20:08:00+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Posts_ENs">
 
@@ -349,58 +349,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -525,54 +473,67 @@
       
   <article class="pa3 pa4-ns nested-copy-line-height">
     
-    
-    
     <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy mid-gray"></section>
 
     
     <section class="ph3 ph5-l center">
       
-        
-        
-        
-
-        
         <article class="cf pv4 bb b--black-10 flex-l items-start">
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/oop/">☕️ Coffee and OOP</a>
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/1003.6/">💻 CSC1003 Final Review</a>
             </h2>
             <p class="gray f6 mb2">
-              2024-09-12 · 4 分钟阅读
+              2024-11-29 · 3 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
-              <p>OOP (Object-Oriented Programming) is the programming paradigm built around objects. Let us use Java OOP—rather than coffee—as an example. It includes the following core ideas:</p>
-<ul>
-<li>
-<p><strong>Class</strong></p>
-</li>
-<li>
-<p><strong>Object ≈ Instance</strong></p>
-</li>
-<li>
-<p><strong>Encapsulation</strong></p>
-</li>
-<li>
-<p><strong>Inheritance</strong></p>
-</li>
-<li>
-<p><strong>Polymorphism</strong></p>
-</li>
-<li>
-<p><strong>Abstraction</strong></p>
-</li>
-</ul>
-<h2 id="classes-instances-objects-and-fields">Classes, instances, objects, and fields</h2>
-<p>A <strong>class</strong> is an <strong>abstract</strong> concept, whereas an <strong>instance</strong> is a <strong>concrete</strong> entity. If coffee is treated as a class, then espresso, frappe, Americano, latte, and cappuccino are instances of that class. A class is the template from which objects are created, and an <strong>instance can also be called an object</strong>. Objects are created according to the class template, but they may differ in their <strong>fields</strong> (also called member variables).</p>
+              A summary of useful Java syntax and common pitfalls.
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/oop/">阅读全文 →</a>
+              <a class="link dim" href="http://localhost:1313/posts_en/1003.6/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/assignment2/">💻 CSC1003 Assignment 2: Two-Dimensional Arrays</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2024-10-31 · 5 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              Worked examples for the second CSC1003-Java assignment.
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/assignment2/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/1003.5/">💻 CSC1003 LEC13-15 Recursion</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2024-10-22 · 2 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              An introduction to recursion, the stack and heap, and stack overflow.
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/1003.5/">阅读全文 →</a>
             </p>
           </div>
 
@@ -580,33 +541,69 @@
           
             
               <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
-                <img src="http://localhost:1313/images/coffee.jpg" alt="Posts_ENs"
+                <img src="http://localhost:1313/images/recursion.jpg" alt="Posts_ENs"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
           
         </article>
-        
       
-        
-        
-        
-
-        
         <article class="cf pv4 bb b--black-10 flex-l items-start">
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/1003.2/">💻 CSC1003 TBL1 Networking and the History of Computing</a>
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/whisper/">📢 How can you batch-transcribe audio into text efficiently?</a>
             </h2>
             <p class="gray f6 mb2">
-              2024-09-11 · 7 分钟阅读
+              2024-10-21 · 1 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
-              Foundational material on networks and the Internet that the lecture largely skipped — LGU does not really offer a dedicated introductory networking course, so many students lack this background.
+              How to transcribe local audio files from the CLI without using an LLM.
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/1003.2/">阅读全文 →</a>
+              <a class="link dim" href="http://localhost:1313/posts_en/whisper/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2024-10-19 · 3 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              Midterm review and mock questions.
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/1003.4/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/assignment1/">💻 CSC1003 Assignment 1 OJ Practice</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2024-09-22 · 5 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              The first OJ programming practice for the first-year CUHKSZ course CSC1003.
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/assignment1/">阅读全文 →</a>
             </p>
           </div>
 
@@ -614,81 +611,12 @@
           
             
               <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
-                <img src="http://localhost:1313/images/eniac.jpg" alt="Posts_ENs"
+                <img src="http://localhost:1313/images/oj1.jpg" alt="Posts_ENs"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
           
         </article>
-        
-      
-        
-        
-        
-
-        
-      
-        
-        
-        
-
-        
-        <article class="cf pv4 bb b--black-10 flex-l items-start">
-          
-          <div class="w-100 w-two-thirds-l pr3">
-            <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/web/"> 🌐 IP Addresses and Subnet Masks</a>
-            </h2>
-            <p class="gray f6 mb2">
-              2024-09-11 · 1 分钟阅读
-            </p>
-            <div class="lh-copy mid-gray">
-              <p>On 2024-08-22, several students raised a few networking questions during CUHKSZ&rsquo;s course-selection training livestream (see the screenshot below). At that point the semester had not yet started, and <code>10.20.219.31</code> is obviously a private IP address, so it cannot be accessed directly from the public Internet. In other words, it can only be reached when the client is already inside the <code>10.0.0.0</code> network, namely CUHKSZ&rsquo;s subnet.</p>
-<p><img src="https://i.postimg.cc/FsKQ3wzM/%E6%88%AA%E5%B1%8F2026_01_11_18_05_02.png" alt=""></p>
-<p>Globally, the following private IP address prefixes are commonly used in local area networks (LANs). These prefixes are defined by <a href="https://tools.ietf.org/html/rfc1918">RFC 1918</a>:</p>
-            </div>
-            <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/web/">阅读全文 →</a>
-            </p>
-          </div>
-
-          
-          
-        </article>
-        
-      
-        
-        
-        
-
-        
-        <article class="cf pv4 bb b--black-10 flex-l items-start">
-          
-          <div class="w-100 w-two-thirds-l pr3">
-            <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/outlook/">🌐 Attempting to Fetch CUHKSZ Mailbox Data</a>
-            </h2>
-            <p class="gray f6 mb2">
-              2024-09-11 · 2 分钟阅读
-            </p>
-            <div class="lh-copy mid-gray">
-              A shareable but unresolved attempt to automate LGU mailbox access.
-            </div>
-            <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/outlook/">阅读全文 →</a>
-            </p>
-          </div>
-
-          
-          
-        </article>
-        
-      
-        
-        
-        
-
-        
       
     </section>
     <ul class="pagination pagination-default">
@@ -697,9 +625,6 @@
       </li>
       <li class="page-item">
         <a href="http://localhost:1313/posts_en/page/6/" aria-label="Previous" class="page-link" role="button"><span aria-hidden="true">&laquo;</span></a>
-      </li>
-      <li class="page-item">
-        <a href="http://localhost:1313/posts_en/page/3/" aria-label="Page 3" class="page-link" role="button">3</a>
       </li>
       <li class="page-item">
         <a href="http://localhost:1313/posts_en/page/4/" aria-label="Page 4" class="page-link" role="button">4</a>
@@ -713,11 +638,14 @@
       <li class="page-item active">
         <a aria-current="page" aria-label="Page 7" class="page-link" role="button">7</a>
       </li>
-      <li class="page-item disabled">
-        <a aria-disabled="true" aria-label="Next" class="page-link" role="button" tabindex="-1"><span aria-hidden="true">&raquo;</span></a>
+      <li class="page-item">
+        <a href="http://localhost:1313/posts_en/page/8/" aria-label="Page 8" class="page-link" role="button">8</a>
       </li>
-      <li class="page-item disabled">
-        <a aria-disabled="true" aria-label="Last" class="page-link" role="button" tabindex="-1"><span aria-hidden="true">&raquo;&raquo;</span></a>
+      <li class="page-item">
+        <a href="http://localhost:1313/posts_en/page/8/" aria-label="Next" class="page-link" role="button"><span aria-hidden="true">&raquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="http://localhost:1313/posts_en/page/8/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
       </li>
     </ul></article>
 

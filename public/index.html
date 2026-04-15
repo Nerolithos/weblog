@@ -352,58 +352,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -437,7 +385,6 @@
     
 
     
-
 
   
   <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/Head.jpg');">
@@ -495,8 +442,6 @@
       
       
       
-      
-      
 <div class="ananke-socials">
   
 </div>
@@ -507,18 +452,12 @@
 
       <div class="tc-l pv4 pv6-l ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
-          
-            Lithos&#39; Blog
-          
+          Lithos&#39; Blog
         </h1>
         
-          
-            <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3 mb3">
-              a CUHKSZ survival documentation
-            </h2>
-          
-        
-        
+          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3 mb3">
+            a CUHKSZ survival documentation
+          </h2>
         
         
         <div class="mt4 home-hero-search">
@@ -545,7 +484,6 @@
       
 
 <div class="pa4">
-  
   
   
   <h1 class="f2">📚 Recent Blogs (Currently 48 blogs)</h1>
@@ -2792,9 +2730,9 @@
     <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
       <span class="liquid-dock-icon">☾</span>
     </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
-      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
-    </button>
+    <a href="https://bubble.nero-lithos.com" class="liquid-dock-item" data-dock-item target="_blank" rel="noopener noreferrer" aria-label="Bubble 解压空间">
+      <span class="liquid-dock-icon">🫧</span>
+    </a>
   </div>
 </div>
 

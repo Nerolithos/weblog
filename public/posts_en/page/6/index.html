@@ -52,8 +52,8 @@
   <meta property="og:type" content="website">
 
   <meta itemprop="name" content="Posts_ENs">
-  <meta itemprop="datePublished" content="2026-04-07T13:30:34+08:00">
-  <meta itemprop="dateModified" content="2026-04-07T13:30:34+08:00">
+  <meta itemprop="datePublished" content="2026-04-11T20:08:00+08:00">
+  <meta itemprop="dateModified" content="2026-04-11T20:08:00+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Posts_ENs">
 
@@ -349,58 +349,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -525,132 +473,171 @@
       
   <article class="pa3 pa4-ns nested-copy-line-height">
     
-    
-    
     <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy mid-gray"></section>
 
     
     <section class="ph3 ph5-l center">
       
-        
-        
-        
-
-        
         <article class="cf pv4 bb b--black-10 flex-l items-start">
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/1003.6/">💻 CSC1003 Final Review</a>
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3200.1/">💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;</a>
             </h2>
             <p class="gray f6 mb2">
-              2024-11-29 · 3 分钟阅读
+              2025-09-01 · 5 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
-              A summary of useful Java syntax and common pitfalls.
+              An introduction to basic C++ syntax and OOP in the second-year CUHKSZ course CSC3200.
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/1003.6/">阅读全文 →</a>
+              <a class="link dim" href="http://localhost:1313/posts_en/3200.1/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+            
+              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
+                <img src="http://localhost:1313/images/32001.jpg" alt="Posts_ENs"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3001.1/">🧮 CSC3001 LEC1-2 Introduction to Discrete Mathematics</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2025-08-31 · 2 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              An introductory guide to CSC3001, a second-year course at CUHKSZ
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/3001.1/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+            
+              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
+                <img src="http://localhost:1313/images/30011.jpg" alt="Posts_ENs"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/streamliturl/">🌐 How to personalize Streamlit URL?</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2025-08-31 · 2 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              An attempt to point a Streamlit app to a custom domain without using a public VPS.
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/streamliturl/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+            
+              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
+                <img src="http://localhost:1313/images/st.jpg" alt="Posts_ENs"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/autorelease/">🌐 Automation of Ssg Post Release</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2025-04-25 · 2 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              How can blog publishing in an SSG setup (Hugo + Cloudflare) be semi-automated?
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/autorelease/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+            
+              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
+                <img src="http://localhost:1313/images/ar.jpg" alt="Posts_ENs"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/brainstorm/">🧠 Brainstorming</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2025-04-10 · 2 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              From a stray thought in MAT2041 to the way interdisciplinary flashes of insight can lead to breakthroughs&hellip;
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/brainstorm/">阅读全文 →</a>
             </p>
           </div>
 
           
           
         </article>
-        
       
-        
-        
-        
-
-        
         <article class="cf pv4 bb b--black-10 flex-l items-start">
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/assignment2/">💻 CSC1003 Assignment 2: Two-Dimensional Arrays</a>
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/lgu/">🐉🧱 CUHKSZ Survival Handbook</a>
             </h2>
             <p class="gray f6 mb2">
-              2024-10-31 · 5 分钟阅读
+              2024-12-09 · 3 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
-              Worked examples for the second CSC1003-Java assignment.
+              A survival handbook written by and for CUHKSZ students; still under active construction.
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/assignment2/">阅读全文 →</a>
+              <a class="link dim" href="http://localhost:1313/posts_en/lgu/">阅读全文 →</a>
             </p>
           </div>
 
           
           
-        </article>
-        
-      
-        
-        
-        
-
-        
-      
-        
-        
-        
-
-        
-        <article class="cf pv4 bb b--black-10 flex-l items-start">
-          
-          <div class="w-100 w-two-thirds-l pr3">
-            <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/whisper/">📢 How can you batch-transcribe audio into text efficiently?</a>
-            </h2>
-            <p class="gray f6 mb2">
-              2024-10-21 · 1 分钟阅读
-            </p>
-            <div class="lh-copy mid-gray">
-              How to transcribe local audio files from the CLI without using an LLM.
-            </div>
-            <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/whisper/">阅读全文 →</a>
-            </p>
-          </div>
-
-          
+            
+              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
+                <img src="http://localhost:1313/images/lgu.jpg" alt="Posts_ENs"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
           
         </article>
-        
-      
-        
-        
-        
-
-        
-        <article class="cf pv4 bb b--black-10 flex-l items-start">
-          
-          <div class="w-100 w-two-thirds-l pr3">
-            <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
-            </h2>
-            <p class="gray f6 mb2">
-              2024-10-19 · 3 分钟阅读
-            </p>
-            <div class="lh-copy mid-gray">
-              Midterm review and mock questions.
-            </div>
-            <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/1003.4/">阅读全文 →</a>
-            </p>
-          </div>
-
-          
-          
-        </article>
-        
-      
-        
-        
-        
-
-        
       
     </section>
     <ul class="pagination pagination-default">
@@ -659,9 +646,6 @@
       </li>
       <li class="page-item">
         <a href="http://localhost:1313/posts_en/page/5/" aria-label="Previous" class="page-link" role="button"><span aria-hidden="true">&laquo;</span></a>
-      </li>
-      <li class="page-item">
-        <a href="http://localhost:1313/posts_en/page/3/" aria-label="Page 3" class="page-link" role="button">3</a>
       </li>
       <li class="page-item">
         <a href="http://localhost:1313/posts_en/page/4/" aria-label="Page 4" class="page-link" role="button">4</a>
@@ -676,10 +660,13 @@
         <a href="http://localhost:1313/posts_en/page/7/" aria-label="Page 7" class="page-link" role="button">7</a>
       </li>
       <li class="page-item">
+        <a href="http://localhost:1313/posts_en/page/8/" aria-label="Page 8" class="page-link" role="button">8</a>
+      </li>
+      <li class="page-item">
         <a href="http://localhost:1313/posts_en/page/7/" aria-label="Next" class="page-link" role="button"><span aria-hidden="true">&raquo;</span></a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts_en/page/7/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
+        <a href="http://localhost:1313/posts_en/page/8/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
       </li>
     </ul></article>
 

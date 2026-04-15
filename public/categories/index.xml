@@ -36,12 +36,5 @@
       <guid>http://localhost:1313/categories/sse/</guid>
       <description></description>
     </item>
-    <item>
-      <title>Help</title>
-      <link>http://localhost:1313/categories/help/</link>
-      <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/categories/help/</guid>
-      <description></description>
-    </item>
   </channel>
 </rss>

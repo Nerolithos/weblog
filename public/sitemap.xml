@@ -11,22 +11,13 @@
     <loc>http://localhost:1313/posts/</loc>
     <lastmod>2026-04-11T20:08:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/</loc>
-    <lastmod>2026-04-11T20:08:00+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/chemistry/</loc>
-    <lastmod>2026-04-11T20:08:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/chemistry/</loc>
     <lastmod>2026-04-11T20:08:00+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</loc>
     <lastmod>2026-04-11T20:08:00+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/pet/</loc>
-    <lastmod>2026-04-11T07:00:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/pet/</loc>
     <lastmod>2026-04-11T07:00:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/projects/</loc>
@@ -41,26 +32,14 @@
     <loc>http://localhost:1313/posts/dda3003/</loc>
     <lastmod>2026-04-08T10:16:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/dda3003/</loc>
-    <lastmod>2026-04-08T10:16:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/courseai/</loc>
-    <lastmod>2026-04-07T19:00:00+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/courseai/</loc>
     <lastmod>2026-04-07T19:00:00+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/3060q/</loc>
     <lastmod>2026-04-07T13:30:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3060q/</loc>
-    <lastmod>2026-04-07T13:30:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/csc3060/</loc>
     <lastmod>2026-04-07T13:30:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/gab/</loc>
-    <lastmod>2026-04-07T11:30:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/gab/</loc>
     <lastmod>2026-04-07T11:30:34+08:00</lastmod>
@@ -71,13 +50,7 @@
     <loc>http://localhost:1313/posts/3060.6/</loc>
     <lastmod>2026-04-02T10:11:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3060.6/</loc>
-    <lastmod>2026-04-02T10:11:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3003.2/</loc>
-    <lastmod>2026-03-26T17:30:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3003.2/</loc>
     <lastmod>2026-03-26T17:30:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/dda/</loc>
@@ -89,23 +62,11 @@
     <loc>http://localhost:1313/posts/3060.5/</loc>
     <lastmod>2026-03-17T10:37:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3060.5/</loc>
-    <lastmod>2026-03-17T10:37:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/emoji/</loc>
-    <lastmod>2026-03-16T14:57:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/emoji/</loc>
     <lastmod>2026-03-16T14:57:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/3060p3/</loc>
     <lastmod>2026-03-14T10:37:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3060p3/</loc>
-    <lastmod>2026-03-14T10:37:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/history-today/</loc>
-    <lastmod>2026-03-12T00:00:00+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/history-today/</loc>
     <lastmod>2026-03-12T00:00:00+08:00</lastmod>
@@ -113,35 +74,17 @@
     <loc>http://localhost:1313/posts/3060.4/</loc>
     <lastmod>2026-03-03T10:37:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3060.4/</loc>
-    <lastmod>2026-03-03T10:37:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3060.3/</loc>
-    <lastmod>2026-02-03T20:37:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3060.3/</loc>
     <lastmod>2026-02-03T20:37:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/3060.2/</loc>
     <lastmod>2026-01-24T10:30:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3060.2/</loc>
-    <lastmod>2026-01-24T10:30:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3003.1/</loc>
-    <lastmod>2026-01-22T16:30:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3003.1/</loc>
     <lastmod>2026-01-22T16:30:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/3060.1/</loc>
     <lastmod>2026-01-06T10:30:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3060.1/</loc>
-    <lastmod>2026-01-06T10:30:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3200.f3/</loc>
-    <lastmod>2025-12-11T07:07:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/3200.f3/</loc>
     <lastmod>2025-12-11T07:07:34+08:00</lastmod>
@@ -152,13 +95,7 @@
     <loc>http://localhost:1313/posts/3200.f2/</loc>
     <lastmod>2025-11-27T13:33:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3200.f2/</loc>
-    <lastmod>2025-11-27T13:33:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3200.f1/</loc>
-    <lastmod>2025-11-21T13:29:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3200.f1/</loc>
     <lastmod>2025-11-21T13:29:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/csc3001/</loc>
@@ -167,17 +104,8 @@
     <loc>http://localhost:1313/posts/3001.8/</loc>
     <lastmod>2025-11-17T12:19:24+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3001.8/</loc>
-    <lastmod>2025-11-17T12:19:24+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3001.7/</loc>
     <lastmod>2025-11-13T09:24:24+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3001.7/</loc>
-    <lastmod>2025-11-13T09:24:24+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/phy2/</loc>
-    <lastmod>2025-11-06T14:29:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/phy2/</loc>
     <lastmod>2025-11-06T14:29:34+08:00</lastmod>
@@ -191,23 +119,11 @@
     <loc>http://localhost:1313/posts/3001.6/</loc>
     <lastmod>2025-10-28T17:30:24+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3001.6/</loc>
-    <lastmod>2025-10-28T17:30:24+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3001.5/</loc>
     <lastmod>2025-10-14T12:30:24+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3001.5/</loc>
-    <lastmod>2025-10-14T12:30:24+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3001.4/</loc>
-    <lastmod>2025-10-11T12:16:24+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3001.4/</loc>
     <lastmod>2025-10-11T12:16:24+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/phy1/</loc>
-    <lastmod>2025-09-16T11:29:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/phy1/</loc>
     <lastmod>2025-09-16T11:29:34+08:00</lastmod>
@@ -215,17 +131,8 @@
     <loc>http://localhost:1313/posts/3200.2/</loc>
     <lastmod>2025-09-15T18:29:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3200.2/</loc>
-    <lastmod>2025-09-15T18:29:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3001.3/</loc>
-    <lastmod>2025-09-11T11:31:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3001.3/</loc>
     <lastmod>2025-09-11T11:31:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3001.2/</loc>
-    <lastmod>2025-09-02T13:31:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/3001.2/</loc>
     <lastmod>2025-09-02T13:31:34+08:00</lastmod>
@@ -233,22 +140,10 @@
     <loc>http://localhost:1313/posts/3200.1/</loc>
     <lastmod>2025-09-01T18:29:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/3200.1/</loc>
-    <lastmod>2025-09-01T18:29:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/3001.1/</loc>
-    <lastmod>2025-08-31T11:29:34+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/3001.1/</loc>
     <lastmod>2025-08-31T11:29:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/streamliturl/</loc>
-    <lastmod>2025-08-31T10:50:30+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/streamliturl/</loc>
-    <lastmod>2025-08-31T10:50:30+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/help/</loc>
     <lastmod>2025-08-31T10:50:30+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E5%B8%AE%E5%8A%A9/</loc>
@@ -257,26 +152,11 @@
     <loc>http://localhost:1313/posts/autorelease/</loc>
     <lastmod>2025-04-25T15:43:45+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/autorelease/</loc>
-    <lastmod>2025-04-25T15:43:45+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/brainstorm/</loc>
     <lastmod>2025-04-10T17:15:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/brainstorm/</loc>
-    <lastmod>2025-04-10T17:15:34+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/lgu/</loc>
-    <lastmod>2024-12-09T14:23:58+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/lgu/</loc>
     <lastmod>2024-12-09T14:23:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/help/</loc>
-    <lastmod>2024-12-09T14:23:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/1003.6/</loc>
-    <lastmod>2024-11-29T14:15:34+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/1003.6/</loc>
     <lastmod>2024-11-29T14:15:34+08:00</lastmod>
@@ -284,20 +164,11 @@
     <loc>http://localhost:1313/tags/csc1003/</loc>
     <lastmod>2024-11-29T14:15:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/assignment2/</loc>
-    <lastmod>2024-10-31T14:49:58+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/assignment2/</loc>
-    <lastmod>2024-10-31T14:49:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/exercises/</loc>
     <lastmod>2024-10-31T14:49:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E7%BB%83%E4%B9%A0/</loc>
     <lastmod>2024-10-31T14:49:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/1003.5/</loc>
-    <lastmod>2024-10-22T17:23:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/1003.5/</loc>
     <lastmod>2024-10-22T17:23:58+08:00</lastmod>
@@ -305,58 +176,30 @@
     <loc>http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/</loc>
     <lastmod>2024-10-22T17:23:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/whisper/</loc>
-    <lastmod>2024-10-21T00:26:58+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/whisper/</loc>
     <lastmod>2024-10-21T00:26:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/1003.4/</loc>
     <lastmod>2024-10-19T23:56:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/1003.4/</loc>
-    <lastmod>2024-10-19T23:56:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/assignment1/</loc>
-    <lastmod>2024-09-22T15:49:58+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/assignment1/</loc>
     <lastmod>2024-09-22T15:49:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/oop/</loc>
-    <lastmod>2024-09-12T11:28:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/oop/</loc>
     <lastmod>2024-09-12T11:28:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/1003.2/</loc>
-    <lastmod>2024-09-11T16:10:58+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/1003.2/</loc>
     <lastmod>2024-09-11T16:10:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/1003.1/</loc>
-    <lastmod>2024-09-11T11:27:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/1003.1/</loc>
     <lastmod>2024-09-11T11:27:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/web/</loc>
-    <lastmod>2024-09-11T09:26:58+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/web/</loc>
-    <lastmod>2024-09-11T09:26:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts_en/outlook/</loc>
     <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/outlook/</loc>
     <lastmod>2024-09-11T09:26:58+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts_en/weblog_deploy/</loc>
-  </url><url>
     <loc>http://localhost:1313/posts/weblog_deploy/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/technology/</loc>
   </url>
 </urlset>

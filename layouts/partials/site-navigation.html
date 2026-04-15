@@ -20,10 +20,8 @@
           {{ end }}
         </ul>
       {{ end }}
-      {{ $isEnPosts := or (eq .Section "posts_EN") (in .RelPermalink "/posts_en/") }}
-      {{ $isEnPostsRoot := eq .RelPermalink ("/posts_en/" | relURL) }}
-      {{ if and (not .IsHome) (not $isEnPostsRoot) }}
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="{{ cond $isEnPosts ("search_en/" | relURL) ("search/" | relURL) }}">
+      {{ if not .IsHome }}
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="{{ "search/" | relURL }}">
         <input
           type="search"
           name="q"

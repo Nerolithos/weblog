@@ -349,58 +349,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -434,7 +382,6 @@
     
 
     
-
 
   
   <header>
@@ -491,8 +438,6 @@
         </ul>
       
       
-      
-      
       <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
@@ -515,14 +460,8 @@
 
       <div class="tc-l pv3 ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-          
-            CSC3060
-          
+          CSC3060
         </h1>
-        
-          
-        
-        
         
         
       </div>
@@ -566,29 +505,6 @@
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060q/" class="link black dim">
-        💯 CSC3060 Quiz Q&amp;A
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-04-07 |
-      📝 4970 字 |
-      ⏱️ 24 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060q/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3060.6/" class="link black dim">
@@ -604,29 +520,6 @@
       CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理
     </div>
     <a href="http://localhost:1313/posts/3060.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.6/" class="link black dim">
-        💻 CSC3060 Week 10-11 Memory Hierarchy
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-04-02 |
-      📝 5465 字 |
-      ⏱️ 11 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -658,29 +551,6 @@
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.5/" class="link black dim">
-        💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-17 |
-      📝 3431 字 |
-      ⏱️ 7 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3060p3/" class="link black dim">
@@ -696,29 +566,6 @@
       CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等
     </div>
     <a href="http://localhost:1313/posts/3060p3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060p3/" class="link black dim">
-        💻 CSC3060 Project: Code Scheduling
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-14 |
-      📝 2013 字 |
-      ⏱️ 10 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3060 Project 3: instruction scheduling, DAG dependency graphs, and related topics.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060p3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -750,29 +597,6 @@
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.4/" class="link black dim">
-        💻 CSC3060 Week 6-7 Processor SW and HW
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-03 |
-      📝 2078 字 |
-      ⏱️ 10 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3060.3/" class="link black dim">
@@ -788,29 +612,6 @@
       CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器
     </div>
     <a href="http://localhost:1313/posts/3060.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.3/" class="link black dim">
-        💻 CSC3060 Week 5 Continuation of Machine Level Programming
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-02-03 |
-      📝 575 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3060 Week 5: continuing machine-level code, with calling conventions and registers.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -842,29 +643,6 @@
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.2/" class="link black dim">
-        💻 CSC3060 Week 3-4 More about Computer System Fundamentals
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-01-24 |
-      📝 3642 字 |
-      ⏱️ 18 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3060.1/" class="link black dim">
@@ -880,29 +658,6 @@
       CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识
     </div>
     <a href="http://localhost:1313/posts/3060.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.1/" class="link black dim">
-        💻 CSC3060 Week 1-2 Introduction to Computer System
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-01-06 |
-      📝 5443 字 |
-      ⏱️ 11 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3060 Week 1–2 at CUHKSZ: an introduction to the hardware and software foundations of computer systems.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 

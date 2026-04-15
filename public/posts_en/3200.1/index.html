@@ -353,58 +353,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -495,9 +443,7 @@
         </ul>
       
       
-      
-      
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
           name="q"
@@ -1042,64 +988,6 @@ Example:</li>
     <aside class="w-30-l mt6-l">
 
 
-  
-  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
-    <div class="post-toc-header">
-      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
-      <span class="post-toc-header-title">menu</span>
-    </div>
-    <p class="f5 b mb2">目录</p>
-    <div class="post-toc-inner">
-      <nav id="TableOfContents">
-  <ul>
-    <li><a href="#csc3200-lec-1-2-introduction-to-c">CSC3200 LEC 1-2 Introduction to C++</a>
-      <ul>
-        <li><a href="#1-how-do-you-run-it">1. How Do You Run It?</a>
-          <ul>
-            <li><a href="#multi-file-compilation">Multi-File Compilation</a></li>
-          </ul>
-        </li>
-        <li><a href="#2-data-types-operators-and-naming-rules">2. Data Types, Operators, and Naming Rules</a>
-          <ul>
-            <li><a href="#data-types">Data Types</a></li>
-            <li><a href="#operators">Operators</a></li>
-            <li><a href="#naming-rules">Naming Rules</a></li>
-          </ul>
-        </li>
-        <li><a href="#3-standard-io">3. Standard I/O</a>
-          <ul>
-            <li><a href="#cout">cout</a></li>
-            <li><a href="#-stream-insertion-operator"><code>&lt;&lt;</code> (stream insertion operator)</a></li>
-            <li><a href="#endl">endl</a></li>
-            <li><a href="#-stream-extraction-operator"><code>&gt;&gt;</code> (stream extraction operator)</a></li>
-          </ul>
-        </li>
-        <li><a href="#-4-function-definition-and-invocation">## 4. Function Definition and Invocation</a></li>
-        <li><a href="#-5-conditional-control">## 5. Conditional Control</a></li>
-        <li><a href="#-6-loops">## 6. Loops</a>
-          <ul>
-            <li><a href="#for-loop"><code>for</code> Loop</a></li>
-            <li><a href="#while-loop"><code>while</code> Loop</a></li>
-            <li><a href="#do-while-loop"><code>do-while</code> Loop</a></li>
-          </ul>
-        </li>
-        <li><a href="#7-addresses-pointers-references-and-passing">7. Addresses, Pointers, References, and Passing</a></li>
-        <li><a href="#8-classes-and-objects-instances--oop">8. Classes and Objects (Instances) — OOP</a>
-          <ul>
-            <li><a href="#interfaceimplementation-separation">Interface–Implementation Separation</a></li>
-            <li><a href="#the-this-pointer">The <code>this</code> Pointer</a></li>
-            <li><a href="#rule-of-three">Rule of Three</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-    </div>
-  </nav>
-  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
-  
-
 
 
 
@@ -1120,25 +1008,6 @@ Example:</li>
   </article>
 
     </main>
-    
-      
-<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
-  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
-    <span class="liquid-dock-main-dot"></span>
-  </button>
-  <div class="liquid-dock-menu">
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
-      <span class="liquid-dock-icon">🔍</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
-      <span class="liquid-dock-icon">☾</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
-      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
-    </button>
-  </div>
-</div>
-
     
     <footer class="custom-footer">
   <p>&copy; Lithos&#39; Blog 2026</p>

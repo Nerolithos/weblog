@@ -349,58 +349,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -434,7 +382,6 @@
     
 
     
-
 
   
   <header>
@@ -491,8 +438,6 @@
         </ul>
       
       
-      
-      
       <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
@@ -515,14 +460,8 @@
 
       <div class="tc-l pv3 ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-          
-            CSC3200
-          
+          CSC3200
         </h1>
-        
-          
-        
-        
         
         
       </div>
@@ -539,29 +478,6 @@
   </article>
   <div class="mw8 center">
     <section class="flex-ns flex-wrap justify-around mt5">
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.f3/" class="link black dim">
-        💯 CSC3200 Final Revision C&#43;&#43; final revision handout
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-12-11 |
-      📝 6510 字 |
-      ⏱️ 13 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3200 is a new CUHKSZ course, so we use a CSC3002 paper as a revision reference.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.f3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
       
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
@@ -612,29 +528,6 @@
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.f2/" class="link black dim">
-        💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Nonlinear)
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-11-27 |
-      📝 12741 字 |
-      ⏱️ 26 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3200 at CUHKSZ: final review of trees, heaps, and graphs.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.f2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3200.f1/" class="link black dim">
@@ -650,29 +543,6 @@
       CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构
     </div>
     <a href="http://localhost:1313/posts/3200.f1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.f1/" class="link black dim">
-        💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-11-21 |
-      📝 5671 字 |
-      ⏱️ 12 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3200 at CUHKSZ: linked lists, stacks, queues, maps, and sets.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.f1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -704,29 +574,6 @@
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.2/" class="link black dim">
-        💻 CSC3200 LEC3-5 Intermediate C&#43;&#43;
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-09-15 |
-      📝 1605 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      The second-year CUHKSZ course CSC3200 on arrays, pointers, and stream operations in C/C++.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3200.1/" class="link black dim">
@@ -742,29 +589,6 @@
       CUHKSZ 大二课程 CSC3200 关于 C++ 基础语法和 OOP 的介绍
     </div>
     <a href="http://localhost:1313/posts/3200.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.1/" class="link black dim">
-        💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-09-01 |
-      📝 2419 字 |
-      ⏱️ 5 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introduction to basic C++ syntax and OOP in the second-year CUHKSZ course CSC3200.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 

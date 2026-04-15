@@ -353,58 +353,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -495,9 +443,7 @@
         </ul>
       
       
-      
-      
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
           name="q"
@@ -1362,80 +1308,6 @@ Below is an example of instantiating a hash set to <strong>store points</strong>
     <aside class="w-30-l mt6-l">
 
 
-  
-  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
-    <div class="post-toc-header">
-      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
-      <span class="post-toc-header-title">menu</span>
-    </div>
-    <p class="f5 b mb2">目录</p>
-    <div class="post-toc-inner">
-      <nav id="TableOfContents">
-  <ul>
-    <li><a href="#c-data-structures-linear-linked-lists-stacks-queues-maps-and-sets">C++ Data Structures (Linear): Linked Lists, Stacks, Queues, Maps, and Sets</a></li>
-    <li><a href="#i-linked-lists-array-vs-linked-list-and-pointer-manipulation">I. Linked Lists: “Array vs. Linked List” and Pointer Manipulation</a>
-      <ul>
-        <li><a href="#abstract-definition">Abstract Definition</a></li>
-        <li><a href="#core-code-template">Core Code Template</a></li>
-        <li><a href="#typical-member-functions">Typical Member Functions</a>
-          <ul>
-            <li><a href="#insert-data-after-node-p">Insert <code>data</code> after node <code>p</code></a></li>
-            <li><a href="#find-the-node-pointer-whose-value-is-data">Find the node (pointer) whose value is <code>data</code></a></li>
-            <li><a href="#delete-the-node-with-value-data-by-first-finding-its-predecessor">Delete the node with value <code>data</code> by first finding its <strong>predecessor</strong></a></li>
-          </ul>
-        </li>
-        <li><a href="#complexity-compared-with-arrays">Complexity Compared with Arrays</a></li>
-        <li><a href="#things-to-watch-for">Things to watch for</a></li>
-      </ul>
-    </li>
-    <li><a href="#ii-stack-lifo-array-version-and-linked-list-version">II. Stack: LIFO, Array Version, and Linked-List Version</a>
-      <ul>
-        <li><a href="#abstract-definition-1">Abstract Definition</a></li>
-        <li><a href="#stack-class-template">Stack Class Template</a></li>
-        <li><a href="#array-implementation-sequential-stack">Array Implementation (Sequential Stack)</a></li>
-        <li><a href="#linked-list-implementation-linked-stack">Linked-List Implementation (Linked Stack)</a></li>
-        <li><a href="#things-to-watch-for-1">Things to watch for</a></li>
-      </ul>
-    </li>
-    <li><a href="#iii-queue-fifo-circular-array-and-linked-list-version">III. Queue: FIFO, Circular Array, and Linked-List Version</a>
-      <ul>
-        <li><a href="#abstract-definition-2">Abstract Definition</a></li>
-        <li><a href="#linked-list-implementation-with-front--back-pointers">Linked-List Implementation (with <code>front</code> / <code>back</code> pointers)</a></li>
-        <li><a href="#circular-array-implementation-sequential-queue">Circular-Array Implementation (Sequential Queue)</a></li>
-        <li><a href="#things-to-watch-for-2">Things to watch for</a></li>
-      </ul>
-    </li>
-    <li><a href="#iv-maps-keyvalue-pairs-hash-functions-and-buckets">IV. Maps: Key–Value Pairs, Hash Functions, and Buckets</a>
-      <ul>
-        <li><a href="#abstract-definition-3">Abstract Definition</a></li>
-        <li><a href="#vector-dynamic-array-implementation-linear-search--binary-search">Vector (Dynamic Array) Implementation: Linear Search / Binary Search</a></li>
-        <li><a href="#hash-table-unordered_map-implementation">Hash-Table (<code>unordered_map</code>) Implementation</a></li>
-        <li><a href="#instantiating-stdunordered_map">Instantiating <code>std::unordered_map</code></a></li>
-        <li><a href="#comparing-map-implementations">Comparing Map Implementations</a></li>
-        <li><a href="#things-to-watch-for-3">Things to watch for</a></li>
-      </ul>
-    </li>
-    <li><a href="#v-sets-set-operations-and-implementations">V. Sets: Set Operations and Implementations</a>
-      <ul>
-        <li><a href="#abstract-definition-4">Abstract Definition</a></li>
-        <li><a href="#comparing-four-implementation-strategies">Comparing Four Implementation Strategies</a>
-          <ul>
-            <li><a href="#1-pointer--linked-list-implementation">1. Pointer / Linked-List Implementation</a></li>
-            <li><a href="#2-bst-implementation-stdset-in-the-standard-library">2. BST Implementation (<code>std::set</code> in the standard library):</a></li>
-            <li><a href="#3-hash-based-implementation-stdunordered_set">3. Hash-Based Implementation (<code>std::unordered_set</code>):</a></li>
-            <li><a href="#4-bit-vector-sets-stdbitset-and-set-operations">4. Bit-Vector Sets (<code>std::bitset</code>) and Set Operations:</a></li>
-          </ul>
-        </li>
-        <li><a href="#things-to-watch-for-4">Things to watch for</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-    </div>
-  </nav>
-  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
-  
-
 
 
 
@@ -1472,25 +1344,6 @@ Below is an example of instantiating a hash set to <strong>store points</strong>
   </article>
 
     </main>
-    
-      
-<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
-  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
-    <span class="liquid-dock-main-dot"></span>
-  </button>
-  <div class="liquid-dock-menu">
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
-      <span class="liquid-dock-icon">🔍</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
-      <span class="liquid-dock-icon">☾</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
-      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
-    </button>
-  </div>
-</div>
-
     
     <footer class="custom-footer">
   <p>&copy; Lithos&#39; Blog 2026</p>

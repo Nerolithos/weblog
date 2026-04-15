@@ -349,58 +349,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -434,7 +382,6 @@
     
 
     
-
 
   
   <header>
@@ -491,8 +438,6 @@
         </ul>
       
       
-      
-      
       <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
@@ -515,14 +460,8 @@
 
       <div class="tc-l pv3 ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-          
-            Tags
-          
+          Tags
         </h1>
-        
-          
-        
-        
         
         
       </div>
@@ -570,27 +509,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/pet/" class="link black dim">
-        🐈 ArkPets suspense puzzle game (final version)
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-04-11 |
-      📝 0 字 |
-      ⏱️ 0 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&rsquo; spine-cpp locally, and turned into a full-on suspense game.
-    </div>
-    <a href="http://localhost:1313/posts_en/pet/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/dda3003/" class="link black dim">
@@ -612,27 +530,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/dda3003/" class="link black dim">
-        🎨 DDA3003 Visual Analytics of Global Energy Transition Patterns (Prototype)
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-04-08 |
-      📝 14 字 |
-      ⏱️ 1 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      DDA3003 Group4 Project Prototype, show global and country-wise renewable energy share on D3 globe, and cluster analysis.
-    </div>
-    <a href="http://localhost:1313/posts_en/dda3003/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/emoji/" class="link black dim">
@@ -648,27 +545,6 @@
       Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game
     </div>
     <a href="http://localhost:1313/posts/emoji/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/emoji/" class="link black dim">
-        🎮 Super &#39;Emojio&#39;
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-16 |
-      📝 0 字 |
-      ⏱️ 0 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game
-    </div>
-    <a href="http://localhost:1313/posts_en/emoji/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -703,27 +579,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060q/" class="link black dim">
-        💯 CSC3060 Quiz Q&amp;A
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-04-07 |
-      📝 4970 字 |
-      ⏱️ 24 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060q/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3060.6/" class="link black dim">
@@ -739,27 +594,6 @@
       CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理
     </div>
     <a href="http://localhost:1313/posts/3060.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.6/" class="link black dim">
-        💻 CSC3060 Week 10-11 Memory Hierarchy
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-04-02 |
-      📝 5465 字 |
-      ⏱️ 11 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -787,27 +621,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.5/" class="link black dim">
-        💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-17 |
-      📝 3431 字 |
-      ⏱️ 7 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3060p3/" class="link black dim">
@@ -823,27 +636,6 @@
       CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等
     </div>
     <a href="http://localhost:1313/posts/3060p3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060p3/" class="link black dim">
-        💻 CSC3060 Project: Code Scheduling
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-14 |
-      📝 2013 字 |
-      ⏱️ 10 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3060 Project 3: instruction scheduling, DAG dependency graphs, and related topics.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060p3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -871,27 +663,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.4/" class="link black dim">
-        💻 CSC3060 Week 6-7 Processor SW and HW
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-03 |
-      📝 2078 字 |
-      ⏱️ 10 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3060.3/" class="link black dim">
@@ -907,27 +678,6 @@
       CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器
     </div>
     <a href="http://localhost:1313/posts/3060.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.3/" class="link black dim">
-        💻 CSC3060 Week 5 Continuation of Machine Level Programming
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-02-03 |
-      📝 575 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3060 Week 5: continuing machine-level code, with calling conventions and registers.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -955,27 +705,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.2/" class="link black dim">
-        💻 CSC3060 Week 3-4 More about Computer System Fundamentals
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-01-24 |
-      📝 3642 字 |
-      ⏱️ 18 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3060.1/" class="link black dim">
@@ -995,54 +724,12 @@
 </div>
 
         
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3060.1/" class="link black dim">
-        💻 CSC3060 Week 1-2 Introduction to Computer System
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-01-06 |
-      📝 5443 字 |
-      ⏱️ 11 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3060 Week 1–2 at CUHKSZ: an introduction to the hardware and software foundations of computer systems.
-    </div>
-    <a href="http://localhost:1313/posts_en/3060.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
       
         <h2 class="f1">
           <a href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/" class="link blue hover-black">
             Tag: 技术
           </a>
         </h2>
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/gab/" class="link black dim">
-        🛠️ Getting Started with GitHub Action Bot for Repository Automation
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-04-07 |
-      📝 1912 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Using my &lsquo;On This Day in History&rsquo; project as an example, this post explains how a CS amateur/enthusiast university student can begin using GitHub Actions Bot to automate a remote repository, along with the common pitfalls.
-    </div>
-    <a href="http://localhost:1313/posts_en/gab/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
@@ -1067,27 +754,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/whisper/" class="link black dim">
-        📢 How can you batch-transcribe audio into text efficiently?
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-10-21 |
-      📝 238 字 |
-      ⏱️ 1 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      How to transcribe local audio files from the CLI without using an LLM.
-    </div>
-    <a href="http://localhost:1313/posts_en/whisper/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/whisper/" class="link black dim">
@@ -1103,27 +769,6 @@
       如何简单的不用 LLM，在 CLI 将本地音频文件转文字。
     </div>
     <a href="http://localhost:1313/posts/whisper/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/outlook/" class="link black dim">
-        🌐 Attempting to Fetch CUHKSZ Mailbox Data
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-09-11 |
-      📝 947 字 |
-      ⏱️ 2 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      A shareable but unresolved attempt to automate LGU mailbox access.
-    </div>
-    <a href="http://localhost:1313/posts_en/outlook/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1200,27 +845,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3003.2/" class="link black dim">
-        🎨 DDA3003 Midterm revision
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-03-26 |
-      📝 2893 字 |
-      ⏱️ 14 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.
-    </div>
-    <a href="http://localhost:1313/posts_en/3003.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3003.1/" class="link black dim">
@@ -1240,54 +864,12 @@
 </div>
 
         
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3003.1/" class="link black dim">
-        🎨 DDA3003 Introduction to D3
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2026-01-22 |
-      📝 762 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introduction to D3.js in CUHKSZ elective DDA3003 Visualization — an HTML-based visualization tool.
-    </div>
-    <a href="http://localhost:1313/posts_en/3003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
       
         <h2 class="f1">
           <a href="http://localhost:1313/tags/csc3200/" class="link blue hover-black">
             Tag: CSC3200
           </a>
         </h2>
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.f3/" class="link black dim">
-        💯 CSC3200 Final Revision C&#43;&#43; final revision handout
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-12-11 |
-      📝 6510 字 |
-      ⏱️ 13 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3200 is a new CUHKSZ course, so we use a CSC3002 paper as a revision reference.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.f3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
@@ -1333,27 +915,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.f2/" class="link black dim">
-        💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Nonlinear)
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-11-27 |
-      📝 12741 字 |
-      ⏱️ 26 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3200 at CUHKSZ: final review of trees, heaps, and graphs.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.f2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3200.f1/" class="link black dim">
@@ -1369,27 +930,6 @@
       CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构
     </div>
     <a href="http://localhost:1313/posts/3200.f1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.f1/" class="link black dim">
-        💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-11-21 |
-      📝 5671 字 |
-      ⏱️ 12 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CSC3200 at CUHKSZ: linked lists, stacks, queues, maps, and sets.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.f1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1417,27 +957,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.2/" class="link black dim">
-        💻 CSC3200 LEC3-5 Intermediate C&#43;&#43;
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-09-15 |
-      📝 1605 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      The second-year CUHKSZ course CSC3200 on arrays, pointers, and stream operations in C/C++.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3200.1/" class="link black dim">
@@ -1453,27 +972,6 @@
       CUHKSZ 大二课程 CSC3200 关于 C++ 基础语法和 OOP 的介绍
     </div>
     <a href="http://localhost:1313/posts/3200.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3200.1/" class="link black dim">
-        💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-09-01 |
-      📝 2419 字 |
-      ⏱️ 5 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introduction to basic C++ syntax and OOP in the second-year CUHKSZ course CSC3200.
-    </div>
-    <a href="http://localhost:1313/posts_en/3200.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1508,27 +1006,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3001.8/" class="link black dim">
-        🧮 CSC3001 LEC17-19 function mapping
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-11-17 |
-      📝 968 字 |
-      ⏱️ 5 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3001: function mappings and division rules, and how they illuminate permutations, stars-and-bars, and Catalan numbers.
-    </div>
-    <a href="http://localhost:1313/posts_en/3001.8/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3001.7/" class="link black dim">
@@ -1544,27 +1021,6 @@
       CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理
     </div>
     <a href="http://localhost:1313/posts/3001.7/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3001.7/" class="link black dim">
-        🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-11-13 |
-      📝 1177 字 |
-      ⏱️ 6 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3001: identities of binomial coefficients, extensions of inclusion–exclusion, and the pigeonhole principle.
-    </div>
-    <a href="http://localhost:1313/posts_en/3001.7/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1592,27 +1048,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3001.6/" class="link black dim">
-        🧮 CSC3001 LEC14-16 Graph
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-10-28 |
-      📝 1419 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3001 图论
-    </div>
-    <a href="http://localhost:1313/posts_en/3001.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3001.5/" class="link black dim">
@@ -1628,48 +1063,6 @@
       CUHKSZ CSC3001 最大公因数问题与模问题
     </div>
     <a href="http://localhost:1313/posts/3001.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3001.5/" class="link black dim">
-        🧮 CSC3001 LEC11-13 GCD and Mod
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-10-14 |
-      📝 1485 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      CUHKSZ CSC3001: greatest common divisors and modular arithmetic.
-    </div>
-    <a href="http://localhost:1313/posts_en/3001.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3001.4/" class="link black dim">
-        🧮 CSC3001 LEC8-10 Recursion
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-10-11 |
-      📝 1633 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      From proof techniques to recursive thinking in CUHKSZ CSC3001, together with methods for solving recurrence relations
-    </div>
-    <a href="http://localhost:1313/posts_en/3001.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1697,27 +1090,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3001.3/" class="link black dim">
-        🧮 CSC3001 LEC6-7 Mathematical Induction
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-09-11 |
-      📝 737 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      More proof techniques in CUHKSZ CSC3001
-    </div>
-    <a href="http://localhost:1313/posts_en/3001.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3001.3/" class="link black dim">
@@ -1739,27 +1111,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3001.2/" class="link black dim">
-        🧮 CSC3001 LEC3-5 Set Theory, FOL, and Basic Proof Methods
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-09-02 |
-      📝 1104 字 |
-      ⏱️ 6 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An extension of propositional logic in CUHKSZ CSC3001: predicate logic
-    </div>
-    <a href="http://localhost:1313/posts_en/3001.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/3001.2/" class="link black dim">
@@ -1775,27 +1126,6 @@
       CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑
     </div>
     <a href="http://localhost:1313/posts/3001.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/3001.1/" class="link black dim">
-        🧮 CSC3001 LEC1-2 Introduction to Discrete Mathematics
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-08-31 |
-      📝 941 字 |
-      ⏱️ 2 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introductory guide to CSC3001, a second-year course at CUHKSZ
-    </div>
-    <a href="http://localhost:1313/posts_en/3001.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1830,27 +1160,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/phy2/" class="link black dim">
-        ⚛️ PHY1001 LEC10-15 Rotational Kinematics
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-11-06 |
-      📝 645 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Important takeaways from PHY1001 at CUHKSZ on rotational motion about an axis.
-    </div>
-    <a href="http://localhost:1313/posts_en/phy2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/phy2/" class="link black dim">
@@ -1872,27 +1181,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/phy1/" class="link black dim">
-        ⚛️ PHY1001 LEC1-5 Basic Kinematics and Newtonian Mechanics
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-09-16 |
-      📝 422 字 |
-      ⏱️ 2 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Important takeaways from PHY1001 at CUHKSZ on basic kinematics and Newtonian mechanics.
-    </div>
-    <a href="http://localhost:1313/posts_en/phy1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/phy1/" class="link black dim">
@@ -1908,34 +1196,6 @@
       CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway
     </div>
     <a href="http://localhost:1313/posts/phy1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-      
-        <h2 class="f1">
-          <a href="http://localhost:1313/tags/help/" class="link blue hover-black">
-            Tag: Help
-          </a>
-        </h2>
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/streamliturl/" class="link black dim">
-        🌐 How to personalize Streamlit URL?
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-08-31 |
-      📝 691 字 |
-      ⏱️ 2 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An attempt to point a Streamlit app to a custom domain without using a public VPS.
-    </div>
-    <a href="http://localhost:1313/posts_en/streamliturl/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1989,54 +1249,12 @@
 </div>
 
         
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/autorelease/" class="link black dim">
-        🌐 Automation of Ssg Post Release
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2025-04-25 |
-      📝 614 字 |
-      ⏱️ 2 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      How can blog publishing in an SSG setup (Hugo + Cloudflare) be semi-automated?
-    </div>
-    <a href="http://localhost:1313/posts_en/autorelease/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
       
         <h2 class="f1">
           <a href="http://localhost:1313/tags/csc1003/" class="link blue hover-black">
             Tag: CSC1003
           </a>
         </h2>
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/1003.6/" class="link black dim">
-        💻 CSC1003 Final Review
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-11-29 |
-      📝 1460 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      A summary of useful Java syntax and common pitfalls.
-    </div>
-    <a href="http://localhost:1313/posts_en/1003.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
@@ -2061,27 +1279,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/assignment2/" class="link black dim">
-        💻 CSC1003 Assignment 2: Two-Dimensional Arrays
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-10-31 |
-      📝 925 字 |
-      ⏱️ 5 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Worked examples for the second CSC1003-Java assignment.
-    </div>
-    <a href="http://localhost:1313/posts_en/assignment2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/assignment2/" class="link black dim">
@@ -2097,27 +1294,6 @@
       CSC1003-JAVA 的第二份作业例题讲解。
     </div>
     <a href="http://localhost:1313/posts/assignment2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/1003.5/" class="link black dim">
-        💻 CSC1003 LEC13-15 Recursion
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-10-22 |
-      📝 712 字 |
-      ⏱️ 2 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introduction to recursion, the stack and heap, and stack overflow.
-    </div>
-    <a href="http://localhost:1313/posts_en/1003.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -2166,48 +1342,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/1003.4/" class="link black dim">
-        💻 CSC1003 LEC10-12 Midterm Revision
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-10-19 |
-      📝 600 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Midterm review and mock questions.
-    </div>
-    <a href="http://localhost:1313/posts_en/1003.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/assignment1/" class="link black dim">
-        💻 CSC1003 Assignment 1 OJ Practice
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-09-22 |
-      📝 2230 字 |
-      ⏱️ 5 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      The first OJ programming practice for the first-year CUHKSZ course CSC1003.
-    </div>
-    <a href="http://localhost:1313/posts_en/assignment1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/assignment1/" class="link black dim">
@@ -2223,27 +1357,6 @@
       CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践
     </div>
     <a href="http://localhost:1313/posts/assignment1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/1003.2/" class="link black dim">
-        💻 CSC1003 TBL1 Networking and the History of Computing
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-09-11 |
-      📝 1314 字 |
-      ⏱️ 7 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Foundational material on networks and the Internet that the lecture largely skipped — LGU does not really offer a dedicated introductory networking course, so many students lack this background.
-    </div>
-    <a href="http://localhost:1313/posts_en/1003.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -2271,27 +1384,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/1003.1/" class="link black dim">
-        💻 CSC1003 LEC1~3 Functions, Data Types, and Computation
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-09-11 |
-      📝 1458 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introductory note to CSC1003 (Java) for first-year students at CUHKSZ.
-    </div>
-    <a href="http://localhost:1313/posts_en/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/1003.1/" class="link black dim">
@@ -2307,55 +1399,6 @@
       CUHKSZ 大一课程 CSC1003（Java） 的入门
     </div>
     <a href="http://localhost:1313/posts/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-      
-        <h2 class="f1">
-          <a href="http://localhost:1313/tags/exercises/" class="link blue hover-black">
-            Tag: Exercises
-          </a>
-        </h2>
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/assignment2/" class="link black dim">
-        💻 CSC1003 Assignment 2: Two-Dimensional Arrays
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-10-31 |
-      📝 925 字 |
-      ⏱️ 5 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      Worked examples for the second CSC1003-Java assignment.
-    </div>
-    <a href="http://localhost:1313/posts_en/assignment2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/assignment1/" class="link black dim">
-        💻 CSC1003 Assignment 1 OJ Practice
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-09-22 |
-      📝 2230 字 |
-      ⏱️ 5 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      The first OJ programming practice for the first-year CUHKSZ course CSC1003.
-    </div>
-    <a href="http://localhost:1313/posts_en/assignment1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -2418,27 +1461,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/1003.5/" class="link black dim">
-        💻 CSC1003 LEC13-15 Recursion
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-10-22 |
-      📝 712 字 |
-      ⏱️ 2 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introduction to recursion, the stack and heap, and stack overflow.
-    </div>
-    <a href="http://localhost:1313/posts_en/1003.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/1003.5/" class="link black dim">
@@ -2460,27 +1482,6 @@
         
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/1003.1/" class="link black dim">
-        💻 CSC1003 LEC1~3 Functions, Data Types, and Computation
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-09-11 |
-      📝 1458 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      An introductory note to CSC1003 (Java) for first-year students at CUHKSZ.
-    </div>
-    <a href="http://localhost:1313/posts_en/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
       <a href="http://localhost:1313/posts/1003.1/" class="link black dim">
@@ -2496,34 +1497,6 @@
       CUHKSZ 大一课程 CSC1003（Java） 的入门
     </div>
     <a href="http://localhost:1313/posts/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-      
-        <h2 class="f1">
-          <a href="http://localhost:1313/tags/technology/" class="link blue hover-black">
-            Tag: Technology
-          </a>
-        </h2>
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts_ENs</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts_en/weblog_deploy/" class="link black dim">
-        🌐 Manual for Deploying a Hugo Blog on Cloudflare
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 0001-01-01 |
-      📝 1718 字 |
-      ⏱️ 4 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      People often say that building a blog with GitHub and Cloudflare is cheap and easy. In practice, however, the process can be surprisingly full of pitfalls.
-    </div>
-    <a href="http://localhost:1313/posts_en/weblog_deploy/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 

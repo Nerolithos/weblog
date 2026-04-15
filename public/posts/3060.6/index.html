@@ -353,58 +353,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -497,8 +445,6 @@
           </li>
           
         </ul>
-      
-      
       
       
       <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
@@ -1239,15 +1185,7 @@
     <ul class="pa0 list">
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
-        </li>
-      
-        <li class="mb2">
           <a href="http://localhost:1313/posts/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
-        </li>
-      
-        <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
         </li>
       
         <li class="mb2">
@@ -1255,15 +1193,7 @@
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
-        </li>
-      
-        <li class="mb2">
           <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
-        </li>
-      
-        <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
         </li>
       
         <li class="mb2">
@@ -1271,23 +1201,11 @@
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
-        </li>
-      
-        <li class="mb2">
           <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
         </li>
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
-        </li>
-      
-        <li class="mb2">
           <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
-        </li>
-      
-        <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
         </li>
       
     </ul>
@@ -1311,9 +1229,9 @@
     <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
       <span class="liquid-dock-icon">☾</span>
     </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
-      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
-    </button>
+    <a href="https://bubble.nero-lithos.com" class="liquid-dock-item" data-dock-item target="_blank" rel="noopener noreferrer" aria-label="Bubble 解压空间">
+      <span class="liquid-dock-icon">🫧</span>
+    </a>
   </div>
 </div>
 

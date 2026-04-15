@@ -52,8 +52,8 @@
   <meta property="og:type" content="website">
 
   <meta itemprop="name" content="Posts_ENs">
-  <meta itemprop="datePublished" content="2026-04-07T13:30:34+08:00">
-  <meta itemprop="dateModified" content="2026-04-07T13:30:34+08:00">
+  <meta itemprop="datePublished" content="2026-04-11T20:08:00+08:00">
+  <meta itemprop="dateModified" content="2026-04-11T20:08:00+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Posts_ENs">
 
@@ -349,58 +349,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -525,32 +473,25 @@
       
   <article class="pa3 pa4-ns nested-copy-line-height">
     
-    
-    
     <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy mid-gray"></section>
 
     
     <section class="ph3 ph5-l center">
       
-        
-        
-        
-
-        
         <article class="cf pv4 bb b--black-10 flex-l items-start">
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
             </h2>
             <p class="gray f6 mb2">
-              2026-03-03 · 10 分钟阅读
+              2026-04-02 · 11 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
-              CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.
+              CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/3060.4/">阅读全文 →</a>
+              <a class="link dim" href="http://localhost:1313/posts_en/3060.6/">阅读全文 →</a>
             </p>
           </div>
 
@@ -558,33 +499,27 @@
           
             
               <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
-                <img src="http://localhost:1313/images/30604.jpg" alt="Posts_ENs"
+                <img src="http://localhost:1313/images/30606.jpg" alt="Posts_ENs"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
           
         </article>
-        
       
-        
-        
-        
-
-        
         <article class="cf pv4 bb b--black-10 flex-l items-start">
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3003.2/">🎨 DDA3003 Midterm revision</a>
             </h2>
             <p class="gray f6 mb2">
-              2026-02-03 · 3 分钟阅读
+              2026-03-26 · 14 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
-              CUHKSZ CSC3060 Week 5: continuing machine-level code, with calling conventions and registers.
+              CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/3060.3/">阅读全文 →</a>
+              <a class="link dim" href="http://localhost:1313/posts_en/3003.2/">阅读全文 →</a>
             </p>
           </div>
 
@@ -592,33 +527,27 @@
           
             
               <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
-                <img src="http://localhost:1313/images/30603.jpg" alt="Posts_ENs"
+                <img src="http://localhost:1313/images/30032.jpg" alt="Posts_ENs"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
           
         </article>
-        
       
-        
-        
-        
-
-        
         <article class="cf pv4 bb b--black-10 flex-l items-start">
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
             </h2>
             <p class="gray f6 mb2">
-              2026-01-24 · 18 分钟阅读
+              2026-03-17 · 7 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
-              CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).
+              CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/3060.2/">阅读全文 →</a>
+              <a class="link dim" href="http://localhost:1313/posts_en/3060.5/">阅读全文 →</a>
             </p>
           </div>
 
@@ -626,33 +555,27 @@
           
             
               <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
-                <img src="http://localhost:1313/images/30602.jpg" alt="Posts_ENs"
+                <img src="http://localhost:1313/images/30605.jpg" alt="Posts_ENs"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
           
         </article>
-        
       
-        
-        
-        
-
-        
         <article class="cf pv4 bb b--black-10 flex-l items-start">
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3003.1/">🎨 DDA3003 Introduction to D3</a>
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/emoji/">🎮 Super &#39;Emojio&#39;</a>
             </h2>
             <p class="gray f6 mb2">
-              2026-01-22 · 4 分钟阅读
+              2026-03-16 · 0 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
-              An introduction to D3.js in CUHKSZ elective DDA3003 Visualization — an HTML-based visualization tool.
+              Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts_en/3003.1/">阅读全文 →</a>
+              <a class="link dim" href="http://localhost:1313/posts_en/emoji/">阅读全文 →</a>
             </p>
           </div>
 
@@ -660,25 +583,85 @@
           
             
               <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
-                <img src="http://localhost:1313/images/30031.jpg" alt="Posts_ENs"
+                <img src="http://localhost:1313/images/emoji.jpg" alt="Posts_ENs"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
           
         </article>
-        
       
-        
-        
-        
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2026-03-14 · 10 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              CUHKSZ CSC3060 Project 3: instruction scheduling, DAG dependency graphs, and related topics.
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/3060p3/">阅读全文 →</a>
+            </p>
+          </div>
 
-        
+          
+          
+            
+              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
+                <img src="http://localhost:1313/images/3060p3.jpg" alt="Posts_ENs"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
+          
+        </article>
       
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts_en/history-today/">🕰️ Today in History</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2026-03-12 · 1 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              <div class="history-today">
+      <h2>历史上的今天 (04-15)</h2>
+      <ul class="history-today-list">
         
+          <li style="margin-bottom: 1em;"><strong>2021</strong> — A mass shooting occurred at a Fedex Ground facility in Indianapolis, Indiana, killing nine and injuring seven.</li>
         
+          <li style="margin-bottom: 1em;"><strong>2019</strong> — The cathedral of Notre-Dame de Paris in France is seriously damaged by a large fire.</li>
         
+          <li style="margin-bottom: 1em;"><strong>2014</strong> — In the worst massacre of the South Sudanese Civil War, more than 400 civilians are gunned down after seeking refuge in houses of worship as well as hospitals.</li>
+        
+          <li style="margin-bottom: 1em;"><strong>2013</strong> — Two bombs explode near the finish line at the Boston Marathon in Boston, Massachusetts, killing three people and injuring over 500 others.</li>
+        
+          <li style="margin-bottom: 1em;"><strong>2013</strong> — A wave of bombings across Iraq kills at least 75 people.</li>
+        
+      </ul>
+      <p style="margin-top: 2em; font-size: 0.9rem; color: #666;">
+        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。
+      </p>
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts_en/history-today/">阅读全文 →</a>
+            </p>
+          </div>
 
-        
+          
+          
+            
+              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts_en/">
+                <img src="http://localhost:1313/images/history.jpg" alt="Posts_ENs"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
+          
+        </article>
       
     </section>
     <ul class="pagination pagination-default">
@@ -707,7 +690,7 @@
         <a href="http://localhost:1313/posts_en/page/3/" aria-label="Next" class="page-link" role="button"><span aria-hidden="true">&raquo;</span></a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts_en/page/7/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
+        <a href="http://localhost:1313/posts_en/page/8/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
       </li>
     </ul></article>
 

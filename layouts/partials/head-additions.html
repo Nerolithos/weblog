@@ -288,59 +288,7 @@
 				} else if (action === 'theme') {
 					toggleTheme();
 				} else if (action === 'lang') {
-					// 中英切换：
-					// - 首页 /  <-> 英文列表 /posts_en/
-					// - 文章 /posts/... <-> /posts_en/...
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						// 统一去掉末尾斜杠，便于判断
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						// 首页与英文列表之间互相切换
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						// 其它页面：仅在路径片段中互换 posts 与 posts_en
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
+					// 预留：中英切换暂未实现
 				}
 				closeDock();
 			});

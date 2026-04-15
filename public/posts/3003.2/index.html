@@ -353,58 +353,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -497,8 +445,6 @@
           </li>
           
         </ul>
-      
-      
       
       
       <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
@@ -1052,15 +998,7 @@ Metadata 元数据: 描述数据的数据 (such as yaml/toml header)</li>
     <ul class="pa0 list">
       
         <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3003.2/">🎨 DDA3003 Midterm revision</a>
-        </li>
-      
-        <li class="mb2">
           <a href="http://localhost:1313/posts/3003.1/">🎨 DDA3003 Introduction to D3</a>
-        </li>
-      
-        <li class="mb2">
-          <a href="http://localhost:1313/posts_en/3003.1/">🎨 DDA3003 Introduction to D3</a>
         </li>
       
     </ul>
@@ -1084,9 +1022,9 @@ Metadata 元数据: 描述数据的数据 (such as yaml/toml header)</li>
     <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
       <span class="liquid-dock-icon">☾</span>
     </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
-      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
-    </button>
+    <a href="https://bubble.nero-lithos.com" class="liquid-dock-item" data-dock-item target="_blank" rel="noopener noreferrer" aria-label="Bubble 解压空间">
+      <span class="liquid-dock-icon">🫧</span>
+    </a>
   </div>
 </div>
 

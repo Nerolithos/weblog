@@ -353,58 +353,6 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
-					
-					
-					var currentPath = window.location.pathname || '/';
-
-					function getToggledLangPath(path) {
-						
-						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
-							path = path.slice(0, -1);
-						}
-
-						
-						if (path === '') {
-							return '/posts_en/';
-						}
-						if (path === '/') {
-							return '/posts_en/';
-						}
-						if (path === '/posts_en') {
-							return '/';
-						}
-
-						
-						var segments = path.split('/');
-						var changed = false;
-						for (var i = 0; i < segments.length; i++) {
-							if (segments[i] === 'posts_en') {
-								segments[i] = 'posts';
-								changed = true;
-								break;
-							}
-							if (segments[i] === 'posts') {
-								segments[i] = 'posts_en';
-								changed = true;
-								break;
-							}
-						}
-						if (!changed) {
-							return null;
-						}
-						var newPath = segments.join('/');
-						if (newPath.charAt(0) !== '/') {
-							newPath = '/' + newPath;
-						}
-						return newPath;
-					}
-
-					var toggledPath = getToggledLangPath(currentPath);
-					if (toggledPath) {
-						var search = window.location.search || '';
-						var hash = window.location.hash || '';
-						window.location.href = toggledPath + search + hash;
-					}
 				}
 				closeDock();
 			});
@@ -495,9 +443,7 @@
         </ul>
       
       
-      
-      
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
           name="q"
@@ -1794,136 +1740,6 @@ a) <code>[a, c, f, e, b, d, h, g]</code> 或 <code>[a, b, d, c, g, f, e, h]</cod
     <aside class="w-30-l mt6-l">
 
 
-  
-  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
-    <div class="post-toc-header">
-      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
-      <span class="post-toc-header-title">menu</span>
-    </div>
-    <p class="f5 b mb2">目录</p>
-    <div class="post-toc-inner">
-      <nav id="TableOfContents">
-  <ul>
-    <li><a href="#c-data-structures-nonlinear-trees-heaps-and-graphs">C++ Data Structures (Nonlinear): Trees, Heaps, and Graphs</a></li>
-    <li><a href="#vi-trees">VI. Trees</a>
-      <ul>
-        <li><a href="#abstract-definition-of-a-tree">Abstract Definition of a Tree</a></li>
-        <li><a href="#basic-tree-implementation">Basic Tree Implementation</a></li>
-        <li><a href="#trees-and-recursion">Trees and Recursion</a></li>
-        <li><a href="#tree-traversal-orders">Tree Traversal Orders</a>
-          <ul>
-            <li><a href="#preorder-logic"><strong>Preorder</strong> logic:</a></li>
-            <li><a href="#postorder-logic"><strong>Postorder</strong> logic:</a></li>
-            <li><a href="#inorder-logic"><strong>Inorder</strong> logic:</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-    <li><a href="#vii-binary-trees">VII. Binary Trees</a>
-      <ul>
-        <li><a href="#height-and-heightnode-laws">Height and Height–Node Laws</a>
-          <ul>
-            <li><a href="#conclusions-about-maximum-and-minimum-height">Conclusions About Maximum and Minimum Height</a></li>
-          </ul>
-        </li>
-        <li><a href="#二叉搜索树-bst">二叉搜索树 BST</a>
-          <ul>
-            <li><a href="#binary-node-class">Binary Node Class</a></li>
-            <li><a href="#search-function-findx-t">Search Function <code>find(x, t)</code></a></li>
-            <li><a href="#finding-the-minimum-and-maximum">Finding the Minimum and Maximum</a></li>
-            <li><a href="#insertion-function-insertx-t">Insertion Function <code>insert(x, t)</code></a></li>
-            <li><a href="#three-cases-for-the-deletion-function-removex-t">Three Cases for the Deletion Function <code>remove(x, t)</code></a></li>
-            <li><a href="#bst-efficiency-and-degeneration">BST Efficiency and Degeneration</a></li>
-          </ul>
-        </li>
-        <li><a href="#treesort--sorting-by-using-a-tree">TreeSort — Sorting by Using a Tree</a></li>
-      </ul>
-    </li>
-    <li><a href="#viii-balanced-binary-search-trees-avl">VIII. Balanced Binary Search Trees (AVL)</a>
-      <ul>
-        <li><a href="#maintaining-balance-by-left--right-rotations">Maintaining Balance by <strong>Left / Right Rotations</strong></a>
-          <ul>
-            <li><a href="#left-and-right-rotations">Left and Right Rotations</a></li>
-            <li><a href="#the-four-cases-and-straight-vs-zigzag-structure">The Four Cases and “Straight vs. Zigzag” Structure</a></li>
-            <li><a href="#avl-的插入删除函数">AVL 的插入/删除函数</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-    <li><a href="#ix-red-black-binary-search-trees">IX. Red-Black Binary Search Trees</a>
-      <ul>
-        <li><a href="#abstract-definition">Abstract Definition</a>
-          <ul>
-            <li><a href="#rbtree-和-avl-的关系">RBTree 和 AVL 的关系</a></li>
-            <li><a href="#红黑树的五条性质">红黑树的五条性质</a></li>
-            <li><a href="#红黑树的节点结构">红黑树的节点结构</a></li>
-          </ul>
-        </li>
-        <li><a href="#rotations-and-the-movedown-helper">Rotations and the <code>moveDown</code> Helper</a></li>
-        <li><a href="#insertion-first-insert-as-in-a-bst-then-fix-colors--rotate">Insertion: First Insert as in a BST, Then “Fix Colors + Rotate”</a>
-          <ul>
-            <li><a href="#fixing-color-conflicts-fixcolor">Fixing Color Conflicts: <code>fixColor</code></a></li>
-          </ul>
-        </li>
-        <li><a href="#deletion-the-double-black-idea">Deletion: the “Double Black” Idea</a></li>
-        <li><a href="#对比-avl-与红黑树">对比 AVL 与红黑树</a></li>
-      </ul>
-    </li>
-    <li><a href="#十回溯-backtracking-与-隐式树">十、回溯 (Backtracking) 与 “隐式树”</a></li>
-    <li><a href="#十一堆-heap-优先队列priority-queue">十一、堆 Heap： 优先队列(Priority Queue)</a>
-      <ul>
-        <li><a href="#abstract-definition-1">Abstract Definition</a></li>
-        <li><a href="#三种实现的对比">三种实现的对比</a></li>
-        <li><a href="#二叉堆-binary-heap">二叉堆 (Binary Heap)</a>
-          <ul>
-            <li><a href="#结构性数组表示">结构性：数组表示</a></li>
-            <li><a href="#有序性-heap-order-property">有序性 (heap-order property)</a></li>
-          </ul>
-        </li>
-        <li><a href="#二叉堆类接口">二叉堆类接口</a>
-          <ul>
-            <li><a href="#插入-push-与上滤-siftup-函数">插入 (push) 与上滤 (siftUp) 函数</a></li>
-            <li><a href="#删最小值与下滤-siftdown-函数">删最小值与下滤 (siftDown) 函数</a></li>
-            <li><a href="#建堆函数-buildheap">建堆函数 (BuildHeap)</a></li>
-          </ul>
-        </li>
-        <li><a href="#堆排序-heapsort">堆排序 heapsort</a></li>
-        <li><a href="#things-to-watch-for">Things to watch for</a></li>
-      </ul>
-    </li>
-    <li><a href="#十二图-graph">十二、图 graph</a>
-      <ul>
-        <li><a href="#abstract-definition-2">Abstract Definition</a></li>
-        <li><a href="#两种实现邻接矩阵和邻接表">两种实现：邻接矩阵和邻接表</a>
-          <ul>
-            <li><a href="#邻接矩阵-adjacency-matrix">邻接矩阵 adjacency matrix</a></li>
-            <li><a href="#邻接表-adjacency-list">邻接表 adjacency list</a></li>
-          </ul>
-        </li>
-        <li><a href="#图遍历dfs-与-bfs">图遍历：DFS 与 BFS</a>
-          <ul>
-            <li><a href="#深度优先搜索-depth-first-search">深度优先搜索 Depth First Search</a></li>
-            <li><a href="#广度优先搜索-breadth-first-search">广度优先搜索 Breadth First Search</a></li>
-          </ul>
-        </li>
-        <li><a href="#路由最短路问题">路由：最短路问题</a>
-          <ul>
-            <li><a href="#无权最短路">无权最短路</a></li>
-            <li><a href="#有权最短路dijkstra-算法">有权最短路：Dijkstra 算法</a></li>
-          </ul>
-        </li>
-        <li><a href="#拓扑排序-topological-sort">拓扑排序 Topological Sort</a></li>
-        <li><a href="#things-to-watch-for-1">Things to watch for</a></li>
-      </ul>
-    </li>
-    <li><a href="#小练习">小练习</a></li>
-  </ul>
-</nav>
-    </div>
-  </nav>
-  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
-  
-
 
 
 
@@ -1968,25 +1784,6 @@ a) <code>[a, c, f, e, b, d, h, g]</code> 或 <code>[a, b, d, c, g, f, e, h]</cod
   </article>
 
     </main>
-    
-      
-<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
-  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
-    <span class="liquid-dock-main-dot"></span>
-  </button>
-  <div class="liquid-dock-menu">
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
-      <span class="liquid-dock-icon">🔍</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
-      <span class="liquid-dock-icon">☾</span>
-    </button>
-    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
-      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
-    </button>
-  </div>
-</div>
-
     
     <footer class="custom-footer">
   <p>&copy; Lithos&#39; Blog 2026</p>

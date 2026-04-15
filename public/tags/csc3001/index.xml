@@ -16,13 +16,6 @@
       <description>CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数</description>
     </item>
     <item>
-      <title>🧮 CSC3001 LEC17-19 function mapping</title>
-      <link>http://localhost:1313/posts_en/3001.8/</link>
-      <pubDate>Mon, 17 Nov 2025 12:19:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts_en/3001.8/</guid>
-      <description>CUHKSZ CSC3001: function mappings and division rules, and how they illuminate permutations, stars-and-bars, and Catalan numbers.</description>
-    </item>
-    <item>
       <title>🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</title>
       <link>http://localhost:1313/posts/3001.7/</link>
       <pubDate>Thu, 13 Nov 2025 09:24:24 +0800</pubDate>
@@ -30,24 +23,10 @@
       <description>CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理</description>
     </item>
     <item>
-      <title>🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</title>
-      <link>http://localhost:1313/posts_en/3001.7/</link>
-      <pubDate>Thu, 13 Nov 2025 09:24:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts_en/3001.7/</guid>
-      <description>CUHKSZ CSC3001: identities of binomial coefficients, extensions of inclusion–exclusion, and the pigeonhole principle.</description>
-    </item>
-    <item>
       <title>🧮 CSC3001 LEC14-16 Graph</title>
       <link>http://localhost:1313/posts/3001.6/</link>
       <pubDate>Tue, 28 Oct 2025 17:30:24 +0800</pubDate>
       <guid>http://localhost:1313/posts/3001.6/</guid>
-      <description>CUHKSZ CSC3001 图论</description>
-    </item>
-    <item>
-      <title>🧮 CSC3001 LEC14-16 Graph</title>
-      <link>http://localhost:1313/posts_en/3001.6/</link>
-      <pubDate>Tue, 28 Oct 2025 17:30:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts_en/3001.6/</guid>
       <description>CUHKSZ CSC3001 图论</description>
     </item>
     <item>
@@ -58,32 +37,11 @@
       <description>CUHKSZ CSC3001 最大公因数问题与模问题</description>
     </item>
     <item>
-      <title>🧮 CSC3001 LEC11-13 GCD and Mod</title>
-      <link>http://localhost:1313/posts_en/3001.5/</link>
-      <pubDate>Tue, 14 Oct 2025 12:30:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts_en/3001.5/</guid>
-      <description>CUHKSZ CSC3001: greatest common divisors and modular arithmetic.</description>
-    </item>
-    <item>
-      <title>🧮 CSC3001 LEC8-10 Recursion</title>
-      <link>http://localhost:1313/posts_en/3001.4/</link>
-      <pubDate>Sat, 11 Oct 2025 12:16:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts_en/3001.4/</guid>
-      <description>From proof techniques to recursive thinking in CUHKSZ CSC3001, together with methods for solving recurrence relations</description>
-    </item>
-    <item>
       <title>🧮 CSC3001 LEC8-10 递归</title>
       <link>http://localhost:1313/posts/3001.4/</link>
       <pubDate>Sat, 11 Oct 2025 12:16:24 +0800</pubDate>
       <guid>http://localhost:1313/posts/3001.4/</guid>
       <description>CUHKSZ CSC3001 从数学证明法到递归思想，以及解递归式</description>
-    </item>
-    <item>
-      <title>🧮 CSC3001 LEC6-7 Mathematical Induction</title>
-      <link>http://localhost:1313/posts_en/3001.3/</link>
-      <pubDate>Thu, 11 Sep 2025 11:31:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts_en/3001.3/</guid>
-      <description>More proof techniques in CUHKSZ CSC3001</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC6-7 数学归纳法</title>
@@ -93,25 +51,11 @@
       <description>CUHKSZ CSC3001 更多数学证明法</description>
     </item>
     <item>
-      <title>🧮 CSC3001 LEC3-5 Set Theory, FOL, and Basic Proof Methods</title>
-      <link>http://localhost:1313/posts_en/3001.2/</link>
-      <pubDate>Tue, 02 Sep 2025 13:31:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts_en/3001.2/</guid>
-      <description>An extension of propositional logic in CUHKSZ CSC3001: predicate logic</description>
-    </item>
-    <item>
       <title>🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</title>
       <link>http://localhost:1313/posts/3001.2/</link>
       <pubDate>Tue, 02 Sep 2025 13:31:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3001.2/</guid>
       <description>CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑</description>
-    </item>
-    <item>
-      <title>🧮 CSC3001 LEC1-2 Introduction to Discrete Mathematics</title>
-      <link>http://localhost:1313/posts_en/3001.1/</link>
-      <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts_en/3001.1/</guid>
-      <description>An introductory guide to CSC3001, a second-year course at CUHKSZ</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC1-2 离散数学入门</title>
