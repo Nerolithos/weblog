@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💯 CSC3060 Quiz Q&amp;A | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3060q/">
+    <meta property="og:url" content="http://localhost:1313/posts/3060q/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💯 CSC3060 Quiz Q&A">
+  <meta property="og:description" content="Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-07T13:30:34+08:00">
+    <meta property="article:modified_time" content="2026-04-07T13:30:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💯 CSC3060 Quiz Q&A">
+  <meta itemprop="description" content="Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.">
+  <meta itemprop="datePublished" content="2026-04-07T13:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-04-07T13:30:34+08:00">
+  <meta itemprop="wordCount" content="6398">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💯 CSC3060 Quiz Q&A">
+  <meta name="twitter:description" content="Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/3060q.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💯 CSC3060 Quiz Q&amp;A</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💯 CSC3060 Quiz Q&amp;A</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-04-07T13:30:34+08:00">April 7, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><blockquote>
+<p>⚠️ 两次 quiz 卷面满分都是 <strong>120</strong>，但只要拿 <strong>≥ 100</strong> 分都属于实际满分。</p>
+</blockquote>
+</br>
+<h1 id="csc3060-2026spring-quiz1">CSC3060 2026Spring Quiz1</h1>
+<h2 id="section-i-30-points-select-the-best-answer-the-answer-is-shown-after-each-question">Section I (30 points): Select the best answer. The answer is shown after each question.</h2>
+<ol>
+<li>
+<p>What is computer architecture?</p>
+<p>a) It is the hardware implementation of a computer</p>
+<p>b) It is the interface between the software and the hardware <strong>(Answer)</strong></p>
+<p>c) It is the rules and conventions that a programmer must follow</p>
+<p>d) It is the components of a computer, including I/O, CPU, and memory</p>
+</li>
+<li>
+<p>Which of the following is not a system program?</p>
+<p>a) ChatGPT <strong>(Answer)</strong></p>
+<p>b) Compiler</p>
+<p>c) OS</p>
+<p>d) Linker</p>
+</li>
+<li>
+<p>In the memory there is a sequence of 128 bits of zero. Which of the following is not a possible representation?</p>
+<p>a) It may be two long integer zeros.</p>
+<p>b) It may be four single‑precision floating point +0.0</p>
+<p>c) It may be a character string &ldquo;0000000000000000&rdquo; <strong>(Answer)</strong></p>
+<p>d) It may be one quadruple‑precision floating‑point value +0.0</p>
+</li>
+<li>
+<p>What illusion does a memory hierarchy give you?</p>
+<p>a) The memory space is all yours.</p>
+<p>b) A memory that is fast, large and inexpensive <strong>(Answer)</strong></p>
+<p>c) A memory that is small, large and expensive</p>
+<p>d) A memory that is fast, small and inexpensive</p>
+</li>
+<li>
+<p>Which of the following phases is not part of the &ldquo;gcc&rdquo; command?</p>
+<p>a) Preprocessing
+b) Linking</p>
+<p>c) Compiling</p>
+<p>d) Loading <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which of the following architectures has only sixteen general‑purpose registers?</p>
+<p>a) RV32MI</p>
+<p>b) RV32EM <strong>(Answer)</strong></p>
+<p>c) RV64IM</p>
+<p>d) RV32ME</p>
+</li>
+<li>
+<p>Which of the following descriptions of the RV32I ISA is not true?</p>
+<p>a) It is for 32‑bit processor implementations; the address range is limited to 4 GB.</p>
+<p>b) Its memory is byte‑addressable.</p>
+<p>c) It requires an on‑chip cache hierarchy implemented <strong>(Answer)</strong></p>
+<p>d) It supports 32 general‑purpose registers X0–X31.</p>
+</li>
+<li>
+<p>When a program is interrupted, what information must be saved so the program can resume after the interrupt is handled?</p>
+<p>a) The memory</p>
+<p>b) All the files used by this application program</p>
+<p>c) The architectural state (registers, PC, etc.) <strong>(Answer)</strong></p>
+<p>d) The cache contents</p>
+</li>
+<li>
+<p>How do you set up a 32‑bit constant 0xAABBCCDD in register X2?</p>
+<p>a) li x2, 0xAABBCCDD</p>
+<p>b) addi x2, x0, 0xAABBCCDD</p>
+<p>c) lui x2, 0xAABBC; addi x2, x2, 0xCDD <strong>(Answer)</strong></p>
+<p>d) lw x2, 0xAABBCCDD(x0)</p>
+</li>
+<li>
+<p>Why do RISC machines often require data to be naturally aligned?</p>
+<p>a) Address generation would be easier</p>
+<p>b) To make the data memory more compact</p>
+<p>c) To support the C and E extension</p>
+<p>d) To avoid data items crossing cache lines or page boundaries <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>What range can an indirect jump (JALR) instruction in RV32I reach?</p>
+<p>a) 512 KB</p>
+<p>b) 1 MB</p>
+<p>c) 4 MB</p>
+<p>d) The full 4 GB address space <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>When implementing the add(a,b) function in Project 1, what does the expression (a &amp; b) &laquo; 1 represent?</p>
+<p>a) The bitwise sum without any carries.</p>
+<p>b) The values of the carry bits that need to be added in the next iteration <strong>(Answer)</strong></p>
+<p>c) The absolute difference between the two numbers.</p>
+<p>d) A logical shift to check for overflow.</p>
+</li>
+<li>
+<p>In the subtract(a,b) function, how is the subtraction operation typically transformed to use the add() function?</p>
+<p>a) By calculating add(a, ~b) directly.</p>
+<p>b) By performing a bitwise XOR and then a right shift.</p>
+<p>c) By transforming it into add(a, add(~b, 1)) using two‑&rsquo;s complement logic <strong>(Answer)</strong></p>
+<p>d) By using a loop to count the difference between a and b.</p>
+</li>
+<li>
+<p>On a RV64I/FD processor, for the following struct:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">S</span> {
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">int</span>   white;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">long</span>  count;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">char</span>  c;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">long</span>  red;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">int</span>   green;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">char</span>  d;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">int</span>   blue;
+</span></span><span style="display:flex;"><span>   } A[<span style="color:#ae81ff">1000</span>];
+</span></span></code></pre></div><p>Assume the starting address of A is stored in register X1.  What instruction should be used for A[10].blue = 0?</p>
+<p>a) sw x0, 322(x1)</p>
+<p>b) sw x0, ‑520(x1)</p>
+<p>c) sw x0, 340(x1)</p>
+<p>d) sw x0, 4840(x1)</p>
+<p>e) sw x0, 520(x1)  <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which of the following decimal numbers have exact representations in IEEE‑754 floating‑point format?</p>
+<p>a) 1.625 <strong>(Answer)</strong></p>
+<p>b) 1.405</p>
+<p>c) 1.35</p>
+<p>d) 1.245</p>
+<p>e) 1.11</p>
+</li>
+</ol>
+</br>
+</br>
+<h2 id="section-ii-40-points-multiple-choice-one-or-more-correct-answers--put-all-correct-letters-the-answers-are-shown-in-parentheses">Section II (40 points): Multiple choice (one or more correct answers).  Put all correct letters; the answers are shown in parentheses.</h2>
+<ol>
+<li>
+<p>Which of the following is the correct representation of 2050₁₀ in 16 bits?</p>
+<p>a) 0b0000100000000010 <strong>(Answer)</strong></p>
+<p>b) 0x0813</p>
+<p>c) 0x0802 <strong>(Answer)</strong></p>
+<p>d) 0b0000100000100011</p>
+</li>
+<li>
+<p>What is ABI?</p>
+<p>a) ABI stands for Application Binary Interface <strong>(Answer)</strong></p>
+<p>b) ABI is just like an API</p>
+<p>c) ABI includes the OS system calls, the ISA and the calling convention <strong>(Answer)</strong></p>
+<p>d) ABI defines whether an application binary is compatible with a computer system <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which of the following instructions belong only to RV64I instead of RV32I?</p>
+<p>a) sra x1, x6, x7</p>
+<p>b) ld x1, 0(x2)  <strong>(Answer)</strong></p>
+<p>c) lwu x1, 0(x2) <strong>(Answer)</strong></p>
+<p>d) slli x5, x6, 35  <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>The contents of three floating‑point registers are:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span> F1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40800000</span>,
+</span></span><span style="display:flex;"><span> F2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3F800000</span>,
+</span></span><span style="display:flex;"><span> F3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xC0800000</span>.
+</span></span></code></pre></div><p>Which of the following is correct?</p>
+<p>a) (F3 + F1) == 0.0  <strong>(Answer)</strong></p>
+<p>b) F3 &lt; F2 &lt; F1      <strong>(Answer)</strong></p>
+<p>c) F2 = F1 / F3</p>
+<p>d) F3 = ‑(F1 * F2)   <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which of the following statements about jump instructions are true?</p>
+<p>a) Jump instructions (JAL and JALR) have 20‑bit and 12‑bit immediates <strong>(Answer)</strong></p>
+<p>b) Jump instructions are in UJ‑type only</p>
+<p>c) Jump instructions can be used for function calls <strong>(Answer)</strong></p>
+<p>d) JALR has a larger jump range than JAL <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which of the following number systems has both +0 and –0?</p>
+<p>a) Signed‑magnitude integers <strong>(Answer)</strong></p>
+<p>b) Two’s‑complement integers</p>
+<p>c) One’s‑complement integers <strong>(Answer)</strong></p>
+<p>d) IEEE‑754 floating‑point numbers <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which of the following statements about the branch and the store is true?</p>
+<p>a) Both instructions generate a 12‑bit (±2¹¹) byte offset</p>
+<p>b) The immediate in the store instruction is an offset relative to rs1, and in a branch instruction it is relative to the PC <strong>(Answer)</strong></p>
+<p>c) Both instructions generate a 12‑bit offset relative to the base register rs1</p>
+<p>d) Branch instructions lack the rd (destination) field <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Assume A, B, C are int and X, Y, Z are floating‑point variables. Which of the following expressions are always true?</p>
+<p>a) A*A &gt;= 0</p>
+<p>b) (X + Y) + Z == X + (Y + Z)</p>
+<p>c) if (A &lt; 0) then ‑A &gt; 0</p>
+<p>d) A == (int)(double)A  <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Assume variable A is an integer. Under what conditions would the results from a big‑endian machine be different from those of a little‑endian machine?</p>
+<p>a) Store A as an int but read it as a sequence of char <strong>(Answer)</strong></p>
+<p>b) Store A as a long and read it as a long</p>
+<p>c) Store A as an int and read it as an int</p>
+<p>d) Store A as a sequence of char but read it as an int <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>What does “32” mean in RV32I?</p>
+</li>
+</ol>
+<p>a) The ISA has 32 general‑purpose registers</p>
+<p>b) The ISA can address up to 2³² bytes</p>
+<p>c) The instructions are 32 bits long</p>
+<p>d) The general‑purpose registers are 32 bits wide <strong>(Answer)</strong></p>
+<p>e) The ISA contains 32 instructions</p>
+</br>
+</br>
+<h2 id="section-iii-50-points-short-and-brief-answers--provide-concise-explanations">Section III (50 points): Short and brief answers.  Provide concise explanations.</h2>
+<ol>
+<li>
+<p>The RISC‑V F/D extension added a fused multiply‑add (FMA) instruction that uses a special R4 type to compute A = B × C + D.</p>
+<p>a) How could you redesign this instruction using only three operands so that no new R4 type is needed?  (3 points)</p>
+<p><strong>Answer:</strong> Make the addend operand implicit by reusing the destination register: define an instruction like <code>fmadd rd, rs1, rs2</code> that computes <code>rd = rd + (rs1 × rs2)</code>.  By using the destination register both as the addend and the destination, only three register operands are needed and the standard R‑type format can be reused.</p>
+<p>b) What regularity of the RV ISA does the design in (a) disrupt?  (2 points)</p>
+<p><strong>Answer:</strong> RISC‑V instructions normally treat the destination register separately from the source registers; changing the meaning of <code>rd</code> to also hold one of the input operands breaks the clean separation between sources and destination.  It also destroys orthogonality—one cannot freely choose all three source operands, because one of them must be the same as the destination.</p>
+<p>c) A floating‑point multiply typically takes about 5 cycles and an add takes about 4 cycles.  Why is FMA still only a 5–6‑cycle operation rather than a 9‑cycle operation?  (3 points)<br>
+<strong>Answer:</strong> In a fused multiply‑add, the multiplier and adder stages are overlapped in a single pipeline: the product and the addend are formed in parallel and only one rounding is performed at the end.  By merging the two operations, intermediate rounding and normalisation are avoided, so the hardware can compute the multiply and add in almost the same time as a single multiply, thus 5–6 cycles instead of 9.</p>
+</li>
+</ol>
+</br>
+<ol start="2">
+<li>
+<p>bfloat16 is a 16‑bit floating‑point format designed by Google for machine learning.</p>
+<p>a) IEEE 754‑2008 also defines the half‑precision FP16 format.  Why do GPUs employ such low‑precision floating‑point formats?  (3 points)<br>
+<strong>Answer:</strong> Many deep‑learning workloads do not require full single‑precision accuracy; using 16‑bit formats cuts memory bandwidth and storage in half, increases the number of values that can be processed in parallel, and reduces power consumption.  Lower‑precision arithmetic provides higher throughput for training and inference while keeping enough numerical fidelity for neural‑network computations.</p>
+<p>b) Why is bfloat16 more popular than IEEE FP16?  (3 points)<br>
+<strong>Answer:</strong> bfloat16 keeps the same 8‑bit exponent as single‑precision but only 7 bits of mantissa, giving it the same dynamic range as FP32.  That makes it much easier to convert FP32 values to bfloat16 without overflow or underflow and preserves the scale of gradients during training.  In contrast, IEEE FP16 has only a 5‑bit exponent and frequently overflows/underflows.  Thus bfloat16 is more robust for training neural networks and simpler to support in hardware.</p>
+</li>
+</ol>
+</br>
+<ol start="3">
+<li>
+<p>Assume your machine is RV32I and function arguments <code>unsigned int a</code>, <code>int b, c</code> are passed in registers a0–a2.
+For each of the following C expressions, suggest efficient RV32I instructions.</p>
+<p>a) <code>a * 4</code>:  Use a left shift by 2: <code>slli a0, a0, 2</code>.</p>
+<p>b) <code>b * 61</code>:  Compute using shifts and subtracts because RV32I has no multiply.  For example:</p>
+</li>
+</ol>
+<pre tabindex="0"><code>   slli t0, a1, 6        # t0 = b &lt;&lt; 6  (b * 64)
+   slli t1, a1, 1        # t1 = b &lt;&lt; 1  (b * 2)
+   sub  t0, t0, t1       # t0 = b * 64 - b * 2 = b * 62
+   sub  t0, t0, a1       # t0 = b * 62 - b = b * 61
+</code></pre><p>The result in t0 is b*61.</p>
+<p>c) <code>a / 8</code>:  For unsigned division by a power of two, use a logical shift right: <code>srli a0, a0, 3</code>.</p>
+<p>d) <code>b &gt;&gt; 3</code>:  An arithmetic right shift for a signed integer: <code>srai a1, a1, 3</code>.</p>
+<p>e) <code>b / 8</code>:  Signed division by 8 is not the same as an arithmetic shift because C truncates toward zero.  One way is:</p>
+<pre tabindex="0"><code>   srai t0, a1, 3          # tentative quotient = b &gt;&gt; 3
+   srai t1, a1, 31         # t1 = sign bit replicated (0 or –1)
+   andi t1, t1, 7          # t1 = mask = (1&lt;&lt;3)–1 if b &lt; 0 else 0
+   add  a0, t0, t1         # a0 = corrected quotient
+</code></pre><p>f) <code>a % 128</code>:  Use a bit mask: <code>andi a0, a0, 127</code>.</p>
+<p>g) <code>pow(2, a)</code>:  Start with 1 in a temporary register and shift left by <code>a</code>:</p>
+<pre tabindex="0"><code>   li   t0, 1
+   sll  t0, t0, a0
+</code></pre><p>h) <code>a = (b &gt;= c)</code>:  Compute the comparison and set <code>a</code> to 1 or 0:</p>
+<pre tabindex="0"><code>   slt  t0, a1, a2     # t0 = 1 if b &lt; c else 0
+   xori t0, t0, 1      # invert to get b &gt;= c
+   mv   a0, t0         # result in a0
+</code></pre><p>i) <code>b * c</code>:  RV32I has no hardware multiply, so you would implement a shift‑add loop:</p>
+<pre tabindex="0"><code>   mv   t0, a1         # multiplicand = b
+   mv   t1, a2         # multiplier = c
+   li   t2, 0          # accumulator = 0
+loop:
+   andi t3, t1, 1
+   beq  t3, x0, skip
+   add  t2, t2, t0     # add multiplicand if low bit of multiplier is 1
+skip:
+   slli t0, t0, 1      # multiplicand &lt;&lt;= 1
+   srli t1, t1, 1      # multiplier &gt;&gt;= 1
+   bnez t1, loop
+   mv   a0, t2         # a0 holds b*c
+</code></pre></br>
+<ol start="4">
+<li>
+<p>The Intel Itanium architecture includes 128 general‑purpose registers.  Should we add 128 registers to RV64I?  Why or why not?  (6 points)</p>
+<p><strong>Answer:</strong> Increasing the register file to 128 registers would lengthen the instruction encoding—each register specifier would need 7 bits instead of 5.  To keep 32‑bit instruction words, RISC‑V would have to shrink immediate fields or restrict other encodings, harming code density.  A larger register file also increases context‑switch overhead and pipeline complexity.  RISC‑V already allows register‑rich implementations via register windows or the “Zmmul” extension without changing the ISA.  Therefore, adding 128 architected registers would provide only marginal benefit while complicating the instruction encoding and hardware.</p>
+</li>
+</ol>
+</br>
+<ol start="5">
+<li>When we access an array element <code>A[i]</code> we need a base register for the address of A and an index register for i.  Why isn’t there a load instruction like <code>lw rd, (rs1 + rs2)</code>?  (5 points)<br>
+<strong>Answer:</strong> RISC‑V keeps the load/store addressing modes simple: a base register plus a small immediate offset.  An address form <code>rs1 + rs2</code> would require an extra adder in the memory stage and complicate hazard detection, increasing cycle time.  Compilers can generate an ADD instruction to compute <code>rs1 + rs2</code> into a temporary register and then use a standard load; this extra instruction is inexpensive and preserves pipeline simplicity and code density.</li>
+</ol>
+</br>
+<ol start="6">
+<li>Estimate the latencies (in clock cycles) of the following operations on a typical RV32I/F core.  (5 points)</li>
+</ol>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Operation</th>
+          <th style="text-align: left">Estimated latency (cycles)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Integer multiply (via shift/add)</td>
+          <td style="text-align: left">≈3 cycles</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Integer divide (via software)</td>
+          <td style="text-align: left">≈10 cycles</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">SP FP add</td>
+          <td style="text-align: left">≈4 cycles</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">SP FP multiply</td>
+          <td style="text-align: left">≈5 cycles</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">FP to int conversion</td>
+          <td style="text-align: left">≈5 cycles</td>
+      </tr>
+  </tbody>
+</table>
+</br>
+</br>
+</br>
+<h1 id="csc3060-2026spring-quiz2">CSC3060 2026Spring Quiz2</h1>
+<h2 id="section-i-30-points-select-the-best-answer-the-answer-is-shown-after-each-question-1">Section I (30 points): Select the best answer. The answer is shown after each question.</h2>
+<ol>
+<li>
+<p>Branch prediction should be performed at which of the pipelined stages?</p>
+<p>a) IF <strong>(Answer)</strong></p>
+<p>b) ID</p>
+<p>c) EXE</p>
+<p>d) MEM</p>
+<p>e) WB</p>
+</li>
+<li>
+<p>Which branch/jump instruction generated from the following C statements is most difficult to predict?</p>
+<p>a) if</p>
+<p>b) for</p>
+<p>c) switch <strong>(Answer)</strong></p>
+<p>d) while</p>
+<p>e) function call</p>
+</li>
+<li>
+<p>Which of the following microarchitectures may have a CPI lower than 1?</p>
+<p>a) Superscalar implementation <strong>(Answer)</strong></p>
+<p>b) Single‑cycle data path implementation</p>
+<p>c) Multi‑cycle data path implementation</p>
+<p>d) Pipelined implementation</p>
+</li>
+<li>
+<p>In the RISC‑V calling convention, which of the following registers is a callee‑save register?</p>
+<p>a) x0</p>
+<p>b) ra (return address)</p>
+<p>c) t1</p>
+<p>d) s1 <strong>(Answer)</strong></p>
+<p>e) a1</p>
+</li>
+<li>
+<p>Which of the following implementations would have the highest instruction execution throughput?</p>
+<p>a) Single‑cycle data path</p>
+<p>b) Multi‑cycle data path</p>
+<p>c) Pipelined data path</p>
+<p>d) Superscalar and pipelined data path <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>The ARM Cortex‑A57 is a processor with 16 pipeline stages.  The decision for a branch instruction is made quite late, near the end of the pipeline.  Assume 20% of the instructions executed are branches and the average CPI is 1.  Without branch prediction, what would be the performance penalty caused by branches in an A57?</p>
+<p>a) 90%</p>
+<p>b) 75% <strong>(Answer)</strong></p>
+<p>c) 50%</p>
+<p>d) 20%</p>
+</li>
+<li>
+<p>Why do some RV pipelined data‑path designs utilize a comparison unit to execute compare‑and‑branch instructions instead of using the standard ALU?</p>
+<p>a) To avoid structural hazards</p>
+<p>b) To avoid setting the wrong branch condition due to subtraction overflow</p>
+<p>c) Because the comparison unit does not trap</p>
+<p>d) The ALU is reserved to compute PC + immediate <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which of the following control signals is most difficult to generate?</p>
+<p>a) ALUsrc (ALU source)</p>
+<p>b) PCsrc (PC source) <strong>(Answer)</strong></p>
+<p>c) Wren (write enable)</p>
+<p>d) ALUctr (ALU control)</p>
+<p>e) MemRd (memory read)</p>
+</li>
+<li>
+<p>Which pipelined register stores the least amount of information?</p>
+<p>a) IF/ID</p>
+<p>b) ID/EX</p>
+<p>c) EX/MEM</p>
+<p>d) MEM/WB <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which DRAM is used in Nvidia’s high‑end GPU global memory?</p>
+<p>a) Traditional DRAM</p>
+<p>b) HBM <strong>(Answer)</strong></p>
+<p>c) SDRAM</p>
+<p>d) RDRAM</p>
+<p>e) DDR5 DRAM</p>
+</li>
+<li>
+<p>How do we index to a branch history table in the correlated branch prediction (two‑level adaptive branch prediction)?</p>
+<p>a) The current PC ⊕ the global history shift register value <strong>(Answer)</strong></p>
+<p>b) The PC address of the current branch instruction</p>
+<p>c) The current PC + the value of the global history shift register</p>
+<p>d) The current PC ⊕ the branch address</p>
+</li>
+<li>
+<p>Which dependency type is the “true dependence” in code scheduling?</p>
+<p>a) WAW (Write After Write)</p>
+<p>b) RAW (Read After Write) <strong>(Answer)</strong></p>
+<p>c) WAR (Write After Read)</p>
+<p>d) RAR (Read After Read)</p>
+</li>
+<li>
+<p>In your Project #2, which of the following commands prints only the content of register a0 in decimal?</p>
+<p>a) print a0 <strong>(Answer)</strong></p>
+<p>b) info registers</p>
+<p>c) x/d a0</p>
+<p>d) print/x a0</p>
+</li>
+<li>
+<p>Regarding Project #2 – Bomb Lab, which of the following statements is correct?</p>
+<p>a) The only way to solve Bomb Lab is by brute‑force guessing.</p>
+<p>b) The bomb is an executable file that can run on any RISC‑V platform.</p>
+<p>c) The goal of Bomb Lab is to determine the correct inputs for each phase without causing the bomb to explode.  <strong>(Answer)</strong></p>
+<p>d) ﻿﻿﻿In RV321, argument registers such as aO and al will stay unchanged throughout the entire function lifetime.</p>
+</li>
+<li>
+<p>RISC‑V would be a fixed‑length ISA if it did not have which extension?</p>
+<p>a) A</p>
+<p>b) B</p>
+<p>c) C <strong>(Answer)</strong></p>
+<p>d) D</p>
+<p>e) F</p>
+</li>
+</ol>
+</br>
+</br>
+<h2 id="section-ii-40-points-multiple-choice-one-or-more-correct-answers-put-all-correct-letters-the-answers-are-shown-in-parentheses">Section II (40 points): Multiple Choice (one or more correct answers). Put all correct letters; the answers are shown in parentheses.</h2>
+<ol>
+<li>
+<p>Which of the following codes’ performance is limited by operation latency rather than bandwidth?</p>
+<p>a) A single query checking your account balance <strong>(Answer)</strong></p>
+<p>b) Large matrix multiplication</p>
+<p>c) Chasing a linked list to locate the end of the list <strong>(Answer)</strong></p>
+<p>d) Traversing a binary tree to find a data item <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>In which situations should caller‑saved registers be considered for allocation?</p>
+<p>a) Leaf routines <strong>(Answer)</strong></p>
+<p>b) A temporary value used across multiple calls</p>
+<p>c) Temporaries in expression evaluation <strong>(Answer)</strong></p>
+<p>d) Array variables</p>
+<p>e) Local scalar variables</p>
+</li>
+<li>
+<p>What hazards might commonly occur when performing a binary tree search on a pipelined data path?</p>
+<p>a) Tree hazards</p>
+<p>b) Structure hazards</p>
+<p>c) Data hazards <strong>(Answer)</strong></p>
+<p>d) Control hazards <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>In the RV32I processor data path, what are the possible selections for the address of the next instruction to be fetched?</p>
+<p>a) PC</p>
+<p>b) PC + 4 <strong>(Answer)</strong></p>
+<p>c) PC + immediate <strong>(Answer)</strong></p>
+<p>d) RS1 + immediate <strong>(Answer)</strong></p>
+<p>e) (RS1 + immediate) (memory indirection)</p>
+</li>
+<li>
+<p>Most modern microprocessors have split I/D caches. Why?</p>
+<p>a) To avoid structural hazards in the pipeline <strong>(Answer)</strong></p>
+<p>b) To get a higher overall cache hit rate</p>
+<p>c) To increase processor reliability</p>
+<p>d) To increase the cache access bandwidth <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Under what circumstances might a longer/deeper pipeline be less desirable?</p>
+<p>a) When there are frequent branch mispredictions <strong>(Answer)</strong></p>
+<p>b) When there are intensive data dependencies among instructions <strong>(Answer)</strong></p>
+<p>c) When there are frequent memory operations</p>
+<p>d) When there are lots of instruction cache misses <strong>(Answer)</strong></p>
+<p>e) When there are frequent procedure calls <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>A scheduler gives the following schedule for the dependency graph on the right. Which of them are valid scheduling (i.e., produce the same result as the unscheduled code block)?</p>
+<p>a) 0 1 2 5 3 9 4 7 6 8 10   <strong>(Answer)</strong></p>
+<p>b) 0 2 1 5 3 8 4 7 9 6 10   <strong>(Answer)</strong></p>
+<p>c) 0 2 4 1 3 7 9 6 5 8 10</p>
+<p>d) 0 1 2 3 5 4 7 8 6 9 10   <strong>(Answer)</strong></p>
+<p>e) 0 1 2 3 4 5 6 7 8 9 10 <strong>(Answer)</strong></p>
+</li>
+<li>
+<p>Which of the following are techniques used to reduce the penalty caused by control hazards?</p>
+<p>a) Pipelined stalls<br>
+b) BTB (branch target buffer) <strong>(Answer)</strong></p>
+<p>c) untagged BHT (branch history table) <strong>(Answer)</strong></p>
+<p>d) Always predict backward branches taken <strong>(Answer)</strong></p>
+<p>e) Data forwarding</p>
+</li>
+<li>
+<p>What locality is exhibited by the following C loop?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (A <span style="color:#f92672">!=</span> NULL) A <span style="color:#f92672">=</span> A<span style="color:#f92672">-&gt;</span>next;
+</span></span></code></pre></div><p>a) Data temporal locality</p>
+<p>b) Data spatial locality</p>
+<p>c) Structural locality</p>
+<p>d) Instruction temporal locality <strong>(Answer)</strong></p>
+<p>e) Instruction spatial locality</p>
+</li>
+<li>
+<p>What information is stored in each cache block (line)?</p>
+<p>a) Byte offset</p>
+<p>b) Cache block data <strong>(Answer)</strong></p>
+<p>c) Cache block tag <strong>(Answer)</strong></p>
+<p>d) A valid bit <strong>(Answer)</strong></p>
+<p>e) A set number</p>
+</li>
+</ol>
+</br>
+</br>
+<h2 id="section-iii-50-points-short-and-brief-answers--provide-concise-explanations-1">Section III (50 points): Short and brief answers.  Provide concise explanations.</h2>
+<ol>
+<li>
+<p><strong>Data Hazards</strong> (13 points)</p>
+<p>We are given the following RV32I code sequence:</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">1. LW  S1, 8(S0)
+2. LW  S2, 16(S0)
+3. SUB T4, S2, S1
+4. AND T5, T4, T3
+5. SUB S4, T4, T3 
+6. ADD T6, S4, T4
+7. SW  T6, 4(S7)
+8. LW  S3, 24(S7)
+9. LW  S1, 8(S7)
+10. LW  S5, 32(S0)
+11. ADD T7, S3, S1
+12. LW  S6, 64(S0)
+</code></pre></li>
+</ol>
+<p>a) In a 5‑stage pipeline without data forwarding, many data hazards will be detected.  <strong>How many bubbles will be generated during the execution?</strong></p>
+<p>​      <strong>Answer:</strong> I1 → I3：s1, I2 → I3：s2, I3 → I4：t4, I3 → I5：t4, I3 → I6：t4, I5 → I6：s4, I6 → I7：t6, I8 → I11：s3, I9 → I11：s1. In total there&rsquo;re 9 RAW dependencies, so 9 bubble stalls.</p>
+<p><img src="https://i.postimg.cc/9QZmG89f/jie-ping2026-04-07-14-21-55.png" alt=""></p>
+<p>b) <strong>With data forwarding</strong>, how do you detect the data‑forwarding conditions in the pipeline?<br>
+<strong>Answer:</strong> The forwarding unit compares destination register fields in the EX/MEM and MEM/WB pipeline registers against the source register fields in the ID/EX register.  For example:</p>
+<pre><code>  * If `(EX/MEM.RegWrite) &amp;&amp; (EX/MEM.Rd ≠ 0) &amp;&amp; (EX/MEM.Rd == ID/EX.Rs1)` then forward the EX/MEM result to the first ALU input (set `ForwardA = 10`).  
+  * If `(EX/MEM.RegWrite) &amp;&amp; (EX/MEM.Rd ≠ 0) &amp;&amp; (EX/MEM.Rd == ID/EX.Rs2)` then forward the EX/MEM result to the second ALU input (`ForwardB = 10`).  
+  * If `(MEM/WB.RegWrite) &amp;&amp; (MEM/WB.Rd ≠ 0) &amp;&amp; !(EX/MEM.RegWrite &amp;&amp; EX/MEM.Rd == ID/EX.Rs1) &amp;&amp; (MEM/WB.Rd == ID/EX.Rs1)` then forward the MEM/WB result to the first ALU input (`ForwardA = 01`).  
+</code></pre>
+<ul>
+<li>Similarly, test <code>(MEM/WB.Rd == ID/EX.Rs2)</code> to set <code>ForwardB = 01</code>.</li>
+</ul>
+<p>c) <strong>With data forwarding, how many bubbles remain?</strong><br>
+<strong>Answer:</strong> One, since adjacent commands with RAW cannot be solved by bypassing (I2 → I3：s2).</p>
+<p>d) <strong>Without data forwarding, we may still avoid bubbles by reordering the instructions.  Provide one reordered code sequence that is free of data hazards.</strong><br>
+<strong>Answer:</strong> Just Follow the DAG graph shown above, don&rsquo;t arrange adjacent RAWs, and the answer will be correct. E.g.: 1, 2, 8, 9, 3, 10, 11, 5, 4, 6, 12, 7.</p>
+</br>
+<ol start="2">
+<li>
+<p><strong>Register ports</strong> (4 points)</p>
+<p>a) <strong>How many write ports and read ports must be provided for the RV32I integer register file?</strong></p>
+<p><strong>Answer:</strong> The RV32I register file must support two simultaneous register reads and one register write each cycle to handle most instructions.  Thus it needs <strong>two read ports and one write port</strong>.</p>
+<p>b) <strong>For a two‑issue superscalar RV64IFD processor with FMA instructions, how many read and write ports must the floating‑point register file provide?</strong></p>
+<p><strong>Answer:</strong> An FMA reads three source registers and writes one destination register.  If the processor can issue two FMA instructions per cycle, the register file must supply at least <strong>6 read ports (2 × 3) and 2 write ports (2 × 1)</strong> to support all operand fetches and writes in one cycle.</p>
+</li>
+</ol>
+</br>
+<ol start="3">
+<li><strong>Memory Wall</strong> (8 points)</li>
+</ol>
+<p>a) <strong>What is the “memory wall”?</strong></p>
+<p><strong>Answer:</strong> The memory wall refers to the growing gap between processor speed and memory speed.  As CPU cycles become faster and more instructions can be issued per cycle, memory latency and bandwidth do not scale proportionally, so memory accesses increasingly dominate execution time and limit performance.</p>
+<p>b) <strong>The memory wall can be divided into the latency and the bandwidth walls.  What could be done to mitigate the impact of each?</strong></p>
+<p><strong>Answer:</strong> To mitigate the <strong>latency wall</strong>, architects use multi‑level cache hierarchies, hardware prefetching, and techniques like out‑of‑order execution and multithreading to hide memory latency.  To mitigate the <strong>bandwidth wall</strong>, systems employ wider memory buses, multiple memory channels, high‑bandwidth memory (HBM), and data compression; software techniques such as blocking and tiling improve reuse and reduce bandwidth demand.</p>
+<p>c) <strong>How is the memory hierarchy managed—by hardware, by software, or by a combination?</strong><br>
+<strong>Answer:</strong> A modern memory hierarchy is managed by a <strong>combination</strong> of hardware and software.  Hardware caches automatically fetch and replace data; the operating system manages page tables, virtual memory, and TLBs; and compilers and programmers can structure data and insert prefetches to improve locality.  Coordinated hardware–software management yields the best performance.</p>
+</br>
+<ol start="4">
+<li><strong>Architecture/Micro‑architecture states</strong> (10 points)</li>
+</ol>
+<p>In a processor we have many types of storage elements: general‑purpose registers, program counter (PC), vector registers, floating‑point registers, overflow/underflow flags, pipelined registers, BHT (branch history table), BTB (branch target buffer), L1 instruction cache, and L1 data cache.</p>
+<p>a) <strong>Which of the above are architectural states for RV32I?</strong> (4)</p>
+<p><strong>Answer:</strong> Architectural state includes only elements that are defined by the ISA and visible to software.  For RV32I these are <strong>the 32 general‑purpose registers (x0–x31) and the program counter (PC)</strong>.  RV32I has no floating‑point or vector registers and no condition flags.</p>
+<p>b) <strong>Which are architectural states for RV64IF/V?</strong> (2)</p>
+<p><strong>Answer:</strong> In RV64IF/V the architectural state consists of <strong>the 64‑bit general‑purpose registers, the program counter, the floating‑point register file (F registers) and the vector register file (V registers)</strong>.  These are preserved across exceptions and context switches.</p>
+<p>c) <strong>Why must instructions be retired in order?  For example, even if an integer add instruction is issued later but completes sooner than a divide instruction, it must wait for the divide to finish and update the register.</strong> (3)</p>
+<p><strong>Answer:</strong> In‑order retirement ensures <strong>precise exceptions</strong> and a correct architectural state.  Even if instructions execute out of order internally, committing them in program order guarantees that the architectural registers and memory reflect the sequential semantics of the program.  If a later instruction completed earlier and wrote its result before an older instruction raised an exception, the processor would expose an inconsistent state to software.  Therefore, results are written back in order.</p>
+<p>d) <strong>Which of the above are microarchitectural states?</strong> (2)</p>
+<p><strong>Answer:</strong> Microarchitectural states are internal to the implementation and need not be preserved by the ISA.  Examples include <strong>pipeline registers, branch history tables (BHT), branch target buffers (BTB), and cache contents (L1 instruction and data caches)</strong>.  These can be flushed and reconstructed from the architectural state when necessary.</p>
+<p>e) <strong>Why, during an interrupt, are micro‑architecture states not saved?</strong> (2)</p>
+<p><strong>Answer:</strong> Interrupt handlers save and restore the architectural state (registers and PC) so that a program can resume correctly.  <strong>Microarchitectural state is not visible to software and can be safely discarded or reinitialised</strong>; the pipeline can be flushed and predictors and caches will be repopulated automatically.  Saving such state would be expensive and provides no benefit to correctness.</p>
+</br>
+<ol start="5">
+<li><strong>Data Structures and Data Hazards</strong> (5 points)</li>
+</ol>
+<p>Many basic data structures (linked lists, trees, queues, stacks, hash tables with collision chains) naturally involve pointer chasing, which introduces memory dependencies that slow performance on pipelined processors due to data hazards.  As a programmer, <strong>what steps can you take to reduce inefficiencies in applications that use such data structures?</strong></p>
+<p><strong>Answer:</strong> To reduce the impact of pointer‑chasing data structures:</p>
+<ul>
+<li><strong>Improve spatial locality</strong> by storing nodes in contiguous arrays or using pool allocators rather than scattered heap allocations.</li>
+<li><strong>Reduce pointer following</strong> by flattening structures (e.g., using dynamic arrays or vectors instead of linked lists) and by grouping related fields together.</li>
+<li><strong>Use prefetching</strong>—software prefetch instructions can bring the next nodes into cache ahead of use.</li>
+<li><strong>Batch operations</strong> to amortise pointer traversal costs, and reorganise algorithms to traverse data in cache‑friendly order.</li>
+<li>Consider <strong>cache‑aware data structures</strong> such as B‑trees and open‑addressing hash tables that reduce memory dependencies.</li>
+</ul>
+</br>
+<ol start="6">
+<li><strong>Control hazards</strong> (10 points)</li>
+</ol>
+<p>In the pipelined data path, the branch target address (PC + immediate) is normally calculated in the EXE stage. However, this PC + immediate calculation could occur earlier at the ID stage, since both the PC value and the immediate are available there.</p>
+<p>a) <strong>If PC + immediate is calculated at the ID stage, how can we take advantage of it?</strong> (2)</p>
+<p><strong>Answer:</strong> Computing the branch target in the decode stage allows the processor to begin fetching from the branch target one cycle earlier.  When combined with branch prediction, the fetch unit can speculatively redirect the instruction fetch immediately after decode, reducing the number of wasted cycles if the prediction is correct.</p>
+<p>b) <strong>Do you think this is a good design choice?  Argue for or against it.</strong> (3)</p>
+<p><strong>Answer:</strong> Moving the PC + immediate adder to the ID stage shortens the branch resolution latency by one cycle, which reduces the branch penalty.  However, it adds an adder to an already complex stage and may lengthen the critical path, increasing the clock period and offsetting the benefit.  In simple in‑order cores with short pipelines, the benefit may outweigh the cost; in high‑performance out‑of‑order cores, branch prediction and speculative execution already mitigate branch penalties, so the extra hardware and timing cost may not justify the small improvement.  Overall, <strong>it can be beneficial in shallow pipelines but less so in deeply pipelined, superscalar designs</strong>.</p>
+<p>c) <strong>Modern microprocessors like Apple’s M4 can predict branch outcomes with 99% accuracy.  Discuss potential directions for further improvements in branch prediction.</strong> (3)<br>
+<strong>Answer:</strong> To push accuracy beyond 99%, researchers explore <strong>larger and more sophisticated branch predictors</strong>, such as TAGE predictors with more history lengths, and hybrid predictors that combine multiple schemes.  <strong>Path‑based and neural‑network predictors</strong>, including perceptron and recurrent neural networks, can learn longer‑range correlations.  Compiler techniques such as profile‑guided optimisation and static branch hints can aid predictors.  Finally, <strong>exploiting machine‑learning methods and hardware–software co‑design</strong> may further improve prediction accuracy.</p>
+<p>d) <strong>The textbook’s Figure 4.59 suggests that a branch instruction would cause three pipelined bubbles, but in class we claim that a branch instruction may cause only two bubbles.  Explain the one‑bubble discrepancy.</strong> (2)</p>
+<p><strong>Answer:</strong> The number of bubbles inserted depends on where the branch target address and condition are resolved in the pipeline.  In the textbook’s example the branch target is computed in the EXE stage and the pipeline must flush the IF, ID and EX stages when a branch is taken—three bubbles.  In class we assumed that PC + immediate is calculated one stage earlier, and/or that branch prediction supplies a speculative target in IF; in that design the branch outcome is known sooner, so only two bubbles are required to flush the incorrect instructions.  <strong>The difference arises from placing the branch‑address calculation earlier in the pipeline.</strong></p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#csc3060-2026spring-quiz1">CSC3060 2026Spring Quiz1</a>
+      <ul>
+        <li><a href="#section-i-30-points-select-the-best-answer-the-answer-is-shown-after-each-question">Section I (30 points): Select the best answer. The answer is shown after each question.</a></li>
+        <li><a href="#section-ii-40-points-multiple-choice-one-or-more-correct-answers--put-all-correct-letters-the-answers-are-shown-in-parentheses">Section II (40 points): Multiple choice (one or more correct answers).  Put all correct letters; the answers are shown in parentheses.</a></li>
+        <li><a href="#section-iii-50-points-short-and-brief-answers--provide-concise-explanations">Section III (50 points): Short and brief answers.  Provide concise explanations.</a></li>
+      </ul>
+    </li>
+    <li><a href="#csc3060-2026spring-quiz2">CSC3060 2026Spring Quiz2</a>
+      <ul>
+        <li><a href="#section-i-30-points-select-the-best-answer-the-answer-is-shown-after-each-question-1">Section I (30 points): Select the best answer. The answer is shown after each question.</a></li>
+        <li><a href="#section-ii-40-points-multiple-choice-one-or-more-correct-answers-put-all-correct-letters-the-answers-are-shown-in-parentheses">Section II (40 points): Multiple Choice (one or more correct answers). Put all correct letters; the answers are shown in parentheses.</a></li>
+        <li><a href="#section-iii-50-points-short-and-brief-answers--provide-concise-explanations-1">Section III (50 points): Short and brief answers.  Provide concise explanations.</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060q/">💯 CSC3060 Quiz Q&amp;A</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

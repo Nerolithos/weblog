@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💯 CSC3200 Final Revision C&#43;&#43; final revision handout | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CSC3200 is a new CUHKSZ course, so we use a CSC3002 paper as a revision reference.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3200.f3/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3200.f3/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💯 CSC3200 Final Revision C&#43;&#43; final revision handout">
+  <meta property="og:description" content="CSC3200 is a new CUHKSZ course, so we use a CSC3002 paper as a revision reference.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2025-12-11T07:07:34+08:00">
+    <meta property="article:modified_time" content="2025-12-11T07:07:34+08:00">
+    <meta property="article:tag" content="CSC3200">
+
+  <meta itemprop="name" content="💯 CSC3200 Final Revision C&#43;&#43; final revision handout">
+  <meta itemprop="description" content="CSC3200 is a new CUHKSZ course, so we use a CSC3002 paper as a revision reference.">
+  <meta itemprop="datePublished" content="2025-12-11T07:07:34+08:00">
+  <meta itemprop="dateModified" content="2025-12-11T07:07:34+08:00">
+  <meta itemprop="wordCount" content="6510">
+  <meta itemprop="keywords" content="CSC3200">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💯 CSC3200 Final Revision C&#43;&#43; final revision handout">
+  <meta name="twitter:description" content="CSC3200 is a new CUHKSZ course, so we use a CSC3002 paper as a revision reference.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/test.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💯 CSC3200 Final Revision C&#43;&#43; final revision handout</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💯 CSC3200 Final Revision C&#43;&#43; final revision handout</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-12-11T07:07:34+08:00">December 11, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="c-final-revision">C++ Final Revision</h1>
+<p>CSC3200 is a new course in the 2025–26 academic year, so there are no past-year CSC3200 sample papers. However, CSC3002 also contains C++ material, though without the data-structure portion, so the following 2021 CUHKSZ CSC3002 final can still be used for revision:</p>
+<embed src="http://localhost:1313/pdf/3002Question.pdf" type="application/pdf" width="100%" height="600px" />
+<p>The answer set is below:</p>
+<embed src="http://localhost:1313/pdf/3002Answer.pdf" type="application/pdf" width="100%" height="600px" />
+</br>
+<h1 id="key-takeaways">Key Takeaways</h1>
+<ol>
+<li><strong>Pointers, References, and Arrays</strong></li>
+</ol>
+<ul>
+<li>The asterisk in declarations: <code>char *p;</code> or <code>char* p</code> means that the variable closest to the asterisk is a pointer to the type on the left. So in <code>char *p, q;</code>, <u><code>q</code> is <strong>not</strong> a pointer</u>. a pointer</u>. Likewise, <code>char const *p</code> and <code>char *const p</code> mean “pointer to const” and “const pointer,” respectively.onst” and “const pointer,” respectively.有关——⚠️<u>星号右边形容指针，左边形容指向的对象</u>。</li>
+<li>The ampersand in declarations: <code>char &amp;r = o;</code> means a reference bound to an existing variable <code>o</code>. A reference is effectively another name for the same object, so changing either one changes the same underlying value. <code>char *&amp;p</code> means a reference to a pointer, whereas <u><code>char &amp;*p</code> is <strong>illegal</strong></u>.</li>
+<li>As operators, <code>*</code> and <code>&amp;</code> mean <strong>dereference</strong> and <strong>address-of</strong>, respectively, so <code>*&amp;v == v</code> and <code>&amp;*p == p</code>.</li>
+<li>Increment and decrement operators: <code>++v</code> increments before returning; <code>v++</code> returns first and then increments. <u>As simple loop iterators, the distinction often does not matter.</u> But expressions such as <code>*++p</code>, <code>++*p</code>, <code>*p++</code>, and <code>(*p)++</code> have importantly different meanings.</li>
+<li>Memory: in a function, <code>char arr1[42];</code> allocates directly on the <strong>stack</strong>, while <code>auto arr2 = new char[42];</code> allocates on the <strong>heap</strong>. <strong>Important:</strong> <u><code>new</code> always returns a <strong>pointer</strong> to the heap object</u>, while the pointer variable itself typically lives on the stack. <strong>pointer</strong> to the heap object</u>, while that pointer variable itself typically lives on the stack.y lives on the stack. The former requires no manual deletion; the latter must be destroyed with <code>delete[]</code>.;<code>。如果在函数/循环/判断体外，直接暴露在类中，</code>char arr[42];<code>这种声明会产生全局变量，存储在 **Global/Static Area**，在任意位置申请</code>static char` 也会存在这里。</li>
+<li>Arrays: an array object such as <code>char arr[42];</code> implicitly decays into <strong>a pointer to its first element</strong>, so <code>*arr</code> and <code>arr + n</code> are legal. <strong>But</strong> <u><code>arr++</code> is <strong>illegal</strong></u>: an array is not literally the same thing as a pointer. By contrast, after <code>auto ptr = arr;</code>, <code>ptr[n]</code> is legal.</li>
+<li>Multidimensional arrays: <code>char arr[][42]</code> means an array whose elements are themselves 42-character arrays. It decays only one level, yielding <code>char (*a)[42]</code>. <u>A multidimensional array is not the same thing as a double pointer</u>.</li>
+</ul>
+</br>
+</br>
+<ol start="2">
+<li><strong>Time Complexity</strong></li>
+</ol>
+<ul>
+<li>
+<p>Three basic sorting methods：</p>
+<p><strong>Selection Sort</strong> repeatedly picks the nth smallest remaining element and swaps it into the nth position. For <code>x</code> elements, it needs <code>x-1</code> comparisons to identify the minimum, so the total is $(n-1)+(n-2)+&hellip;+1+0={n(n-1)\over 2}$ comparisons, which stays at O(n<sup>2</sup>). <strong>Independent of initial ordering</strong>.</p>
+<p><strong>Insertion Sort</strong> scans from left to right and shifts each element leftward until it reaches a smaller predecessor. As above, it may require up to ${n(n-1)\over 2}$ moves, so the average / worst case is O(n<sup>2</sup>), but if the data is already sorted it needs only one pass, giving the best case O(n). <strong>The more ordered the input is, the faster it becomes.</strong></p>
+<p><strong>Bubble Sort</strong> repeatedly swaps adjacent out-of-order pairs from left to right, usually across multiple rounds. It may perform up to ${n(n-1)\over 2}$ swaps, so the average / worst case is O(n<sup>2</sup>), while an already sorted input can be handled in O(n) if an early-stop check is added. <strong>The more ordered the input is, the faster it becomes.</strong></p>
+</li>
+<li>
+<p>Four divide-and-conquer / logarithmic-structure sorting ideas：</p>
+<p><strong>Quick Sort</strong> places smaller elements on one side of a pivot and larger elements on the other, then recurses on both parts. Its average / best complexity is O(nlogn), but if the pivot repeatedly becomes the maximum or minimum, it <strong>degenerates toward a selection-sort-like worst case</strong>.ction-sort-like worst case**, namely O(n<sup>2</sup>).ivot 有关**</p>
+<p><strong>BST Sort</strong> inserts the elements into a binary search tree and then outputs them by inorder traversal. As above, the best / average case is O(nlogn), but if the input sequence is already ordered the tree may <strong>degenerate into a linked list</strong>, yielding the worst case O(n<sup>2</sup>). <strong>The more ordered the input is, the worse it may become.</strong></p>
+<p><strong>Merge Sort</strong> recursively splits the data left and right until only one element remains, then merges upward in sorted order. Because it does not depend on pivot choice or BST structure, it does not degenerate and stays at O(nlogn). <strong>Independent of initial ordering</strong>.</p>
+<p><strong>Heap Sort</strong> builds a min-heap and then performs <code>n</code> calls to <code>deleteMin</code>; building the heap costs O(n), and each deletion costs O(logn), so the total remains O(nlogn). <strong>Independent of initial ordering</strong>.</p>
+</li>
+<li>
+<p>In average practice: <code>Quick Sort ≲ Merge Sort ≲ Heap Sort ≲ BST Sort ≪ Insertion Sort ≲ Bubble Sort ≲ Selection Sort</code>.</p>
+</li>
+</ul>
+</br>
+</br>
+<ol start="3">
+<li><strong>OOP</strong></li>
+</ol>
+<ul>
+<li>
+<p>The <u>three major pillars of OOP</u> are <strong>Encapsulation</strong> (packaging methods and data into a class), <strong>Polymorphism</strong> (compile-time overloading and run-time overriding), and <strong>Inheritance</strong> (subclasses inheriting members from parent classes).</p>
+</li>
+<li>
+<p><strong>Overloading</strong>: parameter types and parameter counts are part of the signature, but ⚠️ <strong>the return type is not</strong>.</p>
+</li>
+<li>
+<p><strong>Inheritance</strong>: in <code>class Son : public Father</code>, the subclass inherits members according to the chosen access mode; inheritance mode affects how inherited members are exposed.</p>
+<p><strong>Virtual inheritance</strong> can resolve the ambiguity of the diamond inheritance pattern by ensuring that only one shared virtual base subobject is created.</p>
+<p><strong>Virtual functions</strong> enable <strong>run-time polymorphism</strong>: when a base-class function is declared <code>virtual</code>, calling it through a base-class interface can dispatch to the subclass implementation.</p>
+</li>
+<li>
+<p>Operator overloading must follow the language rules; one cannot arbitrarily define every possible form. Standard types such as <code>std::string</code>, as well as user-defined <code>struct</code>, <code>enum</code>, or <code>class</code> types, may support appropriate operator overloading.</p>
+</li>
+<li>
+<p>For <code>class Example {int a; char* b;};</code>, the constructor initializer form can be written concisely as <code>public: Example (int x, char* y) : a(x), b(y) {}</code>.</p>
+</li>
+<li>
+<p>When designing a custom class, one usually places <u><strong>data members in the private section</strong></u> and exposes constructors, getters, setters, and similar interfaces for controlled access. access. However, declaring a method or class as a <code>friend</code> grants special access. to otherwise private members.u&gt;<code>friend</code> 可以在类外直接用/改 private 内容</u>。注意⚠️：A 类的 private 部分声明<code>friend class B</code>  只是给 B 的成员开了“通行证”，仍不能在类外访问 A 的私有部分！</p>
+</li>
+<li>
+<p>⚠️ By default, C++ copy construction is shallow: pointers are copied as pointers, so two objects may end up referring to the same memory. By contrast, a deep copy allocates fresh storage. Hence the <strong>Rule of Three</strong>: if one of copy constructor, copy assignment, or destructor must be customized, then all three usually should be customized.</p>
+</li>
+<li>
+<p>A <strong>namespace</strong> is a protective naming scope. Statements such as <code>using namespace std;</code> or <code>using std::string</code> help resolve ambiguity among same-named functions or types from different scopes.</p>
+</li>
+</ul>
+</br>
+</br>
+<ol start="4">
+<li><strong>Basic Data Structure</strong></li>
+</ol>
+<ul>
+<li>
+<p>A <strong>collection class</strong> (container) is a kind of ADT. Arrays, dynamic arrays, linked lists, sets, and tables are all classic containers, while stacks and heaps are restricted containers. In the standard library, the size returned by interfaces such as <code>.size()</code> is of type <strong><code>size_t</code></strong>, so it may need conversion before being used as an <code>int</code>. The <code>.end()</code> function usually returns the position <strong>one step past the last element</strong>.</p>
+</li>
+<li>
+<p>A <strong>dynamic array</strong> such as <code>std::vector</code> can expand <strong>automatically or manually</strong>. For example: <code>new std::vector&lt;int&gt; arr(42)</code>. As a typical container, it satisfies <u><code>effective size</code> ≤ <code>allocation size</code></u>, i.e. <code>arr.size() &lt;= arr.capacity()</code>.e size<code>≤</code>allocation size<code>&lt;/u&gt;, i.e. </code>arr.size() &lt;= arr.capacity()<code>. The </code>.reserve(x)<code>function increases capacity to</code>x<code>without changing the effective size.小**。扩容函数</code>.resize(x, v)<code>将 e.s. 扩大到 x，并把未定义的项初始化为 v，**可以减小，但不改变 a.s.**。</code>.push_back()` 向数组尾部添加元素。动态数组的<strong>随机插入 O(n)，随机访问O(1)</strong>。</p>
+</br>
+</li>
+<li>
+<p>A <strong>linked list</strong> is built from a node class such as <code>class Node {T value; Node&lt;T&gt;* next;};</code> and a list-body class such as <code>class List {List () {}}</code>. Each <strong>older node’s <code>next</code> member points to the newer node</strong>.ember points to the newer node**. The list often includes a private <strong>dummy head node</strong>, initialized for example as <code>dummyHead = new Node&lt;T&gt;(T(), nullptr);</code>, so edge cases become easier to handle.需要每次插/删都检测是否空**。</p>
+</br>
+<p><code>.insert()</code> only needs the pointer <code>prev</code> to the <strong>predecessor node</strong>; then <code>prev-&gt;next = new Node&lt;T&gt;(v, prev-&gt;next);</code> works directly. For <code>.delete()</code>, first find the predecessor <code>prev</code>, then remove the target node by reconnecting the chain and deleting the removed node.rget;` <u>只要有链表结构，绕过被删除项前<strong>一定要做临时指针</strong></u>，否则绕过后想删除时就找不到它了。</p>
+<p>All linked-list nodes are created with <code>new</code>, so they must be <strong>destroyed one by one</strong>. <strong>Random insertion in a linked list is O(1), while random access is O(n)</strong>, which is the opposite tradeoff from an array or dynamic array.</p>
+</br>
+</li>
+<li>
+<p>A <strong>stack</strong> is a LIFO structure and a restricted data type whose operations happen only on one side, the <strong>top</strong>.</p>
+<p>Interface: <code>push()</code>, <code>pop()</code>, <code>top()</code>, <code>isEmpty()</code>.</p>
+<p>Array stack: in <code>stack[]</code>, <u><code>top</code> indexes the <strong>next free slot above the stack top</strong></u>; e.g. <code>T&amp; pop() {return stack[--top];}</code>, <code>void push(const T x) {stack[top++] = x;}</code>, and emptiness can be tested accordingly.</p>
+<p>Linked stack: similar to a linked list and requires two classes (<code>Node</code> and <code>Stack</code>). Unlike an ordinary linked list, new elements point to older ones, so the links run <strong>from stack top down toward the stack bottom</strong>. stack top down toward the stack bottom**, and <code>topPtr</code> points to the top node. The operations are similar to those of a linked list and are omitted here.</p>
+</br>
+</li>
+<li>
+<p>A <strong>queue</strong> is a FIFO structure and a restricted data type whose operations occur at both ends (<code>back</code> for insertion, <code>front</code> for removal).</p>
+<p>Interface: <code>enqueue()</code>, <code>dequeue()</code>, <code>isEmpty()</code>, <code>getFront()</code>.</p>
+<p>Linked queue: also similar to a linked list, with two classes (<code>Node</code> and <code>Queue</code>). In <code>Queue</code>, <code>front</code> points to the head node and <code>back</code> points to the tail node.dinary linked list, older elements point to newer ones, so the links go from the queue front toward the queue back.</p>
+<p><u>循环数组队列</u>：利用 Circular-Array 首位衔接弥补数组难以整体移动。在<strong>插/删时无需整体移动</strong>同时做到<strong>防止超出索引</strong>。(1) 一种实现方式只能用数组大小 const MAX <strong>-1</strong>，front 索引队首，<u>back 索引<strong>队尾的下一位</strong></u>。⚠️核心：<u>enqueue 时先插入然后后移 back ( <code>back = (back+1)%MAX;</code>)，dequeue 时 <code>front = (front+1)%MAX;</code></u>，用求余把<u><strong>超出索引的位置绕回数组开头</strong></u>。⚠️限制条件：要入队不能满 <code>if(!(back+1)&amp;MAX == front)</code>，要出队不能空  <code>if(front != back)</code>。<strong>永远有一位填不了</strong>，这个代价换来可以简单判断满/空的语句。(2) 另一种实现方式虽可以填满 MAX 位，但是要用一个全局变量来计数 (用填了多少位判断满/空)</p>
+</br>
+</li>
+<li>
+<p>A <strong>map</strong> (dictionary) stores key-value pairs such as <code>struct KeyValuePair {T1 key, T2 value};</code>. Because the key acts as an index, it must be unique. A lightweight map may even be implemented using an array or dynamic array.</p>
+<p>哈希表 HashMap：比如 <code>std::unordered_map</code>，利用<strong>哈希函数</strong>将 key 映射到桶数组的索引，即：<code>int BucketIdx = HashFunc(key) % Buckets.size();</code>，良好的哈希函数<strong>尽量避免碰撞</strong> (<u>最好 key 对桶双射</u>)，发生碰撞时用<u>链表或数组将多个 KVP 挂在 Bucketa 数组中</u> (前者用桶数组存 Node，后者将桶数组做成二维数组)。无碰撞时<strong>除遍历全部 O(1)</strong>，KVP 全部碰撞到同个桶时<u>哈希退化为链表，回到 O(n)</u>。为避免退化，检测 <u>KVP 数量与 Buckets 数量的比</u>，过大时要 <strong>rehash</strong> (扩容Buckets 数组并重新计算哈希)。一般要求<u>比例大约低于 <strong>0.7</strong></u>。</p>
+</br>
+</li>
+<li>
+<p>A <strong>set</strong> is an unordered collection of non-repeated data. It may be implemented with hashing, BSTs, linked lists, and so on.</p>
+<p>A character set or small-integer set may be represented using a <strong>bitset</strong> such as <code>std::bitset</code>, where binary bits indicate whether an element belongs to the set. This is especially suitable for small contiguous universes such as ASCII or bounded integer ranges.ially suitable for small contiguous universes such as ASCII or bounded integer ranges.e 0–1000.%bpL<code> 位。&lt;u&gt;对 k 进行操作要用掩码 mask&lt;/u&gt;：</code>return unsigned long(1) &laquo; k%bpL<code>⚠️因为位运算**从右往左**，1 等价于 000...01，所以是左移。取 k</code>bSet[k/bpL] &amp; mask<code>；删 k </code>bSet[k/bpL] &amp;= ~mask`。</p>
+</br>
+</li>
+<li>
+<p>A <strong>tree</strong> is a simple graph without cycles or loops (satisfying <code>|E| = |V| - 1</code> in the connected case), and in rooted discussions it is often treated as a <u>directed one-way</u> structure from parent to child.</p>
+<p>Root：没有父节点；leaf：没有子树；path：图中可行的通路；distance：路径上<u>经过的边数</u>；height：到最远叶子的距离 (<u>空树高为 <strong>-1</strong></u>)；depth：到根的距离。BT：每个节点最多两个子树。Full BT：每个节点都有 0 或 2 个子节点的 BT；Complete BT：最后一层靠左排列其余层全满的 BT(<u>Heap 就是一种 CBT</u>)。</p>
+<p>函数 &ldquo;order&rdquo; 中，<code>cout &lt;&lt; p-&gt;data &lt;&lt;'\n';</code> 和 <code>order (p-&gt;left);</code> 和 <code>order(p-&gt;right);</code> 依次对应 &ldquo;根&rdquo;、&ldquo;左&rdquo;、&ldquo;右&rdquo;，以三种顺序排列这三个语句就形成了<strong>二叉树</strong>中的 preorder、 inorder 和 postorder。</p>
+<p>⚠️对于 N 个节点，高为 h 的二叉树：节点最多 N ≤ 1x2x4x&hellip;2<sup>h </sup>= <strong>2<sup>h+1</sup>-1</strong>，所以<strong>N∈[h+1, 2<sup>h+1</sup>-1]，反过来可以求出 h 的下限，h∈[⌈log<sub>2</sub>(N+1) - 1⌉, N-1]。</strong></p>
+</br>
+</li>
+<li>
+<p><strong>BST 二叉搜索树</strong> 满足对任意有左右子节点的节点 x， <code>x-&gt;left-&gt;data &lt; x-&gt;data; x-&gt;right-&gt;data &lt; x-&gt;data;</code> 的不重复的二叉树，<u>其 inorder 是严格升序的</u>。除遍历平均 O(logn)，退化为链表则全部 O(n)。</p>
+<p>接口：find()、findMin()、findMax()、insert()、remove()</p>
+<p>寻找 v 的函数从某处 x 开始递归，比右大就 <code>find(x-&gt;right)</code> 比左小就 <code>find(x-&gt;left)</code> 都不满足就比较 x 和 v，相等就返回其指针，不相等返回 nullptr。</p>
+<p>找最小项只需 从某处 x 开始一路往左递归到底 <code>if(!x-&gt;left) {return x;} return findMin(x-&gt;left);</code> 即可；找最大项则两处方向相反。</p>
+<p>插入 v 的函数 (不插重复值) 先类似于 find v，会遍历到某节点的左/右子节点是一个空节点，此时 new 一个叶节点即可。</p>
+<p>删除 v 的函数同样先 find v，找到 x 节点，如果 <code>if(x-&gt;left &amp;&amp; x-&gt;right) {}</code> 有两个孩子，<code>x-&gt;data = findMin(x-&gt;right)-&gt;data; remove(x-&gt;data, x-&gt;right);</code> 就<u>将中序后继值 (或前任值) 代替 x 的值并 递归删掉它</u>，它作为右子树的最大值，必然是一个叶节点，套用一个孩子的情况就可以兼容：<code>else {Node&lt;t&gt;* old = x; x = (x-&gt;left) ? t-&gt;left : t-&gt;right; delete old;}</code> (左有节点就代替当前点，反之用右节点代替，<u>没有节点相当于把当前节点悬空</u>)</p>
+</li>
+</ul>
+</br>
+</br>
+<ol start="5">
+<li><strong>Balanced BST</strong></li>
+</ol>
+<ul>
+<li>
+<p>用平衡条件让二叉搜索树不超过 logn 级别的高度，就不会退化。</p>
+</li>
+<li>
+<p><strong>AVL</strong> 要求任意节点的左右子树的高度差不超过 1，<u>故而所有叶节点的深度波动不超出 ±1</u>。这种情况下，随意 insert() 和 delete() 都有大概率破坏平衡。需要在节点类新增一个 height 变量和 height() 函数来记录和返回高度，LminusR() 来记录**<u>平衡系数</u><strong>，如<code>height(n-&gt;left) - height(n-&gt;right)</code> ≤ ±1就正常，小于负一说明右子树过长，就需要</strong>重平衡**。</p>
+<p>⚠️插/删<u>会且只会影响当前节点到根的路径上的点的高度和平衡性！</u> 所以除了左右指针，我们还需要 <strong>parent</strong> 指针才能向上找问题。</p>
+<p>设想一个 <strong>reBalance</strong> 函数，<strong>在插/删之后原地调用</strong>，先更新当前点的高度，<u>从这点开始往 parent 遍历到根：更新高度并检查每一个点的 LminusR()</u>，出现的 ⚠️<strong>第一个失衡点处</strong>，如果 LminusR(n)&gt;1，说明左树过长，检查 LminusR(n-&gt;left)，≥0 说明属于 <strong>LL</strong> 情况，右旋 n；&lt;0 说明属于 LR 情况 先左旋 n-&gt;left <strong><u>变成 LL</strong> 情况</u>再右旋 n。反之 LminusR(n)&lt;1 也一样分为 <strong>RR</strong> (左旋 n) 和 RL (右旋 n-&gt;right <strong>变成 RR</strong> 再左旋 n) 两种情况。总体逻辑如下：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">                                   / &lt;-1(LR): node-&gt;left = lRotate(n-&gt;left);
+             / &gt;1:LminsR(n-&gt;left)〈              ↓ ↓ ↓ ↓ ↓(turns into LL)
+            /                      \ ≥1(LL): return rRotate(n);
+LminusR(n)〈                         / &gt;1(RL): node-&gt;right = rRotate(n-&gt;right);
+            \ &lt;-1:LminusR(n-&gt;right)〈               ↓ ↓ ↓ ↓ ↓(turns into RR)
+                                     \ ≤-1(RR): return lRotate(n);
+</code></pre><ul>
+<li>
+<p>左旋就是 n Inheritance<u>右子节点的左子树</u>并成为<u>右子节点的左子树</u> (Inheritance为 n 的右子树)。相当于交换 n 和其右子节点，抬高了右子节点的右子树 (即所谓的 <strong>RR</strong>)</p>
+</li>
+<li>
+<p>右旋就是 n Inheritance<u>左子节点的右子树</u>并成为<u>左子节点的右子树</u> (Inheritance为 n 的左子树)。相当于交换 n 和其左子节点，抬高了左子节点的左子树 (即所谓的 <strong>LL</strong>)</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> rRotate(Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>n) {
+</span></span><span style="display:flex;"><span>	Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>son <span style="color:#f92672">=</span> n<span style="color:#f92672">-&gt;</span>left, <span style="color:#f92672">*</span>rsT <span style="color:#f92672">=</span> son<span style="color:#f92672">-&gt;</span>right; 
+</span></span><span style="display:flex;"><span>	son<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> n;
+</span></span><span style="display:flex;"><span>	n<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> rsT; 
+</span></span><span style="display:flex;"><span>	n<span style="color:#f92672">-&gt;</span>height <span style="color:#f92672">=</span> height(n); son<span style="color:#f92672">-&gt;</span>height <span style="color:#f92672">=</span> height(son);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> son;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>左右旋以及为何分一到两次旋转的意义不言而喻。</p>
+</br>
+</li>
+<li>
+<p><strong>RBTree 红黑树</strong> 是 Stanford 研发的另一种平衡方式，目的相同，利用 <code>enum COLOR {RED, BLACK};</code>，<u><strong>所有新增节点初始化为红色</strong></u>。</p>
+<p>注意⚠️：红黑树中<u><strong>黑与空是等价的</strong></u>。红黑树中所谓的叶节点的概念与上文完全不同，现在<u>叶代表 <strong>NIL</strong></u><strong>(空占位节点)</strong>——任意节点如果没有左或右子节点就伸出 NIL，因为 <u><strong>黑 ≡ 空</strong>，<strong>NIL 都是黑的</strong></u>。</p>
+<p>红黑树的<strong>五大性质</strong>：<strong>node color</strong>: 所有节点非黑即红；<strong>root property</strong>：根永远黑；<strong>leaf property</strong>: 所有 NIL 都黑；<strong>red property</strong>: 不存在互为父子的红色节点；<strong>black property</strong>: 从任意节点到所有 NIL 的路径中经过的黑节点数量相等，称为 <u><strong>bh</strong> (black height)</u>。</p>
+<p>⚠️对于 N 个节点，高为 h 的红黑树：高度至少为 bh，所以N∈[<strong>2<sup>bh</sup>-1</strong>, 2<sup>h+1</sup>-1]，又因为 <strong>h ≤ 2 bh</strong>(最高也只能红黑相间)，可以得到 h∈[⌈log<sub>2</sub>(N+1) - 1⌉, <strong>⌊2log<sub>2</sub>(N+1) - 1⌋</strong>]。很明显，相比二叉树，红黑树高度是有上限的，<u><strong>高度最多大约是 AVL 的 2 倍</strong></u>，无法退化到链表。</p>
+<p>红黑树也有一套类似 AVL 的重平衡机制，以下对于<strong>插入</strong>一个节点 node：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">       / parent B/NIL：保证根 B，结束。
+node 〈             / 叔 R：叔、父、祖父，颜色反转；并将祖父作为 node 递归；
+       \ parent R 〈
+                    \ 叔 B/NIL：回溯 node 的父、祖父：LR/RL双旋换色(后一次)；LL/RR单旋换色。
+</code></pre><p>父亲黑时没有问题，但<u>如果这过节点本身是根，那就需要把它染黑</u>来保证 black property。</p>
+<p>父亲红时必然会违反 red property，我们需要分的<strong>大情况</strong>是 &ldquo;父亲是祖父的哪个孩子？&rdquo; 在此之下讨论 uncle 的两种情况。</p>
+<ul>
+<li>其中 <strong>&ldquo;父红叔黑&rdquo;</strong> 的部分几乎与 AVL 是一样的，区别是**<u>不需要往上找失衡点</u>**，直接原地讨论：</li>
+</ul>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">(Node&lt;T&gt;* gp  = node-&gt;parent-&gt;parent; Node&lt;T&gt;* p = node-&gt;parent;)                      
+                                / 右子(LR): p = lRotate(p);
+            / 左子，node 是 p 的〈            ↓ ↓ ↓ (turns into LL)
+           /                    \ 左子(LL): rRotate(gp); 并换色
+p 是 gp 的〈                    / 左子(RL): p = rRotate(p);
+           \ 右子，node 是 p 的〈            ↓ ↓ ↓(turns into RR)
+                               \ 右子(RR): lRotate(gp); 并换色
+</code></pre><ul>
+<li>另外一种 <strong>&ldquo;父红叔红&rdquo;</strong> 的部分，直接涂黑两者，把祖父涂红，这样问题就转嫁到祖父身上，将祖父作为 node 递归，<u>我们总会遇到其它两种可解决的情况</u> (比如一路到节点，就属于 &ldquo;父黑&rdquo; 情况)</li>
+</ul>
+<p>删除的重平衡不完全相同，主要是 <strong>&ldquo;double black&rdquo;</strong> 思路。</p>
+<ul>
+<li>
+<p><strong>删红无所谓</strong>，如果删了黑节点，就会造成路径上黑节点缺少 1：用“这个位置是 double black”来表示；然后根据“兄弟节点的颜色、兄弟孩子的颜色”分类讨论</p>
+</li>
+<li>
+<p>兄弟为红：旋转父亲，<strong>交换父亲(B)和兄弟(R)</strong>，并把兄弟涂黑、父亲涂红。因为交换后的新兄弟节点是原本兄弟(R) 的子节点，一定黑或空，进入情况 (2)。</p>
+</li>
+<li>
+<p>兄弟为黑：兄弟孩子全黑或空：兄弟涂红，把 double black 上移；兄弟存在红孩子：类似于插入，根据这个红侄子与其父、祖父的关系的L/R 关系，旋转 1～2 次并调整颜色。</p>
+</li>
+</ul>
+</li>
+</ul>
+</br>
+</br>
+<ol start="6">
+<li><strong>Heap</strong></li>
+</ol>
+<ul>
+<li>
+<p>堆是 “<strong>按优先级处理</strong>元素” 的数据结构，所以又叫 <strong>Priority Queue</strong>。堆不同于 BST，<u>它不把所有元素整体排序</u>，但堆可以用 BST 实现。分为 MinHeap 和 MaxHeap，优先处理最小或最大项。依旧需要 left, right, parent (<strong>索引</strong>)，接口：insert()、push()、deleteMin() / deleteMax()。</p>
+</li>
+<li>
+<p>建立在 vector 基础上的<u>二叉堆 <strong>Binary Heap</strong> 是最优解</u>，<strong>插/删 O(log N)</strong>，findMin O(1)。二叉堆<u>必须表现为一棵<strong>完全二叉树</strong></u>，并用动态数组形式存储 (⚠️<u>不需要指针！</u>)，二叉堆有两条性质：</p>
+<p><strong>结构性</strong>：对于任意索引 i (⚠️<u>存储在 vector 中，所以索引从 0 开始</u>)，其父子节点可以直接计算：<strong>parent(i) = (i−1)/2；left(i) = 2i+1；right(i) = 2i+2</strong>，这样把二叉堆画成 二叉树后<u>索引从左到右从上到下逐行增大，且为<strong>0～N</strong> 的连续整数表示</u>。</p>
+<p><strong>有序性 (heap-order property)</strong>：对 MinHeap，所有父节点小于子节点，MaxHeap 反之。堆<u><strong>只保证 “父子有序”</strong></u>，左右是无序的，故中序遍历不会得到升/降序列。</p>
+<p>⚠️一棵高 h 的完全二叉树：<strong>N∈[2<sup>h</sup>, 2<sup>h+1</sup>-1]</strong></p>
+<p>插入 v：先加入动态数组尾部 <code>minH.push_back(v)</code> 然后<strong>上滤 (siftUp)</strong>： <code>std::swap(minHeap[idx], minHeap[parent(idx)]); idx = parent(idx);</code> 也就是向 parent 方向反复交换直到 parent 小于自己。</p>
+<p>删除根 (deleteMin)：<u>先用数组尾项代替根</u> <code>minH[0] = minHeap.pop_back();</code> 然后<strong>下滤 (siftDown)</strong>：循环<strong>交换自己与左右孩子中较小的那个</strong>，直到左右孩子都比自己大。⚠️Note:<u>每次交换先要确定左右孩子存在 <code>left(idx) &lt; size()</code> 防止<strong>下标越界</strong></u>。</p>
+<p><strong>buildHeap 建堆</strong>：先将元素写入动态数组 <code>for (int i = 0; i &lt; vec.size(); i++)  {data_.push_back(vec[i]);}</code>，然后从最后一个非叶节点开始下滤 <code>for (int i = size() / 2 - 1; i &gt;= 0; --i) {siftDown(i)}</code> (数组末尾在 N-1，其父节点就在 N/2-1)。总共大约在<strong>O(N)</strong>。</p>
+</li>
+</ul>
+</br>
+</br>
+<ol start="7">
+<li>Graph</li>
+</ol>
+<ul>
+<li>
+<p>树是没有循环的图，图是一种满足度数和为偶数的 G~(E, V) 结构。</p>
+<p>无向图有边的两点互成邻接，<u>有向图 (digraph) 被指向的点邻接指向它的点</u>。</p>
+<p>实现图可以用 <strong>adjacency list</strong>：每个顶点做一个数组/链表，再把顶点做成桶数组 (Map)，<u>遍历复杂度 O(|V|+|E|)</u>；也可以用 <strong>adjacnecy matrix</strong>：用 |V|x|V| 的二维数组 <code>[i][j]</code> 表示 i 到 j 有边，无向图是对角对称的，<u>遍历复杂度 O(|V|<sup>2</sup>)</u>。</p>
+<p>DFS：用 stack/递归 先走一条路径到底，然后回溯访问其他路径。思路类似于没有左右的 <strong>preorder</strong></p>
+<p>BFS：用 queue 依次走距离近到远的点。</p>
+<p>最短路径问题：无权时用 BFS 遍历记下到根的层数；有权需要用 <u><strong>Dijkstra 算法</strong></u>：从 r 开始，对当前点所有相邻点，如果<strong>当前点到 r 的距离+边权重</strong>比记录值更小，就更新距离，如此多轮。</p>
+<p>Tropological Sorting： <u>对 <strong>DAG</strong> (有权无环图)</u>，如果 (u, v) 有边，先访问 u (先访问所有前序点)。</p>
+</li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3200/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3200</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#c-final-revision">C++ Final Revision</a></li>
+    <li><a href="#key-takeaways">Key Takeaways</a></li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.f3/">💯 CSC3200 Final Revision C&#43;&#43; 期末样卷</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.f2/">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.f2/">💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Nonlinear)</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.f1/">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.f1/">💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.2/">💻 CSC3200 LEC3-5 Intermediate C&#43;&#43;</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.1/">💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

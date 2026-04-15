@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🛠️ Getting Started with GitHub Action Bot for Repository Automation | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Using my &lsquo;On This Day in History&rsquo; project as an example, this post explains how a CS amateur/enthusiast university student can begin using GitHub Actions Bot to automate a remote repository, along with the common pitfalls.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/gab/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/gab/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🛠️ Getting Started with GitHub Action Bot for Repository Automation">
+  <meta property="og:description" content="Using my ‘On This Day in History’ project as an example, this post explains how a CS amateur/enthusiast university student can begin using GitHub Actions Bot to automate a remote repository, along with the common pitfalls.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2026-04-07T11:30:34+08:00">
+    <meta property="article:modified_time" content="2026-04-07T11:30:34+08:00">
+    <meta property="article:tag" content="技术">
+
+  <meta itemprop="name" content="🛠️ Getting Started with GitHub Action Bot for Repository Automation">
+  <meta itemprop="description" content="Using my ‘On This Day in History’ project as an example, this post explains how a CS amateur/enthusiast university student can begin using GitHub Actions Bot to automate a remote repository, along with the common pitfalls.">
+  <meta itemprop="datePublished" content="2026-04-07T11:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-04-07T11:30:34+08:00">
+  <meta itemprop="wordCount" content="1912">
+  <meta itemprop="keywords" content="技术">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🛠️ Getting Started with GitHub Action Bot for Repository Automation">
+  <meta name="twitter:description" content="Using my ‘On This Day in History’ project as an example, this post explains how a CS amateur/enthusiast university student can begin using GitHub Actions Bot to automate a remote repository, along with the common pitfalls.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/gab.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🛠️ Getting Started with GitHub Action Bot for Repository Automation</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🛠️ Getting Started with GitHub Action Bot for Repository Automation</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-04-07T11:30:34+08:00">April 7, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><a href="https://blog.nero-lithos.com/posts/history-today/">“Today in History”</a> is basically the simplest form of automation: once set up, you do not need to do anything manually every day.</p>
+<ul>
+<li>A Python script fetches data from a public API every day;</li>
+<li>Hugo Anake renders the data into a page during build time;</li>
+<li>GitHub Actions Bot runs the script on a schedule and triggers Cloudflare to rebuild the whole site;</li>
+</ul>
+<p>⚠️ Notes:</p>
+<ol>
+<li>Do not expose secrets to the frontend.</li>
+<li>Use <code>.gitignore</code> and sensible workflow design to avoid bloating your Git history with generated files.</li>
+<li>If you are using an API (for example, an LLM service), it is best to add a security rule in Cloudflare for your domain and use <strong>Managed Challenge</strong>.</li>
+</ol>
+</br>
+<h1 id="project-architecture">Project Architecture</h1>
+<ol>
+<li>
+<p>Goal: create an “On This Day in History” page on the blog that automatically displays historical events for the current date. The whole process is fully automated: even if your own computer is shut down, the site still updates every day.</p>
+</li>
+<li>
+<p>Tech stack</p>
+</li>
+</ol>
+<ul>
+<li>Static website (deployment path: GitHub repository → Cloudflare Pages automatic build);</li>
+<li>Data source: the official Wikipedia On This Day JSON API (no need to scrape HTML);</li>
+<li>Backend automation: scheduled GitHub Actions jobs.</li>
+</ul>
+<ol start="3">
+<li>Key components</li>
+</ol>
+<ul>
+<li>A Python data-fetching script iterates through all dates in the year, retrieves historical events from the Wikipedia API, and generates a JSON file.</li>
+<li>Hugo integration (HTML shortcode): during build time, use <code>readFile</code> + <code>transform.Unmarshal</code> to load the JSON; use <code>now.Format &quot;01-02&quot;</code> (UTC) as the key to select the current day’s events; render both the detail-page list and the homepage summary; use an <code>.md</code> template as the page entry point (with front matter for title, cover image, and so on); and invoke <code>history_today</code> inside the body.</li>
+<li>Automation: a workflow (<code>.yml</code>) with <code>on.schedule</code> set to multiple trigger times each day; pull the repository code and theme submodules before running.</li>
+</ul>
+</br>
+</br>
+<h1 id="pitfalls-and-difficulties">Pitfalls and Difficulties</h1>
+<h2 id="data-source">Data source</h2>
+<p>Phenomenon: if you try to scrape HTML from a site like onthisday.com using CSS selectors to locate DOM elements, a website revision can silently break everything. The script may still run, but it may extract only empty arrays and quietly write them into your JSON file, leaving the frontend with nothing to display.</p>
+<p>Solution: if you switch to the Wikipedia On This Day JSON API, the returned structure is explicit, the fields are stable, and the process does not depend on page layout. Minor HTML revisions are therefore much less likely to break your pipeline.</p>
+<h4 id="takeaways">Takeaways</h4>
+<ul>
+<li>
+<p>Use an API whenever one is available instead of scraping HTML;</p>
+</li>
+<li>
+<p>Detect the case where “no data is fetched.” In such situations, the script should <strong>raise an error and stop</strong>, rather than silently writing JSON full of <code>[]</code>.</p>
+</li>
+</ul>
+</br>
+<h2 id="time-and-time-zones">Time and time zones</h2>
+<p>Phenomenon: both Hugo’s <code>now</code> and GitHub Actions schedules use <strong>UTC</strong> by default. If you run the workflow in the early morning Beijing time, <code>now</code> may still correspond to the previous UTC date. As a result, code that looks perfectly reasonable may keep showing “yesterday in history” even though the page appears to update every day.</p>
+<p>Solution: adjust your cron schedule so that it avoids the ambiguous interval in which the local date has already changed while UTC has not. For example, trigger the task at UTC 0/1/2, which corresponds roughly to 8/9/10 AM Beijing time. By then, both UTC and Beijing are already on the “new day.”</p>
+<h4 id="takeaways-1">Takeaways</h4>
+<ul>
+<li>If you want to define “today” using a local time zone such as <code>Asia/Shanghai</code>, either adjust the cron schedule accordingly or compute dates explicitly in the script using that local time zone;</li>
+<li>It is wise to schedule multiple runs per day as a buffer, because the bot may occasionally fail due to network delays or runner congestion. You may notice that GitHub Actions Bot does not always run exactly on the hour you specify, and some delay is normal. In short, scheduled tasks should preferably <strong>run multiple times per day</strong>, rather than relying on a single successful execution:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">schedule</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">cron</span>: <span style="color:#e6db74">&#34;0 0,1,2 * * *&#34;</span>
+</span></span></code></pre></div><ul>
+<li>For GitHub Actions, running the automatic script at UTC+0 still corresponds to “yesterday” for some local time zones.</li>
+</ul>
+</br>
+<h2 id="build-chain">Build chain</h2>
+<p>Phenomenon: the site builds successfully on localhost, but CI reports errors such as “theme partial not found.” This is a classic Hugo issue, and one common cause is that the theme is a Git submodule that CI did not pull. Another is that older Hugo fields (such as <code>.Site.DisqusShortname</code>) have been deprecated, and newer Hugo versions may fail on them.</p>
+<p>Solution:</p>
+<ul>
+<li>Enable submodules when checking out the repository inside Actions:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v4</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fetch-depth</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">submodules</span>: <span style="color:#ae81ff">recursive</span>
+</span></span></code></pre></div></li>
+<li>Update template usage to match newer Hugo versions. For example, replace <code>.Site.DisqusShortname</code> with <code>.Site.Config.Services.Disqus.Shortname</code>.</li>
+</ul>
+<h4 id="takeaways-2">Takeaways</h4>
+<ul>
+<li>When “it works locally but fails in CI,” check the following first: whether the theme/submodules were pulled, whether a Hugo upgrade renamed some APIs, and whether variables such as <code>HUGO_ENV</code> and other environment settings are configured correctly.</li>
+</ul>
+</br>
+<h2 id="git-history-pollution">Git history pollution</h2>
+<blockquote>
+<p>Action Bot is also a contributor to the repository. Whether the conflict is caused by a human or a bot, do not repeatedly <code>add</code> unnecessary content.</p>
+</blockquote>
+<p>Phenomenon: if your workflow blindly runs <code>git add ... public</code> and stages all generated files, then each <code>hugo</code> build may create or slightly modify a large number of HTML files under <code>public</code>, especially <code>public/posts/</code>. The result is <strong>a huge number of irrelevant diffs every day</strong> (timestamps, ordering differences, and so on). Your Git history gets polluted by unnecessary updates, and conflicts between your local branch and the remote branch become much more likely.</p>
+<p>Solution:</p>
+<ul>
+<li><strong>Do not commit build artifacts anymore.</strong> Instead, the workflow may still run <code>hugo --config hugo.toml</code> as a sanity build check, but should not <code>git add</code> the build output. Then use an empty commit like the following purely to trigger a Cloudflare rebuild, without modifying any files:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git commit --allow-empty -m <span style="color:#e6db74">&#34;chore: daily history-today rebuild trigger&#34;</span>
+</span></span><span style="display:flex;"><span>git push
+</span></span></code></pre></div><ul>
+<li>Also configure <code>.gitignore</code> so that local tools or other scripts do not accidentally add generated files:</li>
+</ul>
+<pre tabindex="0"><code class="language-gitignore" data-lang="gitignore">/public/
+/.history-today-build-stamp
+</code></pre><h4 id="takeaways-3">Takeaways</h4>
+<ul>
+<li><strong>A repository should store only source code and genuine source data, not build results.</strong></li>
+<li>Static-site build directories such as <code>public/</code> or <code>dist/</code> should almost always be listed in <code>.gitignore</code>.</li>
+</ul>
+</br>
+</br>
+<h1 id="a-reusable-github-actions-bot-template">A Reusable GitHub Actions Bot Template</h1>
+<blockquote>
+<p>A step-by-step tutorial aimed at “beginning university programmers.” You can reuse the same pattern for RSS fetching, automatic translation, periodic backups, and many other automation tasks.</p>
+</blockquote>
+<h3 id="step-1-the-script">Step 1: The script</h3>
+<ul>
+<li>The language is up to you: Python / Node / Go / Shell all work. Here I use Python as an example.</li>
+<li>Input: read parameters from environment variables or configuration (for example, an API key or a date range); output: generate data files or modify selected source files; and make sure the script can be run locally from the command line so that you can observe its behavior directly.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># skeleton pseudo-code</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> datetime <span style="color:#f92672">import</span> datetime
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Read secrets from environment variables (if needed)</span>
+</span></span><span style="display:flex;"><span>    api_key <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;MY_API_KEY&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> api_key:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">RuntimeError</span>(<span style="color:#e6db74">&#34;Missing MY_API_KEY&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    today <span style="color:#f92672">=</span> datetime<span style="color:#f92672">.</span>utcnow()<span style="color:#f92672">.</span>date()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ... call a third-party API ...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ... generate JSON or Markdown files ...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div><p><strong>Never hard-code secrets in the script. Always keep them in environment variables on the backend side.</strong></p>
+</br>
+<h3 id="step-2-integrate-the-script-with-the-site-locally-first">Step 2: Integrate the script with the site locally first</h3>
+<p>In our project, for example, the script-generated data is written to <code>static/xxx.json</code>, and Hugo reads that JSON during build time using a shortcode or partial.</p>
+<p>Run and verify locally:</p>
+<ul>
+<li>Make sure the script is <strong>idempotent</strong>: running it multiple times should produce the same result (or simply overwrite the old data).</li>
+<li>Make sure the site can build successfully without depending on CI-specific behavior.</li>
+</ul>
+</br>
+<h3 id="step-3-design-the-github-actions-workflow">Step 3: Design the GitHub Actions workflow</h3>
+<p>A typical workflow looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Daily Bot</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">schedule</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">cron</span>: <span style="color:#e6db74">&#34;0 0,1,2 * * *&#34;</span>   <span style="color:#75715e"># run daily at UTC 0/1/2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">workflow_dispatch</span>: {}       <span style="color:#75715e"># also allow manual triggering by button</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">permissions</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">contents</span>: <span style="color:#ae81ff">write            </span> <span style="color:#75715e"># allow the Bot to push code or make empty commits</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">jobs</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">run-bot</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">steps</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout repo</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v4</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">fetch-depth</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">submodules</span>: <span style="color:#ae81ff">recursive </span> <span style="color:#75715e"># if you use theme submodules, etc.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Setup Python</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/setup-python@v5</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">python-version</span>: <span style="color:#e6db74">&#34;3.12&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install deps</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">pip install -r requirements.txt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Run bot script</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">env</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">MY_API_KEY</span>: <span style="color:#ae81ff">${{ secrets.MY_API_KEY }}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">python content/posts/fetch_history_today.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name: Optional</span>: <span style="color:#ae81ff">sanity build</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">hugo --config hugo.toml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Trigger deploy (empty commit)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git config user.name &#34;github-actions[bot]&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git config user.email &#34;github-actions[bot]@users.noreply.github.com&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git commit --allow-empty -m &#34;chore: daily bot trigger&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git push</span>          
+</span></span></code></pre></div><p>In this setup, the scheduled job lets GitHub Actions Bot run your script automatically. The bot then uses an empty commit to trigger deployment on the downstream platform (such as Cloudflare Pages), without flooding the repository with build artifacts.</p>
+</br>
+</br>
+<h1 id="should-i-put-secrets-in-the-frontend-thats-very-generous-of-you">“Should I Put Secrets in the Frontend? That’s Very Generous of You.”</h1>
+<p>For beginners, it is extremely common to put secrets directly in frontend code or a public repository. Remember this rule:</p>
+<blockquote>
+<p>If anyone can see it in the browser, then it is not a secret.</p>
+</blockquote>
+<p>This includes:</p>
+<ul>
+<li>The source code in a public GitHub repository. GitHub may even send you warning emails if it detects exposed credentials — yes, that happened to me.</li>
+<li>Anything visible via F12: Hugo templates / Markdown / JS / CSS; static JSON / static HTML;</li>
+<li>The browser’s <code>localStorage</code> and cookies (unless they are HTTP-only and intended exclusively for backend use).</li>
+</ul>
+<p><strong>The correct approach is:</strong></p>
+<ol>
+<li><strong>Keep secrets only in server-side environment variables</strong>, such as <code>secrets.MY_API_KEY</code> in GitHub Actions.</li>
+<li>In the workflow, map the secret into the runtime environment:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">env</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">MY_API_KEY</span>: <span style="color:#ae81ff">${{ secrets.MY_API_KEY }}</span>
+</span></span></code></pre></div></li>
+<li>In your script, read it only through <code>os.environ[&quot;MY_API_KEY&quot;]</code>, and never write it into any output file.</li>
+<li>If the script produces content that will be exposed to the frontend, that content must already be <strong>sanitized</strong>: e.g. the actual API response data you want to publish, not API tokens, refresh tokens, or private IDs.</li>
+</ol>
+<p>(Of course, you may also store secrets using Cloudflare Workers &amp; Pages under “Variables and Secrets.”)</p>
+<p>⚠️ Finally, add a WAF security rule in Cloudflare for your domain. Using my domain as an example:</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">When (http.host eq &#34;nero-lithos.com&#34; or ends_with(http.host, &#34;.nero-lithos.com&#34;))
+Then &#34;Managed Challenge&#34;
+</code></pre><p>This service is free for a specific domain. Do <strong>not</strong> configure a global WAF rule from the dashboard homepage, or you may be charged.</p>
+</br>
+</br>
+<h1 id="suggestions">Suggestions</h1>
+<ol>
+<li><strong>Get the workflow working locally first, then move it to CI.</strong> Do not start by writing Actions immediately.</li>
+<li><strong>Increase complexity only one small step at a time.</strong></li>
+<li><strong>A Git bot is still a contributor</strong>, so the files it generates can also create version conflicts.</li>
+<li><strong>Never put secrets into code or configuration files.</strong></li>
+</ol>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">技术</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#project-architecture">Project Architecture</a></li>
+    <li><a href="#pitfalls-and-difficulties">Pitfalls and Difficulties</a>
+      <ul>
+        <li><a href="#data-source">Data source</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+        <li><a href="#time-and-time-zones">Time and time zones</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+        <li><a href="#build-chain">Build chain</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+        <li><a href="#git-history-pollution">Git history pollution</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#a-reusable-github-actions-bot-template">A Reusable GitHub Actions Bot Template</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#step-1-the-script">Step 1: The script</a></li>
+            <li><a href="#step-2-integrate-the-script-with-the-site-locally-first">Step 2: Integrate the script with the site locally first</a></li>
+            <li><a href="#step-3-design-the-github-actions-workflow">Step 3: Design the GitHub Actions workflow</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#should-i-put-secrets-in-the-frontend-thats-very-generous-of-you">“Should I Put Secrets in the Frontend? That’s Very Generous of You.”</a></li>
+    <li><a href="#suggestions">Suggestions</a></li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/gab/">🛠️ GitHub Action Bot 自动化管理仓库入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/whisper/">📢 How can you batch-transcribe audio into text efficiently?</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/whisper/">📢 如何快速批量地将音频转文字？</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/outlook/">🌐 Attempting to Fetch CUHKSZ Mailbox Data</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/outlook/">🌐 龙大邮箱抓取尝试</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/weblog_deploy/">🌐 在 cloudflare 部署 Hugo 构架博客的 manual</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

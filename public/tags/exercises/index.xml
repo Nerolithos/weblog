@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Exercises on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/exercises/</link>
+    <description>Recent content in Exercises on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 31 Oct 2024 14:49:58 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/exercises/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC1003 Assignment 2: Two-Dimensional Arrays</title>
+      <link>http://localhost:1313/posts_en/assignment2/</link>
+      <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/assignment2/</guid>
+      <description>Worked examples for the second CSC1003-Java assignment.</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 Assignment 1 OJ Practice</title>
+      <link>http://localhost:1313/posts_en/assignment1/</link>
+      <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/assignment1/</guid>
+      <description>The first OJ programming practice for the first-year CUHKSZ course CSC1003.</description>
+    </item>
+  </channel>
+</rss>

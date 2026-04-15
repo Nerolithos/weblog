@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC1003 Final Review | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="A summary of useful Java syntax and common pitfalls.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/1003.6/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/1003.6/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC1003 Final Review">
+  <meta property="og:description" content="A summary of useful Java syntax and common pitfalls.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2024-11-29T14:15:34+08:00">
+    <meta property="article:modified_time" content="2024-11-29T14:15:34+08:00">
+    <meta property="article:tag" content="CSC1003">
+
+  <meta itemprop="name" content="💻 CSC1003 Final Review">
+  <meta itemprop="description" content="A summary of useful Java syntax and common pitfalls.">
+  <meta itemprop="datePublished" content="2024-11-29T14:15:34+08:00">
+  <meta itemprop="dateModified" content="2024-11-29T14:15:34+08:00">
+  <meta itemprop="wordCount" content="1460">
+  <meta itemprop="keywords" content="CSC1003">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC1003 Final Review">
+  <meta name="twitter:description" content="A summary of useful Java syntax and common pitfalls.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC1003 Final Review</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2024-11-29T14:15:34+08:00">November 29, 2024</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="csc-final">CSC Final</h1>
+<h2 id="string-processing">String Processing</h2>
+<h3 id="areplaceb-c"><code>a.replace(b, c)</code></h3>
+<ul>
+<li>
+<p><code>a.replace(b, c)</code> replaces every occurrence of substring <code>b</code> in string <code>a</code> with <code>c</code>. You can also use it to remove <code>b</code> entirely, or to insert <code>c</code> between every two characters.</p>
+</li>
+<li>
+<p>It works for both characters and strings.</p>
+</li>
+<li>
+<p>For example, to remove the space inside a phrase: <code>&quot;Hello world&quot;.replace(&quot; &quot;, &quot;&quot;);</code></p>
+</li>
+<li>
+<p>Application: OJ Problem P1019 (BanishLetter2)</p>
+<p>Write a static method that takes a String and many char values. Delete all the characters in the String that equals to the char values, and return the result. For example:</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Input:            Output:
+</span></span><span style="display:flex;"><span>Hello World       He Wrd
+</span></span><span style="display:flex;"><span>o l k
+</span></span></code></pre></div><ul>
+<li>Certainly, we can inspect the string character by character and filter out the required letters:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Scanner;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BanishLetter2</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        String in <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String filterset <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> input <span style="color:#f92672">=</span> in.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> filter <span style="color:#f92672">=</span> filterset.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        next:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">&lt;</span>input.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span>0; j<span style="color:#f92672">&lt;</span>filter.<span style="color:#a6e22e">length</span>; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (filter<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>.<span style="color:#a6e22e">equals</span>(input<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>)) <span style="color:#66d9ef">continue</span> next;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(input<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>However, with <code>replace</code>, we can process the string directly without first splitting it into an array:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Scanner;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BanishLetter2</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        String input <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String filterset <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> filter <span style="color:#f92672">=</span> filterset.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">&lt;</span>filter.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) input <span style="color:#f92672">=</span> input.<span style="color:#a6e22e">replace</span>(filter<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>, <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(input);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="astartwithb-and-aendwithc"><code>a.startWith(b)</code> and <code>a.endWith(c)</code></h3>
+<ul>
+<li>
+<p>They test whether string <code>a</code> starts with substring <code>b</code>, or ends with substring <code>c</code>.</p>
+</li>
+<li>
+<p>Application: OJ Problem P1015 (Longest Common Prefix)</p>
+<p>Write a static method that takes a String array and return the longest common prefix. Return an empty String if common prefix does not exist.</p>
+<p>Input1: <code>flower flow flight</code></p>
+<p>Output1: <code>fl</code></p>
+<p>Input2: <code>hello world csc1003</code></p>
+<p>Output2:</p>
+</li>
+<li>
+<p>Idea: assume the first word is the current LCP. If any later word does not <code>startsWith</code> it, remove the last character from the candidate prefix. Repeat until every remaining word matches the trimmed LCP.</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Scanner;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LCP</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">lcp</span>(String<span style="color:#f92672">[]</span> strs) {
+</span></span><span style="display:flex;"><span>        String prefix <span style="color:#f92672">=</span> strs<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>;  <span style="color:#75715e">// Assume the first word is the longest common prefix initially</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1; i <span style="color:#f92672">&lt;</span> strs.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>strs<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>.<span style="color:#a6e22e">startsWith</span>(prefix)) {  <span style="color:#75715e">// If a word does not match the current prefix, shorten it by one character</span>
+</span></span><span style="display:flex;"><span>                prefix <span style="color:#f92672">=</span> prefix.<span style="color:#a6e22e">substring</span>(0, prefix.<span style="color:#a6e22e">length</span>() <span style="color:#f92672">-</span> 1);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (prefix.<span style="color:#a6e22e">isEmpty</span>()) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> prefix;  <span style="color:#75715e">// Once all words match the trimmed first word, return it</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        String input <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> words <span style="color:#f92672">=</span> input.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        String result <span style="color:#f92672">=</span> lcp(words);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(result);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="asubstringb-c"><code>a.substring(b, c)</code></h3>
+<ul>
+<li>
+<p><code>a.substring(b, c)</code> extracts the characters of string <code>a</code> whose indices lie in <code>[b, c)</code>. It can also be used to isolate a single character such as <code>a[b]</code>.</p>
+</li>
+<li>
+<p>For example, print a string one character at a time:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>String str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Hello World&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">=</span>str.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>str.<span style="color:#a6e22e">substring</span>(i, i<span style="color:#f92672">+</span>1).<span style="color:#a6e22e">equals</span>(<span style="color:#e6db74">&#34; &#34;</span>)) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(str.<span style="color:#a6e22e">substring</span>(i, i<span style="color:#f92672">+</span>1)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+<li>
+<p>Application: OJ Problem P1021 (Bool)</p>
+<p>A Boolean expression is an expression that evaluates to either true or false. Valid expressions follow the following conventions:</p>
+<p>the result of &rsquo;t&rsquo; is true; the result of &lsquo;f&rsquo; is false; &lsquo;!(subExpr)&rsquo; means to perform logical NOT operation on the internal expression subExpr; &lsquo;&amp;(subExpr1, subExpr2, &hellip;, subExprn)&rsquo; means to perform logical AND operation on 2 or more internal expressions subExpr1, subExpr2, &hellip;, subExprn; &lsquo;|(subExpr1, subExpr2, &hellip;, subExprn)&rsquo; means to perform logical OR operation on 2 or more internal expressions subExpr1, subExpr2, &hellip;, subExprn.</p>
+<p>Given a boolean expression in the form of a String, you need to return the result of the expression.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Input1: |<span style="color:#f92672">(</span>f,f,f,t<span style="color:#f92672">)</span>           Input2: !<span style="color:#f92672">(</span>&amp;<span style="color:#f92672">(</span>f,t<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Output1: t                   Output2: true
+</span></span></code></pre></div></li>
+<li>
+<p>Converting the string into an array and then looping over it would be unnecessarily cumbersome here. By contrast, <code>substring</code> can directly select part of the string, whereas arrays would require extra loops, possibly nested ones.</p>
+</li>
+<li>
+<p>My solution is this: when the method detects an operator (<code>&amp;</code> or <code>|</code>), it removes the surrounding parentheses and commas, then recursively evaluates the resulting string; when it sees <code>&quot;t&quot;</code> or <code>&quot;f&quot;</code>, it returns the corresponding Boolean value; when it sees <code>&quot;!&quot;</code>, it returns the negation of what follows.</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Bool</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Scanner sc <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner(System.<span style="color:#a6e22e">in</span>);
+</span></span><span style="display:flex;"><span>        String expression <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">nextLine</span>();
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(evaluateExpr(expression));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">evaluateExpr</span>(String expr) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Handle the base cases `f` and `t` inside the expression </span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">equals</span>(<span style="color:#e6db74">&#34;t&#34;</span>)) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">equals</span>(<span style="color:#e6db74">&#34;f&#34;</span>)) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Every `return` sends information back to the caller, so in recursion it does not prematurely terminate the overall computation</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;!&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>evaluateExpr(expr.<span style="color:#a6e22e">substring</span>(2, expr.<span style="color:#a6e22e">length</span>() <span style="color:#f92672">-</span> 1)); <span style="color:#75715e">// Remove the outer parentheses</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;&amp;&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            String innerExprs <span style="color:#f92672">=</span> filter(expr.<span style="color:#a6e22e">substring</span>(2, expr.<span style="color:#a6e22e">length</span>() <span style="color:#f92672">-</span> 1));
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">&lt;</span>innerExprs.<span style="color:#a6e22e">length</span>(); i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>evaluateExpr(innerExprs.<span style="color:#a6e22e">substring</span>(i, i<span style="color:#f92672">+</span>1))) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// For AND, a single `f` makes the whole result false</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (expr.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;|&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            String innerExprs <span style="color:#f92672">=</span> filter(expr.<span style="color:#a6e22e">substring</span>(2, expr.<span style="color:#a6e22e">length</span>() <span style="color:#f92672">-</span> 1));
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0; i<span style="color:#f92672">&lt;</span>innerExprs.<span style="color:#a6e22e">length</span>(); i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (evaluateExpr(innerExprs.<span style="color:#a6e22e">substring</span>(i, i<span style="color:#f92672">+</span>1))) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// For OR, a single `t` makes the whole result true</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>; <span style="color:#75715e">// This return value does not matter, because valid input should never let the program reach this line</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">filter</span>(String expr) {
+</span></span><span style="display:flex;"><span>        String split <span style="color:#f92672">=</span> expr.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">&#34;,&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> split;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="acontainschar-b"><code>a.contains(Char b)</code></h3>
+<ul>
+<li>It checks whether string <code>a</code> contains character <code>b</code>, returning <code>true</code> or <code>false</code>. It is commonly used as a condition in <code>if</code> or <code>while</code> statements.</li>
+</ul>
+<h3 id="aindexofchar-b-and-aindexofstring-b"><code>a.IndexOf(Char b)</code> and <code>a.IndexOf(String b)</code></h3>
+<ul>
+<li>This is similar to the previous one, but it can locate either a character or a string. It returns the index where <code>b</code> first appears in <code>a</code>, as an <code>int</code>.</li>
+<li>If you only want to test whether <code>a</code> contains <code>b</code>, simply check whether the return value is <code>-1</code>.</li>
+</ul>
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<h3 id="alength-和-alength"><code>a.length</code> 和 <code>a.length()</code></h3>
+<ul>
+<li><code>a.length</code> is used when <code>a</code> is an array, whereas <code>a.length()</code> is used when <code>a</code> is a string. They cannot be mixed up.</li>
+<li>Arrays and strings are both data types, but their interfaces differ: an array’s length is a field, while a string’s length is obtained through a method.</li>
+</ul>
+<h3 id="type-b-和-integerparseintb"><code>(&lt;type&gt;) b</code> 和 <code>Integer.parseInt(b)</code></h3>
+<ul>
+<li>Explicit casting <code>type a = (type) b</code> is mainly used among numeric types (<code>long</code>, <code>short</code>, <code>int</code>, etc.), and is commonly used for truncation or narrowing conversions.</li>
+</ul>
+<h3 id="on-return-and-recursive-methods">On <code>return</code> and Recursive Methods</h3>
+<ul>
+<li>Many beginners think <code>return</code> simply ends a method and jumps back to the call site. In recursion, however, <code>return</code> sends control back to the previous recursive frame rather than ending the entire recursive process immediately.</li>
+<li>For example, in a method such as <code>recur(String a)</code>, you may write <code>return recur(String b) + recur(String c)</code> to perform divide-and-conquer style recursion, such as decomposing an expression by operators and solving it piece by piece.</li>
+</ul>
+<h2 id="oop-and-dt">OOP and DT</h2>
+<ul>
+<li>
+<p>Whenever we see <code>Class.b</code> in Java, it indicates that <code>b</code> is a member field of class <code>Class</code>. For example, if we define a class <code>Coffee</code>, declare <code>public final foam;</code> inside it, and set <code>this.foam = foam;</code> inside the constructor <code>public Coffee(double foam)</code>, then <code>foam</code> becomes an accessible field:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>Coffee cappuccino <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Coffee(1<span style="color:#f92672">/</span>3);  <span style="color:#75715e">// This line is precisely calling the constructor!</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">double</span> foampct <span style="color:#f92672">=</span> cappuccino.<span style="color:#a6e22e">foam</span>  <span style="color:#75715e">// foampct = 0.333333...</span>
+</span></span></code></pre></div></li>
+<li>
+<p>A more common example is <code>array.length</code>, where <code>length</code> is an immutable field of the given array.</p>
+</li>
+<li>
+<p>Note: if a member field is not <code>final</code> (i.e., it is mutable), it is usually better not to access it directly. Instead, use getter methods so that the class preserves proper encapsulation.</p>
+</li>
+<li>
+<p>As for constructing a DT, here is the example from the lecture:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Complex</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">double</span> re;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">double</span> im;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Complex</span>(<span style="color:#66d9ef">double</span> real, <span style="color:#66d9ef">double</span> imag) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">re</span> <span style="color:#f92672">=</span> real;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">im</span> <span style="color:#f92672">=</span> imag;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Complex <span style="color:#a6e22e">plus</span>(Complex b) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> real <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">re</span> <span style="color:#f92672">+</span> b.<span style="color:#a6e22e">re</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> imag <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">im</span> <span style="color:#f92672">+</span> b.<span style="color:#a6e22e">im</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Complex(real, imag);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Complex <span style="color:#a6e22e">times</span>(Complex b) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> real <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">re</span> <span style="color:#f92672">*</span> b.<span style="color:#a6e22e">re</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">im</span> <span style="color:#f92672">*</span> b.<span style="color:#a6e22e">im</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> imag <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">re</span> <span style="color:#f92672">*</span> b.<span style="color:#a6e22e">im</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">im</span> <span style="color:#f92672">*</span> b.<span style="color:#a6e22e">re</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Complex(real, imag);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">modulus</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> Math.<span style="color:#a6e22e">sqrt</span>(re <span style="color:#f92672">*</span> re <span style="color:#f92672">+</span> im <span style="color:#f92672">*</span> im);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Test code</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Complex a <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Complex(3.<span style="color:#a6e22e">0</span>, 4.<span style="color:#a6e22e">0</span>);
+</span></span><span style="display:flex;"><span>        Complex b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Complex(1.<span style="color:#a6e22e">0</span>, 2.<span style="color:#a6e22e">0</span>);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a: &#34;</span> <span style="color:#f92672">+</span> a);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;b: &#34;</span> <span style="color:#f92672">+</span> b);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a + b: &#34;</span> <span style="color:#f92672">+</span> a.<span style="color:#a6e22e">plus</span>(b));
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;a * b: &#34;</span> <span style="color:#f92672">+</span> a.<span style="color:#a6e22e">times</span>(b));
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Modulus of a: &#34;</span> <span style="color:#f92672">+</span> a.<span style="color:#a6e22e">modulus</span>());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>This program can represent complex numbers and compute their addition, multiplication, and modulus.</li>
+<li>Every time a complex number is created, the constructor is invoked.</li>
+<li>In <code>a.plus(b)</code> and <code>a.times(b)</code>, the argument <code>b</code> cannot be omitted, because the parameter named <code>b</code> in the method declaration is not the same thing as the actual object passed in during invocation.</li>
+</ul>
+</li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc1003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC1003</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#csc-final">CSC Final</a>
+      <ul>
+        <li><a href="#string-processing">String Processing</a>
+          <ul>
+            <li><a href="#areplaceb-c"><code>a.replace(b, c)</code></a></li>
+            <li><a href="#astartwithb-and-aendwithc"><code>a.startWith(b)</code> and <code>a.endWith(c)</code></a></li>
+            <li><a href="#asubstringb-c"><code>a.substring(b, c)</code></a></li>
+            <li><a href="#acontainschar-b"><code>a.contains(Char b)</code></a></li>
+            <li><a href="#aindexofchar-b-and-aindexofstring-b"><code>a.IndexOf(Char b)</code> and <code>a.IndexOf(String b)</code></a></li>
+          </ul>
+        </li>
+        <li><a href="#common-pitfalls">Common Pitfalls</a>
+          <ul>
+            <li><a href="#alength-和-alength"><code>a.length</code> 和 <code>a.length()</code></a></li>
+            <li><a href="#type-b-和-integerparseintb"><code>(&lt;type&gt;) b</code> 和 <code>Integer.parseInt(b)</code></a></li>
+            <li><a href="#on-return-and-recursive-methods">On <code>return</code> and Recursive Methods</a></li>
+          </ul>
+        </li>
+        <li><a href="#oop-and-dt">OOP and DT</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.6/">💻 CSC1003 期末总结</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/assignment2/">💻 CSC1003 Assignment 2: Two-Dimensional Arrays</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/assignment2/">💻 CSC1003 Assignment2 二维数组</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/1003.5/">💻 CSC1003 LEC13-15 Recursion</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.5/">💻 CSC1003 LEC13-15 递归</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/assignment1/">💻 CSC1003 Assignment 1 OJ Practice</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/assignment1/">💻 CSC1003 Assignment1 OJPractice</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/1003.2/">💻 CSC1003 TBL1 Networking and the History of Computing</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.2/">💻 CSC1003 TBL1 网络与计算机史</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/1003.1/">💻 CSC1003 LEC1~3 Functions, Data Types, and Computation</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.1/">💻 CSC1003 LEC1~3 函数、数据类型与计算</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

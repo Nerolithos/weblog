@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3060.2/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3060.2/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
+  <meta property="og:description" content="CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2026-01-24T10:30:34+08:00">
+    <meta property="article:modified_time" content="2026-01-24T10:30:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
+  <meta itemprop="description" content="CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).">
+  <meta itemprop="datePublished" content="2026-01-24T10:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-01-24T10:30:34+08:00">
+  <meta itemprop="wordCount" content="3642">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 3-4 More about Computer System Fundamentals">
+  <meta name="twitter:description" content="CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30602.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-01-24T10:30:34+08:00">January 24, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>Programmer: → “It has been” 4294967295 “days since the last integer overflow 😊”</p>
+<p><del>(Definitely not because someone decremented <code>0u</code> without checking the lower bound.)</del></p>
+</br>
+<h1 id="week-3--process-of-data">Week 3  Process of Data</h1>
+<h2 id="integer-arithmetic">Integer Arithmetic</h2>
+<p>Because the C family is historically foundational, its data types are not dynamically represented the way they are in Python. As a result, arithmetic overflow has caused a huge number of serious bugs.</p>
+<p>⚠️ Overflow for an n-bit <strong>signed integer</strong> often appears as <strong>wraparound</strong> — $u = (a + b)\bmod 2^n \quad$.</p>
+<ul>
+<li><strong>Positive overflow</strong>: once the value exceeds the upper bound, subtract 2<sup>n</sup> and wrap into the negative range.</li>
+<li><strong>Negative overflow / underflow</strong>: once the value goes below the lower bound, add 2<sup>n</sup> and wrap into the positive range.</li>
+</ul>
+<p>Overflow detection for two’s-complement addition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int32_t</span> <span style="color:#a6e22e">sign</span>(<span style="color:#66d9ef">int32_t</span> x) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">uint32_t</span>)x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">add_overFlow</span>(<span style="color:#66d9ef">int32_t</span> a, <span style="color:#66d9ef">int32_t</span> b, <span style="color:#66d9ef">int32_t</span> r) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ((<span style="color:#f92672">~</span>(sign(a) <span style="color:#f92672">^</span> sign(b))) <span style="color:#f92672">&amp;</span> (sign(a) <span style="color:#f92672">^</span> sign(r))) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Modern hardware usually does not trap on ordinary integer overflow at the logic-gate level, because that would impose a large performance cost, and some domains — such as hashing and cryptography — deliberately rely on wraparound behavior. So overflow is usually handled in software.</p>
+<p><strong>Precise exceptions</strong> are difficult because instructions may execute out of order. Fast instructions may finish first and write their results before an earlier slow instruction raises an exception. To preserve the illusion of a sequential machine, the CPU needs significant extra machinery: <strong>internally the machine may run out of order, but externally it must still <em>appear</em> in order.</strong></p>
+</br>
+<h3 id="1-bit-full-adder-addition-and-subtraction">1-bit Full Adder, Addition, and Subtraction</h3>
+<p>Carry behavior in addition has two ingredients: <strong>propagate</strong> and <strong>generate</strong>.</p>
+<p>For two binary numbers A and B, the i-th bit receives a carry-in C<sub>in</sub> from bit i−1, and its sum bit is: S<sub>i</sub> = A<sub>i</sub> ^ B<sub>i</sub> ^ C<sub>in</sub></p>
+<p>The carry-out is: C<sub>out</sub> = (A<sub>i</sub> &amp; B<sub>i</sub>) | (C<sub>in</sub> &amp; (A<sub>i</sub> ^ B<sub>i</sub>))</p>
+<p><img src="https://i.postimg.cc/VkcJRzzV/jie-ping2026-01-20-10-37-42.png" alt=""></p>
+<p>A concrete C++ implementation can simulate <strong>carry look-ahead (CLA)</strong> with shifts:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">uint32_t</span> <span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">uint32_t</span> a, <span style="color:#66d9ef">int32_t</span> b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> p <span style="color:#f92672">=</span> a <span style="color:#f92672">^</span> b;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int32_t</span> g <span style="color:#f92672">=</span> a <span style="color:#f92672">&amp;</span> b;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>    g <span style="color:#f92672">=</span> g <span style="color:#f92672">|</span> (p <span style="color:#f92672">&amp;</span> (g <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> p <span style="color:#f92672">&amp;</span> (p <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>); 
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// carry look-ahead: repeatedly double the carry-propagation range, &lt;&lt;1, &lt;&lt;2, &lt;&lt;4, ... until the full width is covered
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> (a <span style="color:#f92672">^</span> b) <span style="color:#f92672">^</span> (g <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Subtraction is then easy, because A − B is equivalent to A + (~B + 1).</p>
+</br>
+<h3 id="multiplier">Multiplier</h3>
+<p>As in decimal multiplication, multiplying two numbers means multiplying the first number by each digit of the second number, with the appropriate place value. For unsigned binary numbers this becomes $a \times m = \sum_{i=0}^{n} m_i (a &laquo; i)$. Just as schoolbook multiplication shifts left once per digit, binary multiplication uses left shift to represent higher place value.</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">       0010       A  
+     × 1011       B            C = 0u
+-------------------------------------- &#34;Shift and Add Method&#34;
+       0010   if(B &amp; 1u) C += (A &lt;&lt; 0)
+      0010    if(B &amp; 2u) C += (A &lt;&lt; 1)
+     0000     if(B &amp; 4u) C += (A &lt;&lt; 2)
+    0010      if(B &amp; 8u) C += (A &lt;&lt; 3)
+--------------------------------------
+ = 00010110       C
+</code></pre><p>For signed integers, the main additional issue is that the sign of the result is determined by A ^ B.</p>
+</br>
+<h3 id="divider">Divider</h3>
+<p>Schoolbook binary division works by scanning from the highest bit of the dividend downward, repeatedly checking whether the divisor can be subtracted. If it can, the corresponding quotient bit becomes 1; then the process continues.</p>
+<p>One implementation uses a mask such as <code>1u &lt;&lt; 31</code>, shifts it right logically, extracts each bit of the dividend with AND, appends that bit into a temporary remainder register, and then tries one subtraction per step. If the result is nonnegative, the current mask bit is recorded in the quotient.</p>
+</br>
+</br>
+<h2 id="floating-point-numbers-and-their-arithmetic">Floating-Point Numbers and Their Arithmetic</h2>
+<p>Compared with integers, floating-point numbers are inexact approximations of real values. Recall the IEEE single- and double-precision formats:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">type</th>
+          <th style="text-align: left">sizeof(～)</th>
+          <th style="text-align: left">composition</th>
+          <th style="text-align: left">composition size</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">float</td>
+          <td style="text-align: left">4 Byte</td>
+          <td style="text-align: left">sign, exponent + <strong>127</strong>, fraction</td>
+          <td style="text-align: left">1b + 8b + 23b</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">double</td>
+          <td style="text-align: left">8 Byte</td>
+          <td style="text-align: left">sign, exponent + <strong>1023</strong>, fraction</td>
+          <td style="text-align: left">1b + 11b + 52b</td>
+      </tr>
+  </tbody>
+</table>
+<p>⚠️ <strong>Bias</strong>: to represent negative exponents, we store the exponent after adding an offset.</p>
+<p>For single precision, the exponent field leads to several cases:</p>
+<ul>
+<li>If <code>e</code> is neither all zeros nor all ones (<strong>normalized</strong>), then $$x = (-1)^s \times (1+\frac{f}{2^{23}})\times 2^{(e-127)}\ \ (s:sign, f:fraction, e:exponent)$$</li>
+<li>If <code>e = 00000000</code> (<strong>denormalized / subnormal</strong>), then when <code>f = 0</code> the value is zero; otherwise $$x = (-1)^s \times \left(\frac{f}{2^{23}}\right)\times 2^{-126}$$</li>
+<li>If <code>e = 11111111</code>, then $$F=0: \pm\infty,\ \ F ≠ 0: NaN$$</li>
+</ul>
+<p>⚠️ Note: in the denormalized case, the effective exponent is fixed at −126; the usual hidden leading 1 is absent. For example, <code>0 00000000 1000...</code> equals 2<sup>-127</sup>.</p>
+</br>
+<h3 id="what-is-a-floating-point-number-really">What is a floating-point number, really?</h3>
+<p>⚠️ The key idea is that <u>range and precision cannot both be maximized</u>. Floating point allocates more precision near zero and less precision for huge magnitudes. Concretely, normalized single-precision values in the interval 2<sup>e</sup> to 2<sup>e+1</sup> are spaced by 2<sup>e-23</sup>, while denormalized values have fixed spacing 2<sup>-149</sup>.</p>
+<p>The point of the denormalized region is to create a dense band of representable numbers between 2<sup>-149</sup> and 2<sup>-126</sup>. This gives us <strong>gradual underflow</strong>: tiny positive values approach zero smoothly under rounding instead of collapsing abruptly to 0.</p>
+<p><img src="https://i.postimg.cc/GhP0mTqh/jie-ping2026-01-22-11-16-21.png" alt=""></p>
+<p>So floating point sacrifices precision for very large numbers in exchange for a vastly larger representable range, with finer precision concentrated near zero. That is why the “point” effectively floats.</p>
+</br>
+<h3 id="binary-expansion">Binary Expansion</h3>
+<p>To convert the fractional part of a decimal number into binary, repeatedly multiply by 2 and record whether the result crosses 1:<img src="https://i.postimg.cc/15DgRBkm/jie-ping2026-01-22-11-30-10.png" alt=""></p>
+<ul>
+<li>Standard binary-expansion method: (1) separate the integer and fractional parts; (2) repeatedly multiply the fractional part by 2 and take mod 1 until a pattern emerges.</li>
+</ul>
+</br>
+<h3 id="rounding">Rounding</h3>
+<p>IEEE defines four rounding modes: <strong>round-to-even</strong>, round-toward-zero, round-down, and round-up. The default is usually round-to-even. Converting a float to an integer typically uses round-toward-zero. In single precision, integers larger than 2<sup>24</sup> are no longer all exactly representable.</p>
+</br>
+<h3 id="floating-point-arithmetic">Floating-Point Arithmetic</h3>
+<ul>
+<li>Addition and multiplication remain commutative, but associativity fails: <code>(2 + 2^100) - 2^100 ≠ 2 + (2^100 - 2^100)</code>.</li>
+<li>Converting <code>int32_t</code> to <code>float</code> is exact only within the representable range, while converting <code>float</code> back to <code>int32_t</code> may involve rounding or even overflow.</li>
+<li>Floating-point addition typically proceeds in stages: align exponents, add significands, normalize, then round and renormalize if necessary.</li>
+</ul>
+</br>
+</br>
+</br>
+<h1 id="week-4--machine-level-programming">Week 4  Machine-Level Programming</h1>
+<h2 id="understanding-machine-level-code-through-assembly">Understanding Machine-Level Code Through Assembly</h2>
+<ul>
+<li><strong>x86</strong> is a large <strong>CPU ISA family</strong> descended from the Intel 8086. We usually study <strong>x86-64</strong> (AMD64), the 64-bit extension of x86. In 32-bit mode the registers are <code>%eax</code>, <code>%ebx</code>, etc.; in 64-bit mode they become <strong><code>%rax</code>, <code>%rbx</code></strong>, and so on. The program counter is <strong><code>%rip</code></strong>. x86 is fundamentally a 2-operand machine.</li>
+<li><strong>ISA (instruction set architecture)</strong> is the CPU specification as seen by software. Different hardware ecosystems define different ISAs — for example <strong>CISC</strong> (<code>x86</code>), where hardware is more complex, versus <strong>RISC</strong> (<code>ARM</code>, <code>RISC-V</code>), where hardware is simpler but software carries more responsibility.</li>
+<li><strong>What the machine actually executes is a sequence of bytes</strong> — hexadecimal byte strings, each encoding one instruction. The machine knows almost nothing about source-level constructs such as variable names or data types.</li>
+<li><strong>Assembly language</strong> is the human-readable form of machine code under a specific ISA. Two common ways to inspect machine code are:
+<ol>
+<li>Force the compiler to emit assembly directly: <code>gcc -Og -S xxx.c</code></li>
+<li>Use a <strong>disassembler</strong> to translate byte sequences into something resembling assembly: <code>objdump -d xxx.o</code> (Linux)</li>
+</ol>
+</li>
+<li>Disassembly output usually contains the <strong>address / offset, the raw bytes, and the equivalent assembly instruction</strong>.</li>
+<li>A major feature of x86-64 is that <strong>instruction length is variable</strong> (1–15 bytes). More common instructions or those with fewer operands are often shorter.</li>
+<li>Disassembly works by reconstructing instructions from bytes and <strong>does not require source code</strong>. Its naming conventions may differ slightly from GCC-generated assembly.</li>
+</ul>
+</br>
+</br>
+<h2 id="x86-64-optional">x86-64 (optional)</h2>
+<h3 id="accessing-information--registers">Accessing Information — Registers</h3>
+<p>A 64-bit CPU has one program counter register (<code>%rip</code>) and 16 general-purpose registers (<code>%rax</code>, <code>%rbx</code>, &hellip;). These registers are flexible in purpose, except that <strong><code>%rsp</code></strong> is conventionally fixed as the stack pointer.</p>
+<ul>
+<li>All 16 of them are 64-bit integer registers used to store integers and pointers.</li>
+<li>In general, the register width matches the machine width. Suffixes such as <code>b</code>, <code>w</code>, <code>l</code>, and <code>q</code> control whether one accesses 8, 16, 32, or 64 bits.
+<img src="https://i.postimg.cc/VNWTjZZw/jie-ping2026-01-26-21-42-57.png" alt=""></li>
+</ul>
+</br>
+<h3 id="common-x86-64-assembly-instructions">Common x86-64 Assembly Instructions</h3>
+<ol>
+<li><strong>Data movement / address calculation</strong></li>
+</ol>
+<ul>
+<li><code>mov a, b</code>: <strong>copy data from <code>a</code> to <code>b</code></strong>. Depending on the operand width, we have <code>movb</code> = 8b, <code>movw</code> = 16b, <code>movl</code> = 32b, and <code>movq</code> = 64b. The same suffix idea also appears in commands such as <code>call</code>, <code>ret</code>, and <code>pop</code>, though the suffix is often omitted in practice.
+<img src="https://i.postimg.cc/FRcQ0K4k/jie-ping2026-01-26-21-26-09.png" alt=""></li>
+<li><code>lea</code>: <strong>load effective address / perform address arithmetic</strong>. It is often used for pointer arithmetic or multiply-add style computations. Unlike <code>mov</code>, it does not read memory.</li>
+</ul>
+<ol start="2">
+<li><strong>Stack operations</strong></li>
+</ol>
+<ul>
+<li><code>pushq a</code>: expand the stack toward a <strong>lower virtual address</strong> by 8 bytes, i.e. <strong><code>%rsp -= 8</code></strong>, and then push <code>a</code> onto the stack.</li>
+<li><code>popq a</code>: pop the top stack value into <code>a</code> (register or memory), i.e. <strong><code>%rsp += 8</code></strong> afterward.</li>
+</ul>
+<ol start="3">
+<li><strong>Arithmetic</strong></li>
+</ol>
+<ul>
+<li><code>add</code> / <code>sub</code> / <code>neg</code>: addition / subtraction / negation.</li>
+<li><code>imul</code>: multiply (in several forms); <code>idiv</code>: divide (typically with <code>rdx:rax</code> as the dividend).</li>
+<li><code>inc</code> / <code>dec</code>: increment / decrement (often replaced by <code>add/sub $1</code>).</li>
+<li><code>and</code> / <code>or</code> / <code>xor</code> / <code>not</code>: bitwise and / or / xor / not.</li>
+<li><code>shl</code> / <code>shr</code>: logical left / right shift; <code>sar</code>: arithmetic right shift for signed values.</li>
+</ul>
+<ol start="4">
+<li><strong>Function calls</strong></li>
+</ol>
+<ul>
+<li><code>call a</code>: <strong>push</strong> the return address (the next instruction) onto the stack, then jump to the target.</li>
+<li><code>ret</code>: pop the return address from the stack and jump back.</li>
+</ul>
+</br>
+<h3 id="x86-64-operands-and-addressing">x86-64 Operands and Addressing</h3>
+<p><strong>Three major operand classes:</strong></p>
+<ul>
+<li><strong>Immediate</strong>: a constant, written with <code>$</code> in AT&amp;T syntax (for example <code>$1</code>, <code>$0x42</code>).</li>
+<li><strong>Register</strong>: such as <code>%rax</code>, <code>%rbx</code>, and so on.</li>
+<li><strong>Memory reference</strong>: compute an effective address through an address expression, then access memory at that location.</li>
+</ul>
+<p><strong>Memory-addressing form: <code>Imm(r_b, r_i, s)</code></strong></p>
+<ul>
+<li>The effective address is built from four parts: displacement <code>Imm</code>, base register <code>r_b</code>, index register <code>r_i</code>, and scale factor <code>s</code>.</li>
+<li>It is computed as <strong><code>M[Imm + R[r_b] + R[r_i]·s]</code></strong>, where <code>R[...]</code> denotes the contents of a register and <code>M[...]</code> denotes the contents of memory at that address.</li>
+<li>The <strong>scale factor</strong> <code>s</code> must be <code>1/2/4/8</code>, matching common basic-type sizes and making expressions such as “array index × element size” convenient.</li>
+<li>Examples: <code>$0x42</code> denotes the literal constant <code>0x42</code>; <code>0x42</code> denotes the data stored at memory address <code>0x42</code>; <code>%rax</code> denotes the value stored in that register; and <code>(%rax)</code> denotes the data at the memory location pointed to by the value in <code>%rax</code>.</li>
+</ul>
+</br>
+</br>
+<h2 id="risc-v">RISC-V</h2>
+<p><del>The x86 ISA is bizarre enough that it feels like someone wandered into a CS classroom while being neither an Arknights player nor a femboy. Let us return to the comfort of RISC.</del></p>
+<p><img src="https://i.postimg.cc/0yY00fbv/huby59vy6kja1.png" alt=""></p>
+<p>RV32I (RISC-V 32I) is the minimal mandatory 32-bit integer instruction set in the RISC-V family. It follows a load/store architecture and contains 32 general-purpose 32-bit registers (<code>x0</code>–<code>x31</code>, with <code>x0</code> hardwired to zero), one 32-bit PC, and several CSR registers. It is the base on which all RISC-V processors are built.</p>
+<p><strong>Key features and components of RV32I:</strong></p>
+<ul>
+<li>
+<p>The “I” in RV32I means the base integer ISA. There is also <code>E</code>, a reduced embedded profile, plus many extensions: <code>M</code> for multiplication/division, <code>A</code> for atomic memory operations, <code>C</code> for compressed 16-bit instructions, <code>F/D</code> for floating point, <code>V</code> for vectors, and so on.</p>
+</li>
+<li>
+<p>Running an instruction from an unsupported extension — for example, <code>mul</code> on a pure RV32I machine — triggers an <code>illegal instruction exception</code>.</p>
+</li>
+<li>
+<p><strong>FMA</strong> is especially important in the floating-point extensions. Unlike the usual 3-operand RISC style, it is effectively a 4-operand operation, which is highly useful in matrix and vector arithmetic.</p>
+</li>
+<li>
+<p><strong>Instruction classes</strong>: RV32I uses six encoding formats — <code>R</code>, <code>I</code>, <code>S</code>, <code>B</code>, <code>U</code>, and <code>J</code>.</p>
+</li>
+<li>
+<p>RISC is generally <strong>3-operand</strong>: the pattern is <code>A = B op C</code>, as in <code>ADD x6, x0, x7</code>.</p>
+</li>
+<li>
+<p><strong>Load/store architecture</strong>: memory is accessed only by load and store instructions; all other computation takes place between registers.</p>
+</li>
+<li>
+<p>Multiplication/division and floating-point arithmetic are not part of the minimal base; they belong to separate extensions.</p>
+</li>
+<li>
+<p><strong><code>x0</code> is always zero</strong>, because zero is used constantly. For example, negation can be written as <code>sub x9, x0, x8</code>.</p>
+</li>
+<li>
+<p><strong>More registers are not automatically better</strong>. A larger register file can help performance, but it also lengthens instructions and can slow register access.</p>
+</li>
+</ul>
+</br>
+<h3 id="rv32i-instruction-categories">RV32I Instruction Categories</h3>
+<h4 id="by-functionality">By functionality:</h4>
+<ul>
+<li>ALU instructions (register-register, register-immediate)</li>
+<li>Control-flow instructions (branches and jumps)</li>
+<li>Memory access instructions (load and store)</li>
+<li>CSR instructions (related to privilege and exceptions, often read-modify-write)</li>
+<li>Privileged instructions (kernel / OS only)</li>
+</ul>
+<h4 id="-by-encoding-format">⚠️ By encoding format:</h4>
+<p>In RV32I, each instruction is 32 bits wide, and its fields are arranged according to one of six fixed formats (<strong>RISBUJ</strong>).</p>
+<ul>
+<li><strong>opcode</strong> is a 7-bit operation code telling the CPU which major instruction class this belongs to.</li>
+<li><strong>rd</strong> means <strong>register destination</strong>, specifying which target register receives the result.</li>
+<li><strong>rs</strong> means <strong>register source</strong>, specifying which register is read.</li>
+<li><strong>funct3 / funct7</strong> further refine the operation, such as distinguishing <code>add</code> from <code>sub</code> or <code>srl</code> from <code>sra</code>.</li>
+<li><strong>imm</strong> is the immediate field, used as a literal value, an offset, or a jump distance depending on context.</li>
+</ul>
+<p><img src="https://i.postimg.cc/gjmgnSZd/image.png" alt=""></p>
+<p>⚠️ The six major instruction-format families are <strong>R / I / B / J</strong> (the common ones), plus <strong>S</strong> for stores and <strong>U</strong> for upper-immediate instructions:</p>
+<ul>
+<li><strong>R</strong>: no immediate field; used for many <u>register-register operations</u> (opcode <code>0110011</code>), such as <code>add</code>, <code>sub</code>, <code>and</code>, and <code>sll</code>.</li>
+<li><strong>I</strong>: 12-bit immediate; used for <u>register-immediate operations</u> (<code>0010011</code>) such as <code>addi</code>, <code>andi</code>, and also ⚠️ <strong>all</strong> <u>load instructions</u> (<code>0000011</code>) such as <code>lw</code>, <code>lb</code>, <code>lh</code>.</li>
+<li><strong>B</strong>: 12-bit immediate; branch instructions with <strong>no <code>rd</code></strong>, such as <code>beq</code> (branch if equal) and <code>bne</code> (branch if not equal).</li>
+<li><strong>J</strong>: 20-bit immediate, for instructions such as <code>jal</code> (jump and link).</li>
+<li><strong>S</strong>: store-to-memory instructions with <strong>no <code>rd</code></strong>, such as <code>sw</code>, <code>sb</code>, and <code>sh</code>.</li>
+</ul>
+</br>
+<h3 id="alu-instructions">ALU Instructions</h3>
+<p><strong>R-type</strong>: compute using two register operands and write the result back to a register — <code>OP: rd ← rs1 (funct3, funct7) rs2</code>.</p>
+<ul>
+<li>
+<p>For example, a <code>sub</code> encoding can negate the value in <code>x6</code> and store it back into <code>x6</code>.</p>
+</li>
+<li>
+<p>Likewise, an <code>add</code> encoding with <code>x0</code> can effectively copy the value in <code>x6</code> into <code>x7</code>.</p>
+</li>
+</ul>
+<p><strong>I-type</strong>: compute using one register and one <strong>12-bit</strong> immediate, then write the result back — <code>OP-IMM: rd ← rs1 (funct3) I-imm</code>.</p>
+<ul>
+<li>For example, an <code>addi</code> instruction may add 1024 to <code>x6</code> and store the result in <code>x7</code>.</li>
+<li>Shift-immediate instructions are also I-type, but here the immediate is <strong>not</strong> treated as an ordinary 12-bit signed value. Its low bits form the <strong>shift amount (<code>shamt</code>)</strong> (5 bits in RV32I, 6 bits in RV64I), while higher bits — including <code>inst[30]</code> — distinguish SRLI (<code>0</code>) from SRAI (<code>1</code>).</li>
+<li>For example, “bitwise NOT of <code>x1</code>” can be written as <code>xori x1, x1, -1</code>.</li>
+</ul>
+</br>
+<h3 id="load-instructions">Load Instructions</h3>
+<p><strong>I-type</strong>: use a base register plus an immediate offset to form a memory address, then load from memory into a register — <code>LOAD: rd ← memory[rs1 + I-imm]</code>.</p>
+<ul>
+<li>For example, <code>lw</code> may fetch 4 bytes from address <code>[x6] - 7</code> into <code>x7</code>. A 12-bit <strong>signed</strong> immediate covers offsets in the range <code>[-2048, +2047]</code>. Such offsets are often used to access array elements or fields inside container-like structures.</li>
+<li>More concretely, suppose we have an image-pixel array <code>Struct Color {int r, int g, int b} pixelArray[]</code>. If the base address is stored in <code>x1</code>, then the green component of the 100th element could be accessed with an instruction such as <code>lb x2, 1204(x1)</code>.</li>
+<li><code>lb</code> reads 1 byte, <code>lh</code> reads 2 bytes, and RV64I also provides <code>ld</code> for 8-byte loads.</li>
+</ul>
+</br>
+<h3 id="store-instructions">Store Instructions</h3>
+<p><strong>S-type</strong>: store the contents of a register into memory at an address formed by register + immediate — <code>STORE: mem[rs1 + S-imm] ← rs2</code>.</p>
+<ul>
+<li>For example, <code>sw</code> may store the full word in <code>x6</code> to memory at address <code>[x7] + 1</code>. The immediate field in the S-type encoding is comparatively small and is split across the instruction format.</li>
+</ul>
+<p>⚠️ Important pitfall — <strong>data alignment</strong>: when storing <code>n</code> bytes, the address should normally be a multiple of <code>n</code>; for example, <code>sw</code> / <code>lw</code> usually require addresses divisible by 4. RISC-V itself is not absolutely strict in every implementation, but compilers generally enforce alignment, and many RISC designs such as ARM assume aligned access. Alignment helps avoid crossing page, cache-line, or other storage-unit boundaries.</p>
+<p>Example:</p>
+<p><img src="https://i.postimg.cc/k4ctS35r/jie-ping2026-02-03-10-28-05.png" alt=""></p>
+<ul>
+<li>If the fields require alignments <code>4, 8, 1, 4, 4</code>, then padding is needed: 4 bytes before <code>count</code>, 3 bytes before <code>red</code>, and the <strong>overall structure alignment equals the maximum field alignment = 8 bytes</strong>. Thus the full structure occupies 32 bytes, and the offset of the 100th <code>red</code> field is <code>32×100 + 4 + 4 + 8 + 1 + 3 = 3220</code>.</li>
+</ul>
+</br>
+<h3 id="branch-instructions"><strong>Branch</strong> Instructions</h3>
+<p><strong>SB-type</strong>: compare two register values and choose one control-flow direction, for example with <code>beq</code>.</p>
+<ul>
+<li>
+<p>In S-type, the offset is relative to a base address and measured in bytes. In SB-type, the offset is relative to the PC and measured in halfwords (2 bytes). Taken together, the encoding lets a branch reach roughly <strong>±4 KB</strong> of instruction space.</p>
+</li>
+<li>
+<p>For unconditional jumps, one uses J-type <code>jal</code>, which can reach about <strong>±1 MB</strong>, or I-type <code>jalr</code>, which can cover the full <strong>4 GB</strong> address space in RV32 through register-based addressing.</p>
+</li>
+<li>
+<p>RV32I includes <code>&gt;=</code> and <code>&lt;</code> forms such as <code>bge</code> and <code>blt</code>, but not separate <code>&gt;</code> or <code>&lt;=</code> mnemonics. It also provides unsigned forms such as <code>bgeu</code> and <code>bltu</code>. A neat trick is that a range test like <code>0 &lt;= x &lt; y</code> can often be done with a single unsigned comparison <code>bgeu x, y</code>, which simultaneously excludes negative values and values above the upper bound.</p>
+</li>
+</ul>
+<p>Thus, if the branch is taken, the machine updates <code>PC += imm × 4</code>; otherwise the default next step is simply <code>PC += 4</code>.</p>
+</br>
+<h3 id="lui-and-auipc">LUI and AUIPC</h3>
+<p><strong>U-type</strong>: used to construct larger constants or addresses that exceed the small immediate range (for example, beyond ±1MB).</p>
+<p><code>LUI</code>: place the <strong>20-bit</strong> upper immediate into a register, then shift it left by 12 and fill the low bits with zeros: <code>rd = U-imm &lt;&lt; 12</code>.</p>
+<p><code>AUIPC</code>: build a large <strong>PC-relative</strong> address base: <code>rd = PC + (U-imm &lt;&lt; 12)</code>.</p>
+<ul>
+<li>
+<p>For example, to build a 32-bit constant such as <code>0x12345678</code>, one may use <code>lui x1, 0x12345</code> and then <code>addi x1, x1, 0x678</code>.</p>
+<p>⚠️ <strong>Important pitfall</strong>: when the low 12 bits of the desired 32-bit constant are <code>≥ 0x800</code>, the naive <code>LUI + ADDI</code> combination may fail because the <code>ADDI</code> immediate is <strong>signed</strong> and will be <strong>sign-extended</strong>. In that case the decomposition must be adjusted.</p>
+</li>
+<li>
+<p>Alternatively, one may use the pseudo-instruction <code>li</code> and let the assembler handle the details.</p>
+</li>
+</ul>
+</br>
+<h3 id="jump-instructions">Jump Instructions</h3>
+<p>A jump is, conceptually, much like a branch without a condition.</p>
+<p><strong>J-type</strong> here refers specifically to the unconditional jump-and-link instruction <code>jal</code> — <code>JAL: rd ← pc + 4; pc ← pc + J-Imm</code>.</p>
+<ul>
+<li>One might wonder why <code>rd</code> is not repurposed to enlarge the immediate field. The reason is that doing so would introduce an additional instruction format and complicate decoding, which goes against the “RISC” design spirit. For longer-range control flow, <code>JALR</code> can be used instead.</li>
+</ul>
+<p><strong>I-type</strong> here specifically includes the unconditional indirect jump <code>jalr</code> — <code>JALR: rd ← pc + 4; pc ← (rs1 + I-Imm) &amp; ~0x01</code>.</p>
+<ul>
+<li>
+<p>⚠️ For a return, one often sees a pattern like <code>jalr x0, 0(x1)</code>. If the JALR base register is <code>x1</code> and the offset is 0 or very small, it is often reasonable to guess that the instruction is a return — though this guess is not infallible, because <code>x1</code> is not magically reserved by hardware for returns.</p>
+</li>
+<li>
+<p>In both cases, the lowest bit of the jump target is forced to 0, ensuring alignment compatible with 16-bit instruction support.</p>
+</li>
+<li>
+<p>Conceptually, <code>JALR</code> is often used together with address-construction instructions such as <code>AUIPC</code>, which lets it indirectly jump anywhere in the full 32-bit virtual address space (<code>0x00000000</code> to <code>0xFFFFFFFF</code>).</p>
+</li>
+</ul>
+</br>
+<h3 id="csr-instructions">CSR Instructions</h3>
+<p>These are system-level instructions that use special <strong>CSR (control and status register)</strong> registers to manage program execution — exceptions, interrupts, performance counters, timers, and so on.</p>
+<p><img src="https://i.postimg.cc/qRBmf0s9/jie-ping2026-02-03-16-22-32.png" alt=""></p>
+</br>
+<h3 id="exception-handling"><strong>Exception Handling</strong></h3>
+<h4 id="two-things-the-hardware-must-do">Two things the hardware must do:</h4>
+<ol>
+<li>Record the exception, including key CSR state such as the following:</li>
+</ol>
+<ul>
+<li>
+<p><code>mepc</code> – the PC of the instruction that raised the exception</p>
+</li>
+<li>
+<p><code>mcause</code> – the cause of the exception</p>
+</li>
+<li>
+<p><code>mstatus.mpp</code> – the privilege mode active at the time of the exception, so the system can later restore it</p>
+</li>
+</ul>
+<ol start="2">
+<li>Hand control to software: the CPU reads <strong><code>mtvec</code></strong> (the trap-handler address), sets the PC there, and switches to a higher privilege level.</li>
+</ol>
+<h4 id="software-side-exception-handler">Software Side (Exception Handler)</h4>
+<p>A common design is <strong>one Common Handler (CH)</strong> plus several <strong>Interrupt / Exception Handlers (IH)</strong>.</p>
+<p><strong>CH (common entry)</strong> is usually written in assembly and performs the “dirty work.”</p>
+<ol>
+<li>Save all GPRs (general-purpose registers)</li>
+<li>Prepare arguments and call a C-level IH function</li>
+<li>After the IH returns, decide how <code>mepc</code> should be updated (<code>+4</code> or <code>+2</code>)</li>
+<li>Restore all GPRs</li>
+<li>Execute <code>ERET</code> (usually called <code>mret</code> in RISC-V)</li>
+</ol>
+<p><strong>IH (specific handlers)</strong> are often written in C and dispatch according to <code>mcause</code>.</p>
+<ul>
+<li>
+<p>illegal instruction → illegal_inst_ih</p>
+</li>
+<li>
+<p>timer interrupt → timer_ih</p>
+</li>
+<li>
+<p>external interrupt → ext_ih</p>
+</li>
+<li>
+<p>&hellip;&hellip;</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="rv32i-abi">RV32I ABI</h2>
+<p><strong>ABI = Application Binary Interface</strong>. It specifies <strong>how separately compiled binary programs cooperate with one another</strong>.</p>
+<p>If different assemblers and toolchains used different register conventions, chaos would result. So, taking the RISC-V ABI (ILP32) as an example:</p>
+<p><img src="https://i.postimg.cc/8CT5Vn7v/jie-ping2026-02-03-16-42-03.png" alt=""></p>
+<p>At the hardware level, registers usually have few absolute restrictions, but the ABI assigns them conventional roles.</p>
+<ul>
+<li>
+<p><strong>Caller-saved</strong>: <code>t0–t6</code>, <code>a0–a7</code>, and <code>ra</code>. This means that if the caller wants to preserve those register values across a function call, the caller must save them first. The callee is free to overwrite them. They are commonly used for <u>temporaries and argument passing</u>, and <code>a0/a1</code> also often hold return values.</p>
+</li>
+<li>
+<p><strong>Callee-saved</strong>: <code>s0–s11</code> (with <code>sp</code> treated specially and maintained carefully). If the callee uses these registers, it must first save the old values and restore them before returning. This allows the caller to keep “long-lived variables” in the <code>s</code> registers across function calls.</p>
+</li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week-3--process-of-data">Week 3  Process of Data</a>
+      <ul>
+        <li><a href="#integer-arithmetic">Integer Arithmetic</a>
+          <ul>
+            <li><a href="#1-bit-full-adder-addition-and-subtraction">1-bit Full Adder, Addition, and Subtraction</a></li>
+            <li><a href="#multiplier">Multiplier</a></li>
+            <li><a href="#divider">Divider</a></li>
+          </ul>
+        </li>
+        <li><a href="#floating-point-numbers-and-their-arithmetic">Floating-Point Numbers and Their Arithmetic</a>
+          <ul>
+            <li><a href="#what-is-a-floating-point-number-really">What is a floating-point number, really?</a></li>
+            <li><a href="#binary-expansion">Binary Expansion</a></li>
+            <li><a href="#rounding">Rounding</a></li>
+            <li><a href="#floating-point-arithmetic">Floating-Point Arithmetic</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#week-4--machine-level-programming">Week 4  Machine-Level Programming</a>
+      <ul>
+        <li><a href="#understanding-machine-level-code-through-assembly">Understanding Machine-Level Code Through Assembly</a></li>
+        <li><a href="#x86-64-optional">x86-64 (optional)</a>
+          <ul>
+            <li><a href="#accessing-information--registers">Accessing Information — Registers</a></li>
+            <li><a href="#common-x86-64-assembly-instructions">Common x86-64 Assembly Instructions</a></li>
+            <li><a href="#x86-64-operands-and-addressing">x86-64 Operands and Addressing</a></li>
+          </ul>
+        </li>
+        <li><a href="#risc-v">RISC-V</a>
+          <ul>
+            <li><a href="#rv32i-instruction-categories">RV32I Instruction Categories</a></li>
+            <li><a href="#alu-instructions">ALU Instructions</a></li>
+            <li><a href="#load-instructions">Load Instructions</a></li>
+            <li><a href="#store-instructions">Store Instructions</a></li>
+            <li><a href="#branch-instructions"><strong>Branch</strong> Instructions</a></li>
+            <li><a href="#lui-and-auipc">LUI and AUIPC</a></li>
+            <li><a href="#jump-instructions">Jump Instructions</a></li>
+            <li><a href="#csr-instructions">CSR Instructions</a></li>
+            <li><a href="#exception-handling"><strong>Exception Handling</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#rv32i-abi">RV32I ABI</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

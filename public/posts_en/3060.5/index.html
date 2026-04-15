@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3060.5/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3060.5/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards">
+  <meta property="og:description" content="CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2026-03-17T10:37:34+08:00">
+    <meta property="article:modified_time" content="2026-03-17T10:37:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards">
+  <meta itemprop="description" content="CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.">
+  <meta itemprop="datePublished" content="2026-03-17T10:37:34+08:00">
+  <meta itemprop="dateModified" content="2026-03-17T10:37:34+08:00">
+  <meta itemprop="wordCount" content="3431">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards">
+  <meta name="twitter:description" content="CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30605.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-03-17T10:37:34+08:00">March 17, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><strong>⚠️ This post ends with a Quiz-2 cheating paper.</strong></p>
+</br>
+<h1 id="week-8--pipelined-implementation">Week 8  Pipelined Implementation</h1>
+<blockquote>
+<p>The core idea of <strong>pipelining</strong> is to <strong>overlap different stages of multiple instructions</strong>. An ideal pipeline is <strong>single-issue</strong>: it begins <strong>one instruction per short cycle</strong>.</p>
+</blockquote>
+<p>Basic concepts:</p>
+<ul>
+<li><strong>Throughput</strong>: on average, how many cycles are needed per completed instruction?</li>
+<li><strong>Latency</strong>: how long does one instruction take from issue to completion?</li>
+<li><strong>Stage</strong>: instructions are divided into hardware-distinct stages.</li>
+<li><strong>Fill</strong>: instructions enter the pipeline one by one; <strong>Drain</strong>: we wait for the last instruction to pass through the remaining stages.</li>
+</ul>
+<p>⚠️ <strong>The RISC-V ISA is naturally pipeline-friendly</strong>:</p>
+<ul>
+<li><strong>Fixed 32-bit instruction length</strong> (except for the C-extension), which makes it easier to divide instructions into regular stages. By contrast, x86 instructions vary from 1 to 17 bytes.</li>
+<li><strong>Few and regular instruction formats</strong>: decode and register-read can often be completed in the same stage.</li>
+<li><strong>Load/store architecture</strong>: only <code>load</code> and <code>store</code> access memory; address calculation stays in EX and memory access stays in MEM, which cleanly separates responsibilities.</li>
+</ul>
+</br>
+<h2 id="five-stage-pipeline-throughput-and-timing">Five-Stage Pipeline, Throughput, and Timing</h2>
+<p>In the classical 5-stage pipeline, each instruction is split into five stages that occupy different parts of the processor:</p>
+<ol>
+<li><strong>IF</strong>: Instruction Fetch, including the PC, the <code>ADD4</code> unit, and instruction memory.</li>
+<li><strong>ID</strong>: Instruction Decode and Register Read, including the register file and immediate generator (sign-extension).</li>
+<li><strong>EX</strong>: Execute / Address Calculation, including the ALU and its input selectors.</li>
+<li><strong>MEM</strong>: Data-memory access.</li>
+<li><strong>WB</strong>: Write Back to the register file.</li>
+</ol>
+<p>In a single-cycle CPU, the minimum cycle length is the <u>total latency of the slowest instruction, typically <code>lw</code></u> — a “long cycle.” In a multi-cycle or pipelined CPU, the minimum cycle length is the <u>latency of the slowest stage</u>, such as MEM or EX — a “short cycle.” The reciprocal of the cycle time gives the clock frequency.</p>
+<p><img src="https://i.postimg.cc/7L9T17R1/jie-ping2026-03-17-11-23-35.png" alt=""></p>
+<ul>
+<li>
+<p>Suppose <code>1 long cycle = 5 short cycles</code>. Then <code>LW</code> requires 5 short cycles, <code>SW/ADD/SUB/JAL</code> require 4 short cycles, and <code>BEQ</code> requires 3. Executing <code>LW, LW, ADD, SUB, BEQ, SW, SW</code> then takes:</p>
+<ul>
+<li>
+<p><strong>Single-cycle</strong>: the entire execution is rounded up to the slowest instruction, so <code>7 lc = 35 sc</code>; the ideal throughput is <u>1 instruction / 5 short cycles</u>.</p>
+</li>
+<li>
+<p><strong>Multi-cycle</strong>: the machine pays only the actual demand of each instruction, so <code>5sc × 2 + 4sc × 4 + 3sc × 1 = 29sc</code>; the ideal throughput is <u>1 instruction / average CPI</u>.</p>
+</li>
+<li>
+<p><strong>Pipeline</strong>: execution is rounded up by stage, not by whole instruction. So the total is <strong>fill + drain</strong> — <code>7 sc + 4 sc = 11 sc</code>; the ideal throughput (ignoring the drain tail) is <u>1 instruction / short cycle</u>, i.e. CPI ≈ 1.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Thus, under ideal 5-stage assumptions, the throughputs are roughly <strong>1/5, 1/(3~5), and 1</strong>.</p>
+</li>
+</ul>
+<blockquote>
+<p>⚠️ A single-cycle CPU is limited by the slowest instruction, a multi-cycle CPU by CPI, and a pipeline by the slowest stage.</p>
+</blockquote>
+</br>
+<h3 id="general-formulas">General Formulas</h3>
+<p>(short cycle = n; number of pipeline stages = N)</p>
+<ul>
+<li>
+<p><strong>Single-cycle</strong>: $T = n \times T_{long}$, where the cycle length is determined by the slowest instruction.</p>
+</li>
+<li>
+<p><strong>Multi-cycle</strong>: $T = \sum_i CPI(i)$.</p>
+</li>
+<li>
+<p><strong>Ideal N-stage pipeline</strong>: $T = n + (N-1)$, where <strong>drain = latency − 1</strong>.</p>
+</li>
+<li>
+<p><strong>Pipeline speedup relative to single-cycle</strong>: ideally, speedup approaches $N$ if the stages are well balanced.</p>
+</li>
+<li>
+<p>Relative to a non-pipelined multi-cycle machine, the speedup is roughly the average CPI of the original implementation.</p>
+</li>
+</ul>
+<blockquote>
+<p>⚠️ Pipelines accelerate execution by increasing <strong>throughput</strong>, not by reducing the latency of a single instruction. In fact, if the stages are unbalanced, individual-instruction latency may even increase.</p>
+</blockquote>
+</br>
+</br>
+<h2 id="the-cost-of-pipelining">The Cost of Pipelining</h2>
+<p>For a pipeline to “advance one instruction every short cycle,” the following must hold:</p>
+<ul>
+<li>the hardware resources required by each stage must be able to serve different instructions simultaneously;</li>
+<li>otherwise, a <strong>structural hazard</strong> occurs: resource contention forces a stall, and the pipeline flow breaks.</li>
+</ul>
+<p>For example, if IF and MEM share a single-ported memory, then whenever one <code>LW/SW</code> uses memory in MEM, the next instruction cannot fetch in IF. The fix is usually to <strong>duplicate the resource</strong> — separate I-cache and D-cache, or use a multi-ported memory — at increased hardware cost.</p>
+<blockquote>
+<p>The price of pipelining is hardware redundancy or more complicated control logic. Ideal “CPI = 1” exists only when resources are sufficient and structural hazards are resolved.</p>
+</blockquote>
+<p>This issue is discussed further below in the WEEK 9 section.</p>
+</br>
+</br>
+<h2 id="example">Example</h2>
+<p><img src="https://i.postimg.cc/XvZYqz5x/jie-ping2026-03-17-12-09-39.png" alt=""></p>
+<ul>
+<li>
+<p>Clock cycle time? — 1250 ps (single-cycle), 350 ps (non-pipelined multi-cycle), and 350 ps (pipeline).</p>
+</li>
+<li>
+<p>Latency of <code>lw</code>? — 1250 ps (non-pipelined single-cycle), but <strong>350 ps × 5 = 1750 ps</strong> in the pipeline.</p>
+</li>
+<li>
+<p>If we move to a 6-stage pipeline, which stage should be split, and what is the new cycle time? — Split ID; the cycle time becomes 300 ps.</p>
+</li>
+<li>
+<p>Speedup? — <code>1250/350</code> relative to the single-cycle design; and an average CPI-style speedup of 4 relative to the multi-cycle design.</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="actual-implementation-of-a-pipeline">Actual Implementation of a Pipeline</h2>
+<p>The rhythm of a pipeline is determined by the slowest stage. Unlike a non-pipelined multi-cycle machine, instructions in a pipeline cannot arbitrarily skip stages, because that would break the cadence.</p>
+<p><img src="https://i.postimg.cc/wMqs3dd2/jie-ping2026-03-17-14-04-32.png" alt=""></p>
+<ul>
+<li>
+<p><strong>Sequentially</strong>: the stages of a single instruction must still occur in order.</p>
+</li>
+<li>
+<p><strong>Simultaneously</strong>: different stages of different instructions may proceed in parallel.</p>
+</li>
+</ul>
+<p>In particular, not every EX-stage operation finishes within one short cycle — for example, <code>div</code>. For such high-latency operations:</p>
+<ol>
+<li>
+<p><strong>Stall</strong>: stop the next instruction one stage before EX, creating a bubble. This is simple, but it damages throughput and erodes the speedup of pipelining.</p>
+</li>
+<li>
+<p><strong>Separate long-latency pipeline</strong>: hand operations such as DIV / FP to dedicated units in the M-extension and F/D-extensions, allowing the main pipeline to continue advancing other independent instructions.ther independent instructions. This is one reason why <a href="https://blog.nero-lithos.com/posts/3060.2/">RISC-V separates such modules</a>.顺序**退休，原因是 “异常/陷阱 (traps)” 语义：如果后面的指令先退休了，而前面的指令后来触发异常，会导致程序状态不一致。然而 RISC-V <strong>避免了很多算术异常</strong>，所以乱序退休也是可行的。</p>
+</li>
+</ol>
+</br>
+<h3 id="the-true-key-to-implementing-a-pipeline-insert-pipeline-registers">The true key to implementing a pipeline: insert pipeline registers</h3>
+<p>In a single-cycle machine, the control signals serve only one instruction, so there is no ambiguity. In a pipeline, however, multiple instructions simultaneously occupy different stages, which creates the following classic confusion:</p>
+<ul>
+<li>“Which instruction’s <code>rs1/rs2/imm</code> should be used right now?”</li>
+<li>“Which instruction’s <code>rd</code> should WB write right now?”</li>
+</ul>
+<p>The solution is to <strong>insert pipeline registers (IF/ID, ID/EX, EX/MEM, MEM/WB) between stages</strong>, carrying both <strong>data and control signals</strong> forward together, so that every stage uses the information belonging to the same instruction.</p>
+<p><img src="https://i.postimg.cc/QdgpSSdr/jie-ping2026-03-17-14-47-53.png" alt=""></p>
+<blockquote>
+<p>Pipeline registers are <strong>not architectural state</strong>. Context switching saves the architectural state — registers, PC, memory-visible state — while pipeline registers, predictors, and caches belong to the microarchitectural state.</p>
+</blockquote>
+</br>
+</br>
+</br>
+<h1 id="week-9--pipeline-hazards">Week 9  Pipeline Hazards</h1>
+<p>Beyond fill/drain overhead and stage imbalance, pipelines also face <strong>data hazards</strong>, <strong>structural hazards</strong>, and <strong>control hazards</strong>. These hazards often force younger instructions to stop in the <strong>ID stage</strong>, creating <strong>stalls</strong> and therefore <strong>bubbles</strong>, which reduce efficiency.</p>
+<p>The overhead of fill and drain means that pipelines strongly prefer long-running programs —</p>
+<blockquote>
+<p>fill and drain are both pure overhead. Only the fully overlapped middle region is ideal. Pipelines optimize long programs; their speedup on very short code fragments may be limited.</p>
+</blockquote>
+</br>
+<h2 id="structural-hazards">Structural Hazards</h2>
+<blockquote>
+<p>A structural hazard is the most basic kind of resource conflict: the hardware is insufficient, so two instructions compete for the same resource at the same time.</p>
+</blockquote>
+<h4 id="example-a-imem-and-dmem-port-conflict">Example A: IMEM and DMEM Port Conflict</h4>
+<ul>
+<li>The IF stage needs to fetch an instruction from <strong>IMEM</strong>.</li>
+<li>The MEM stage of <code>load/store</code> instructions needs to access <strong>DMEM</strong>.</li>
+</ul>
+<p>If the machine uses a <strong>Von Neumann architecture</strong>, where instructions and data share one memory port, then a data access in MEM prevents an instruction fetch in IF. That is the conflict.</p>
+<p><img src="https://i.postimg.cc/HsKMQfp9/jie-ping2026-03-18-15-08-55.png" alt=""></p>
+<h4 id="example-b-two-adjacent-division-instructions">Example B: Two Adjacent Division Instructions</h4>
+<p>A divider often does not finish in one cycle. It may occupy the functional unit for dozens of cycles, such as 32 or 64. If two division instructions appear back to back, the second finds that the divider is still busy.</p>
+</br>
+<h4 id="avoiding-structural-hazards">Avoiding Structural Hazards</h4>
+<ol>
+<li><strong>Pipeline stalls</strong></li>
+</ol>
+<p>The most direct method is to make the younger instruction wait in ID and insert bubbles. It is simple, but hurts performance.</p>
+<ol start="2">
+<li><strong>Add resources</strong></li>
+</ol>
+<p>In <strong>scalar architectures</strong>, structural hazards are relatively uncommon because designers often provision enough ports in the register file, use separate IMEM and DMEM, pipeline expensive functional units, and include multiple adders. This is the standard trade: spend hardware to buy performance.</p>
+<ol start="3">
+<li><strong>Instruction reordering</strong></li>
+</ol>
+<p>The compiler may apply <strong>static scheduling</strong>, or the hardware may use <strong>dynamic scheduling</strong>, to separate instructions that would otherwise compete for the same resource.</p>
+<ol start="4">
+<li><strong>ISA design</strong></li>
+</ol>
+<p>Some ISA features would require additional write ports, such as post-increment addressing. Alternatively, the ISA may simply forbid forms likely to create conflicts — for example, keeping ALU instructions away from MEM-side effects.</p>
+<ul>
+<li>For example, an R-type instruction does not truly need MEM, but letting it reach WB too early would break the rhythm of the pipeline and itself create structural problems.</li>
+</ul>
+</br>
+</br>
+<h2 id="data-hazards">Data Hazards</h2>
+<blockquote>
+<p>A data hazard occurs when a later instruction depends on data produced by an earlier one, but that data is not yet available. In the basic pipeline discussion, this is a <strong>RAW</strong> dependency.</p>
+</blockquote>
+<p>For example:</p>
+<p><code>add x9, x0, x1</code>: the result is computed at the end of EXE and written back to <code>x9</code> during WB.</p>
+<p><code>sub x10, x9, x3</code>: it needs to read <code>x9</code> during the ID stage.</p>
+<p>When <code>sub</code> reaches ID, <code>add</code> may not yet have written <code>x9</code> back into the register file. In the worst case, <code>sub</code> must wait until <code>add</code> completes WB, creating <u>two bubble cycles</u>.</p>
+</br>
+<p>Data hazards can be roughly divided into three categories:</p>
+<h3 id="register-access-issues">Register Access Issues</h3>
+<p>If a write and a read of the same register occur in the same cycle, the issue can be solved by <strong>write-then-read within the same cycle</strong>. No stall is needed.</p>
+</br>
+<h3 id="alu-result-access-issues">ALU Result Access Issues</h3>
+<p>In the diagram below, the register-access issue for <code>xor</code> is solved by write-then-read, but <code>sub</code> and <code>or</code> would still obtain the wrong value because <code>add</code> has not yet reached WB.</p>
+<p><img src="https://i.postimg.cc/j2YyTztF/jie-ping2026-03-18-18-57-58.png" alt=""></p>
+<h4 id="solution-1-stall-the-pipeline-at-id">Solution 1: Stall the Pipeline at ID</h4>
+<blockquote>
+<p>As in the example above, the immediately following dependent instruction may have to <strong>stall for 2 cycles</strong>.</p>
+</blockquote>
+<p>This is a form of <strong>interlocking</strong> … which is terrible for performance.</p>
+<h4 id="solution-2-data-forwarding-bypassing">Solution 2: Data Forwarding (Bypassing)</h4>
+<blockquote>
+<p>Instead of waiting for the value to be written back into the register file, we directly <strong>bypass</strong> the already-computed result from the pipeline to the ALU.</p>
+</blockquote>
+<p>This works because by the time the dependent instruction reaches EX, the producer has at least completed its own EX stage and entered MEM, so a usable copy of the result already exists inside the pipeline.</p>
+<p>This is one of the central mechanisms by which modern pipelines solve ALU data hazards.</p>
+</br>
+<h3 id="load-issues">Load Issues</h3>
+<blockquote>
+<p>A <code>load</code> produces its result only after the memory access in MEM, so an immediately following dependent instruction usually <strong>must stall for 1 cycle</strong>.</p>
+</blockquote>
+<p>In reality, the latency of a load depends heavily on where the data comes from: L2 may cost 2–3 cycles, L3 around 20 cycles, and DRAM roughly 200 cycles.</p>
+</br>
+<h3 id="detecting-data-hazards">Detecting Data Hazards</h3>
+<blockquote>
+<p>Does the destination register <code>RegRd</code> of an older in-flight instruction match the source register <code>RegRs</code> that the current instruction wants to read?</p>
+</blockquote>
+<p>Bypass from the EX/MEM pipeline register:</p>
+<ul>
+<li>EX/MEM.RegRd = ID/EX.RegRs1</li>
+<li>EX/MEM.RegRd = ID/EX.RegRs2</li>
+</ul>
+<p>Bypass from the MEM/WB pipeline register:</p>
+<ul>
+<li>MEM/WB.RegRd = ID/EX.RegRs1</li>
+<li>MEM/WB.RegRd = ID/EX.RegRs2</li>
+</ul>
+<p>Additional conditions:</p>
+<ul>
+<li>If the older instruction does <strong>not</strong> write a register at all, then no forwarding is needed. So we must check <code>RegWr</code>.</li>
+<li>If the destination register is <code>$0</code>, we also do not forward, because the zero register is always 0. So we must check <code>RegRd ≠ 0</code>.</li>
+</ul>
+</br>
+<h3 id="mips">MIPS</h3>
+<blockquote>
+<p><strong>MIPS = Micro-Processor without Interlocked Pipe Stages</strong> — the hardware tries to avoid complicated pipeline interlocks, leaving many data-hazard issues to the compiler.</p>
+</blockquote>
+<p>This is exactly where <a href="https://blog.nero-lithos.com/posts/3060p3/">code scheduling</a> enters the picture: the compiler reorders instructions to avoid <strong>WAW, WAR, and RAW</strong> problems; if no suitable instruction can fill the gap, it inserts <code>NOP</code>s. Even on non-MIPS machines, the same idea can reduce interlocks and therefore reduce stalls.</p>
+<p><img src="https://i.postimg.cc/CL87tspj/jie-ping2026-03-18-19-49-44.png" alt=""></p>
+</br>
+</br>
+<h2 id="control-hazards">Control Hazards</h2>
+<blockquote>
+<p>Before a branch has been resolved as <strong>taken / not taken</strong>, or before a jump target has been computed, the next IF stage does not yet know what instruction stream should actually be fetched.</p>
+</blockquote>
+<ul>
+<li>
+<p>Control hazards arise from conditional branches and jump instructions such as <code>jal</code> and <code>jalr</code>.</p>
+</li>
+<li>
+<p>Branches typically account for <strong>15% to 30%</strong> of instructions — roughly one out of every 4–5 instructions. So control hazards are one of the key determinants of pipeline performance.</p>
+</li>
+<li>
+<p>⚠️ The hardest control hazard to predict is usually the <strong>indirect jump</strong> form, especially <code>JALR</code>.</p>
+</li>
+</ul>
+<p>⚠️ The problem is <u>not the abstract existence of a jump itself</u>, but the fact that the true next fetch target is not known until the branch or jump has been resolved by the execution hardware. That is why both <code>jal</code> and <code>jalr</code> create control hazards.</p>
+<p>Let us first discuss the taken / not-taken problem for branches.</p>
+<p><img src="https://i.postimg.cc/Bbj3swBJ/jie-ping2026-03-18-20-05-29.png" alt=""></p>
+<ul>
+<li>
+<p>Without protection, as many as <strong>three wrong-path instructions</strong> may be issued after a branch, depending on how late the branch is resolved.</p>
+</li>
+<li>
+<p>If we simply <strong>flush</strong> all wrong-path instructions, and 20% of instructions are branches with 50% taken, then flushing 3 instructions creates a baseline penalty of <code>3 × 0.2 × 0.5 = 30%</code> CPI penalty.</p>
+</li>
+<li>
+<p>If the branch outcome can be resolved earlier, the flush penalty drops. That is why branch resolution should happen as early as possible.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>The earlier the branch outcome is known, the better.</strong></p>
+</blockquote>
+</br>
+<h3 id="strategy-1-predict-not-taken">Strategy 1: Predict Not Taken</h3>
+<p>The simplest prediction strategy assumes that every branch is <strong>not taken</strong>, so the next PC is provisionally set to <code>PC + 4</code>, and the guess is checked later. In theory this cuts the penalty substantially. However, real programs are dominated by loops, where the backward branch is taken many times and not taken only once. So the practical accuracy is often only about <strong>30–40%</strong>.</p>
+<h3 id="strategy-2-static-branch-prediction">Strategy 2: Static Branch Prediction</h3>
+<blockquote>
+<p><strong>Static prediction</strong> means the prediction is chosen mostly at compile time and does not adapt much at runtime.</p>
+</blockquote>
+<p>For example:</p>
+<ul>
+<li>
+<p><strong>Backward branches</strong> are predicted <strong>taken</strong>, because loop back-edges are usually taken repeatedly and fail only once at loop exit.</p>
+<p>For example, <code>beq r3, r4, -8</code> → predict taken.</p>
+</li>
+<li>
+<p><strong>Forward branches</strong> are predicted <strong>not taken</strong>, because compilers often place the “then” path along fall-through order.</p>
+<p>For example, <code>beq r3, r4, 8</code> → predict fall-through.</p>
+</li>
+<li>
+<p>The prediction may be recorded explicitly in the ISA, or encoded through conventions such as operand ordering, though such schemes are limited and instruction-specific.</p>
+</li>
+</ul>
+<p>Even so, static prediction usually reaches only <strong>60–70%</strong> accuracy, or perhaps <strong>80–85%</strong> with stronger compiler analysis.</p>
+</br>
+<h3 id="strategy-3-dynamic-branch-prediction">Strategy 3: Dynamic Branch Prediction</h3>
+<blockquote>
+<p><strong>Dynamic prediction</strong> learns from runtime history and continually updates its guesses. Its accuracy can often reach <strong>90%–99%</strong>.</p>
+</blockquote>
+<h4 id="bht-branch-history-table">BHT: Branch History Table</h4>
+<p>A BHT is indexed using information derived from the branch PC, and stores recent branch outcomes. The table is consulted during <strong>IF</strong>, and the actual outcome later updates the entry. If no useful history is present, the default is often NT.</p>
+<p>A full tag would be expensive, so real machines often index the BHT using only the low bits of the PC. This creates <strong>aliasing</strong>: different branches may collide into the same history entry and pollute one another. Untagged BHTs are simple and cost-effective, while higher-end processors often prefer tagged variants to reduce aliasing.</p>
+<h4 id="1-bit-predictor">1-bit Predictor</h4>
+<p>(if it was T last time, predict T this time, and vice versa)</p>
+<p>⚠️ A 1-bit predictor suffers the classic “two mispredictions per loop” problem, especially in <strong>nested loops</strong>, so its accuracy is only around <strong>70–80%</strong>:</p>
+<ol>
+<li>Most iterations of the inner loop are still in the looping phase, so they are T;</li>
+<li>On the final loop exit, the real outcome suddenly becomes NT, causing the first misprediction and updating the predictor to NT.</li>
+<li>The next time the inner loop is entered, the first iteration should actually be T, but the predictor still remembers NT, causing the second misprediction.</li>
+</ol>
+<h4 id="2-bit-predictor-fsm">2-bit Predictor (FSM)</h4>
+<blockquote>
+<p>It changes direction only after two consecutive mistakes.</p>
+</blockquote>
+<p><img src="https://i.postimg.cc/1Xt0JDch/jie-ping2026-03-18-20-58-52.png" alt="">This is a <strong>finite-state machine</strong>, and its accuracy is often around <strong>85–95%</strong>.</p>
+</br>
+<h3 id="strategy-4-correlated-prediction">Strategy 4: Correlated Prediction</h3>
+<p>Also called <strong>two-level adaptive branch prediction</strong>, it does not ask only what this branch itself did last time, but rather:</p>
+<blockquote>
+<p><strong>whether the recent global pattern of branch behavior helps predict the current branch.</strong></p>
+</blockquote>
+<h4 id="1-ghb-global-branch-history-register">1. GHB: Global Branch History Register</h4>
+<p>The GHB is a shift register that records the outcomes of the most recent branches. Each bit encodes T/NT, so the register captures the recent control-flow context.</p>
+<h4 id="2-pht-pattern-history-table">2. PHT: Pattern History Table</h4>
+<p>The PHT stores <strong>2-bit saturating counters</strong>. The current GHB pattern is used as the index. If the branch turns out taken, the corresponding counter is incremented; otherwise it is decremented. So the table learns not “what this branch always does,” but “what tends to happen under this recent global history.”</p>
+<p>For example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (a<span style="color:#f92672">==</span><span style="color:#ae81ff">2</span>) a<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;   <span style="color:#75715e">// B1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (b<span style="color:#f92672">==</span><span style="color:#ae81ff">2</span>) b<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;   <span style="color:#75715e">// B2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (a<span style="color:#f92672">!=</span>b) {...}  <span style="color:#75715e">// B3
+</span></span></span></code></pre></div><p>If B1 is T and B2 is also T, then both <code>a</code> and <code>b</code> were set to 0, so B3 is likely <strong>not taken</strong>. The result of B3 is correlated with the results of the two preceding branches.</p>
+</br>
+<blockquote>
+<p>Raising prediction accuracy from 98% to 99% is not “just one more percent.” It can effectively cut the <strong>misprediction rate</strong> in half, which matters much more for performance.</p>
+</blockquote>
+</br>
+<h3 id="we-have-discussed-whether-to-jump--but-where-do-we-jump-to">We Have Discussed Whether to Jump — But Where Do We Jump To?</h3>
+<p>Even with good predictors, there may still be a <strong>1–2 cycle penalty</strong>, depending on whether the target address can be computed in ID or only in EX.</p>
+<blockquote>
+<p>Branch prediction has two distinct problems: <strong>whether</strong> the branch is taken, and <strong>where</strong> the target is.</p>
+</blockquote>
+<p>To solve the “where” problem, modern processors use the <strong>BTB (Branch Target Buffer)</strong>, which is essentially <strong>a cache of target addresses</strong>.</p>
+<ul>
+<li>
+<p>The target address is usually stable, because the branch immediate is stable.</p>
+</li>
+<li>
+<p>So we build a small PC-indexed cache. During IF, the machine checks the BTB using the current PC.</p>
+</li>
+<li>
+<p>If the BTB hits and the branch is predicted taken, the machine can immediately fetch the target instruction rather than waiting for later stages to compute the address.</p>
+</li>
+</ul>
+<p>That is why modern processors often use BHT and BTB together: the <strong>BHT</strong> predicts <strong>whether</strong>, while the <strong>BTB</strong> supplies <strong>where</strong>.</p>
+</br>
+</br>
+<h2 id="how-do-control-signals-flow-through-the-pipeline">How Do Control Signals Flow Through the Pipeline?</h2>
+<blockquote>
+<p><strong>Pipeline registers, the BHT, and the BTB all belong to the microarchitecture.</strong></p>
+</blockquote>
+<p><strong>EX stage</strong></p>
+<p>The datapath needs the values of <code>rs1</code>, <code>rs2</code>, the <code>PC</code>, and the immediate.</p>
+<p>The control signals include <a href="https://blog.nero-lithos.com/posts/3060.4/">Asel</a>, <code>Bsel</code>, and <code>ALUsel</code>.</p>
+<p><strong>MEM stage</strong></p>
+<p>The datapath must carry <code>ALUout</code> as an address, plus the value of <code>rs2</code> for stores.</p>
+<p>The relevant control signals are <code>MemRW</code>, <code>BrLt</code>, and <code>BrEq</code>.</p>
+<p><strong>WB stage</strong></p>
+<p>Possible write-back sources include <code>ALUout</code>, <code>PC+4</code> (for the link register), and <code>MEMout</code>.</p>
+<p>The control signals include <strong><code>Wbsel</code>, <code>rd</code>, and <code>WRen</code></strong>.</p>
+<p><strong>Delayed use:</strong></p>
+<ul>
+<li>EX-stage control signals are actually used <strong>one cycle later</strong>.</li>
+<li>MEM-stage control signals are used <strong>two cycles later</strong>.</li>
+<li>WB-stage control signals are used <strong>three cycles later</strong>.</li>
+<li>The destination register <code>rd</code> must also be carried all the way to WB.</li>
+</ul>
+<p>When an instruction is decoded in ID, the control unit already knows what will be needed later, but the instruction has not yet reached EX/MEM/WB. So these control bits cannot disappear; they must be stored in the <strong>pipeline registers</strong> and carried forward stage by stage.</p>
+</br>
+</br>
+</br>
+<h1 id="cheating-paper-for-csc3060-quiz2">Cheating-paper for CSC3060 Quiz2</h1>
+<embed src="http://localhost:1313/pdf/3060cp2.pdf" type="application/pdf" width="100%" height="600px" />
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week-8--pipelined-implementation">Week 8  Pipelined Implementation</a>
+      <ul>
+        <li><a href="#five-stage-pipeline-throughput-and-timing">Five-Stage Pipeline, Throughput, and Timing</a>
+          <ul>
+            <li><a href="#general-formulas">General Formulas</a></li>
+          </ul>
+        </li>
+        <li><a href="#the-cost-of-pipelining">The Cost of Pipelining</a></li>
+        <li><a href="#example">Example</a></li>
+        <li><a href="#actual-implementation-of-a-pipeline">Actual Implementation of a Pipeline</a>
+          <ul>
+            <li><a href="#the-true-key-to-implementing-a-pipeline-insert-pipeline-registers">The true key to implementing a pipeline: insert pipeline registers</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#week-9--pipeline-hazards">Week 9  Pipeline Hazards</a>
+      <ul>
+        <li><a href="#structural-hazards">Structural Hazards</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+        <li><a href="#data-hazards">Data Hazards</a>
+          <ul>
+            <li><a href="#register-access-issues">Register Access Issues</a></li>
+            <li><a href="#alu-result-access-issues">ALU Result Access Issues</a></li>
+            <li><a href="#load-issues">Load Issues</a></li>
+            <li><a href="#detecting-data-hazards">Detecting Data Hazards</a></li>
+            <li><a href="#mips">MIPS</a></li>
+          </ul>
+        </li>
+        <li><a href="#control-hazards">Control Hazards</a>
+          <ul>
+            <li><a href="#strategy-1-predict-not-taken">Strategy 1: Predict Not Taken</a></li>
+            <li><a href="#strategy-2-static-branch-prediction">Strategy 2: Static Branch Prediction</a></li>
+            <li><a href="#strategy-3-dynamic-branch-prediction">Strategy 3: Dynamic Branch Prediction</a></li>
+            <li><a href="#strategy-4-correlated-prediction">Strategy 4: Correlated Prediction</a></li>
+            <li><a href="#we-have-discussed-whether-to-jump--but-where-do-we-jump-to">We Have Discussed Whether to Jump — But Where Do We Jump To?</a></li>
+          </ul>
+        </li>
+        <li><a href="#how-do-control-signals-flow-through-the-pipeline">How Do Control Signals Flow Through the Pipeline?</a></li>
+      </ul>
+    </li>
+    <li><a href="#cheating-paper-for-csc3060-quiz2">Cheating-paper for CSC3060 Quiz2</a></li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🎨 DDA3003 Midterm revision | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3003.2/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3003.2/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🎨 DDA3003 Midterm revision">
+  <meta property="og:description" content="CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2026-03-26T17:30:34+08:00">
+    <meta property="article:modified_time" content="2026-03-26T17:30:34+08:00">
+    <meta property="article:tag" content="DDA3003">
+
+  <meta itemprop="name" content="🎨 DDA3003 Midterm revision">
+  <meta itemprop="description" content="CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.">
+  <meta itemprop="datePublished" content="2026-03-26T17:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-03-26T17:30:34+08:00">
+  <meta itemprop="wordCount" content="2893">
+  <meta itemprop="keywords" content="DDA3003">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🎨 DDA3003 Midterm revision">
+  <meta name="twitter:description" content="CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30032.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🎨 DDA3003 Midterm revision</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🎨 DDA3003 Midterm revision</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-03-26T17:30:34+08:00">March 26, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"></br>
+<p>⚠️ <strong>A 26Spring mock exam and answer key are included at the end of this post.</strong></p>
+<blockquote>
+<p>Post-exam note: in Spring 2026, concept questions were worth only about 20 points in total, and D3 appeared in just one 3-point question. The rest focused on drawing charts, modifying them, or critiquing visualization cases. So obsessing over definitions alone is not very useful. Most questions came from the review paper and lecture slides. Drawings do not need to be perfectly precise, but it is wise to bring pens of at least five colors.</p>
+<p>For drawing visualizations from data, you should display all of the data. For example, one question this year asked students to visualize the fertility rate, life expectancy, and cGDP of China, the United States, and Germany over three years. A reasonable answer would be a scatterplot where size encodes fertility, color encodes country, the x-axis encodes life expectancy, and the y-axis encodes GDP per capita, with proper legends.</p>
+<p>For web-design questions, you do not need to show all data at once; it is enough to explain what interactions would reveal which data.</p>
+<p>For visualization critique, try to enumerate as many design flaws as possible. You may discuss chart junk separately, for example unnecessary backgrounds, decorative bar shapes, or meaningless 3D effects.</p>
+</blockquote>
+</br>
+<h1 id="infovis-design-principles">InfoVis Design Principles</h1>
+<p><strong>InfoVis</strong>: interactive visual representation of abstract data to amplify cognition</p>
+<ul>
+<li>Purpose: insight, not pictures</li>
+<li>Best for: EDA (<strong>Exploratory Data Analysis</strong>)</li>
+<li>Use EDA when you do not yet know exactly what you are looking for.</li>
+<li><strong>Two aspects</strong>: representation / interaction</li>
+<li><strong>Two challenges</strong>: scale / diversity</li>
+</ul>
+</br>
+<h3 id="edward-tuftes-principles">Edward Tufte&rsquo;s Principles</h3>
+<ul>
+<li><strong>Graphical Integrity</strong>: tell the truth. Check baseline, scale, and context. Avoid distortion or ambiguity; graphical magnitude should stay proportional to data magnitude.
+<strong>Zero tolerance rule</strong>: ordinary bar charts should begin from a zero baseline, or else visual exaggeration occurs. Dot plots are different because viewers are not comparing bar lengths there.
+<strong>Lie Factor</strong> = size of effect in graph / size of effect in data. A figure whose lie factor exceeds <strong>1.05</strong> is already meaningfully distorted.
+When using <strong>area</strong> rather than length (for example, circles), make sure the <strong>area</strong>, not the diameter, is proportional to the data.</li>
+<li><strong>Tufte Data-Ink Ratio</strong>: DIR = Data_Ink / Total_Ink, need to MAXIMIZE.
+Methods: erase non-data ink, erase redundant data ink, then revise and edit.
+In some cases — especially when exact values matter, there is too much data, or the comparisons are weak — a table may be better than a chart.</li>
+<li><strong>Avoid chart junk</strong>: unnecessary 3D, unnecessary color, decorative gridlines, boxes, overly dense labels, and gratuitous shapes.</li>
+<li><strong>Data Density</strong> = Number of Entries / Area of Graph</li>
+<li><strong>Small multiples</strong>: same design, another variable changes</li>
+<li><strong>Macro/Micro</strong>: big picture + fine details</li>
+<li><strong>Content is King</strong></li>
+</ul>
+</br>
+<h3 id="gestalt-laws">Gestalt Laws</h3>
+<ul>
+<li><strong>proximity</strong>: when grouping objects, humans usually prioritize spatial closeness over color or shape</li>
+<li>similarity</li>
+<li>connectedness</li>
+<li><strong>continuity</strong>: people tend to follow partially broken paths as though they were continuous</li>
+<li><strong>closure</strong>: the mind automatically completes incomplete shapes</li>
+<li><strong>symmetry</strong>: humans are highly sensitive to symmetric structures</li>
+<li><strong>relative size</strong>: larger objects are often perceived as closer or more important, which may mislead viewers</li>
+<li>figure-ground</li>
+<li><strong>Prägnanz</strong>: less is more</li>
+</ul>
+</br>
+</br>
+<h1 id="visual-perception">Visual Perception</h1>
+<h2 id="perception">Perception</h2>
+<ul>
+<li>active / contextual, influenced by values, experience and background</li>
+</ul>
+<p><strong>Two-stage model</strong>:</p>
+<ul>
+<li><strong>Early stage</strong>: low-level, parallel perception (color, shape, etc.), corresponding to fast and intuitive automatic processing.</li>
+<li><strong>Later stage</strong>: sequential, top-down, goal-directed processing (pattern, meaning, etc.), which is slower and relies on longer-term knowledge; it may be described in terms of verbal and motor subsystems.</li>
+</ul>
+<p><strong>Three-stage model</strong>:</p>
+<ul>
+<li><strong>Selection</strong>: what is noticed first; <strong>Organization</strong>: how it is grouped; <strong>Interpretation</strong>: how it is understood.</li>
+</ul>
+</br>
+<h3 id="preattentive-processing">Preattentive Processing</h3>
+<p>Fast parallel visual processing that does not require focused attention and usually completes within <strong>200–250 ms</strong>.</p>
+<ul>
+<li>Tasks: target detection / boundary detection / counting</li>
+<li>Only a <strong>single feature</strong> can usually be processed preattentively.</li>
+<li>A <strong>conjunction</strong> of features, such as shape plus hue, usually requires a sequential search.</li>
+<li><strong>Key properties</strong>: color / form / movement / spatial position</li>
+<li><strong>Change blindness</strong>: people sometimes fail to notice visual changes at all.</li>
+</ul>
+</br>
+<h3 id="color-scheme">Color Scheme</h3>
+<p>Color refers to light roughly in the <strong>0.4–0.7 μm</strong> range. Expert observers may distinguish on the order of a million colors, while ordinary viewers distinguish perhaps around twenty thousand.</p>
+<ul>
+<li><strong>RGB</strong> (based on the three cone-cell channels) is common for screens, while <strong>CMYK</strong> is common in printing and physical publication.</li>
+<li><strong>HSL</strong>: Hue, Saturation, Lightness.
+<code>L = 0</code> is black, <code>L = 100</code> is white, and <strong><code>L = 50</code> with <code>S = 100</code> gives a vivid pure color</strong>.</li>
+<li><strong>HSV</strong>: Hue, Saturation, Value
+<code>V = 0</code> is black, <strong><code>V = 100</code> gives full-value color</strong>, and <code>S = 0</code> yields white / gray-scale appearance.</li>
+<li><strong>Luminance</strong>: foreground and background should differ in brightness.</li>
+<li><strong>Quantitative color</strong>: avoid rainbow scale for quantitative data
+Ware&rsquo;s rule of thumb: about <strong>12 colors</strong>.
+Less is more: <strong>more than about 20–30 colors usually hurts rather than helps</strong>.
+Practical advice: blue can occupy large areas if not oversaturated; avoid using nearby blue hues that are hard to separate; red and green should be used carefully, especially away from the focal center; related hues may be varied through saturation and lightness.</li>
+</ul>
+</br>
+</br>
+<h1 id="d3js-and-html">D3.js and HTML</h1>
+<p>The standard stack of web visualization includes:</p>
+<ol>
+<li><strong>HTML</strong> — the markup language of the page</li>
+<li><strong>DOM</strong> — the manipulable structural representation of the HTML page</li>
+<li><strong>CSS</strong> — the presentation layer: color, font, size, layout, and so on</li>
+<li><strong>SVG</strong> — a vector-graphics system that scales cleanly</li>
+<li><strong>JavaScript / D3</strong> — the main layer for storing, transforming, and dynamically rendering data</li>
+</ol>
+</br>
+<h3 id="css">CSS</h3>
+<ul>
+<li><strong>Internal CSS</strong>: directly style elements such as <code>h1</code>, <code>p</code>, and <code>body</code> inside the <code>&lt;style&gt;</code> area of the HTML file.</li>
+<li><strong>External CSS</strong>: reference a separate stylesheet via <code>&lt;link rel=&quot;stylesheet&quot; href=&quot;xxx.css&quot;&gt;</code>.</li>
+</ul>
+</br>
+<h3 id="js">JS</h3>
+<ul>
+<li><strong><code>console.log()</code></strong>: print output for debugging.</li>
+<li><strong><code>object.key</code> is equivalent to <code>object[&quot;key&quot;]</code></strong>: object properties can be accessed by either dot notation or square-bracket notation.
+⚠️ Important exception: if the property name begins with a special character or a digit, or when a variable is used as the key, square brackets are required.</li>
+<li>Single vs. double quotes are largely interchangeable in many contexts, and semicolons are often optional in practice.</li>
+<li>Variables declared without <code>var</code>, <code>let</code>, or <code>const</code> become <strong>global</strong>, which is usually dangerous.</li>
+<li><code>[x, y, z]</code> denotes an array, while <code>{a: b, c: d}</code> denotes an object / dictionary.</li>
+<li><strong><code>this</code></strong> usually refers to the current object inside a method.</li>
+<li><strong><code>const</code></strong> means a constant binding, not necessarily an immutable value.
+⚠️ Thus one <strong>can</strong> still modify array elements or object properties, but <strong>cannot</strong> reassign the whole array / object reference.</li>
+</ul>
+</br>
+<h3 id="js-arrays">JS Arrays</h3>
+<p><code>[]</code>: arrays are, in JavaScript terms, also objects.</p>
+<ul>
+<li>Objects use string-like keys; arrays use numeric indices starting from 0.</li>
+<li><strong><code>push()</code></strong>: append to the end of an array.</li>
+<li><strong><code>pop()</code></strong>: return the last item and remove it.</li>
+<li><strong><code>shift()</code></strong>: return the first item and remove it.</li>
+<li><strong><code>unshift()</code></strong>: add one or more elements to the front of the array and return the new length.</li>
+<li><strong><code>slice(start, end)</code></strong>: a shallow copy of the interval <code>[start, end)</code>.
+⚠️ It returns a <strong>shallow copy</strong> of part of the array while leaving the original unchanged.</li>
+<li><strong><code>map()</code></strong>: transform every element through a function and return a new array, e.g. <code>map1 = arr.map(x =&gt; x + 2)</code>.
+⚠️ <strong>When not to use map()</strong>:not using the returned array; or not returning a value from callback</li>
+<li><strong>forEach()</strong>: calls a function once for each array element
+⚠️ Unlike <code>map()</code>, this kind of traversal is about executing over elements, not about constructing a new array.</li>
+</ul>
+</br>
+<h3 id="d3">D3</h3>
+<p>JavaScript library, data-driven DOM / HTML / SVG manipulation</p>
+<ul>
+<li><strong>Selection</strong>: based on CSS selectors
+<strong>select()</strong> first matching; <strong>selectAll()</strong> all matching
+select by ID (&quot;#xxx&quot;), by className (&quot;.xxx&quot;), by tag (&ldquo;div&rdquo;, &ldquo;h1&rdquo;, &ldquo;p&rdquo;, &ldquo;span&rdquo;, etc.)
+The return value of most selection methods is the selection itself. This means that selection methods such as .style, .attr and .on can be <strong>chain</strong>ed. E.g.: <code>selection.attr(...).style(...).text(...)</code></li>
+<li><strong><code>append()</code></strong>: append a child element.</li>
+<li><strong><code>text()</code></strong>: set text.</li>
+<li>To change HTML content, use <strong><code>html()</code></strong>.</li>
+<li>To change attributes, use <strong><code>attr()</code></strong>.</li>
+<li>To change CSS styling, use <strong><code>style()</code></strong>.</li>
+</ul>
+</br>
+<h3 id="svg">SVG</h3>
+<p>Scalable vector graphics <code>&lt;svg&gt;</code>: the drawing canvas for SVG graphics. <strong>Create with</strong>: <code>d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)</code>.</p>
+<ul>
+<li><strong>circle</strong>: <code>cx</code>, <code>cy</code>, <code>r</code>. Optional attributes include <strong><code>fill</code></strong>, <strong><code>stroke</code></strong>, and <strong><code>stroke-width</code></strong>. <strong>Create with</strong>: <code>.append(&quot;circle&quot;)</code>.</li>
+<li><strong>rect</strong>: <code>x</code>, <code>y</code>, <code>width</code>, <code>height</code> (the last two cannot be negative).</li>
+<li><strong>line</strong>: start point <code>x1, y1</code>; end point <code>x2, y2</code>.</li>
+<li>path: <strong>Capital letters</strong>: absolute position；<strong>Lowercase letters</strong>: relative position</li>
+<li><strong>text</strong>: x, y, text-anchor</li>
+<li><strong>g</strong>: use <code>vis.append(&quot;g&quot;)</code>, then append shapes such as <code>group.append(&quot;circle&quot;)</code>, <code>group.append(&quot;rect&quot;)</code>, and <code>group.append(&quot;text&quot;)</code> inside that group.</li>
+<li>Updating and controlling displayed elements:
+<strong>d</strong> = datum; <strong>i</strong> = index. <strong>Use i for position (where), Use d for size / style (what/how)</strong>
+⚠️ <strong>data join</strong> follows four steps: <code>d3.select() → .selectAll() → .data() → .join()</code>.
+Once the data changes, one typically performs the join again so that <code>update(newData)</code> can redraw / update the visualization.
+<strong><code>.join(enter, update, exit)</code></strong> uses three functions to handle element entry and update when data exists, and element exit when it no longer does.</li>
+<li>Element transformation tools:
+<strong>translate(tx, ty)</strong>: move along x and y
+<strong>rotate(angle)</strong>: rotate around origin or specified center
+<strong>scale(sx, sy)</strong>: resize, if sy omitted then sy = sx
+<strong>Linear scale</strong>: domain → range
+<strong><code>scaleSqrt</code></strong>: useful for circle-area encoding, so that <strong>area</strong>, rather than diameter, stays proportional to data.
+<strong><code>axis</code></strong>: <code>axisBottom</code>, <code>axisLeft</code>, <code>axisRight</code>, <code>axisTop</code>, used via <code>.call()</code> to generate and invoke the axis.
+<strong>transition</strong>: state change animation</li>
+</ul>
+</br>
+</br>
+<h1 id="multivariate-data--tables">Multivariate Data &amp; Tables</h1>
+<h3 id="data">Data</h3>
+<ul>
+<li>Variables in data are attributes or dimensions.</li>
+<li><strong>Data model</strong>: often described in terms of <strong>objects</strong>, <strong>attributes</strong>, and <strong>relations</strong>.</li>
+<li>In a data table, a <strong>case</strong> is the “individual” represented by a row, while a <strong>variable</strong> is the “attribute” represented by a column.
+Wide table: each attribute gets a column (e.g. year)
+A <strong>long table</strong> stores each case as an attribute-value pair; it is often tidier and easier to use for plotting.
+Variable Type:
+<ol>
+<li><strong>Categorical</strong>: <strong>nominal</strong> (not ordered, e.g. sex, country tag) or <strong>ordinal</strong> (ordered, e.g. clothing size).</li>
+<li><strong>Quantitative</strong> (numeric and measurable).
+<strong>Metadata</strong>: data that describes data itself (such as YAML / TOML headers).</li>
+</ol>
+</li>
+<li>Strategies for encoding data and improving space usage include composition, alignment, folding, recursion, and overloading.</li>
+</ul>
+</br>
+<h3 id="data-issues-and-cleaning">Data Issues and Cleaning：</h3>
+<ul>
+<li>Common data issues include <strong>missing fields</strong>, <strong>duplicates</strong>, <strong>conflicts</strong>, delimiter problems, whitespace, encoding problems, abbreviations, typos, syntax errors, and so on.</li>
+<li>Data cleaning: <strong>remove, impute (guess) or flag (e.g. NAN) missing ones</strong>. Only remove an outlier if you can prove that it’s <strong>erroneous</strong>.</li>
+<li>Typical cleaning steps: remove unwanted or irrelevant observations, fix structural errors, standardize units / formatting / capitalization, remove unwanted outliers, fix contradictions, fix type-conversion and syntax errors, deal with missing data, and validate the results.lidate dataset.</li>
+</ul>
+</br>
+<h3 id="multivariate-data-table-and-graph">Multivariate Data, Table and Graph:</h3>
+<ul>
+<li><strong>Univariate</strong> data graph: x-axis: independent cases, y-axis: dependent variables</li>
+<li><strong>Bivariate</strong>: Scatter-point is most often</li>
+<li><strong>Trivariate</strong> and <strong>Hypervariate</strong> scatter graph: <strong>use small multiples, or colors in 2D</strong></li>
+<li>A <strong>table</strong> is best for exact values. Numbers are usually right-aligned, often also aligned by decimal position, which improves comparison.</li>
+<li><strong>Graph</strong> = patterns / shape / relationships。</li>
+</ul>
+</br>
+</br>
+<h1 id="multivariate-graphs--charts">Multivariate Graphs &amp; Charts</h1>
+<p><strong>Few’s process</strong>: Choose chart (or table) based on data type and analytic goal, not decoration.</p>
+</br>
+<h3 id="basic-plots">Basic Plots:</h3>
+<p><strong>Scatter plot</strong>: well suited to showing the relationship between <strong>two</strong> quantitative variables, but weaker for many-variable relationships.</p>
+<ul>
+<li>If time intervals are irregular, a scatterplot may be more appropriate than a line chart.
+<strong>Line chart</strong>: used to show change over continuous time.</li>
+<li>As long as it does not mislead, the y-axis does not always have to start from 0.</li>
+<li><strong>Banking to 45°</strong></li>
+<li>If there are too many overlapping lines (<strong>overplotting</strong>), use <strong>small multiples</strong>.</li>
+<li>When values span different orders of magnitude and you want to compare <strong>growth rates</strong> (for example, all growing by 10%), a <strong>log scale</strong> is better than a linear scale.
+<strong>Bar chart</strong>: because the comparison is based on <strong>length</strong>, starting the y-axis above 0 can severely exaggerate differences.</li>
+<li><strong>Horizontal bars</strong> are often better than vertical bar charts when <strong>labels are too long</strong>, <strong>there are too many cases</strong>, or <strong>the bars themselves would become awkwardly long</strong>.</li>
+<li><strong>Stacked bars</strong>: allow multiple category components to be layered inside one bar.
+<strong>Trellis display</strong>: essentially a form of small multiples. For example, it can replace an overly cluttered stacked bar chart.
+<strong>Crosstab</strong>: suitable for multivariable cross-analysis among categorical variables, especially beyond a 2×2 case.
+<strong>Pareto chart</strong>: essentially a combination of a <strong>bar chart + line chart</strong>.</li>
+<li>⚠️ <strong>80/20 Rule</strong>: 80% of effect comes from 20% of causes (<strong>Vital few</strong>)。</li>
+<li>It is useful for analyzing the root causes of problems or defects, such as complaints, sales problems, or accident analysis.
+<strong>Bump chart</strong>: shows how rankings change over time.</li>
+</ul>
+</br>
+<h3 id="distribution-analysis-plots">Distribution Analysis Plots:</h3>
+<p><strong>Box plot</strong>: used to examine distribution, spread, and possible outliers.
+<strong>Histogram</strong>: used for continuous data; its bars touch and show a distribution. ⚠️ A bar chart, by contrast, is for discrete data and has separated bars.</p>
+<ul>
+<li>Overlaying multiple datasets may become cluttered; <strong>a line chart can sometimes handle that more clearly</strong>.
+<strong>Dot plot</strong>: shows the frequency with which some values appear in a dataset, using dots — somewhat like a point-based histogram.</li>
+<li>⚠️ Dot-style categorical comparisons are mainly for one variable or a few grouped comparisons (primarily 1D), whereas a scatter plot is inherently pairwise and two-dimensional.
+<strong>Strip plot</strong>: a scatterplot with categorical grouping along one axis, displaying individual observations for each category.
+<strong>Stem-and-leaf plot</strong>: displays the shape and spread of a continuous distribution, revealing <strong>central tendency, variability, skewness, and outliers</strong>.</li>
+</ul>
+</br>
+<h3 id="cyclical-data-plots">Cyclical Data Plots:</h3>
+<p><strong>Radar graph</strong>: represent data across the cyclical nature of time</p>
+<ul>
+<li>Suitable for time structures with periodicity.
+<strong>Heatmap</strong>: display a large quantity of cyclical data</li>
+<li>⚠️ When periodic data is too dense for a radar chart, a heatmap may be more suitable.</li>
+</ul>
+<p><strong>Overplotting</strong>: many data points overlap, making interpretation difficult.</p>
+<ul>
+<li>Possible remedies: reduce marker size, <strong>jitter points</strong>, make points transparent, aggregate or sample the data, or <strong>encode density</strong>.</li>
+</ul>
+</br>
+</br>
+<h1 id="graph-theory-and-graph-visualization">Graph theory and graph visualization</h1>
+<h3 id="graph-theory">Graph theory</h3>
+<p>A graph consists of nodes (entities) and edges (relationships), i.e. <code>G = (V, E)</code>. <a href="https://blog.nero-lithos.com/posts/3200.f2/">For more graph-theory detail, click here</a>.
+Two common graph representations:</p>
+<ul>
+<li>
+<p><strong>Adjacency Matrix</strong>: supports random access, with complexity <code>O(|V|^2)</code>; entry <code>(a, b) = 1</code> indicates that edge <code>ab</code> exists.</p>
+</li>
+<li>
+<p><strong>Adjacency List</strong>: supports sequential graph traversal, with complexity <code>O(|E|)</code>; a list entry such as <code>a: b</code> indicates that edge <code>ab</code> exists.</p>
+<p>Nodes are often assigned numeric indices for easier management and programming; numeric IDs can be generated through maps (Java), dictionaries (Python), or even SQLite.
+⚠️ Graphs are useful in business for detecting risk patterns, simulating internet / railway / supply-chain systems, optimizing asset mixes in markets, mapping social hierarchies, and detecting communities.</p>
+</li>
+<li>
+<p>A graph need not be simple; for example, multiple-edge-like relationship structures may arise in social-network settings such as <em>LinkedIn</em>.</p>
+</li>
+</ul>
+</br>
+<h3 id="graph-in-visualization">Graph in Visualization</h3>
+<p>Applications of graphs and corresponding <strong>graph layouts</strong>:</p>
+<ul>
+<li>
+<p>(Node-link) <strong>Relationships</strong> → nodes + links, conceptual picture</p>
+</li>
+<li>
+<p><strong>Hierarchies</strong> → tree layouts, sunburst charts.</p>
+</li>
+<li>
+<p><strong>Communities</strong> → clustered layouts, labels, computational clustering</p>
+</li>
+<li>
+<p><strong>Flows</strong> → Sankey, chord diagram</p>
+</li>
+<li>
+<p><strong>Spatial networks</strong> → schematic layout for routes/nodes</p>
+</li>
+<li>
+<p><strong>Large graphs</strong> → overplotting or tile-based aggregation</p>
+</li>
+<li>
+<p><strong>Process of visualizing graphs</strong>:
+<strong>1. Prepare Data</strong>
+<strong>2. Layout</strong>: arrange nodes and edges.
+<strong>3. Add Visual Attributes</strong>: size, color, position, and edge annotation.
+<strong>4. ⚠️ Interact, Explain, Further Analysis</strong>: zoom and pan, identify by hover / click, <strong>filter</strong> (⚠️ not deletion, only hiding), isolate, inspect neighbors and paths, <strong>drag / move / modify / delete / group</strong>, build explanatory sequences (e.g. in <em>Gephi</em>), annotate, add a <strong>legend</strong>, and export.</p>
+</li>
+<li>
+<p>⚠️ Two <em>Gephi</em> filters: <strong>giant component</strong> (topologically remove tiny or disconnected components) and <strong>edge weight</strong> (remove low-frequency edges).</p>
+</li>
+<li>
+<p><strong>Ego-network</strong>: one focal node together with all of its direct neighbors and relationships.</p>
+</li>
+</ul>
+</br> 
+<p>Basic graph concepts:</p>
+<ul>
+<li>
+<p>⚠️ <strong>Basic graph statistics</strong> include <strong>density</strong>, <strong>components</strong>, <strong>degree</strong>, <strong>path</strong>, and <strong>centrality</strong>. (Hue does not belong here.)</p>
+<p><strong>Centrality</strong> includes <strong>betweenness centrality</strong> (number of shortest paths going through a node), <strong>Katz centrality</strong> (weighted influence based on distance to all nodes), <strong>degree centrality</strong> (larger degree means more central), and <strong>closeness centrality</strong> (average distance to all nodes).</p>
+<p><strong>Diameter</strong>: the longest among all shortest paths (i.e. the critical path).</p>
+</li>
+<li>
+<p>⚠️ <strong>Essential visual attributes</strong>: Node size, Node color, Label, Edge weight, Edge color, Edge type.</p>
+</li>
+</ul>
+</br>
+<p>Layout strategies:</p>
+<p>Page-level arrangement:</p>
+<ul>
+<li><strong>Random node layouts</strong>: nodes are randomly distributed in space, as in a rough Force Atlas–style layout.</li>
+<li><strong>Force-directed layout</strong>: often yields one large cluster plus scattered peripheral points.</li>
+</ul>
+<p>Graph-internal layout types:</p>
+<ul>
+<li>Force-directed, node-only, time-oriented, top-down, radial, treemap (nested rectangles whose areas express hierarchy), hierarchical pie (<strong>a circular hierarchy, very similar to a sunburst</strong>), map-based, chord, and parallel-coordinate layouts.</li>
+<li>⚠️ <strong>Hierarchy layouts</strong> include both ordinary <strong>tree</strong> layouts and <strong>radial</strong> layouts. Tree layouts are non-circular and neatly arranged, such as top-down or left-to-right; top-down layouts can become too wide when labels are long. If the hierarchy is broad (many nodes), a radial layout may work better. Radial layouts include both radial trees and sunburst charts.</li>
+<li>A <strong>Sankey diagram</strong> is suitable for directional, step-based, path-like flow (for example, product-supply flow), whereas a <strong>Chord diagram</strong> suits many-to-many flow without a single fixed directional sequence (for example, global imports and exports).</li>
+</ul>
+</br>
+<p>Graph <strong>encoding</strong>: <strong>Node</strong> = entity, <strong>Link</strong> = relationship, <strong>Size</strong> often encodes importance or popularity, <strong>Color</strong> often encodes frequency or attribute, and <strong>Width</strong> often encodes link amount or strength.</p>
+<ul>
+<li>
+<p>In community visualization, a <strong>clique</strong> is a complete subgraph (all internal pairs are connected), and color can be used to distinguish major cliques.</p>
+<p>A <strong>convex hull</strong> is the enclosing “shell” drawn around each group (community); it is useful for emphasizing groups rather than individual links.</p>
+</li>
+<li>
+<p><strong>Flow visualization</strong> is used to display transactional events, depict systems or behavioral models, and represent supply chains.</p>
+<p>⚠️ <strong>Transactional data is often visualized with a Sankey diagram</strong>: a multi-step flow where link <strong>width encodes volume</strong>.</p>
+</li>
+</ul>
+</br>
+</br>
+<h1 id="dda3003-26s-mock-paper--answer">DDA3003 (26S) Mock Paper + Answer</h1>
+<embed src="http://localhost:1313/pdf/dda3003mid.pdf" type="application/pdf" width="100%" height="600px" />
+</br>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/dda3003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">DDA3003</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#infovis-design-principles">InfoVis Design Principles</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#edward-tuftes-principles">Edward Tufte&rsquo;s Principles</a></li>
+            <li><a href="#gestalt-laws">Gestalt Laws</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#visual-perception">Visual Perception</a>
+      <ul>
+        <li><a href="#perception">Perception</a>
+          <ul>
+            <li><a href="#preattentive-processing">Preattentive Processing</a></li>
+            <li><a href="#color-scheme">Color Scheme</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#d3js-and-html">D3.js and HTML</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#css">CSS</a></li>
+            <li><a href="#js">JS</a></li>
+            <li><a href="#js-arrays">JS Arrays</a></li>
+            <li><a href="#d3">D3</a></li>
+            <li><a href="#svg">SVG</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#multivariate-data--tables">Multivariate Data &amp; Tables</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#data">Data</a></li>
+            <li><a href="#data-issues-and-cleaning">Data Issues and Cleaning：</a></li>
+            <li><a href="#multivariate-data-table-and-graph">Multivariate Data, Table and Graph:</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#multivariate-graphs--charts">Multivariate Graphs &amp; Charts</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#basic-plots">Basic Plots:</a></li>
+            <li><a href="#distribution-analysis-plots">Distribution Analysis Plots:</a></li>
+            <li><a href="#cyclical-data-plots">Cyclical Data Plots:</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#graph-theory-and-graph-visualization">Graph theory and graph visualization</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#graph-theory">Graph theory</a></li>
+            <li><a href="#graph-in-visualization">Graph in Visualization</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#dda3003-26s-mock-paper--answer">DDA3003 (26S) Mock Paper + Answer</a></li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3003.2/">🎨 DDA3003 Midterm revision</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3003.1/">🎨 DDA3003 Introduction to D3</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3003.1/">🎨 DDA3003 Introduction to D3</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

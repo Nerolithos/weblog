@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC1003 LEC1~3 Functions, Data Types, and Computation | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="An introductory note to CSC1003 (Java) for first-year students at CUHKSZ.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/1003.1/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/1003.1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC1003 LEC1~3 Functions, Data Types, and Computation">
+  <meta property="og:description" content="An introductory note to CSC1003 (Java) for first-year students at CUHKSZ.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2024-09-11T11:27:58+08:00">
+    <meta property="article:modified_time" content="2024-09-11T11:27:58+08:00">
+    <meta property="article:tag" content="CSC1003">
+    <meta property="article:tag" content="讲座">
+
+  <meta itemprop="name" content="💻 CSC1003 LEC1~3 Functions, Data Types, and Computation">
+  <meta itemprop="description" content="An introductory note to CSC1003 (Java) for first-year students at CUHKSZ.">
+  <meta itemprop="datePublished" content="2024-09-11T11:27:58+08:00">
+  <meta itemprop="dateModified" content="2024-09-11T11:27:58+08:00">
+  <meta itemprop="wordCount" content="1458">
+  <meta itemprop="keywords" content="CSC1003,讲座">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC1003 LEC1~3 Functions, Data Types, and Computation">
+  <meta name="twitter:description" content="An introductory note to CSC1003 (Java) for first-year students at CUHKSZ.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/10031.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC1003 LEC1~3 Functions, Data Types, and Computation</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC1003 LEC1~3 Functions, Data Types, and Computation</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2024-09-11T11:27:58+08:00">September 11, 2024</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><strong>All credits go to Prof. WenYe Li, who gave this lecture to year 24 Freshmen.</strong></p>
+<p><strong>Full credit goes to Professor Wenye Li, the main lecturer of this course for the 2024 cohort.</strong></p>
+<h2 id="the-first-java-program">The First Java Program</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hello</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Hello, world!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>println()</code> prints a line and then moves to the next line automatically, whereas <code>print()</code> does not append a newline.</p>
+<p><strong>A Java source file (that is, a program) may define only one <code>public</code> class, and the class name must exactly match the file name.</strong> The method <code>public static void main(String[] args)</code> is the fixed entry point of a Java program, so execution always starts from <code>main</code>. Here, <code>void</code> is the method return type and means “no return value”; <code>static</code> indicates that the method belongs to the class itself.</p>
+<p>Use <code>javac</code> to compile a <code>.java</code> source file into <code>.class</code> bytecode, and use <code>java</code> to run a compiled Java program. The argument to <code>java</code> is the class name.</p>
+<p><code>args</code> is <strong>not</strong> a reserved word. You could rename it to <code>lgu</code> if you wanted, as long as you use the same name consistently: <code>lgu[0]</code>, <code>lgu[1]</code>, and so on. Index <code>[0]</code> refers to the first command-line argument. In the following example, if you type <code>java Hello lgu xys</code> in the terminal, Java will output <code>Hello! xys</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hello</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> lgu) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Hello! &#34;</span> <span style="color:#f92672">+</span> lgu<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The full workflow is:</p>
+<ol>
+<li>Define a <code>public</code> class named <code>Name</code>, and save it as <code>Name.java</code></li>
+<li>Run <code>javac Name.java</code> to compile it and generate <code>Name.class</code></li>
+<li>Run <code>java Name</code> to execute the class</li>
+</ol>
+<h2 id="data-types">Data Types</h2>
+<p>Java defines the following primitive data types:</p>
+<ul>
+<li>Integer types: <code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code></li>
+<li>Floating-point types: <code>float</code>, <code>double</code></li>
+<li>Character/string-related types: <code>char</code>, <code>String</code> (<code>String</code> is a reference type)</li>
+<li>Boolean type: <code>boolean</code></li>
+</ul>
+<p>The smallest storage unit in computer memory is the <strong>byte</strong>. One byte consists of 8 binary digits, i.e. 8 bits. Its binary range is <code>00000000</code> to <code>11111111</code>, which corresponds to decimal <code>0</code> to <code>255</code>, or hexadecimal <code>00</code> to <code>ff</code>.</p>
+<p>Among the basic numeric types, <code>byte</code> occupies 1 byte, <code>short</code> 2 bytes, <code>int</code> 4 bytes, <code>long</code> 8 bytes, <code>float</code> 4 bytes, <code>double</code> 8 bytes, and <code>char</code> 2 bytes.</p>
+<p>For booleans, the situation is more subtle:</p>
+<p><strong>In the Java Virtual Machine specification</strong>, boolean values are often treated as <code>int</code> values after compilation, and <code>int</code> occupies <strong>4 bytes</strong>. In that sense, a boolean may be regarded as taking 4 bytes. This is related to <strong>memory alignment</strong>: the JVM often aligns data to natural boundaries such as 4 bytes, which can improve performance and simplify implementation.</p>
+<p><strong>Inside arrays</strong>, however, each boolean element is typically represented using 1 bit in the abstract sense: Java encodes <code>true</code> as 1 and <code>false</code> as 0. So when booleans are stored as array elements, their <strong>effective information content</strong> is 1 bit each.</p>
+<p>In short, although boolean values are always conceptually represented by 0 and 1, and the actual information needed is only 1 bit, the physical storage cost depends on context.</p>
+<ul>
+<li>
+<p>The <strong>IEEE 754</strong> standard is used to represent <code>float</code> values (4 bytes, 32 bits):
+• First express a floating-point number in the form <code>(-1)^a x b x 2^c</code>
+• <strong>Sign bit (1 bit, a)</strong>: indicates whether the number is positive or negative<br>
+0 means positive, 1 means negative
+• <strong>Exponent field (8 bits, c)</strong>: stores the exponent using a bias<br>
+The bias is 127, so the actual exponent is stored exponent − 127
+• <strong>Fraction / mantissa field (23 bits, b)</strong>: stores the fractional part of the significand<br>
+The leading 1 is implicit and therefore not stored explicitly
+• For <code>double</code>, the bit allocation is 1, 11, and 52 respectively.</p>
+</li>
+<li>
+<p>For <code>float</code>, one concrete example is:
+<code>6.5 = (-1)^0 x 1.625 x 2^2 = 0 10000001 10100000000000000000000</code>
+• <strong>Sign bit = 0</strong> (positive number)<br>
+• <strong>Exponent = 10000001 (129)</strong>, so the actual exponent is <code>129 - 127 = 2</code><br>
+• <strong>Mantissa = 1.101<sub>BIN</sub></strong> (with the leading 1 implicit), so the significand is <code>1 + 0.5 + 0.125 = 1.625&lt;sub&gt;DEC&lt;/sub&gt;</code></p>
+</li>
+</ul>
+<p>In Java, integers are represented exactly, and integer arithmetic is also exact within range (with truncation toward zero in division). Floating-point numbers, however, often cannot be represented exactly in binary, so rounding errors may arise:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">//...</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">float</span> a <span style="color:#f92672">=</span> 0.<span style="color:#a6e22e">1</span> <span style="color:#f92672">/</span> 3 <span style="color:#f92672">*</span> 3
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">float</span> b <span style="color:#f92672">=</span> 0.<span style="color:#a6e22e">1</span>
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(a <span style="color:#f92672">==</span> b)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//...</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">(</span>terminal output<span style="color:#f92672">)</span> &gt; False
+</span></span></code></pre></div><p><strong>For an integer type occupying <code>n</code> bytes, the representable range is <code>[-2^(8n-1), 2^(8n-1)-1]</code>.</strong></p>
+<ul>
+<li>Why is it not <code>[-2^n, 2^n-1]</code>?</li>
+</ul>
+<p>Computer systems use <strong>two’s complement</strong> to represent signed integers. For example, <code>+6&lt;sub&gt;DEC&lt;/sub&gt; = 00000110&lt;sub&gt;BIN&lt;/sub&gt;</code>, while to represent a negative number you invert the bits of its absolute value and then add 1: <code>-6&lt;sub&gt;DEC&lt;/sub&gt; = 11111010&lt;sub&gt;BIN&lt;/sub&gt;</code>. The leading bit indicates the sign, in a way analogous to the sign bit in floating-point representation. This is also closely related to overflow, which we discuss below.</p>
+<p><strong>Type casting:</strong></p>
+<ul>
+<li><code>byte b = 42, ~~b = (int) b~~</code>: a variable can have only one type; it cannot “recast itself” this way.</li>
+<li><code>byte b = 42, ~~long c  = (int) b~~</code>: inconsistent target type — should it be <code>long</code> or <code>int</code>?</li>
+<li><code>byte b = 42, int c = (int) b</code>: valid.</li>
+<li>Type casting can also lead to overflow if the target type cannot represent the value.</li>
+</ul>
+<h2 id="rules-of-computation">Rules of Computation</h2>
+<p>Let us use an example from the 2024 TUT session 1:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">rules</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> 7 <span style="color:#f92672">/</span> 5;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> b <span style="color:#f92672">=</span> 7 <span style="color:#f92672">/</span> 5
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> c <span style="color:#f92672">=</span> 7.<span style="color:#a6e22e">0</span> <span style="color:#f92672">/</span> 5
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> d <span style="color:#f92672">=</span> 4.<span style="color:#a6e22e">00</span> <span style="color:#f92672">+</span> 5.<span style="color:#a6e22e">00</span>
+</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(a <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span> b <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span> c <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span> d);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">(</span>terminal output<span style="color:#f92672">)</span> &gt; 1, 1.0, 1.4, 9.0
+</span></span></code></pre></div><ul>
+<li>
+<p>In Java, the JVM does not treat all numeric literals uniformly as Python might. <strong>When assigning a value to a variable, you must declare its type</strong>, e.g. <code>int x = 42</code> assigns the integer 42 to <code>x</code>. Numeric literals themselves also have default types: for instance, <code>42</code> is an <code>int</code>, and <code>42.0</code> is a <code>double</code> (<strong>all decimal literals are <code>double</code> by default</strong>). So in the example above, for <code>b</code>, we have <code>7&lt;int&gt; / 5&lt;int&gt; = 1&lt;int&gt;</code>, and then <code>1&lt;int&gt;</code> is widened to <code>1.0&lt;double&gt;</code> when assigned to <code>b</code>. Since <code>7 / 5</code> is integer division, the result must be an integer. The same idea explains <code>c</code>: because <code>7.0</code> is a <code>double</code>, the result is <code>1.4&lt;double&gt;</code>. <strong>If one operand is an integer and the other is floating-point, the integer is automatically promoted to floating-point.</strong></p>
+</li>
+<li>
+<p>An unspecified floating-point literal such as <code>42.0</code> is <code>double</code> by default in Java. If you want a <code>float</code>, you must append <code>f</code> or <code>F</code>, e.g. <code>float a = 42.0f</code>. Likewise, a <code>long</code> literal such as 42 should be written as <code>42L</code> when needed.</p>
+</li>
+<li>
+<p>In Java, <code>7.00 / 5</code> evaluates to <code>1.4</code> rather than <code>1.40</code> because, by default, Java prints floating-point numbers using only the necessary decimal places. In other words, it suppresses meaningless trailing zeros. For example, for <code>d</code>, the expression <strong><code>4.00 + 5.00</code> evaluates to <code>9.0</code> (a <code>double</code>)</strong>.</p>
+</li>
+<li>
+<p>On <strong>overflow in integer arithmetic</strong>:</p>
+<p><strong>Integer overflow</strong> is a characteristic pitfall of fixed-width arithmetic in Java: if the result exceeds the representable range of the data type, the computation wraps around and becomes incorrect.</p>
+<p>Here is an example cited from Professor Li’s lecture:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">//......</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">byte</span> m <span style="color:#f92672">=</span> 100;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">byte</span> n <span style="color:#f92672">=</span> 70;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">byte</span> p <span style="color:#f92672">=</span> m <span style="color:#f92672">+</span> n
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(p)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//......</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">(</span>terminal output<span style="color:#f92672">)</span> &gt; -86
+</span></span></code></pre></div><p>Assigning 170 to the <code>byte</code> variable <code>p</code> causes overflow, because the maximum value of <code>byte</code> is 127, and 170 exceeds that bound. Java wraps the value according to the <code>byte</code> range (<code>-128</code> to <code>127</code>). Since the total range size is 256, the result is effectively <code>170 - 256 = -86</code>. Intuitively, once you go beyond one end of the range, you re-enter from the other side.</p>
+</li>
+<li>
+<p>Logical operators:</p>
+<p>AND: <code>&amp;&amp;</code>, OR: <code>||</code>, NOT: <code>!=</code>.</p>
+</li>
+<li>
+<p>Bitwise operators (binary level):</p>
+<p>AND: <code>&amp;</code>, OR: <code>|</code>, XOR: <code>^</code>.</p>
+</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://liaoxuefeng.com/books/java/introduction/index.html">廖雪峰的官方网站</a></li>
+</ul>
+<h2 id="in-class-quiz">In-class Quiz</h2>
+<ol>
+<li>
+<p>Does <code>float a = 0.11 * 100</code> necessarily evaluate to <code>11.0</code>?</p>
+</li>
+<li>
+<p>What will <code>b</code> print in the following code?</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">short</span> a <span style="color:#f92672">=</span> 30000:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">short</span> b <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> a
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(b)
+</span></span></code></pre></div><ol start="3">
+<li>
+<p>If you want to simulate the behavior of a subnet mask in Java, which operator would you use?</p>
+</li>
+<li>
+<p>Is <code>args</code> a reserved word?</p>
+</li>
+<li>
+<p>What is the result of <code>double x = 1.00 + 2</code>?</p>
+</li>
+<li>
+<p>How can you use type casting to generate a random integer between 0 and 100 inclusive and assign it to <code>a</code>?</p>
+</li>
+</ol>
+<h4 id="answer">answer</h4>
+<ol>
+<li>
+<p>Not necessarily      2. -5536      3. <code>&amp;</code>      4. No      5. 3.0</p>
+</li>
+<li>
+<p><code>int a = (int) (Math.random() * 101)</code></p>
+</li>
+</ol>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc1003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC1003</a>
+   </li>
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">讲座</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#the-first-java-program">The First Java Program</a></li>
+        <li><a href="#data-types">Data Types</a></li>
+        <li><a href="#rules-of-computation">Rules of Computation</a></li>
+        <li><a href="#reference">Reference</a></li>
+        <li><a href="#in-class-quiz">In-class Quiz</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.1/">💻 CSC1003 LEC1~3 函数、数据类型与计算</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8" />
+  <title>D3 · 全球可再生能源旋转地球</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../css/custom.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #ffffff;
+      color: #222222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .dda-page {
+      flex: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+    }
+    .dda-header {
+      margin-bottom: 1.5rem;
+    }
+    .dda-header h1 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+    }
+    .dda-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 0.95rem;
+      color: #222222;
+      display: block;
+    }
+    .dda-globe-wrapper {
+      position: relative;
+      margin-top: 1.5rem;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .dda-view-toggle {
+      position: absolute;
+      left: 50%;
+      top: 1.75rem;
+      transform: translateX(-50%);
+      display: inline-flex;
+      background: rgba(255,255,255,0.95);
+      border-radius: 999px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border: 1px solid rgba(15,23,42,0.12);
+      overflow: hidden;
+      z-index: 18;
+      font-size: 0.8rem;
+    }
+    .dda-view-toggle button {
+      padding: 0.25rem 0.85rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #374151;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+    .dda-view-toggle button.dda-view-toggle--active {
+      background: #111827;
+      color: #ffffff;
+    }
+    .dda-globe-svg {
+      width: 100%;
+      max-width: 900px;
+      /* 与 tile / map 视图保持一致的显示高度，尽量占满视口 */
+      height: min(70vh, 720px);
+      display: none; /* 初次加载默认显示 tile 视图，由 JS 决定最终模式 */
+      margin: 0 auto;
+    }
+    .dda-tile-svg {
+      width: 100%;
+      max-width: 900px;
+      height: min(70vh, 720px);
+      display: block;
+      margin: 0 auto;
+    }
+    .dda-map-svg {
+      width: 100%;
+      max-width: 900px;
+      height: min(70vh, 720px);
+      display: none;
+      margin: 0 auto;
+    }
+    .dda-globe-sphere {
+      fill: #e6f2ff;
+      stroke: #4f83cc;
+      stroke-width: 1.2px;
+    }
+    .dda-globe-graticule {
+      fill: none;
+      stroke: rgba(120, 150, 200, 0.4);
+      stroke-width: 0.6px;
+      stroke-dasharray: 2 2;
+    }
+    .dda-globe-country {
+      stroke: rgba(255, 255, 255, 0.9);
+      stroke-width: 0.5px;
+      cursor: pointer;
+    }
+    .dda-globe-country:hover {
+      stroke-width: 2px;
+      stroke: #111;
+    }
+    .dda-tile-country {
+      stroke: #ffffff;
+      stroke-width: 0.5px;
+      cursor: pointer;
+    }
+    .dda-tile-country:hover {
+      stroke-width: 2px;
+      stroke: #111827;
+    }
+    .dda-search-container {
+      position: absolute;
+      left: 1.75rem;
+      top: 1.75rem;
+      z-index: 18;
+      width: 210px;
+      max-width: 55%;
+      font-size: 0.8rem;
+    }
+    .dda-search-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.25);
+      background: rgba(255,255,255,0.96);
+      color: #111827;
+      outline: none;
+    }
+    .dda-search-input::placeholder {
+      color: #9ca3af;
+    }
+    .dda-search-suggestions {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin-top: 0.25rem;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.16);
+      border: 1px solid rgba(0,0,0,0.06);
+      max-height: 240px;
+      overflow-y: auto;
+      display: none;
+    }
+    .dda-search-item {
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+    .dda-search-item span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dda-search-item-code {
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+    .dda-search-item:hover,
+    .dda-search-item--active {
+      background: #e5e7eb;
+    }
+    .dda-legend {
+      /* 放在图片区域下方，不再遮挡地图 */
+      position: static;
+      margin: 0.35rem auto 0;
+      background: rgba(255,255,255,0.92);
+      border-radius: 8px;
+      /* 上边距略小、下边距略大一点，保证数字完全在白框内 */
+      padding: 0.35rem 1rem 1.2rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      font-size: 0.8rem;
+      max-width: 420px;
+    }
+    .dda-legend-bar {
+      /* 由 D3 动态绘制 SVG 渐变色带，这里只负责占位尺寸 */
+      width: 100%;
+      height: 10px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 0.15rem;
+    }
+        #f6d32d 33%,  /* 10%  yellow */
+        #c5e1a5 66%,  /* 20%  light green */
+        #006837 100%  /* 30%+ pure green */
+      );
+      margin-bottom: 0.25rem;
+    }
+    .dda-legend-labels {
+      position: relative;
+      display: block;
+      font-size: 0.72rem;
+      opacity: 0.8;
+      margin-top: 0.15rem;
+      height: 1.1rem;
+    }
+    .dda-legend-caption {
+      margin-top: 1.2rem;
+      font-size: 0.72rem;
+      color: #4b5563;
+      text-align: center;
+      opacity: 0.9;
+    }
+    .dda-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.55rem 0.75rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.78rem;
+      color: #222;
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.12s ease-out;
+      z-index: 30;
+      white-space: nowrap;
+    }
+    .dda-tooltip strong {
+      font-weight: 600;
+    }
+    .dda-tooltip-sparkline {
+      margin-top: 0.4rem;
+      display: block;
+    }
+    .dda-linechart-toggle {
+      position: absolute;
+      left: 1.75rem;
+      top: 4.1rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      background: #ffffff;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: #111827;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      z-index: 15;
+    }
+    .dda-linechart-toggle:hover {
+      background: rgba(148, 163, 184, 0.12);
+    }
+
+    .dda-linechart-panel {
+      position: absolute;
+      inset: 0.75rem;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+      border: 1px solid rgba(0,0,0,0.08);
+      display: none;
+      flex-direction: column;
+      padding: 0.9rem 1.1rem 1.1rem;
+      z-index: 20;
+    }
+    .dda-linechart-panel--visible {
+      display: flex;
+    }
+    .dda-linechart-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .dda-linechart-back {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: none;
+      background: #e5e7eb;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .dda-linechart-back:hover {
+      background: #d1d5db;
+    }
+    .dda-linechart-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+    .dda-linechart-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      font-size: 0.8rem;
+    }
+    .dda-linechart-controls label {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .dda-linechart-controls select {
+      font-size: 0.8rem;
+      padding: 0.15rem 0.3rem;
+    }
+    .dda-linechart-draw {
+      padding: 0.25rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      background: #111827;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .dda-linechart-draw:hover {
+      background: #020617;
+    }
+    .dda-linechart-svg {
+      width: 100%;
+      height: 360px;
+      margin-top: 0.3rem;
+    }
+    .dda-linechart-empty {
+      font-size: 0.8rem;
+      color: #666666;
+      margin-top: 0.3rem;
+    }
+    .dda-slider-section {
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem 0.75rem;
+      border-radius: 12px;
+      background: #fafafa;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .dda-slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+      gap: 1rem;
+    }
+    .dda-slider-header-left {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+    .dda-current-year {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .dda-slider-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: #666;
+    }
+    .dda-slider-wrapper input[type="range"] {
+      flex: 1;
+    }
+    .dda-play-button {
+      padding: 0.28rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.6);
+      background: #111827;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dda-play-button:hover {
+      background: #020617;
+    }
+    .dda-info-panel {
+      margin-top: 0.9rem;
+      font-size: 0.85rem;
+      color: #444;
+    }
+    .dda-info-panel strong {
+      font-weight: 600;
+    }
+    .dda-backlink {
+      margin-top: 1.8rem;
+      font-size: 0.9rem;
+    }
+    .dda-backlink a {
+      color: #8ab4ff;
+      text-decoration: none;
+    }
+    .dda-backlink a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 640px) {
+      .dda-page {
+        padding: 0 0.75rem 1.75rem;
+      }
+      .dda-globe-svg,
+      .dda-tile-svg,
+      .dda-map-svg {
+        height: min(60vh, 420px);
+      }
+    }
+
+    /* 适配矮屏幕，仍尽量保持较大可视区域 */
+    @media (max-height: 720px) {
+      .dda-page {
+        padding-top: 0;
+        padding-bottom: 1.75rem;
+      }
+      .dda-globe-svg,
+      .dda-tile-svg,
+      .dda-map-svg {
+        height: min(65vh, 520px);
+      }
+      .dda-slider-section {
+        margin-top: 1.25rem;
+        padding-top: 0.85rem;
+        padding-bottom: 0.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dda-page">
+    <header class="dda-header">
+      <h1>Global Renewable Energy Share</h1>
+      <p>DDA3003 Group4 ——— Visual Analytics of Global Energy Transition Patterns ——— Explore with hovering and clicking the countries.</p>
+    </header>
+
+    <section class="dda-slider-section">
+      <div class="dda-slider-header">
+        <div class="dda-slider-header-left"></div>
+        <div style="display: none;">
+          <span id="dda-current-year" class="dda-current-year">-</span>
+        </div>
+      </div>
+      <div class="dda-slider-wrapper">
+        <button id="dda-play-toggle" class="dda-play-button" type="button">▶</button>
+        <span id="dda-year-min">-</span>
+        <input id="dda-year-slider" type="range" min="0" max="0" step="1" value="0" />
+        <span id="dda-year-max">-</span>
+      </div>
+      <div id="dda-info-panel" class="dda-info-panel">
+        Current year: -. Hover or click country to see details.
+      </div>
+    </section>
+
+    <section class="dda-globe-wrapper">
+      <div class="dda-view-toggle">
+        <button id="dda-view-globe" type="button">Globe</button>
+        <button id="dda-view-tiles" class="dda-view-toggle--active" type="button">Tile map</button>
+        <button id="dda-view-map" type="button">Map</button>
+      </div>
+      <svg id="dda-globe-svg" class="dda-globe-svg"></svg>
+      <svg id="dda-tile-svg" class="dda-tile-svg"></svg>
+      <svg id="dda-map-svg" class="dda-map-svg"></svg>
+      <div id="dda-tooltip" class="dda-tooltip"></div>
+      <div class="dda-search-container">
+        <input
+          id="dda-country-search"
+          class="dda-search-input"
+          type="text"
+          placeholder="Search country..."
+          autocomplete="off"
+        />
+        <div id="dda-country-suggestions" class="dda-search-suggestions"></div>
+      </div>
+      <button id="dda-linechart-toggle" class="dda-linechart-toggle" type="button">Line chart</button>
+
+      <div id="dda-linechart-panel" class="dda-linechart-panel">
+        <div class="dda-linechart-header">
+          <button id="dda-linechart-back" class="dda-linechart-back" type="button">&#8592;</button>
+          <div class="dda-linechart-title">Renewables share of primary energy (TPES) over time</div>
+        </div>
+        <div class="dda-linechart-controls">
+          <label>Country 1:
+            <select id="dda-lc-country1"></select>
+          </label>
+          <label>Country 2:
+            <select id="dda-lc-country2"></select>
+          </label>
+          <label>Country 3:
+            <select id="dda-lc-country3"></select>
+          </label>
+          <button id="dda-lc-draw" class="dda-linechart-draw" type="button">Draw</button>
+        </div>
+        <svg id="dda-linechart-svg" class="dda-linechart-svg"></svg>
+        <div id="dda-linechart-empty" class="dda-linechart-empty">Select up to three countries and click "Draw" to see their renewable energy share over time.</div>
+      </div>
+      <div class="dda-legend">
+        <div class="dda-legend-bar"></div>
+        <div class="dda-legend-labels">
+          <span>0%</span>
+          <span>5%</span>
+          <span>10%</span>
+          <span>15%</span>
+          <span>20%</span>
+          <span>25%</span>
+          <span>30%+</span>
+        </div>
+        <div class="dda-legend-caption">Metric: renewables share of electricity production</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // ==========================
+    // 布局与投影设置
+    // ==========================
+    const globeSvg = d3.select("#dda-globe-svg");
+    const tileSvg = d3.select("#dda-tile-svg");
+    const mapSvg = d3.select("#dda-map-svg");
+    const globeNode = globeSvg.node();
+    const globeRect = globeNode.getBoundingClientRect();
+    const globeWidth = globeRect.width || globeNode.clientWidth || 800;
+    const globeHeight = globeRect.height || globeNode.clientHeight || 520;
+
+    const baseScale = Math.min(globeWidth, globeHeight) / 2.1;
+
+    const projection = d3.geoOrthographic()
+      // 地球仪整体缩小约 10%，并进一步上移，避免被下方元素遮挡
+      .scale(baseScale * 0.9)
+      .translate([globeWidth / 2, globeHeight / 2 - 10])
+      .clipAngle(90);
+
+    const mapProjection = d3.geoNaturalEarth1()
+      // 稍微缩小比例，让地图不要贴满整个卡片
+      .scale(baseScale * 0.7)
+      .translate([globeWidth / 2, globeHeight / 2 + 10]);
+
+    const geoPath = d3.geoPath(projection);
+    const mapPath = d3.geoPath(mapProjection);
+    const graticule = d3.geoGraticule();
+
+    const globeGroup = globeSvg.append("g");
+    const mapGroup = mapSvg.append("g");
+
+    const sphere = globeGroup.append("path")
+      .datum({ type: "Sphere" })
+      .attr("class", "dda-globe-sphere");
+
+    const grat = globeGroup.append("path")
+      .datum(graticule())
+      .attr("class", "dda-globe-graticule");
+
+    const mapZoom = d3.zoom()
+      .scaleExtent([0.8, 4])
+      .on("zoom", (event) => {
+        mapGroup.attr("transform", event.transform);
+      });
+
+    mapSvg.call(mapZoom);
+
+    let countryPaths = null;
+    let mapCountryPaths = null;
+    let tileRects = null;
+    let tilePositionsByIso3 = new Map(); // Map<iso3, {col,row,name}>
+    let isHoveringCountry = false; // 在播放年份时，避免移入国家时 tooltip 被反复隐藏
+    let lastTooltipIso3 = null;
+    let lastTooltipName = null;
+
+    // ==========================
+    // 数据结构
+    // ==========================
+    const yearSlider = document.getElementById("dda-year-slider");
+    const playButton = document.getElementById("dda-play-toggle");
+    const viewGlobeBtn = document.getElementById("dda-view-globe");
+    const viewTilesBtn = document.getElementById("dda-view-tiles");
+    const viewMapBtn = document.getElementById("dda-view-map");
+    const linechartToggle = document.getElementById("dda-linechart-toggle");
+    const linechartPanel = document.getElementById("dda-linechart-panel");
+    const linechartBack = document.getElementById("dda-linechart-back");
+    const lcCountry1 = document.getElementById("dda-lc-country1");
+    const lcCountry2 = document.getElementById("dda-lc-country2");
+    const lcCountry3 = document.getElementById("dda-lc-country3");
+    const lcDrawBtn = document.getElementById("dda-lc-draw");
+    const lcSvg = d3.select("#dda-linechart-svg");
+    const lcEmpty = document.getElementById("dda-linechart-empty");
+    const yearLabel = document.getElementById("dda-current-year");
+    const yearMinLabel = document.getElementById("dda-year-min");
+    const yearMaxLabel = document.getElementById("dda-year-max");
+    const infoPanel = document.getElementById("dda-info-panel");
+    const tooltipEl = document.getElementById("dda-tooltip");
+
+    // Country search elements
+    const searchInput = document.getElementById("dda-country-search");
+    const searchSuggestionsEl = document.getElementById("dda-country-suggestions");
+    let searchOptions = [];
+    let searchMatches = [];
+    let searchActiveIndex = -1;
+
+    let years = [];
+    let currentYear = null;
+    let dataByYearAndCode = new Map(); // Map<year, Map<code, { value, name }>>
+    let countryNameByCode = new Map(); // Map<code, name>
+    let countrySeriesCache = new Map(); // Map<code, Array<{year, value}>>
+
+    // Display-name overrides for sensitive entities (UI only; ISO3 and data remain unchanged)
+    const DISPLAY_NAME_OVERRIDES = new Map([
+      ["HKG", "HongKong, China SAR"],
+      ["MAC", "Macau, China SAR"],
+      ["TWN", "Taiwan, China RoC"]
+    ]);
+
+    function getDisplayCountryName(iso3, fallbackName) {
+      const code = (iso3 || "").toUpperCase();
+      if (DISPLAY_NAME_OVERRIDES.has(code)) {
+        return DISPLAY_NAME_OVERRIDES.get(code);
+      }
+      return fallbackName;
+    }
+
+    // Africa aggregate: 用 CSV 中 "Africa" 这一行的数值
+    // 给除 Morocco(EGY)、Egypt(EGY)、Algeria(DZA)、South Africa(ZAF)
+    // 以外的非洲国家着色。
+    const africaAggregateIso3 = new Set([
+      "AGO","BEN","BWA","BFA","BDI","CMR","CPV","CAF","TCD","COM",
+      "COD","COG","CIV","DJI","GNQ","ERI","SWZ","ETH","GAB","GMB",
+      "GHA","GIN","GNB","KEN","LSO","LBR","LBY","MDG","MWI","MLI",
+      "MRT","MUS","MOZ","NAM","NER","NGA","RWA","STP","SEN","SLE",
+      "SOM","SSD","SDS","SDN","TZA","TGO","TUN","UGA","ZMB","ZWE","SYC","ABV"
+    ]);
+    let africaAggregateByYear = new Map(); // Map<year, value>
+
+    let valueMin = Infinity;
+    let valueMax = -Infinity;
+
+    const VIEW_MODE_KEY = "dda_view_mode";
+    let viewMode = "tiles"; // "globe" | "tiles" | "map"
+
+    // Year playback state
+    let isPlayingYears = false;
+    let playTimer = null;
+    let playIndex = 0;
+
+    // Tile 视图缩放：在 tile 网格构建后对内部 g 进行缩放变换
+    const tileZoom = d3.zoom()
+      .scaleExtent([0.8, 4])
+      .on("zoom", (event) => {
+        const gTile = tileSvg.select("g");
+        if (!gTile.empty()) {
+          gTile.attr("transform", event.transform);
+        }
+      });
+
+    tileSvg.call(tileZoom);
+
+    // Color scale: low = red, high = green, new 0–75%+ scale
+    const colorScale = d3.scaleLinear()
+      .range([
+        "#b30000", // 0%
+        "#e55c00", // ~15%
+        "#f6d32d", // ~30%
+        "#c5e1a5", // ~45%
+        "#2e7d32", // ~60%
+        "#006837"  // 75%+
+      ]);
+
+    function renderLegendGradient() {
+      const barContainer = d3.select(".dda-legend-bar");
+      const labelsContainer = d3.select(".dda-legend-labels");
+      if (barContainer.empty() || labelsContainer.empty()) return;
+
+      barContainer.selectAll("*").remove();
+      labelsContainer.selectAll("*").remove();
+
+      const barNode = barContainer.node();
+      const width = barNode.clientWidth || 260;
+      const height = barNode.clientHeight || 10;
+
+      const svg = barContainer.append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      const defs = svg.append("defs");
+      const gradient = defs.append("linearGradient")
+        .attr("id", "dda-legend-gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%");
+
+      const domain = colorScale.domain();
+      if (!domain.length) return;
+      const min = domain[0];
+      const max = domain[domain.length - 1];
+
+      domain.forEach(v => {
+        const t = (v - min) / (max - min || 1);
+        gradient.append("stop")
+          .attr("offset", `${t * 100}%`)
+          .attr("stop-color", colorScale(v));
+      });
+
+      svg.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", height)
+        .attr("fill", "url(#dda-legend-gradient)");
+
+      // 按数值比例放置刻度标签，使其与颜色条对应
+      const tickValues = [0, 15, 30, 45, 60, 75];
+      const labelScale = d3.scaleLinear()
+        .domain([0, 75])
+        // 两端各预留 5% 边距，避免文字顶出白色框
+        .range([5, 95]);
+
+      const labelsNode = labelsContainer.node();
+      const labelSelection = labelsContainer
+        .style("position", "relative")
+        .selectAll("span")
+        .data(tickValues)
+        .enter()
+        .append("span")
+        .style("position", "absolute")
+        .style("transform", "translateX(-50%)")
+        .style("left", d => `${labelScale(d)}%`);
+
+      labelSelection.text(d => d === 75 ? "75%+" : `${d}%`);
+    }
+
+    // ==========================
+    // 渲染函数
+    // ==========================
+    function renderGlobe() {
+      sphere.attr("d", geoPath);
+      grat.attr("d", geoPath);
+      if (countryPaths) {
+        countryPaths.attr("d", geoPath);
+      }
+    }
+    function renderMap() {
+      if (!mapCountryPaths) return;
+      mapCountryPaths.attr("d", mapPath);
+    }
+
+    function getCountryValue(year, iso3) {
+      const yearMap = dataByYearAndCode.get(year);
+      let record = yearMap ? (yearMap.get(iso3) || null) : null;
+
+      // 若该国家没有有效数据（包括 NaN），但属于 Africa aggregate 分组，
+      // 则使用 CSV 中 "Africa" 这一行对应年份的汇总数值。
+      const hasValidValue = record && record.value != null && !isNaN(record.value);
+      if (!hasValidValue && africaAggregateIso3.has(iso3)) {
+        const aggValue = africaAggregateByYear.get(year);
+        if (aggValue != null && !isNaN(aggValue)) {
+          record = { value: aggValue, name: "Africa Aggregate" };
+        }
+      }
+
+      return record;
+    }
+
+    function getCountrySeries(iso3) {
+      if (!iso3 || !years.length) return null;
+      const code = String(iso3).toUpperCase();
+      if (countrySeriesCache.has(code)) return countrySeriesCache.get(code);
+
+      const series = years.map(year => {
+        const rec = getCountryValue(year, code);
+        const value = rec && !isNaN(rec.value) ? rec.value : null;
+        return { year, value };
+      });
+
+      countrySeriesCache.set(code, series);
+      return series;
+    }
+
+    function smoothSeries(series) {
+      if (!Array.isArray(series) || !series.length) return series || [];
+      const windowSize = 3;
+      const half = Math.floor(windowSize / 2);
+      return series.map((d, i) => {
+        let sum = 0;
+        let count = 0;
+        for (let j = i - half; j <= i + half; j++) {
+          if (j < 0 || j >= series.length) continue;
+          const v = series[j].value;
+          if (v != null && !isNaN(v)) {
+            sum += v;
+            count++;
+          }
+        }
+        if (!count) return { year: d.year, value: null };
+        return { year: d.year, value: sum / count };
+      });
+    }
+
+    function renderTooltipSparklineForCountry(iso3) {
+      if (!iso3 || !years.length) return;
+      const container = d3.select(tooltipEl).select(".dda-tooltip-sparkline");
+      if (container.empty()) return;
+      container.selectAll("*").remove();
+
+      const rawSeries = getCountrySeries(iso3);
+      if (!rawSeries) return;
+      const smoothed = smoothSeries(rawSeries);
+      const values = smoothed
+        .map(d => d.value)
+        .filter(v => v != null && !isNaN(v));
+      if (!values.length) return;
+
+      const width = 170;
+      const height = 60;
+      const margin = { top: 6, right: 4, bottom: 14, left: 4 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const svg = container.append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const x = d3.scaleLinear()
+        .domain(d3.extent(years))
+        .range([0, innerWidth]);
+
+      const maxVal = d3.max(values);
+
+      const y = d3.scaleLinear()
+        .domain([0, maxVal * 1.05])
+        .nice()
+        .range([innerHeight, 0]);
+
+      // 简单坐标轴：左侧竖线，标注 0% 和最大值
+      g.append("line")
+        .attr("x1", 0)
+        .attr("x2", 0)
+        .attr("y1", 0)
+        .attr("y2", innerHeight)
+        .attr("stroke", "#e5e7eb")
+        .attr("stroke-width", 1);
+
+      g.append("text")
+        .attr("x", 2)
+        .attr("y", innerHeight)
+        .attr("dy", -2)
+        .attr("font-size", 8)
+        .attr("fill", "#6b7280")
+        .text("0%");
+
+      g.append("text")
+        .attr("x", 2)
+        .attr("y", y(maxVal))
+        .attr("dy", -1)
+        .attr("font-size", 8)
+        .attr("fill", "#6b7280")
+        .text(`${maxVal.toFixed(0)}%`);
+
+      g.append("line")
+        .attr("x1", 0)
+        .attr("x2", innerWidth)
+        .attr("y1", innerHeight)
+        .attr("y2", innerHeight)
+        .attr("stroke", "#e5e7eb")
+        .attr("stroke-width", 1);
+
+      // 根据每一年的数值，用与主地图相同的颜色刻度为折线分段着色
+      const segments = [];
+      for (let i = 1; i < smoothed.length; i++) {
+        const a = smoothed[i - 1];
+        const b = smoothed[i];
+        if (a.value == null || b.value == null || isNaN(a.value) || isNaN(b.value)) continue;
+        const midVal = (a.value + b.value) / 2;
+        segments.push({
+          x1: x(a.year),
+          y1: y(a.value),
+          x2: x(b.year),
+          y2: y(b.value),
+          color: colorScale(midVal)
+        });
+      }
+
+      g.selectAll(".dda-tooltip-sparkline-seg")
+        .data(segments)
+        .enter()
+        .append("line")
+        .attr("class", "dda-tooltip-sparkline-seg")
+        .attr("x1", d => d.x1)
+        .attr("y1", d => d.y1)
+        .attr("x2", d => d.x2)
+        .attr("y2", d => d.y2)
+        .attr("stroke", d => d.color)
+        .attr("stroke-width", 1.4)
+        .attr("stroke-linecap", "round");
+
+      if (currentYear != null) {
+        const point = smoothed.find(d => d.year === currentYear && d.value != null && !isNaN(d.value));
+        if (point) {
+          const pointColor = colorScale(point.value);
+          g.append("circle")
+            .attr("cx", x(point.year))
+            .attr("cy", y(point.value))
+            .attr("r", 2.5)
+            .attr("fill", pointColor)
+            .attr("stroke", "#ffffff")
+            .attr("stroke-width", 1);
+        }
+      }
+    }
+
+    function setTooltipContentForCountry(iso3, name) {
+      if (!iso3) return;
+      const year = currentYear;
+      const record = year ? getCountryValue(year, iso3) : null;
+
+      let content = "";
+      if (!year || !record || record.value == null || isNaN(record.value)) {
+        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year || "-"} · Renewables share: NAN</div>`;
+      } else {
+        const value = record.value.toFixed(2);
+        const suffix = record.name === "Africa Aggregate" ? " · Africa Aggregate" : "";
+        content = `<div><strong>${name}</strong> (${iso3})</div><div>${year} · Renewables share: ${value}%${suffix}</div>`;
+      }
+
+      tooltipEl.innerHTML = content + '<div class="dda-tooltip-sparkline"></div>';
+      renderTooltipSparklineForCountry(iso3);
+    }
+
+    function refreshTooltipForCurrentYear() {
+      if (!isHoveringCountry || !lastTooltipIso3 || !lastTooltipName) return;
+      setTooltipContentForCountry(lastTooltipIso3, lastTooltipName);
+    }
+
+    function applyYearByIndex(index) {
+      if (!years.length) return;
+      const clamped = Math.max(0, Math.min(years.length - 1, index));
+      playIndex = clamped;
+      yearSlider.value = String(clamped);
+      const year = years[clamped];
+      updateColorsForYear(year);
+      updateInfoPanel(null);
+      const linechartVisible = linechartPanel && linechartPanel.classList.contains("dda-linechart-panel--visible");
+      if (!isHoveringCountry && !linechartVisible) {
+        hideTooltip();
+      } else if (isHoveringCountry && !linechartVisible) {
+        // 鼠标悬浮在国家上时，保持 tooltip 可见，但根据新的年份刷新其中的内容和折线图上的点
+        refreshTooltipForCurrentYear();
+      }
+      updateTileColorsForYear(year);
+    }
+
+    function updateColorsForYear(year) {
+      if (!countryPaths && !mapCountryPaths) return;
+      currentYear = year;
+      yearLabel.textContent = year;
+
+      if (countryPaths) {
+        countryPaths
+          .attr("fill", d => {
+            const iso3 = d.properties && (d.properties.iso_a3 || d.properties.ISO_A3 || d.id);
+            const record = getCountryValue(year, iso3);
+            if (!record || record.value == null || isNaN(record.value)) {
+              return "#e0e0e0"; // 无数据
+            }
+            return colorScale(record.value);
+          });
+      }
+
+      if (mapCountryPaths) {
+        mapCountryPaths
+          .attr("fill", d => {
+            const iso3 = d.properties && (d.properties.iso_a3 || d.properties.ISO_A3 || d.id);
+            const record = getCountryValue(year, iso3);
+            if (!record || record.value == null || isNaN(record.value)) {
+              return "#e0e0e0"; // 无数据
+            }
+            return colorScale(record.value);
+          });
+      }
+    }
+    function updateTileColorsForYear(year) {
+      if (!tileRects) return;
+      currentYear = year;
+      tileRects
+        .attr("fill", d => {
+          const iso3 = d.code;
+          const record = getCountryValue(year, iso3);
+          if (!record || record.value == null || isNaN(record.value)) {
+            return "#e0e0e0";
+          }
+          return colorScale(record.value);
+        });
+    }
+
+    function updateInfoPanel(feature) {
+      const yearText = currentYear != null ? currentYear : "-";
+      infoPanel.innerHTML = `Current year: <strong>${yearText}</strong>. Hover or click country to see details.`;
+    }
+
+    function showTooltip(event, feature) {
+      if (!feature) return;
+      const props = feature.properties || {};
+      const iso3 = props.iso_a3 || props.ISO_A3 || feature.id || "?";
+      const rawName = props.name || props.ADMIN || "Unknown country";
+      const name = getDisplayCountryName(iso3, rawName);
+      lastTooltipIso3 = iso3;
+      lastTooltipName = name;
+
+      setTooltipContentForCountry(iso3, name);
+
+      const wrapperRect = document.querySelector(".dda-globe-wrapper").getBoundingClientRect();
+      const x = event.clientX - wrapperRect.left;
+      const y = event.clientY - wrapperRect.top;
+
+      tooltipEl.style.left = `${x}px`;
+      tooltipEl.style.top = `${y}px`;
+      tooltipEl.style.opacity = "1";
+    }
+
+    function hideTooltip() {
+      tooltipEl.style.opacity = "0";
+    }
+
+    function showLinechartTooltip(event, year, points) {
+      if (!points || !points.length) {
+        hideTooltip();
+        return;
+      }
+
+      let content = `<div><strong>${year}</strong></div>`;
+      points.forEach(p => {
+        content += `<div>${p.name} (${p.code}): ${p.value.toFixed(2)}%</div>`;
+      });
+
+      tooltipEl.innerHTML = content;
+
+      const wrapperRect = document.querySelector(".dda-globe-wrapper").getBoundingClientRect();
+      const x = event.clientX - wrapperRect.left;
+      const y = event.clientY - wrapperRect.top;
+
+      tooltipEl.style.left = `${x}px`;
+      tooltipEl.style.top = `${y}px`;
+      tooltipEl.style.opacity = "1";
+    }
+
+    function showLinechartPanel() {
+      if (!linechartPanel) return;
+      linechartPanel.classList.add("dda-linechart-panel--visible");
+      hideTooltip();
+    }
+
+    function hideLinechartPanel() {
+      if (!linechartPanel) return;
+      linechartPanel.classList.remove("dda-linechart-panel--visible");
+    }
+
+    function populateCountrySelects() {
+      if (!lcCountry1 || !lcCountry2 || !lcCountry3) return;
+      if (!countryNameByCode.size) return;
+
+      const options = Array.from(countryNameByCode.entries())
+        .sort((a, b) => a[1].localeCompare(b[1]));
+
+      [lcCountry1, lcCountry2, lcCountry3].forEach(select => {
+        if (!select) return;
+        select.innerHTML = "";
+        const emptyOpt = document.createElement("option");
+        emptyOpt.value = "";
+        emptyOpt.textContent = "(none)";
+        select.appendChild(emptyOpt);
+        options.forEach(([code, name]) => {
+          const opt = document.createElement("option");
+          opt.value = code;
+          opt.textContent = `${name} (${code})`;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function drawLineChartForCountries(codes) {
+      if (!codes.length || !years.length) {
+        if (lcEmpty) lcEmpty.style.display = "block";
+        lcSvg.selectAll("*").remove();
+        return;
+      }
+      if (lcEmpty) lcEmpty.style.display = "none";
+
+      const svgNode = lcSvg.node();
+      const width = svgNode.clientWidth || 800;
+      const height = svgNode.clientHeight || 360;
+      lcSvg.attr("viewBox", `0 0 ${width} ${height}`);
+      lcSvg.selectAll("*").remove();
+
+      const margin = { top: 32, right: 110, bottom: 40, left: 56 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const g = lcSvg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const xScale = d3.scaleLinear()
+        .domain(d3.extent(years))
+        .range([0, innerWidth]);
+
+      const allValues = [];
+      const series = codes.map(code => {
+        const baseName = countryNameByCode.get(code) || code;
+        const name = getDisplayCountryName(code, baseName);
+        const values = years.map(year => {
+          const rec = getCountryValue(year, code);
+          const v = rec && !isNaN(rec.value) ? rec.value : null;
+          if (v != null) allValues.push(v);
+          return { year, value: v };
+        });
+        return { code, name, values };
+      });
+
+      const maxVal = allValues.length ? d3.max(allValues) : 1;
+      const yScale = d3.scaleLinear()
+        .domain([0, maxVal * 1.05])
+        .nice()
+        .range([innerHeight, 0]);
+
+      const line = d3.line()
+        .defined(d => d.value != null)
+        .x(d => xScale(d.year))
+        .y(d => yScale(d.value));
+
+      const color = d3.scaleOrdinal()
+        .domain(codes)
+        .range(["#2563eb", "#16a34a", "#f97316"]);
+
+      g.append("g")
+        .attr("transform", `translate(0,${innerHeight})`)
+        .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
+
+      g.append("g")
+        .call(d3.axisLeft(yScale));
+
+      g.append("text")
+        .attr("x", -innerHeight / 2)
+        .attr("y", -40)
+        .attr("transform", "rotate(-90)")
+        .attr("text-anchor", "middle")
+        .attr("font-size", 10)
+        .attr("fill", "#374151")
+        .text("Renewables share (%)");
+
+      series.forEach(s => {
+        g.append("path")
+          .datum(s.values)
+          .attr("fill", "none")
+          .attr("stroke", color(s.code))
+          .attr("stroke-width", 2)
+          .attr("d", line);
+      });
+
+      const legend = g.append("g")
+        .attr("transform", `translate(${innerWidth + 16}, 4)`);
+
+      series.forEach((s, i) => {
+        const row = legend.append("g")
+          .attr("transform", `translate(0, ${i * 18})`);
+        row.append("rect")
+          .attr("width", 10)
+          .attr("height", 10)
+          .attr("fill", color(s.code));
+        row.append("text")
+          .attr("x", 14)
+          .attr("y", 9)
+          .attr("font-size", 10)
+          .text(`${s.name} (${s.code})`);
+      });
+
+      // 交互：在折线图上移动鼠标时，显示每个国家在最接近年份的数值
+      const focusLine = g.append("line")
+        .attr("stroke", "#9ca3af")
+        .attr("stroke-width", 1)
+        .attr("y1", 0)
+        .attr("y2", innerHeight)
+        .style("opacity", 0);
+
+      g.append("rect")
+        .attr("width", innerWidth)
+        .attr("height", innerHeight)
+        .attr("fill", "transparent")
+        .on("mousemove", (event) => {
+          const [mx] = d3.pointer(event, g.node());
+          const xYear = xScale.invert(mx);
+
+          // 找到与鼠标位置最接近的整数年份
+          let nearestYear = years[0];
+          let minDiff = Math.abs(nearestYear - xYear);
+          for (let i = 1; i < years.length; i++) {
+            const diff = Math.abs(years[i] - xYear);
+            if (diff < minDiff) {
+              minDiff = diff;
+              nearestYear = years[i];
+            }
+          }
+
+          const points = series.map(s => {
+            const match = s.values.find(v => v.year === nearestYear && v.value != null && !isNaN(v.value));
+            if (!match) return null;
+            return { code: s.code, name: s.name, value: match.value };
+          }).filter(Boolean);
+
+          if (!points.length) {
+            hideTooltip();
+            focusLine.style("opacity", 0);
+            return;
+          }
+
+          focusLine
+            .attr("x1", xScale(nearestYear))
+            .attr("x2", xScale(nearestYear))
+            .style("opacity", 1);
+
+          showLinechartTooltip(event, nearestYear, points);
+        })
+        .on("mouseout", () => {
+          hideTooltip();
+          focusLine.style("opacity", 0);
+        });
+    }
+
+    // ==========================
+    // Tile grid construction (PolicyViz template)
+    // ==========================
+    function buildTileGridFromTemplate(tileTemplate, nameToCode) {
+      if (!tileSvg || !tileSvg.node()) return;
+      const svgNode = tileSvg.node();
+      const width = svgNode.clientWidth || 800;
+      const height = svgNode.clientHeight || 400;
+      tileSvg.attr("viewBox", `0 0 ${width} ${height}`);
+      tileSvg.selectAll("*").remove();
+
+      if (!Array.isArray(tileTemplate) || !tileTemplate.length) return;
+
+      const maxRow = d3.max(tileTemplate, d => d.row);
+      const maxCol = d3.max(tileTemplate, d => d.col);
+      const rowsGrid = maxRow + 1;
+      const colsGrid = maxCol + 1;
+
+      const cellSize = Math.min(width / colsGrid, height / rowsGrid);
+      const xOffset = (width - colsGrid * cellSize) / 2;
+      const yOffset = (height - rowsGrid * cellSize) / 2;
+
+      function nameKey(str) {
+        return String(str)
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z]/g, "");
+      }
+
+      tilePositionsByIso3 = new Map();
+
+      const tileData = [];
+      tileTemplate.forEach(entry => {
+        const key = nameKey(entry.name);
+        let iso3 = nameToCode.get(key) || null;
+        if (!iso3) {
+          for (const [k, code] of nameToCode.entries()) {
+            if (k.includes(key) || key.includes(k)) {
+              iso3 = code;
+              break;
+            }
+          }
+        }
+
+        if (iso3) {
+          tilePositionsByIso3.set(iso3, { col: entry.col, row: entry.row, name: entry.name });
+        }
+
+        tileData.push({ code: iso3, name: entry.name, col: entry.col, row: entry.row });
+      });
+
+      const g = tileSvg.append("g");
+
+      tileRects = g.selectAll("rect")
+        .data(tileData)
+        .enter()
+        .append("rect")
+        .attr("class", "dda-tile-country")
+        .attr("rx", 2)
+        .attr("ry", 2)
+        .attr("x", d => xOffset + d.col * cellSize + 1)
+        .attr("y", d => yOffset + d.row * cellSize + 1)
+        .attr("width", cellSize - 2)
+        .attr("height", cellSize - 2)
+        .on("mousemove", (event, d) => {
+          isHoveringCountry = true;
+          const fakeFeature = {
+            properties: {
+              name: d.name,
+              iso_a3: d.code
+            }
+          };
+          showTooltip(event, fakeFeature);
+          updateInfoPanel(fakeFeature);
+        })
+        .on("mouseout", () => {
+          isHoveringCountry = false;
+          hideTooltip();
+        })
+        .on("click", (event, d) => {
+          if (!d.code) return; // 无 ISO3 代码的 tile 只显示为灰色，不跳转
+          const target = `country.html?code=${encodeURIComponent(d.code)}`;
+          window.location.href = target;
+        });
+    }
+
+    // ==========================
+    // Country search (autocomplete + navigation)
+    // ==========================
+    function buildSearchOptions() {
+      if (!countryNameByCode.size) return;
+      searchOptions = Array.from(countryNameByCode.entries())
+        .map(([code, name]) => {
+          const displayName = getDisplayCountryName(code, name);
+          return { code, name: displayName };
+        })
+        .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    function clearSearchSuggestions() {
+      if (!searchSuggestionsEl) return;
+      searchSuggestionsEl.innerHTML = "";
+      searchSuggestionsEl.style.display = "none";
+      searchMatches = [];
+      searchActiveIndex = -1;
+    }
+
+    function navigateToCountry(code) {
+      if (!code) return;
+      const target = `country.html?code=${encodeURIComponent(code)}`;
+      window.location.href = target;
+    }
+
+    function renderSearchSuggestions() {
+      if (!searchInput || !searchSuggestionsEl) return;
+      const query = searchInput.value.trim().toLowerCase();
+      clearSearchSuggestions();
+      if (!query) return;
+
+      searchMatches = searchOptions.filter(opt => {
+        const name = opt.name.toLowerCase();
+        const code = opt.code.toLowerCase();
+        return name.includes(query) || code.includes(query);
+      }).slice(0, 10);
+
+      if (!searchMatches.length) return;
+
+      searchMatches.forEach((opt, idx) => {
+        const item = document.createElement("div");
+        item.className = "dda-search-item";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = opt.name;
+        const codeSpan = document.createElement("span");
+        codeSpan.textContent = opt.code;
+        codeSpan.className = "dda-search-item-code";
+
+        item.appendChild(nameSpan);
+        item.appendChild(codeSpan);
+
+        item.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          navigateToCountry(opt.code);
+        });
+
+        searchSuggestionsEl.appendChild(item);
+      });
+
+      searchSuggestionsEl.style.display = "block";
+      searchActiveIndex = -1;
+    }
+
+    function moveSearchActive(delta) {
+      if (!searchMatches.length || !searchSuggestionsEl) return;
+      const items = Array.from(searchSuggestionsEl.children);
+      if (!items.length) return;
+
+      searchActiveIndex = (searchActiveIndex + delta + items.length) % items.length;
+      items.forEach((el, idx) => {
+        if (idx === searchActiveIndex) el.classList.add("dda-search-item--active");
+        else el.classList.remove("dda-search-item--active");
+      });
+    }
+
+    function selectActiveSearchMatch() {
+      if (!searchMatches.length) return;
+      if (searchActiveIndex < 0 || searchActiveIndex >= searchMatches.length) {
+        navigateToCountry(searchMatches[0].code);
+      } else {
+        navigateToCountry(searchMatches[searchActiveIndex].code);
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", () => {
+        renderSearchSuggestions();
+      });
+
+      searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          moveSearchActive(1);
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          moveSearchActive(-1);
+        } else if (event.key === "Enter") {
+          event.preventDefault();
+          selectActiveSearchMatch();
+        } else if (event.key === "Escape") {
+          clearSearchSuggestions();
+        }
+      });
+    }
+
+    if (searchSuggestionsEl) {
+      document.addEventListener("click", (event) => {
+        const container = document.querySelector(".dda-search-container");
+        if (!container) return;
+        if (!container.contains(event.target)) {
+          clearSearchSuggestions();
+        }
+      });
+    }
+
+    // ==========================
+    // 加载数据：GeoJSON + 旧/新两份 CSV
+    // ==========================
+    const worldGeoJsonUrl = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson";
+    const csvUrl = "renewable-share-energy.csv";       // 原始 TPES 占比（1965–2023）
+    const newCsvUrl = "new_renewable_share.csv";       // 新版 TPES 数据（2000–2024），需要覆盖 2000–2024
+    const electricityShareCsvUrl = "share-of-electricity-production-from-renewable-sources.csv"; // 电力可再生占比（用于 1985–1999 覆盖）
+
+    Promise.all([
+      d3.json(worldGeoJsonUrl),
+      d3.csv(csvUrl),
+      d3.csv(newCsvUrl),
+      d3.csv(electricityShareCsvUrl)
+    ]).then(([world, rows, newRows, elecRows]) => {
+      if (!world || !world.features) {
+        console.error("World map data is not in the expected format", world);
+        return;
+      }
+
+      // 先处理旧 CSV：Entity,Code,Year,Renewables (% equivalent primary energy)
+      rows.forEach(row => {
+        const code = row.Code && row.Code.trim();
+        const entity = row.Entity && row.Entity.trim();
+        const year = +row.Year;
+        const valueRaw = row["Renewables (% equivalent primary energy)"];
+
+        if (!year) return;
+
+        const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
+
+        // 单独记录 "Africa" 这一行，用于非洲汇总着色。
+        // 仅保留 2000 年及之后的聚合值，早期年份数据不可信，因此不使用。
+        if (entity === "Africa" && !isNaN(value) && year >= 2000) {
+          africaAggregateByYear.set(year, value);
+        }
+
+        // 没有 code 的行（例如 Africa 区域汇总）到此结束
+        if (!code) return;
+
+        if (!isNaN(value)) {
+          if (value < valueMin) valueMin = value;
+          if (value > valueMax) valueMax = value;
+        }
+
+        if (code && entity && !countryNameByCode.has(code)) {
+          countryNameByCode.set(code, entity);
+        }
+
+        if (!dataByYearAndCode.has(year)) {
+          dataByYearAndCode.set(year, new Map());
+        }
+        dataByYearAndCode.get(year).set(code, { value, name: entity });
+      });
+
+      // 再处理新 CSV：Area, ISO 3 code, Year, Energy_source, Share
+      // 先按「年份 + 国家」汇总 5 个可再生能源类别的占比之和，
+      // 仅用于 2000–2024，之后覆盖旧数据中对应年份的值。
+      const renewableSources = new Set([
+        "Bioenergy",
+        "Hydro",
+        "Other Renewables",
+        "Solar",
+        "Wind"
+      ]);
+
+      const newYearCodeMap = new Map(); // Map<year, Map<code, { value, name }>>
+      const newAfricaAggregate = new Map(); // Map<year, value>
+
+      if (Array.isArray(newRows)) {
+        newRows.forEach(row => {
+          const area = (row["Area"] || "").trim();
+          const code = (row["ISO 3 code"] || "").trim();
+          const year = +row["Year"];
+          const source = (row["Energy_source"] || "").trim();
+          const shareRaw = row["Share"];
+
+          if (!year || year < 2000 || year > 2024) return; // 仅 2000–2024 使用新数据
+          if (!renewableSources.has(source)) return;
+
+          const share = shareRaw === undefined || shareRaw === "" ? NaN : +shareRaw;
+          if (isNaN(share)) return;
+
+          // Africa 区域汇总（没有 ISO 代码）
+          if (!code && area === "Africa") {
+            const prevAgg = newAfricaAggregate.get(year) || 0;
+            newAfricaAggregate.set(year, prevAgg + share);
+          }
+
+          // 只有有 ISO3 代码的行才用于国家着色
+          if (!code) return;
+
+          if (!newYearCodeMap.has(year)) newYearCodeMap.set(year, new Map());
+          const byCode = newYearCodeMap.get(year);
+          const prev = byCode.get(code) || { value: 0, name: area || code };
+          prev.value += share;
+          if (area) prev.name = area;
+          byCode.set(code, prev);
+
+          // 补充代码到国家名称映射，防止新 CSV 中出现旧 CSV 未包含的国家
+          if (area && !countryNameByCode.has(code)) {
+            countryNameByCode.set(code, area);
+          }
+        });
+      }
+
+      // 用新 CSV 结果覆盖 2000–2024 年的国家数值
+      newYearCodeMap.forEach((byCode, year) => {
+        if (!dataByYearAndCode.has(year)) {
+          dataByYearAndCode.set(year, new Map());
+        }
+        const target = dataByYearAndCode.get(year);
+        byCode.forEach((rec, code) => {
+          target.set(code, { value: rec.value, name: rec.name });
+        });
+      });
+
+      // 覆盖 2000–2024 年的 Africa 汇总占比，其它年份仍使用旧 CSV
+      newAfricaAggregate.forEach((val, year) => {
+        africaAggregateByYear.set(year, val);
+      });
+
+      // 第三份 CSV：share-of-electricity-production-from-renewable-sources.csv
+      // 仅使用 1985–1999 年约 100 个国家的电力可再生占比覆盖旧 TPES 数据，
+      // 其他年份保持原有逻辑不变。
+      if (Array.isArray(elecRows)) {
+        elecRows.forEach(row => {
+          const code = row.Code && row.Code.trim();
+          const entity = row.Entity && row.Entity.trim();
+          const year = +row.Year;
+          const valueRaw = row.Renewables;
+
+          if (!code || !year || year < 1985 || year > 1999) return;
+          const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
+          if (isNaN(value)) return;
+
+          if (!dataByYearAndCode.has(year)) {
+            dataByYearAndCode.set(year, new Map());
+          }
+          const byCode = dataByYearAndCode.get(year);
+          byCode.set(code, { value, name: entity || code });
+
+          if (entity && !countryNameByCode.has(code)) {
+            countryNameByCode.set(code, entity);
+          }
+        });
+      }
+
+      years = Array.from(dataByYearAndCode.keys())
+        .filter(y => y >= 1985) // 仅保留 1985 年及之后的年份
+        .sort((a, b) => a - b);
+      if (years.length === 0) {
+        console.error("No valid yearly data parsed from CSV");
+        return;
+      }
+
+      // Populate line chart country selectors once we know the countries
+      populateCountrySelects();
+      // Build autocomplete options for search
+      buildSearchOptions();
+
+      // Build a name-key -> ISO3 map for tile template lookup
+      function nameKey(str) {
+        return String(str)
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z]/g, "");
+      }
+      const nameToCode = new Map();
+      let unitedKingdomCode = null;
+      let czechCode = null;
+      let slovakiaCode = null;
+      let southKoreaCode = null;
+      let uaeCode = null;
+      countryNameByCode.forEach((name, code) => {
+        const k = nameKey(name);
+        if (!nameToCode.has(k)) {
+          nameToCode.set(k, code);
+        }
+
+        // 记录 United Kingdom (GBR) 的代码，用于 tile 特殊映射
+        if (k === "unitedkingdom" || code === "GBR") {
+          unitedKingdomCode = code;
+        }
+
+        // 记录捷克和斯洛伐克的代码
+        if (code === "CZE") {
+          czechCode = code;
+        }
+        if (code === "SVK") {
+          slovakiaCode = code;
+        }
+
+        // 记录韩国（KOR）的代码，用于 tile 特殊映射 "S. Korea"
+        if (code === "KOR") {
+          southKoreaCode = code;
+        }
+
+        // 记录阿联酋（ARE）的代码，用于 tile 特殊映射 "UAE"
+        if (code === "ARE") {
+          uaeCode = code;
+        }
+      });
+
+      // 特殊处理：tile 模板中使用 "Great Britain"，但数据中是 "United Kingdom (GBR)"
+      // 如果找到了英国的代码，则把 "Great Britain" 也映射到同一个代码
+      if (unitedKingdomCode && !nameToCode.has("greatbritain")) {
+        nameToCode.set("greatbritain", unitedKingdomCode);
+      }
+
+      // 特殊处理：可能存在 "Czechia"、"Czech Rep." 等别名
+      if (czechCode) {
+        ["czechia", "czechrep", "czechrepublic"].forEach(alias => {
+          if (!nameToCode.has(alias)) {
+            nameToCode.set(alias, czechCode);
+          }
+        });
+      }
+
+      // 特殊处理：可能存在 "Slovak Rep."、"Slovak Republic" 等别名
+      if (slovakiaCode) {
+        ["slovakia", "slovakrep", "slovakrepublic"].forEach(alias => {
+          if (!nameToCode.has(alias)) {
+            nameToCode.set(alias, slovakiaCode);
+          }
+        });
+      }
+
+      // 特殊处理：tile 模板中使用 "S. Korea"，数据中是 South Korea (KOR)
+      if (southKoreaCode) {
+        const aliasKey = "skorea"; // "S. Korea" 经过 nameKey 处理后的形式
+        if (!nameToCode.has(aliasKey)) {
+          nameToCode.set(aliasKey, southKoreaCode);
+        }
+      }
+
+      // 特殊处理：tile 模板中使用 "UAE"，数据中是 United Arab Emirates (ARE)
+      if (uaeCode) {
+        const aliasKey = "uae"; // "UAE" 经过 nameKey 处理后的形式
+        if (!nameToCode.has(aliasKey)) {
+          nameToCode.set(aliasKey, uaeCode);
+        }
+      }
+
+      // 补充一些非洲国家在 tile 模板中的名称 -> ISO3 的映射。
+      // 其中部分国家在 CSV 里没有单独的 Code 行，但我们仍然
+      // 希望它们的 tile 能映射到一个 ISO3，以便使用 Africa Aggregate 着色。
+      const africaManualMappings = [
+        ["Libya", "LBY"],
+        ["Tunisia", "TUN"],
+        ["Togo", "TGO"],
+        ["Benin", "BEN"],
+        ["Liberia", "LBR"],
+        ["Ghana", "GHA"],
+        ["Central African Republic", "CAF"],
+        ["Uganda", "UGA"],
+        ["Kenya", "KEN"],
+        ["Mauritania", "MRT"],
+        ["Gambia", "GMB"],
+        ["Senegal", "SEN"],
+        ["Mali", "MLI"],
+        ["Niger", "NER"],
+        ["Sudan", "SDN"],
+        ["South Sudan", "SSD"],
+        ["Eritrea", "ERI"],
+        ["Djibouti", "DJI"],
+        ["Guinea-Bissau", "GNB"],
+        ["Sierra Leone", "SLE"],
+        ["Burkina Faso", "BFA"],
+        ["Chad", "TCD"],
+        ["Ethiopia", "ETH"],
+        ["Somalia", "SOM"],
+        ["Cabo Verde", "CPV"],
+        ["Cote d'Ivoire", "CIV"],
+        ["Nigeria", "NGA"],
+        ["Cameroon", "CMR"],
+        ["Democratic Republic of Congo", "COD"],
+        ["Republic of the Congo", "COG"],
+        ["Burundi", "BDI"],
+        ["Rwanda", "RWA"],
+        ["Tanzania", "TZA"],
+        ["Angola", "AGO"],
+        ["Gabon", "GAB"],
+        ["Malawi", "MWI"],
+        ["Mozambique", "MOZ"],
+        ["Seychelles", "SYC"],
+        ["Zambia", "ZMB"],
+        ["Botswana", "BWA"],
+        ["Zimbabwe", "ZWE"],
+        ["Comoros", "COM"],
+        ["Swaziland", "SWZ"],
+        ["Lesotho", "LSO"],
+        ["Madagascar", "MDG"],
+        ["Namibia", "NAM"],
+        ["Mauritius", "MUS"],
+        ["Sao Tome and Principe", "STP"],
+        ["Equatorial Guinea", "GNQ"]
+      ];
+
+      africaManualMappings.forEach(([label, code]) => {
+        const k2 = nameKey(label);
+        if (!nameToCode.has(k2)) {
+          nameToCode.set(k2, code);
+        }
+      });
+
+      // 额外补充 tile 模板中特殊写法到 ISO3 的映射，
+      // 确保 Dominican Republic (DOM) 和 N. Korea (PRK) 在 tile 视图中有数据。
+      const extraTileMappings = [
+        ["Dominican Republic", "DOM"],
+        ["N. Korea", "PRK"],
+        ["Kyrgyz Republic", "KGZ"],
+        ["Laos", "LAO"],
+        ["Dominica", "DMA"]
+      ];
+
+      extraTileMappings.forEach(([label, code]) => {
+        const k2 = nameKey(label);
+        if (!nameToCode.has(k2)) {
+          nameToCode.set(k2, code);
+        }
+      });
+
+      // Color scale domain: 0–75%+, with more steps
+      valueMin = 0;
+      valueMax = 75;
+      colorScale
+        .domain([
+          0,   // deep red
+          15,  // orange
+          30,  // yellow
+          45,  // light green
+          60,  // medium green
+          75   // deep green (75%+)
+        ])
+        .clamp(true);
+
+      // 在确定好 domain 之后，根据 colorScale 动态绘制图例色带，
+      // 确保图例颜色和地图着色严格一致。
+      renderLegendGradient();
+
+      // 初始化滑块（从最早的 1985 年开始）
+      yearSlider.min = 0;
+      yearSlider.max = years.length - 1;
+      yearSlider.step = 1;
+      yearSlider.value = 0; // 默认指向最早年份（1985）
+      yearMinLabel.textContent = years[0];
+      yearMaxLabel.textContent = years[years.length - 1];
+
+      const initialYear = years[0];
+      currentYear = initialYear;
+      yearLabel.textContent = initialYear;
+
+      yearSlider.addEventListener("input", () => {
+          if (isPlayingYears) {
+          // Stop playback when user manually adjusts the slider
+          if (playTimer !== null) {
+            clearInterval(playTimer);
+            playTimer = null;
+          }
+          isPlayingYears = false;
+          playButton.textContent = "▶";
+        }
+        const idx = +yearSlider.value;
+        applyYearByIndex(idx);
+      });
+
+      function stopPlayback() {
+        if (playTimer !== null) {
+          clearInterval(playTimer);
+          playTimer = null;
+        }
+        isPlayingYears = false;
+        if (playButton) playButton.textContent = "▶";
+      }
+
+      function startPlayback(initialIndex) {
+        if (!years.length) return;
+        stopPlayback();
+        isPlayingYears = true;
+        if (playButton) playButton.textContent = "❚❚";
+
+        const idx = Number.isFinite(+initialIndex) ? +initialIndex : 0;
+        const clampedIndex = Math.max(0, Math.min(years.length - 1, idx));
+        applyYearByIndex(clampedIndex);
+
+        playTimer = setInterval(() => {
+          let nextIndex = playIndex + 1;
+          if (nextIndex >= years.length) {
+            nextIndex = 0; // loop back to earliest year
+          }
+          applyYearByIndex(nextIndex);
+        }, 100); // ~0.1s per year，播放更快
+      }
+
+      if (playButton) {
+        playButton.addEventListener("click", () => {
+          if (!years.length) return;
+          if (!isPlayingYears) {
+            // Start from current slider position or earliest year
+            const currentIndex = Number.isFinite(+yearSlider.value) ? +yearSlider.value : 0;
+            startPlayback(currentIndex >= 0 && currentIndex < years.length ? currentIndex : 0);
+          } else {
+            stopPlayback();
+          }
+        });
+      }
+
+      // 页面首次打开时，自动从 1985 年开始播放
+      startPlayback(0);
+
+      // 绘制国家（球面）
+      countryPaths = globeGroup.append("g")
+        .selectAll("path")
+        .data(world.features)
+        .enter()
+        .append("path")
+        .attr("class", "dda-globe-country")
+        .on("mousemove", (event, d) => {
+          isHoveringCountry = true;
+          showTooltip(event, d);
+          updateInfoPanel(d);
+        })
+        .on("mouseout", () => {
+          isHoveringCountry = false;
+          hideTooltip();
+        })
+        .on("click", (event, d) => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          if (!iso3) return;
+          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          window.location.href = target;
+        });
+
+      // 绘制国家（平面投影 Natural Earth）
+      if (mapSvg && mapSvg.node()) {
+        mapCountryPaths = mapGroup.selectAll("path")
+          .data(world.features)
+          .enter()
+          .append("path")
+          .attr("class", "dda-globe-country")
+          .attr("d", mapPath)
+          .on("mousemove", (event, d) => {
+            isHoveringCountry = true;
+            showTooltip(event, d);
+            updateInfoPanel(d);
+          })
+          .on("mouseout", () => {
+            isHoveringCountry = false;
+            hideTooltip();
+          })
+          .on("click", (event, d) => {
+            const props = d.properties || {};
+            const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+            if (!iso3) return;
+            const target = `country.html?code=${encodeURIComponent(iso3)}`;
+            window.location.href = target;
+          });
+      }
+
+      // 构建 tile grid：使用 PolicyViz 提供的世界 tile grid 模板
+      d3.json("world-tile-grid.json").then(tileTemplate => {
+        buildTileGridFromTemplate(tileTemplate, nameToCode);
+        // Initial render
+        renderGlobe();
+        renderMap();
+        updateColorsForYear(initialYear);
+        updateTileColorsForYear(initialYear);
+      }).catch(err => {
+        console.error("Failed to load world tile grid template", err);
+        // 即使模板失败，也至少渲染球面视图
+        renderGlobe();
+        renderMap();
+        updateColorsForYear(initialYear);
+      });
+    }).catch(err => {
+      console.error("Failed to load data", err);
+    });
+
+    // ==========================
+    // 旋转&拖拽交互
+    // ==========================
+    let isDraggingGlobe = false;
+    let lastRotation = projection.rotate();
+    let lastPos = null;
+
+    function updateRotation(lambda, phi) {
+      projection.rotate([lambda, phi]);
+      renderGlobe();
+    }
+
+    let baseLambda = 0;
+    let basePhi = -15;
+    updateRotation(baseLambda, basePhi);
+
+    // Use a single, slow, time-based rotation so speed is stable (globe only; map is static)
+    const rotationSpeedDegPerMs = 0.008; // ~5° per second
+    let lastTickTime = Date.now();
+
+    const rotationInterval = d3.interval(() => {
+      if (isDraggingGlobe) {
+        lastTickTime = Date.now();
+        return;
+      }
+      const now = Date.now();
+      const dt = now - lastTickTime;
+      lastTickTime = now;
+      const deltaLambda = dt * rotationSpeedDegPerMs;
+      baseLambda = (baseLambda + deltaLambda) % 360;
+      updateRotation(baseLambda, basePhi);
+    }, 60);
+
+    const globeDrag = d3.drag()
+      .on("start", (event) => {
+        isDraggingGlobe = true;
+        lastRotation = projection.rotate();
+        lastPos = [event.x, event.y];
+      })
+      .on("drag", (event) => {
+        if (!lastPos) return;
+        const dx = event.x - lastPos[0];
+        const dy = event.y - lastPos[1];
+        const sensitivity = 0.25;
+        const lambda = lastRotation[0] + dx * sensitivity;
+        const phi = Math.max(-80, Math.min(80, lastRotation[1] - dy * sensitivity));
+        baseLambda = lambda;
+        basePhi = phi;
+        updateRotation(lambda, phi);
+      })
+      .on("end", () => {
+        isDraggingGlobe = false;
+        lastPos = null;
+      });
+
+    globeSvg.call(globeDrag);
+
+    // 初次进入页面时，从 localStorage 读取用户偏好；否则默认使用 tile 视图
+    (function initViewModeFromStorage() {
+      let initialMode = "tiles";
+      try {
+        const stored = window && window.localStorage ? window.localStorage.getItem(VIEW_MODE_KEY) : null;
+        if (stored === "globe" || stored === "tiles" || stored === "map") {
+          initialMode = stored;
+        }
+      } catch (_) {}
+      setViewMode(initialMode);
+    })();
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      try {
+        if (window && window.localStorage) {
+          window.localStorage.setItem(VIEW_MODE_KEY, mode);
+        }
+      } catch (_) {}
+
+      const globeNodeEl = globeSvg.node();
+      const tileNodeEl = tileSvg.node();
+      const mapNodeEl = mapSvg.node();
+      if (!globeNodeEl || !tileNodeEl || !mapNodeEl) return;
+
+      globeNodeEl.style.display = mode === "globe" ? "block" : "none";
+      tileNodeEl.style.display = mode === "tiles" ? "block" : "none";
+      mapNodeEl.style.display = mode === "map" ? "block" : "none";
+
+      if (viewGlobeBtn) {
+        if (mode === "globe") viewGlobeBtn.classList.add("dda-view-toggle--active");
+        else viewGlobeBtn.classList.remove("dda-view-toggle--active");
+      }
+      if (viewTilesBtn) {
+        if (mode === "tiles") viewTilesBtn.classList.add("dda-view-toggle--active");
+        else viewTilesBtn.classList.remove("dda-view-toggle--active");
+      }
+      if (viewMapBtn) {
+        if (mode === "map") viewMapBtn.classList.add("dda-view-toggle--active");
+        else viewMapBtn.classList.remove("dda-view-toggle--active");
+      }
+    }
+
+    if (viewGlobeBtn) {
+      viewGlobeBtn.addEventListener("click", () => setViewMode("globe"));
+    }
+    if (viewTilesBtn) {
+      viewTilesBtn.addEventListener("click", () => setViewMode("tiles"));
+    }
+    if (viewMapBtn) {
+      viewMapBtn.addEventListener("click", () => setViewMode("map"));
+    }
+
+    if (linechartToggle) {
+      linechartToggle.addEventListener("click", () => {
+        showLinechartPanel();
+      });
+    }
+
+    if (linechartBack) {
+      linechartBack.addEventListener("click", () => {
+        hideLinechartPanel();
+      });
+    }
+
+    if (lcDrawBtn) {
+      lcDrawBtn.addEventListener("click", () => {
+        const codes = [lcCountry1.value, lcCountry2.value, lcCountry3.value]
+          .filter((v, idx, arr) => v && arr.indexOf(v) === idx) // non-empty & unique
+          .slice(0, 3);
+        drawLineChartForCountries(codes);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3001.2/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3001.2/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法">
+  <meta property="og:description" content="CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:published_time" content="2025-09-02T13:31:34+08:00">
+    <meta property="article:modified_time" content="2025-09-02T13:31:34+08:00">
+    <meta property="article:tag" content="CSC3001">
+
+  <meta itemprop="name" content="🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法">
+  <meta itemprop="description" content="CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑">
+  <meta itemprop="datePublished" content="2025-09-02T13:31:34+08:00">
+  <meta itemprop="dateModified" content="2025-09-02T13:31:34+08:00">
+  <meta itemprop="wordCount" content="2087">
+  <meta itemprop="keywords" content="CSC3001">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法">
+  <meta name="twitter:description" content="CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30012.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-09-02T13:31:34+08:00">September 2, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>(涵盖第 2 和第 3 个讲义)</p>
+<h1 id="ln2-sets-and-fol-集合论与谓词逻辑">LN2 Sets and FOL 集合论与谓词逻辑</h1>
+<br>
+<h1 id="ii1-集合论">II.1 集合论</h1>
+<br>
+<h2 id="集合的基本定义">集合的基本定义</h2>
+<ul>
+<li>集合(set)：<strong>无序</strong>(unordered) 且元素互<strong>不重复</strong>(distinct) 的元素群。元素本身可以是集合</li>
+<li>幂集(power set)： 对于集合 A，其幂集 P(A) = { S｜S ⊆ A }，即其所有子集的集合。比如 P({a, b}) = {ø, {a}, {b}, {a, b}}</li>
+<li>基数(size / cardinality)： |A| = “A 的元素数”</li>
+<li>幂集的基数： |P(A)| = “A 的子集个数”(含空集与本身)。如果集合 A 含有 n 个元素，那么它的幂集有 2<sup>n</sup> 个元素。<strong>A 的幂集基数是 A 的子集个数，同时也是 A 的幂集的元素个数</strong>：|P(A)| =2<sup>|A|</sup></li>
+</ul>
+<br>
+<br>
+<h2 id="集合运算">集合运算</h2>
+<ul>
+<li>Union 并集 A ∪ B：属于 A 或 B（或二者）的所有元素。$$\bigcup_{i=0}^{n} A_i = {, x \in U \mid \exists\ i=0,1,2,\dots,n\ ;so\ x \in A_i \  }$$</li>
+<li>Intersection 交集 A ∩ B：同时属于 A 与 B 的元素。$$\bigcap_{i=0}^{n} A_i = {, x \in U \mid\ \forall\ i=0,1,2…n\ ;x \in A_i \ always\ hold\ } $$</li>
+<li>Difference 差集 A \ B：属于 A 但不在 B 的元素。( 课本记作 <strong>A - B</strong>)</li>
+<li>Complement 补集 Aᶜ：相对于全集 U，不在 A 的元素。</li>
+<li>Subset 子集 A ⊆ B：A 的每个元素都在 B；真子集用 ⊊。</li>
+</ul>
+<h3 id="partition-of-sets集合的划分">partition of sets(集合的划分)</h3>
+<p>将一个集合 A 变成一个包含一些“两两不相交”且并集恰为 A 的子集的集合
+a set of subsets of A which are pairwise/mutual disjoint, and their union is A</p>
+<h3 id="cartesian-product笛卡尔积">cartesian product(笛卡尔积)</h3>
+<ul>
+<li>定义：A × B x C = { (a, b, c) | a ∈ A, b ∈ B, c ∈ C }</li>
+<li>ordered(有序性)：(1,2) ≠ (2,1), A x B ≠ B x A if A ≠ B</li>
+<li>|A x B x C| = |A| x |B| x |C|</li>
+</ul>
+<br>
+<br>
+<h2 id="集合恒等式identities">集合恒等式(Identities)</h2>
+<p>Commutative 交换, Associative结合, Distributive分配, Identity 恒等, Complement 补集,
+De Morgan：(A ∩ B)ᶜ = Aᶜ ∪ Bᶜ；(A ∪ B)ᶜ = Aᶜ ∩ Bᶜ,
+Difference law(差集)：A - B = A ∩ Bᶜ。</p>
+<br>
+<br>
+<br>
+<h1 id="ii2-谓词逻辑first-order-logic">II.2 谓词逻辑(First Order Logic)</h1>
+<br>
+<h2 id="predicates谓词">Predicates(谓词)</h2>
+<p>带变量的命题，例如：</p>
+<ul>
+<li>
+<p>P(x, y): x+2=y。</p>
+</li>
+<li>
+<p>P(1,3) 为真；¬P(1,4) 为真。
+Domain(论域)：变量可取的值的范围</p>
+</li>
+</ul>
+<br>
+<h2 id="quantifiers量词">Quantifiers(量词)</h2>
+<h3 id="universal-quantifier全称量词-">Universal Quantifier(全称量词 ∀)</h3>
+<ul>
+<li>∀ x ∈ D, P(x) 表示“对 D 中所有 x，命题 P(x) 成立”。</li>
+<li>代表了 Proposition Logic 的“交集(∩) / AND(∧)”：
+$$\forall x \in \mathbb{Z}^+,\ \ P(x) = P(1)\land P(2)\land P(3)\dots$$</li>
+</ul>
+<h3 id="existential-quantifier存在量词-">Existential Quantifier(存在量词 ∃)</h3>
+<ul>
+<li>∃ x ∈ D, P(x) 表示“在 domain D 中至少有一个 x，使得 P(x) 成立”。</li>
+<li>代表了 Proposition Logic 的“并集(∪) / OR(∨)&quot;：</li>
+<li>展开成无限析取：\exists x \in \mathbb{Z}^+ P(x) = P(1)\lor P(2)\lor P(3)\dots</li>
+</ul>
+<br>
+<br>
+<h2 id="翻译">翻译</h2>
+<h3 id="费马大定理">费马大定理</h3>
+<p>自然语言：
+如果一个整数 n 大于 2， a<sup>n</sup>+ b<sup>n</sup>= c<sup>n</sup>对任意正整数 a, b, c 都不成立
+谓词逻辑：
+对于任意正整数 a, b, c，要么 n ≤ 2，要么 n 不是整数，要么 a<sup>n</sup>+ b<sup>n</sup>= c<sup>n</sup> 不成立
+谓词逻辑语言:$$\forall\ a, b, c\in Z^+,\ (n≤2)\lor(n\notin Z)\lor(a^n+b^n≠c^n)$$</p>
+<br>
+<h3 id="哥德巴赫猜想">哥德巴赫猜想</h3>
+<p>自然语言：
+“每个正偶数都是两个质数之和”。
+谓词逻辑：
+”对于任意正整数，要么它不是偶数；要么存在两个整数质数，两者和为这个数“
+谓词逻辑语言：$$\forall x \in Z^+, (odd(x))\lor(\exists\ m,n \in Z, prime(m)\land prime(n)\land (m+n=x))$$</p>
+<br>
+<h3 id="素数的定义">素数的定义</h3>
+<p>自然语言：
+素数是所有大于 1 且没有除了 1 和自己以外的正因子的正数
+谓词逻辑：
+对于整数 p &gt;1，对于任意整数 a 和 b，要么 a 是 1，要么 a 是 p，要么 a x b ≠ p
+谓词逻辑语言：$$prime(p) \equiv (p&gt;1)\land(p\in Z)\land(\forall\ a, b\in Z^+, (a=1)\lor(a=p)\lor(a\times b≠p)$$</p>
+<br>
+<br>
+<h2 id="量词语句的否定">量词语句的否定</h2>
+<p>不任意 ≡ 存在不：  ¬(∀x), P(x) ≡ (∃x), ¬P(x)
+不存在 ≡ 任意不：  ¬(∃x), P(x) ≡ (∀x), ¬P(x)
+证明(利用德摩根定律)：$$&ldquo;不是对任意 x，都有 P(x)&rdquo;\ ::=\ (¬(∀x),\ P(x))\ ≡\ ¬(\bigcap_{i=0}^{n} P_i)\ ≡\ \bigcup_{i=0}^{n}(¬P_i)\ ≡\ ((∃x),\ ¬P(x)) $$</p>
+<br>
+<br>
+<h2 id="多重量词与其否定">多重量词与其否定</h2>
+<ul>
+<li>∀, ∃ ¬≡ ∃, ∀   (对于任意人，都存在一个最爱的人 ≠ 存在一个人，爱所有人)</li>
+<li>∃, ∃ 以及 ∀, ∀ 都可以交换顺序</li>
+<li>¬(∀x, ∃y, P(x, y)) ≡ ∃x, ∀y, ¬P(x, y)</li>
+</ul>
+<br>
+<br>
+<h2 id="更多翻译">更多翻译</h2>
+<ul>
+<li>不存在最大的正整数：
+→ 对于任意正整数 x，都存在一个正整数 y 不比 x 小
+$$∀x ∈ Z^+,\ ∃y ∈ Z^+,\ y ≥ x$$</li>
+</ul>
+<br>
+<ul>
+<li>所有有理数都可以用分数表示：
+→ 对于任意有理数 x，存在整数 p 和 q，使得 x = p/q
+$$∀x ∈ R,\ ∃ p,\ q ∈ Z,\ (q ≠ 0) ∧ ({p\over{q}} = x)$$</li>
+</ul>
+<br>
+<ul>
+<li>每一个大于 1 的整数，都能表示为一组素数的乘积
+→ 对于任意整数 x 且 x 大于 1，存在一些素数之积为这个整数 x
+$$∀x \in \mathbb{Z}, \ x &gt; 1,\ (∃p_1, p_2, \dots, p_n \in \mathbb{Z}^+, ; (\bigwedge_{i=1}^n prime(p_i)) \land (x = \prod_{i=1}^n p_i)))$$</li>
+</ul>
+<br>
+<br>
+<br>
+<br>
+<h1 id="ln3-basic-prove-methods-基本证明法">LN3 Basic Prove Methods 基本证明法</h1>
+<br>
+<ul>
+<li>
+<p>论证方法分为：direct proof(直接数学证明)、~ by contrapositive(逆否法)、~ by contradiction(反证法)、proof by cases(反例法) 以及 proof by induction(数学归纳法)。我们现在讨论前四种。</p>
+</li>
+<li>
+<p>在论证开始前，除了直接证明，需要声明 &ldquo;We shall prove by ~&quot;。</p>
+</li>
+<li>
+<p>对于逆否，写出逆否命题；对于反证，写出否定假设。</p>
+</li>
+<li>
+<p>论证结束写“Q.E.D.&quot;。</p>
+</li>
+</ul>
+<br>
+<h2 id="proof-by-contrapositive">Proof by Contrapositive</h2>
+<ul>
+<li>逆否命题：P → Q ≡ ¬Q → ¬P  (“偶数能被 2 整除”  等价于  “不能被 2 整除就不是偶数”)</li>
+<li>对于需要声明双向蕴含关系(”当且仅当“)时，可以直接证明 P → Q 和 ¬P → ¬Q</li>
+</ul>
+<br>
+<h2 id="proof-by-contradiction">Proof by Contradiction</h2>
+<ul>
+<li>反证法：P → Q ≡ ¬P → FALSE  (”偶数能被 2 整除“  等价于  ”不是偶数也能被 2 整除“是荒谬的)</li>
+<li>或者 P NOT→ Q ≡ ¬P → TRUE</li>
+</ul>
+<br>
+<h2 id="proof-by-cases">Proof by Cases</h2>
+<ul>
+<li>只能用于探讨<strong>存在性</strong>的<strong>含变量</strong>命题的<strong>证伪</strong></li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3001/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3001</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.2/">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

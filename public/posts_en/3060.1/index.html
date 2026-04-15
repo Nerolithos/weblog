@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 1-2 Introduction to Computer System | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CSC3060 Week 1–2 at CUHKSZ: an introduction to the hardware and software foundations of computer systems.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3060.1/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3060.1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 1-2 Introduction to Computer System">
+  <meta property="og:description" content="CSC3060 Week 1–2 at CUHKSZ: an introduction to the hardware and software foundations of computer systems.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2026-01-06T10:30:34+08:00">
+    <meta property="article:modified_time" content="2026-01-06T10:30:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 1-2 Introduction to Computer System">
+  <meta itemprop="description" content="CSC3060 Week 1–2 at CUHKSZ: an introduction to the hardware and software foundations of computer systems.">
+  <meta itemprop="datePublished" content="2026-01-06T10:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-01-06T10:30:34+08:00">
+  <meta itemprop="wordCount" content="5443">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 1-2 Introduction to Computer System">
+  <meta name="twitter:description" content="CSC3060 Week 1–2 at CUHKSZ: an introduction to the hardware and software foundations of computer systems.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30601.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 1-2 Introduction to Computer System</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 1-2 Introduction to Computer System</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-01-06T10:30:34+08:00">January 6, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>As one great philosopher once said: <del>“There are three kinds of people in computer science: Turing, von Neumann, and Arknights / VTuber addicts.”</del></p>
+</br>
+<h1 id="week-1--introduction">Week 1  Introduction</h1>
+<p>Computer System = <strong>Hardware + System Software</strong></p>
+<p>We want computers to &hellip;</p>
+<ol>
+<li>do more (more transistors, more cores &hellip;)</li>
+<li>run faster (concurrency, optimization, cache &hellip;)</li>
+</ol>
+<p>This course leans more toward the software side: how code is compiled, how code is optimized, and related topics. The textbook is <em>Computer Systems: A Programmer’s Perspective</em> (3rd ed.).</p>
+</br>
+<h2 id="why-binary">Why Binary?</h2>
+<p>Why did von Neumann choose binary?</p>
+<p>From a hardware perspective, modern CMOS technology roughly follows the dynamic-power relation P ≈ k·C·U<sup>2</sup>·f (load capacitance × voltage squared × switching frequency). Circuits operating far above about 1 V would face exponentially worse leakage, breakdown, and burnout risks. As fabrication keeps shrinking, high-voltage designs become unrealistic both in stability and cooling requirements. So we use electrical signals around 0–1 V to represent information.</p>
+<p>Under this constraint, voltage error is common, so a sufficient noise margin is necessary. For instance, we cannot define “0” and “1” as 0.1 V and 0.2 V, because ordinary electrical noise would make them hard to distinguish in practice. Binary is therefore the most stable choice: values near 0 V mean “0,” values near 1 V mean “1,” and noise is unlikely to make the two collapse into one another.</p>
+<p>Beyond that, vacuum tubes, relays, and transistors are naturally switch-like, bistable devices. Much of the physical world is easier to model in bistable terms, and even human logic itself — Boolean algebra — is built around binary distinctions. It is hard to imagine a more concise logical system than yes/no.</p>
+<p>At the deepest level, one might joke that “the universe wants to destroy computers,” because <u><strong>stability and determinism run against entropy</strong></u>. Binary is simply the most deterministic and least ambiguous representation we have.</p>
+</br>
+</br>
+<h2 id="hardware-cpu">Hardware: CPU</h2>
+<ul>
+<li>
+<p><strong>The CPU (processor)</strong> consists of one or more minimal processing units called <strong>cores</strong>. A core can independently execute at least one thread of control, so we distinguish between “<u>multi-core parallelism and single-core concurrency</u>,” which we will discuss further later.</p>
+</li>
+<li>
+<p>A CPU does not operate as one continuous flow; instead it repeatedly follows a “fetch, decode, execute” cycle: fetch an instruction from memory/cache, decode it, then compute or access memory. The smallest time unit is a cycle, and frequency is measured in GHz. For example, a 3 GHz CPU executes 3×10<sup>9</sup> cycles per second.</p>
+</li>
+<li>
+<p>The CPU consists of the following basic parts:</p>
+<p><strong>PC (program counter)</strong> is part of the CPU’s architectural state. It is a special <strong>instruction register</strong> that stores a <u>pointer to the current instruction in main memory</u>. The CPU processes the instruction pointed to by the PC and then updates the PC to the next one.</p>
+<p><strong>Registers</strong>: the smallest and fastest storage structures in the machine, each storing one <strong>word</strong> (that is, an n-bit value on an n-bit machine).</p>
+<p><strong>Register file</strong>: a temporary <strong>data-storage component</strong> consisting of a collection of general-purpose registers, usually only a few hundred bytes in total, directly connected to the ALU.</p>
+<p><strong>ALU</strong>: the arithmetic and logic unit, which operates on one or more values from the register file.</p>
+<p><strong>SRAM L1–L3 caches</strong>: the high-speed cache hierarchy connected to the register file.</p>
+<p><strong>bus interface</strong>: the CPU’s communication interface to the system bus.</p>
+</li>
+</ul>
+<p><img src="https://i.postimg.cc/44hwD0VY/jie-ping2026-01-06-18-29-15.png" alt=""></p>
+</br>
+</br>
+<h2 id="hardware-bus">Hardware: Bus</h2>
+<ul>
+<li>
+<p>CPUs, memory, and I/O devices communicate through physical wires called the <strong>bus</strong>, which transfer word-sized chunks of bytes. The common signal classes are <strong>data lines</strong>, <strong>address lines</strong>, and <strong>control lines</strong>. Slow memory access, and even slower I/O, easily create bus congestion. This is one reason why technologies such as caches and DMA were developed.</p>
+</li>
+<li>
+<p><strong>Direct Memory Access (DMA)</strong> moves data directly between a device and memory, but it does not execute instructions. It can bypass some CPU-internal movement, but it still depends on the I/O bus and memory bus.</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="hardware-memory-hierarchy">Hardware: Memory Hierarchy</h2>
+<h3 id="memory-hierarchy">Memory Hierarchy</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"><strong>Storage Type</strong></th>
+          <th style="text-align: left"><strong>Access Time</strong></th>
+          <th style="text-align: left">Location</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">L0 Registers</td>
+          <td style="text-align: left">~1 cycle</td>
+          <td style="text-align: left">CPU</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L1 Cache</td>
+          <td style="text-align: left">~4 cycles</td>
+          <td style="text-align: left">CPU</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L2 Cache</td>
+          <td style="text-align: left">~10 cycles</td>
+          <td style="text-align: left">CPU</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L4 DRAM main memory</td>
+          <td style="text-align: left">~100–300 cycles</td>
+          <td style="text-align: left">beyond the I/O bridge</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L5 Local SSD (e.g. disk)</td>
+          <td style="text-align: left">~10<sup>5</sup> cycles</td>
+          <td style="text-align: left">beyond the I/O bridge</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">L6 Web Server</td>
+          <td style="text-align: left">\</td>
+          <td style="text-align: left">outside the computer</td>
+      </tr>
+  </tbody>
+</table>
+<p>The hierarchy means that <strong>an upper layer can serve as a cache for the layer below it</strong>. For example, DRAM acts as a cache for SSD-backed storage. Moving upward, capacity decreases and cost per byte rises, but speed increases.</p>
+<p>This hierarchy exists because main memory is slow, because programs exhibit the two kinds of locality, and because processes must be isolated from one another.</p>
+<p>The point of multiple cache levels is to reduce timing uncertainty in access by expanding the amount of recently useful data that can be retained.</p>
+</br>
+<h3 id="main-memory-dram">Main Memory (DRAM)</h3>
+<p>Main memory sits outside the CPU and is a <strong>temporary</strong> storage layer. Files usually reside on disk when inactive, and only the working subset is cached into DRAM while the program is running.</p>
+<p><strong>Why is main memory so slow?</strong>
+<strong>DRAM = Dynamic RAM</strong>: it uses the “charged / uncharged” state of capacitors to represent bits. Because capacitors leak, DRAM must be <strong>periodically refreshed</strong>. As a result, main memory is <u>slow, cheap, and large</u>.</p>
+<p>That is why we need CPU caches to bridge the time gap between the register file and main memory.</p>
+</br>
+<h3 id="cpu-cache-sram">CPU Cache (SRAM)</h3>
+<p>CPU cache is <strong>a small but fast storage layer located between the CPU and DRAM</strong>. SRAM stores bits using the bistable state of <strong>flip-flop circuits</strong>. <u>Caches are fast, expensive, and small</u>.</p>
+<ul>
+<li>Caching works by placing <strong>the data most likely to be used soon</strong> close to the CPU, so that slow DRAM does not choke the processor’s much faster execution speed.
+The basis for what is “most likely” is temporal and spatial locality:</li>
+</ul>
+<ol>
+<li><strong>Temporal locality</strong>: after accessing A, the program is likely to access A again soon.</li>
+<li><strong>Spatial locality</strong>: after accessing A, nearby locations such as A−1 or A+1 are likely to be accessed as well.</li>
+</ol>
+</br>
+</br>
+<h2 id="program-lifetime">Program Lifetime</h2>
+<ol>
+<li><strong>Source code</strong> (<code>ASCII</code> text):</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;hello, world</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);]
+</span></span></code></pre></div><ol start="2">
+<li><strong>Compilation</strong>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>gcc -o hello hello.c
+</span></span></code></pre></div><p>This is typically described in four steps:
+<strong>preprocessor</strong>: macro expansion, processing <code>include</code> and <code>define</code>, removing comments, and turning <strong><code>.c → .i</code></strong></p>
+<p><strong>compiler</strong>: semantic checking, then translating ASCII <strong><code>.i</code></strong> into assembly <strong><code>.s</code></strong></p>
+<p><strong>assembler</strong>：assembly(<strong>.s</strong>)→binary(<strong>.o</strong>)</p>
+<p><strong>linker</strong>：pack object files and libraries into executable, <strong>.o</strong>→<strong>.exe</strong></p>
+<ul>
+<li>In practice, the compiler may skip an explicit assembly output step and go directly toward binary unless the <code>-S</code> flag is used.</li>
+</ul>
+<ol start="3">
+<li>Produce the executable file (binary instructions) and store it on disk.</li>
+<li><strong>Execution</strong>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>./hello
+</span></span></code></pre></div><p>A more concrete picture is the following:</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">┌──────────────────────┐
+│        User          │ physical layer: types the shell command `./hello`
+└──────────┬───────────┘
+┌──────────▼───────────┐
+│   Shell (bash/zsh)   │ application layer: the shell parses the command and asks the OS to execute it
+└──────────┬───────────┘
+┌──────────▼───────────┐
+│   OS Kernel          │ software layer: the kernel moves the file into main memory via DMA and handles scheduling / concurrency
+└──────────┬───────────┘
+┌──────────▼───────────┐
+│   Device Drivers     │ software-hardware boundary: drivers allow the OS to communicate with hardware for input/output
+└──────────┬───────────┘
+┌──────────▼───────────┐
+│   Hardware (CPU/IO)  │ 硬件层：CPU 把 &#34;hello, world\n&#34; 搬到寄存器并命令显示器显示
+└──────────-───────────┘
+</code></pre><ul>
+<li>After <code>./hello</code> is entered, the shell asks the OS to handle the command. The command flows through the I/O subsystem into the CPU, the executable is DMA-transferred from disk into DRAM page by page, then fetched upward through the cache hierarchy into registers, and finally the CPU instructs the display subsystem to show the result.</li>
+</ul>
+<p><img src="https://i.postimg.cc/43WsTyCF/tu-xiang.png" alt=""></p>
+<ul>
+<li>The shell is the software layer that connects user input to the OS. Different systems provide different shells.</li>
+<li>The OS spends much of its time <strong>moving data</strong>, not merely performing arithmetic.</li>
+<li>The <strong>time gap between main memory and registers</strong> is what makes caching necessary; cache hits are central to performance optimization.</li>
+</ul>
+</br>
+</br>
+<h2 id="software-operating-system">Software: Operating System</h2>
+<p>The OS is the software layer that schedules and manages hardware resources. It <strong>abstracts</strong> hardware into manageable <strong>virtual</strong> objects:</p>
+<ol>
+<li>
+<p><strong>Process</strong>: an abstraction over CPU, memory, and I/O resources. A process may contain multiple threads.</p>
+<ul>
+<li>
+<p><strong>Thread</strong>: a sub-execution path inside a process that shares the same virtual memory. Threads communicate quickly, but can also interfere with one another.</p>
+</li>
+<li>
+<p><strong>Concurrency</strong>: <u>multiple processes conceptually coexist at the same time, for example by alternating execution</u>. On a single-core processor, the <strong>OS kernel</strong> implements concurrency through <strong>context switching</strong>, letting different processes take turns on the CPU while maintaining the illusion that each one owns it.</p>
+</li>
+<li>
+<p><strong>Parallelism</strong>: <u>multiple processes really run at the same time</u>. It is a special case of concurrency. Multi-core or multiprocessor systems can execute different processes simultaneously, rather than merely switching between them.</p>
+</li>
+<li>
+<p>Note: what follows concerns <u><strong>non-process-level</strong> virtual parallelism</u>, which is a completely different concept.</p>
+<p><strong>ILP (instruction-level parallelism)</strong>: “doing several things at once with the same body.” <u>It does <strong>not</strong> require multiple cores</u>; for example, different execution units may perform addition and multiplication in parallel.</p>
+<p><strong>DLP (data-level parallelism)</strong>: “doing many similar things at once with carbon paper.” <u>It also does <strong>not</strong> require multiple cores</u>; SIMD is the standard example.</p>
+</li>
+<li>
+<p><strong>Hyperthreading</strong>: one physical core is exposed as multiple logical CPUs, helping the machine schedule concurrent or parallel work more effectively.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Virtual Memory</strong>: an abstraction over main memory plus disk-backed storage; the virtual address space is ultimately backed by disk.</p>
+<ul>
+<li>The partitioning of virtual memory is a <strong>semantic and safety model</strong>. It does <strong>not</strong> correspond directly to hardware structures such as registers, caches, or DRAM.</li>
+</ul>
+</li>
+</ol>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">高地址
+┌─────────────────┐0x ffff ffff ffff ffff
+│   Kernel Space  │  ← 内核，对程序代码不可见
+├─────────────────┤
+│      Stack      │  ← 函数调用、局部变量
+│        ↓        │
+│                 │            
+│        ↑        │
+│     Library     │  ← 共享库在内存中的映射，如 ”math“
+│                 │ 
+│        ↑        │
+│      Heap       │  ← malloc / new 手动生成的长期变量
+├─────────────────┤ 
+│     R&amp;W Data    │  ← global / static 变量，来自程序
+├─────────────────┤
+│  Read Only Text │  ← 程序代码
+├─────────────────┤0x 0000 0000 0000 0fff
+│      empty      │  ← 空指针预留空间 (page 0)
+└─────────────────┘0
+低地址
+</code></pre><ul>
+<li>The heap grows upward and the stack grows downward, leaving unallocated virtual space in between. Virtual memory is managed by <strong>pages</strong>, and <strong>page 0 is left unmapped</strong> so that null-pointer errors can be caught.</li>
+<li>Virtual memory is usually byte-addressed, meaning the machine addresses 8-bit units, though words and double-words are common derived units. An “n-bit computer” has a theoretical virtual address space of 2<sup>n</sup> bytes.</li>
+<li>In the hierarchy, <strong>L4 DRAM acts as a cache for L5 disk-backed virtual memory</strong>, holding only the pages currently in use.</li>
+<li>The virtual address space can be much larger than physical memory. A 64-bit computer absolutely does <strong>not</strong> contain 2<sup>64</sup> bytes of DRAM.</li>
+<li>Different processes may also share data: distinct virtual addresses in different processes can map to the same physical DRAM page.</li>
+</ul>
+<ol start="3">
+<li><strong>File</strong>: an abstraction that treats I/O resources as continuous byte streams.</li>
+</ol>
+</br>
+</br>
+<h2 id="amdahls-law">Amdahl&rsquo;s Law</h2>
+<p>If a fraction α of a system becomes k times faster, the total speedup is still heavily constrained by the remaining portion:
+$$T_{new} = (1-\alpha)T_{old} + \frac{\alpha T_{old}}{k},\ \ \text{Speedup} = \frac{1}{(1-\alpha) + \alpha/k}$$</p>
+<ul>
+<li>
+<p>Therefore, optimization should first target the slowest part of the system, not the part that is already fast.</p>
+<p>To substantially speed up the whole system, one must improve a substantial fraction of the total workload:</p>
+</li>
+</ul>
+<p>$$S_{k\to \infty} = \frac{1}{1- \alpha}$$</p>
+<ul>
+<li>Moore’s Law does not directly translate transistor count into real system performance, because more physical resources do not automatically imply proportionally better efficiency.</li>
+</ul>
+</br>
+</br>
+</br>
+<h1 id="week-2--storage-of-data">Week 2  Storage of Data</h1>
+<p>For a byte-addressed machine, all data is ultimately just a sequence of bytes; data types exist mainly for the compiler. Byte addressing means each address refers to 8 bits. Thus a 64-bit machine can be abstracted as having a 2<sup>64</sup>-byte virtual address space (16 EB), and every file can be viewed as some byte block inside it. (For a 32-bit machine, the limit is 4 GB.)</p>
+</br>
+<h2 id="number-bases">Number Bases</h2>
+<p>Becoming fluent in hexadecimal is essential for reading assembly and memory dumps&hellip;</p>
+<ul>
+<li>
+<p><strong>One hexadecimal digit equals 4 bits.</strong></p>
+</li>
+<li>
+<p><code>1111</code> is decimal by default, whereas <code>0x1111</code> explicitly denotes hexadecimal.</p>
+</li>
+<li>
+<p>A <strong>bit vector</strong> writes a binary number as a vector of bits, usually read from right to left in significance order: 42 → 11010<sub>BIN</sub> → [1, 1, 0, 1, 0].</p>
+</li>
+<li>
+<p>One byte ranges from <code>0000 0000</code><sub>BIN</sub> to <code>1111 1111</code><sub>BIN</sub>, equivalently from <code>0</code><sub>DEC</sub> to <code>255</code><sub>DEC</sub>, or from <code>0x00</code> to <code>0xff</code>.</p>
+</li>
+<li>
+<p>The hexadecimal letters <code>a</code>–<code>f</code> are <strong>case-insensitive</strong> and correspond to the <strong>four-bit</strong> patterns 1010–1111.</p>
+</li>
+</ul>
+<p>Base conversion:</p>
+<ul>
+<li>HEX → BIN: expand each hexadecimal digit into a four-bit binary pattern.</li>
+<li>BIN → HEX: group bits in chunks of four and rewrite each chunk as one hex digit.</li>
+<li>HEX → DEC: multiply each digit by its corresponding 16<sup>n</sup> place value and add them up.</li>
+<li>DEC → HEX: repeatedly divide by 16 using <strong>Euclid’s method</strong>, and read the remainders from right to left.</li>
+</ul>
+</br>
+</br>
+<h2 id="integer-representation">Integer Representation</h2>
+<ul>
+<li>In C, an integer literal such as <code>0x42</code> is signed by default unless written as <code>0x42u</code> or <code>0x42U</code>.</li>
+<li>Integer data types (<code>int</code>, <code>long</code>, etc.) are stored directly as binary strings. For example, 12345 is represented in memory (big-endian view) as <code>00 00 30 39</code>.</li>
+<li>Integers come in two major forms: <strong>unsigned</strong> and <strong>signed</strong>. For an <code>n</code>-byte integer type, the former stores <code>0</code> to <code>2^(8n)-1</code>, while the latter uses the highest bit for negative values and stores <code>-2^(8n-1)</code> to <code>2^(8n-1)-1</code>; in the signed interpretation, <u><strong>a highest bit of 1 indicates a negative number</strong></u>.</li>
+</ul>
+</br>
+<h3 id="unsigned-integer">Unsigned Integer</h3>
+<p><code>B2U_ω()</code> is the <strong><u>bijection</u></strong> that maps a binary string to an ω-bit unsigned integer:</p>
+<p>$$B2U_ω(\vec x) = \sum_{i=0}^{ω-1}x_i·2^ω $$</p>
+<ul>
+<li>
+<p>For example, a 1-byte <code>unsigned char</code> can represent 0–255; for an <code>n</code>-byte unsigned integer, the maximum value is <strong><code>0xF...F</code></strong> (with <code>n/4</code> hex digits <code>F</code>).</p>
+</li>
+<li>
+<p>Once an integer calculation exceeds the available bit width, the extra high bits are discarded; this is called <strong>overflow</strong>.</p>
+</li>
+</ul>
+</br>
+<h3 id="signed-integers-twos-complement">Signed Integers (Two’s Complement)</h3>
+<ul>
+<li>A 1-byte signed <code>char</code> represents <code>-128</code> to <code>+127</code>. In C, negative numbers are usually stored in <strong><u>two’s complement</u></strong>, meaning that the negative of a number is formed by <u><strong>bitwise inversion plus one</strong></u>. For example, if <code>1</code> is <code>0000 0001</code>, then <code>-1</code> is <code>1111 1111</code>; if <code>127</code> is <code>0111 1111</code>, then <code>-127</code> is <code>1000 0001</code>, and <code>-128</code> is <code>1000 0000</code>.</li>
+<li>In hand calculation, hexadecimal is convenient: <code>0x3039</code> → invert → <code>0xCFC6</code> → add 1 → <code>0xCFC7</code>.</li>
+<li>⚠️ <strong>Why two’s complement is useful</strong>: subtraction can be treated as “addition of a negative,” and the natural bit overflow still yields the correct result. For example, with <code>char</code>, <code>3 - 2 = 3 + (-2) → 0011 + 1110 = 10001 → 1</code>.</li>
+</ul>
+<p><code>B2T_ω()</code> is the <u><strong>bijection</strong></u> that maps a binary string to an ω-bit signed (two’s-complement) integer:</p>
+<p>$$B2T_ω(\vec x) = -x_{ω-1}2^{ω-1}+ {\sum_{i=0}^{ω-2}x_i·2^ω}$$</p>
+<ul>
+<li>
+<p>For an <code>n</code>-byte two’s-complement integer, the minimum value is <strong><code>0x80...0</code></strong>, while the maximum is <strong><code>0x7F...F</code></strong>.</p>
+</li>
+<li>
+<p>Other negative-number representations also exist, such as one’s complement and signed magnitude, but none of them have the same computational advantages as two’s complement.</p>
+</li>
+</ul>
+</br>
+<h3 id="a-classic-pitfall-type-casting">A classic pitfall: type casting</h3>
+<ul>
+<li><strong>Sign extension</strong>: if a value is widened (e.g. <code>char → int</code>) without changing signedness, one copies the highest bit into the new high bits. For example, <code>char: 10000101</code> becomes <code>int: 1111...10000101</code>.</li>
+<li><strong>Truncation</strong>: when a value is narrowed to a smaller type width, the excess high bits are simply cut off. This can lead to <strong>undefined behavior</strong> in some contexts.</li>
+</ul>
+<p>In C, mixing <strong>signed and unsigned</strong> values is a common and dangerous logic error, because the two use different binary-to-decimal interpretations.</p>
+<ul>
+<li>
+<p><strong>A type cast changes the interpretation of data, not necessarily the underlying bit pattern</strong>. For example, if <code>int a = -4242; auto b = (unsigned)a;</code>, both <code>a</code> and <code>b</code> share the same bit pattern <code>~(0x00001092)+1 = 0xFFFFEF6E</code>, but <code>b</code> is interpreted as the unsigned integer <strong>4294963054</strong>. In other words, a negative two’s-complement bit pattern becomes a large positive number under unsigned interpretation. <img src="https://i.postimg.cc/DfrD11nJ/tu-xiang.png" alt=""></p>
+</li>
+<li>
+<p>⚠️ <strong>Extremely dangerous case</strong>: when one operation mixes signed and unsigned values, <strong>C implicitly converts the signed operand to unsigned before performing the calculation</strong>.</p>
+</li>
+</ul>
+</br>
+<h3 id="a-spectacular-bug-">A spectacular bug &hellip;</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">&lt;</span> vec.<span style="color:#a6e22e">size</span>())   <span style="color:#75715e">// 若 i 是负数，因为 size() 是 size_t，强转换数值起飞
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; i<span style="color:#f92672">--</span>)   <span style="color:#75715e">// 若 n 或 i 是 unsigned，都死循环
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">unsigned</span> len <span style="color:#f92672">=</span> a <span style="color:#f92672">-</span> b;   <span style="color:#75715e">// a &lt; b 时数值爆炸
+</span></span></span></code></pre></div><p>⚠️ <strong>Use unsigned for indices / subscripts, signed for loop iterators, avoid mixing signedness, and cast explicitly before comparison so that you remind yourself what is happening.</strong></p>
+</br>
+</br>
+<h2 id="floating-point-representation">Floating-Point Representation</h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">type</th>
+          <th style="text-align: left">sizeof(～)</th>
+          <th style="text-align: left">composition</th>
+          <th style="text-align: left">composition size</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">float</td>
+          <td style="text-align: left">4 Byte</td>
+          <td style="text-align: left">sign, exponent + <strong>127</strong>, fraction</td>
+          <td style="text-align: left">1b + 8b + 23b</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">double</td>
+          <td style="text-align: left">8 Byte</td>
+          <td style="text-align: left">sign, exponent + <strong>1023</strong>, fraction</td>
+          <td style="text-align: left">1b + 11b + 52b</td>
+      </tr>
+  </tbody>
+</table>
+<p>For example, <code>(float)12345.0</code> can be written as <code>11000000111001</code><sub>BIN</sub>, that is, <strong><code>1.1000000111001 × 2^13</code></strong>, so its fields decompose as follows:</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">0 (代表正数) ｜13+“偏移量 (bias)” = 140 → 10001100 | “小数位” 10000001110010000000000
+</code></pre><p>Therefore, the single-precision floating-point value <code>12345.0</code> is stored in memory (big-endian view) as <code>46 40 E4 00</code>.</p>
+<ul>
+<li><u><strong>Bias</strong></u>: since exponents may be positive or negative, an exponent field is stored by adding a bias such as <code>2^(n-1)-1</code>, thereby <u>shifting it into the nonnegative range</u>.</li>
+</ul>
+</br>
+<h2 id="strings">Strings</h2>
+<p>In C, a string is simply an array of characters represented through an ASCII-style encoding table.</p>
+<p>For example, the string “AaZz” appears in memory as <code>41 61 5A 7A 00</code>, because it is equivalent to the character array <code>char[A, a, Z, z, \0]</code>. Note that I do not label this with endianness, because string literals do not carry byte-significance structure in the same way numeric multi-byte data does.</p>
+<h3 id="code">Code</h3>
+<p>On different machines, the <u><strong>binary instructions produced from the same source file may be completely different</strong></u>. From the computer’s point of view, a program is just a sequence of bytes. Without source-level information, binary code is difficult to move across machines with different <strong>OSes, ISAs, and calling conventions</strong>; such binaries are said to be <strong>ABI-incompatible</strong>.</p>
+</br>
+</br>
+<h2 id="word-size-and-data-size">Word Size and Data Size</h2>
+<p><img src="https://i.postimg.cc/c1kNMC7F/jie-ping2026-01-08-15-27-40.png" alt=""></p>
+<ul>
+<li>On an n-bit machine, all pointers occupy n bits. Many programmers once assumed that an <code>int</code> could store a pointer. That often works on many 32-bit machines, but fails on 64-bit systems.</li>
+<li>A program compiled with <code>gcc -m32 hello.c</code> may run on both 32-bit and 64-bit environments, whereas using <code>-m64</code> generally requires a 64-bit environment. This kind of <strong>backward compatibility</strong> matters for long-term file and software portability.</li>
+<li>In the LP64 versus ILP64 debate during the shift from 32 bits to 64 bits, ILP64 supporters argued that <code>int</code> should also become 8 bytes, because many programmers had historically mixed integers and pointers on 32-bit systems where they shared the same width. LP64 supporters argued that this would waste memory and reduce performance. In practice, LP64 became the dominant choice.</li>
+</ul>
+</br>
+</br>
+<h2 id="addressing-and-byte-order">Addressing and Byte Order</h2>
+<p>In C, a pointer points to the first byte of the referenced data object. Naturally, an n-bit machine uses n-bit pointers.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> val <span style="color:#f92672">=</span> <span style="color:#ae81ff">4242</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> ptr <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>val;
+</span></span></code></pre></div><p>Suppose <code>&amp;val</code> is allocated at <code>0x0010</code>. Then <code>val</code> occupies virtual addresses <code>0x0010</code> through <code>0x0013</code>, and <code>ptr</code> stores <code>0x0010</code>. For a data type that <u>spans multiple bytes</u>, such as <code>4242</code><sub>DEC</sub> = <code>0x0000109A</code>, the value is split into separate byte chunks, and there are two possible <u>byte orders</u>:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Byte order in storage</th>
+          <th style="text-align: left">0x0010</th>
+          <th style="text-align: left">0x0011</th>
+          <th style="text-align: left">0x0012</th>
+          <th style="text-align: left">0x0013</th>
+          <th style="text-align: left">Common in</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Big-endian</td>
+          <td style="text-align: left">00</td>
+          <td style="text-align: left">00</td>
+          <td style="text-align: left">10</td>
+          <td style="text-align: left">9A</td>
+          <td style="text-align: left">TCP/IP, IBM, Motorola</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Little-endian</td>
+          <td style="text-align: left">9A</td>
+          <td style="text-align: left">10</td>
+          <td style="text-align: left">00</td>
+          <td style="text-align: left">00</td>
+          <td style="text-align: left">Intel (x86), iOS, Android</td>
+      </tr>
+  </tbody>
+</table>
+<p>Big-endian versus little-endian refers to whether bytes are arranged from high significance to low significance or the reverse. That is why literals such as <u>strings are not usually described in terms of endianness</u> in the same way as multi-byte numeric data.</p>
+<p>Many modern processors are <strong>bi-endian</strong> in <u>hardware</u>, but the <u>operating system fixes the active byte order</u>. For example, ARM chips in phones typically run in little-endian mode under iOS or Android.</p>
+<p>Compilers usually hide byte order from ordinary programmers, but endianness must still be considered in the following cases:</p>
+<ol>
+<li>
+<p><strong>Network communication</strong>: big-endian and little-endian machines cannot blindly exchange raw binary words; communication protocols usually standardize on <u><strong>network byte order = big-endian</strong></u>.</p>
+</li>
+<li>
+<p><strong>Assembly and disassembly</strong>: when reading disassembled bytes such as <code>4004d3: 01 05 43 0b 20 00  add %eax,0x200b43(%rip)</code>, the little-endian byte order can look counterintuitive, because the apparent byte sequence corresponds to a value like <code>0x200b43</code>.</p>
+</li>
+<li>
+<p><strong>Type casting</strong>: the following example shows the special power of C pointers. By type-casting an address to <code>unsigned char*</code>, one can read memory byte by byte, regardless of the original data type, and treat it as a “byte array.”</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>bytePtr;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">showBytes</span>(bytePtr start, <span style="color:#66d9ef">size_t</span> len) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">size_t</span> i;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; i<span style="color:#f92672">++</span>) <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%.2x&#34;</span>, start[i]);
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">showInt</span>(<span style="color:#66d9ef">int</span> x) <span style="color:#a6e22e">show_bytes</span>((bytePtr)<span style="color:#f92672">&amp;</span>x, <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>)); <span style="color:#75715e">// typecast
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">showFloat</span>(<span style="color:#66d9ef">float</span> x) <span style="color:#a6e22e">show_bytes</span>((bytePtr)<span style="color:#f92672">&amp;</span>x, <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">float</span>);
+</span></span></code></pre></div><p>Running such code with <code>x = 4242 = 0x3039</code>, one gets the counterintuitive <code>39 30 00 00</code> on a little-endian machine, but <code>00 00 30 39</code> on a big-endian machine.</p>
+</br>
+</br>
+<h2 id="boolean-algebra">Boolean Algebra</h2>
+<p>If this topic is unfamiliar, see <a href="https://blog.nero-lithos.com/posts/3001.1/">CSC3001 Boolean Algebra Basics</a>.</p>
+<p>At the hardware level, a computer fundamentally only needs one logically complete gate family, such as <strong>NAND</strong> (<code>⊼</code>). Because <code>{NAND}</code> is functionally complete, all other Boolean operators can be built from it.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">~A</th>
+          <th style="text-align: left">A | B</th>
+          <th style="text-align: left">A &amp; B</th>
+          <th style="text-align: left">A ^ B</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">A ⊼ A</td>
+          <td style="text-align: left">(~A) ⊼ (~B)</td>
+          <td style="text-align: left">(A ⊼ B) ⊼ (A ⊼ B)</td>
+          <td style="text-align: left">(A ⊼ (A ⊼ B)) ⊼ (B ⊼ (A ⊼ B))</td>
+      </tr>
+  </tbody>
+</table>
+<ul>
+<li>a &amp; (b|c) = (a&amp;b)|(a&amp;c)；a|(b&amp;c) = (a|b) &amp; (a|c)</li>
+<li>a ^ a=0；(a ^ b) ^ a=b</li>
+</ul>
+<p>Example: swapping data without a temporary variable:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> x, <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> y) {
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span>y <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>x <span style="color:#f92672">^</span> <span style="color:#f92672">*</span>y;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>x <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>x <span style="color:#f92672">^</span> <span style="color:#f92672">*</span>y;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>y <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>x <span style="color:#f92672">^</span> <span style="color:#f92672">*</span>y;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></br>
+<h3 id="bitwise-operations">Bitwise Operations</h3>
+<p>⚠️ Three practical rules for bitwise programming:</p>
+<ol>
+<li>Avoid floating-point numbers entirely (for example, <strong>do not use <code>pow()</code></strong>).</li>
+<li>Use fixed-width integers such as <code>uint32_t</code> or <code>uint64_t</code>.</li>
+<li>Always keep track of the exact type width, and beware of <strong>undefined behavior</strong>.</li>
+</ol>
+<p>In CSC3001, Boolean algebra may look like pure logical or numerical manipulation. In CSE, however, it often appears as <strong>bitwise computation</strong>. We frequently write a subset of a finite universe as a <strong>bit vector</strong>, then perform Boolean operations on those bits. For example, a character set over the 128-element ASCII universe can be represented by 128 bits, and over the universe <code>{1,2,3,4,5}</code>, the subset <code>{2,1,5}</code> can be represented as <code>10011</code>.</p>
+</br>
+<h3 id="shift-operations">Shift Operations</h3>
+<ol>
+<li>
+<p>Left shift by <code>n</code> (<code>&lt;&lt; n</code>) moves the data <code>n</code> binary positions to the left, discarding overflow on the high side and filling empty positions on the right with zeros.</p>
+<p>For example, an n-bit network mask can be generated by <code>uint32_t mask = 0xFFFFFFFFu &lt;&lt; (32 - n);</code>, such as the 24-bit mask <code>0xFFFFFF00</code>.</p>
+<p><code>int x = 1 &lt;&lt; 31;</code> is invalid, because the <code>1</code> has been shifted into the sign bit. This is one reason why bitwise operations are safest with <strong>unsigned</strong> types.</p>
+</li>
+<li>
+<p>Right shift by <code>n</code> (<code>&gt;&gt; n</code>) divides into <strong>arithmetic right shift</strong> (replicate the sign bit on the left) and <strong>logical right shift</strong> (fill the left side with zeros).</p>
+<p>Most compilers use arithmetic right shift for signed integers, but for unsigned integers the shift must be logical. Otherwise the meaning of the bit pattern changes incorrectly.</p>
+</li>
+</ol>
+<ul>
+<li>Both left and right shifts associate to the left, and their precedence is lower than ordinary arithmetic. Thus <code>1+2 &lt;&lt; a+1 &gt;&gt; 3</code> behaves like <code>((1+2) &lt;&lt; (a+1)) &gt;&gt; 3</code>.</li>
+<li>If the shift amount <code>n</code> exceeds the type width <code>l</code>, real hardware may effectively shift by <code>n mod l</code>; however, <strong>in C this still counts as undefined behavior</strong>.</li>
+</ul>
+</br>
+<h3 id="optional-network-masks">(Optional) Network Masks</h3>
+<p>If you are interested in <a href="https://blog.nero-lithos.com/posts/3200.f1/">bit-vector masks</a> or <a href="https://blog.nero-lithos.com/posts/web/">network masks</a>, here is a brief illustration of IPv4 network masks.f IPv4 masks. A network mask is central to scalable networking because it abstracts many IP addresses into a single “network.” During Internet routing, <strong>routers mainly need to decide in which “direction” (that is, which network) the destination lies</strong>, while the exact host identity is handled only by edge devices close to the PC. 才关心。</p>
+<p>⚠️ In simple terms, a router records the neighboring network prefixes, compares the destination against them through masks, and forwards the packet toward the approximate target network; the next router then repeats the same process.</p>
+<p>All PCs (end hosts) sit behind edge devices such as home routers. Suppose router <code>X</code> defines subnet <strong>192.168.50.0</strong>, takes address <strong>192.168.50.1</strong>, and assigns the PC <strong>192.168.50.123</strong>.0.123**. If the subnet contains fewer than 255 hosts, then the final 8 bits are enough to distinguish them, so a 24-bit mask (<code>255.255.255.0</code>) is sufficient. As you can see, ⚠️ <strong>the larger the mask, the smaller the subnet</strong>, because the masked-off portion is the host namespace within that subnet. PC 的子网地址进行 <u><strong>AND 操作</strong></u>，就会隐藏 PC 在 X 中的**<u>主机号</u>**，得到我们一开始定义的 (子) <strong><u>网络号</u></strong> <strong>192.168.50.0</strong>，如下：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">IP = 11000000.10101000.00000001.01111011/24
+(24-bit) mask = 11111111.11111111.11111111.00000000
+subnet IP = IP &amp; mask = 11000000.10101000.00000001.00000000/24
+</code></pre><p>Why do this? Suppose there is another router <code>W</code> above <code>X</code>, with subnet <code>192.168.2.0/23</code>, and that <code>X</code> has address <code>192.168.2.2</code> inside it. If a packet must travel through <code>W</code> toward the PC, then <strong>the host number <code>123</code> is meaningless to <code>W</code></strong>. ⚠️ A router compares the destination against neighboring prefixes using <strong>longest-prefix matching (LPM)</strong>, thereby determining only the correct network direction rather than the exact host identity.</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">router W: 我处于公网的 14.14.14.1, 我有一个子网 192.168.2.0/23
+router X: 我在 W 的子网地址是 192.168.2.2/23, 我有一个子网 192.168.50.0/24
+PC: 我在 X 的子网地址是 192.168.50.123/24
+
+W 眼中：10.0.0.0/8      → 方向 A
+       172.16.0.0/12   → 方向 B
+       192.168.0.0/16  → 方向 C
+       ......
+       192.168.50.0/24 → 方向 X
+所以只需要去找 X，至于 “123”，W 看不见也用不着
+</code></pre></br>
+<h3 id="logical-operations">Logical Operations</h3>
+<ul>
+<li>In C, every nonzero value counts as true. Values such as <code>0</code>, <code>\0</code>, <code>NULL</code>, and <code>nullptr</code> are false, while values such as <code>42</code>, <code>&quot;0&quot;</code>, and <code>&quot;null&quot;</code> are true. For example, <code>!!0x42</code> evaluates to true (<code>0x1</code>).</li>
+<li>The logical operators are <code>&amp;&amp;</code> (and), <code>||</code> (or), and <code>!</code> (not). <strong>Do not confuse them with bitwise operations.</strong> They treat values as Booleans, not as bit patterns.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>, b <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%d, %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, a <span style="color:#f92672">&amp;</span> b, a <span style="color:#f92672">&amp;&amp;</span> b);
+</span></span></code></pre></div><pre><code>The code above prints `2, 1`, because `0010 &amp; 1010 = 0010`, while `2 &amp;&amp; 10 = 1` in Boolean logic.
+</code></pre>
+<ul>
+<li>⚠️ A key feature of logical operators is <strong>short-circuit evaluation</strong>: expressions are evaluated from left to right, and once the overall truth value is already known, the rest is not evaluated. This is why <code>&amp;&amp;</code> is commonly used as a safety guard in <code>if</code> / <code>while</code> conditions: <code>ptr &amp;&amp; *ptr == 10</code> will never dereference a null pointer, and <code>i &lt; n &amp;&amp; !arr[i]</code> prevents array-index overflow.</li>
+</ul>
+</br>
+</br>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week-1--introduction">Week 1  Introduction</a>
+      <ul>
+        <li><a href="#why-binary">Why Binary?</a></li>
+        <li><a href="#hardware-cpu">Hardware: CPU</a></li>
+        <li><a href="#hardware-bus">Hardware: Bus</a></li>
+        <li><a href="#hardware-memory-hierarchy">Hardware: Memory Hierarchy</a>
+          <ul>
+            <li><a href="#memory-hierarchy">Memory Hierarchy</a></li>
+            <li><a href="#main-memory-dram">Main Memory (DRAM)</a></li>
+            <li><a href="#cpu-cache-sram">CPU Cache (SRAM)</a></li>
+          </ul>
+        </li>
+        <li><a href="#program-lifetime">Program Lifetime</a></li>
+        <li><a href="#software-operating-system">Software: Operating System</a></li>
+        <li><a href="#amdahls-law">Amdahl&rsquo;s Law</a></li>
+      </ul>
+    </li>
+    <li><a href="#week-2--storage-of-data">Week 2  Storage of Data</a>
+      <ul>
+        <li><a href="#number-bases">Number Bases</a></li>
+        <li><a href="#integer-representation">Integer Representation</a>
+          <ul>
+            <li><a href="#unsigned-integer">Unsigned Integer</a></li>
+            <li><a href="#signed-integers-twos-complement">Signed Integers (Two’s Complement)</a></li>
+            <li><a href="#a-classic-pitfall-type-casting">A classic pitfall: type casting</a></li>
+            <li><a href="#a-spectacular-bug-">A spectacular bug &hellip;</a></li>
+          </ul>
+        </li>
+        <li><a href="#floating-point-representation">Floating-Point Representation</a></li>
+        <li><a href="#strings">Strings</a>
+          <ul>
+            <li><a href="#code">Code</a></li>
+          </ul>
+        </li>
+        <li><a href="#word-size-and-data-size">Word Size and Data Size</a></li>
+        <li><a href="#addressing-and-byte-order">Addressing and Byte Order</a></li>
+        <li><a href="#boolean-algebra">Boolean Algebra</a>
+          <ul>
+            <li><a href="#bitwise-operations">Bitwise Operations</a></li>
+            <li><a href="#shift-operations">Shift Operations</a></li>
+            <li><a href="#optional-network-masks">(Optional) Network Masks</a></li>
+            <li><a href="#logical-operations">Logical Operations</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

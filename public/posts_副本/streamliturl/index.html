@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🌐 How to personalize Streamlit URL? | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/streamliturl/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/streamliturl/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🌐 How to personalize Streamlit URL?">
+  <meta property="og:description" content="一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:published_time" content="2025-08-31T10:50:30+08:00">
+    <meta property="article:modified_time" content="2025-08-31T10:50:30+08:00">
+    <meta property="article:tag" content="帮助">
+
+  <meta itemprop="name" content="🌐 How to personalize Streamlit URL?">
+  <meta itemprop="description" content="一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试">
+  <meta itemprop="datePublished" content="2025-08-31T10:50:30+08:00">
+  <meta itemprop="dateModified" content="2025-08-31T10:50:30+08:00">
+  <meta itemprop="wordCount" content="1198">
+  <meta itemprop="keywords" content="帮助">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🌐 How to personalize Streamlit URL?">
+  <meta name="twitter:description" content="一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/st.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🌐 How to personalize Streamlit URL?</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🌐 How to personalize Streamlit URL?</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-08-31T10:50:30+08:00">August 31, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="streamlit-的域名显示问题未解决">Streamlit 的域名显示问题(未解决)</h1>
+<p>前情提要：我用 streamlit 制作了一个 AI 辅助 CUHKSZ 答疑（龙大生存指南）工具的 APP，希望将 Streamlit 分配的域名指向我自己的私有域名（比如你现在在看这篇文章时浏览器里写着的的那个域名）。</p>
+<h2 id="take-1直接暴力增加-cname-记录">TAKE 1：直接暴力增加 CNAME 记录</h2>
+<p><img src="https://i.postimg.cc/QxBYcQtW/25083101.png" alt="最上面那一条就是我新建的 CNAME "></p>
+<ul>
+<li>我的域名要求展示“你的域名”的证书；而 Streamlit 只给 *.streamlit.app 颁证。无效(出现 400/403/404  一类的循环/响应报错)</li>
+</ul>
+<h2 id="take-2反向代理">TAKE 2：反向代理？</h2>
+<p>1、我在 Cloudflare 仪表盘创建了一个新的 workers 应用。
+<img src="https://i.postimg.cc/tRvm1SXj/25083102.png" alt=""></p>
+<p>2、用最简洁的默认 fetch() 函数脚本开始，返回 hello world。部署到公网后可以在编辑栏写入所需的反向代理脚本。
+<img src="https://i.postimg.cc/bvX14bpW/25083102x3.png" alt=""></p>
+<p>3、反向代理中无法直接指明被指向的对象(用户访问的网站，以 ai.nero-lithos.com 为例)，因为没有配置路由的功能。如果强行写固定 URL 进去，只能起到“在 Triggers 触发的路由中，只允许这个写入的 URL 反代” 的功能，如需要，则补充这一行：
+<code>const ALLOWED_HOST = &quot;ai.nero-lithos.com&quot;;</code>
+<strong>无论如何，都需要在 Workers/Triggers 下配置反代 URL：ai.nero-lithos.com/*</strong>
+<img src="https://i.postimg.cc/fyPH6LHL/25083103.png" alt=""></p>
+<p>4、写入脚本后再次部署，随后在左边栏中重新(点击)从 Workers/Workers&amp;Pages 中找到刚才新建的 Workers 应用，选择上方导航栏的 Settings(设置)，然后选择第一项 Domains &amp; Routes，增加一个新的 custom 路由记录(ai.nero-lithos.com)。
+<img src="https://i.postimg.cc/sxx66S4q/25083104.png" alt="">
+Cloudflare 会随机生成一个 CNAME 记录，等待一会应该就可以访问被代理对象了。如果你像我一样试图手动配置过 CNAME 记录，请去 DNS 下删除那条记录(否则会冲突)。
+<img src="https://i.postimg.cc/HxBv93Xb/25083105.png" alt=""></p>
+<p>5、<strong>现在，我试图访问 ai.nero-lithos.com 发现可以访问(解析)</strong>，然而域名被强行跳回了 futuregate.streamlit.app。这似乎是 Streamlit 的默认逻辑，如果用户访问时 Host 不是它自己的域名（*.streamlit.app），会在响应里返回重定向 (302/301) 或者在页面内嵌的资源链接里写回它的官方域名。
+我可能需要：</p>
+<ul>
+<li>拦截并修改 Streamlit 返回的 Location Header，强行导向“*.streamlit.app”到目标 URL</li>
+<li>修改 Cookie/HTML 硬编码写入的“*.streamlit.app”相关字段</li>
+</ul>
+<p>6、 修改后发现没有显著变化。尝试 trouble-shoot：curl -I &ndash;max-redirs 0 <a href="https://ai.nero-lithos.com/">https://ai.nero-lithos.com/</a> ，发现 Worker 收到的 Location 为“https://share.streamlit.io/-/auth/app?redirect_uri=…”<strong>因此，Streamlit 的返回方式是先跳回主站，由主站再分配 .app 类子域名</strong>。我的拦截是无效的，需要修改负责“Location改写”的部分。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">loc</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">resHeaders</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#34;Location&#34;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">resHeaders</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#34;location&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">loc</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">u</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">loc</span>, <span style="color:#a6e22e">upstreamUrl</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//这里省略拦截 \*.streamlit.app 的代码段
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">hostname</span>.<span style="color:#a6e22e">endsWith</span>(<span style="color:#e6db74">&#34;share.streamlit.io&#34;</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">searchParams</span>.<span style="color:#a6e22e">has</span>(<span style="color:#e6db74">&#34;redirect_uri&#34;</span>)) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">redirectTarget</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">searchParams</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#34;redirect_uri&#34;</span>));
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">redirectTarget</span>.<span style="color:#a6e22e">hostname</span>.<span style="color:#a6e22e">endsWith</span>(<span style="color:#e6db74">&#34;.streamlit.app&#34;</span>)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">redirectTarget</span>.<span style="color:#a6e22e">hostname</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">ALLOWED_HOST</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">redirectTarget</span>.<span style="color:#a6e22e">protocol</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https:&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">searchParams</span>.<span style="color:#a6e22e">set</span>(<span style="color:#e6db74">&#34;redirect_uri&#34;</span>, <span style="color:#a6e22e">redirectTarget</span>.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">resHeaders</span>.<span style="color:#a6e22e">set</span>(<span style="color:#e6db74">&#34;Location&#34;</span>, <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">err</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Failed to parse Location:&#34;</span>, <span style="color:#a6e22e">loc</span>, <span style="color:#a6e22e">err</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>7、试图访问，发现卡死。问题不在于单个 Location 或 HTML 内容，而在于<strong>服务端会话</strong>：认证成功与否由 share.streamlit.io 域下的 Cookie 决定；我的域<strong>拿不到</strong>，上游永远不承认，因此永远无法通过 Streamlit 认证，也永远无法开始渲染，所以一直是白屏。<strong>结论：这个问题在 Streamlit 环境下且没有外网 VPS 时绝对无解。</strong></p>
+<p>8、所以说，<strong>Streamlit Cloud 不支持白标自定义域</strong>。继续用 Workers/Nginx 只会在 share.streamlit.io 的认证链中循环。要么接受官方域名；要么把迁移到<strong>支持自定义域</strong>的托管（Railway/Render/Fly/VPS 等）。</p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/%E5%B8%AE%E5%8A%A9/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">帮助</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/streamliturl/">🌐 How to personalize Streamlit URL?</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/autorelease/">🌐 Automation of Ssg Post Release</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/autorelease/">🌐 Automation of Ssg Post Release</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3200 LEC1-2 Introduction to C&#43;&#43; | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="An introduction to basic C&#43;&#43; syntax and OOP in the second-year CUHKSZ course CSC3200.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3200.1/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3200.1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;">
+  <meta property="og:description" content="An introduction to basic C&#43;&#43; syntax and OOP in the second-year CUHKSZ course CSC3200.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2025-09-01T18:29:34+08:00">
+    <meta property="article:modified_time" content="2025-09-01T18:29:34+08:00">
+    <meta property="article:tag" content="CSC3200">
+
+  <meta itemprop="name" content="💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;">
+  <meta itemprop="description" content="An introduction to basic C&#43;&#43; syntax and OOP in the second-year CUHKSZ course CSC3200.">
+  <meta itemprop="datePublished" content="2025-09-01T18:29:34+08:00">
+  <meta itemprop="dateModified" content="2025-09-01T18:29:34+08:00">
+  <meta itemprop="wordCount" content="2419">
+  <meta itemprop="keywords" content="CSC3200">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;">
+  <meta name="twitter:description" content="An introduction to basic C&#43;&#43; syntax and OOP in the second-year CUHKSZ course CSC3200.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/32001.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-09-01T18:29:34+08:00">September 1, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="csc3200-lec-1-2-introduction-to-c">CSC3200 LEC 1-2 Introduction to C++</h1>
+<br>
+<h2 id="1-how-do-you-run-it">1. How Do You Run It?</h2>
+<br>
+<p>macOS comes with <code>clang++</code> by default. You can check it in the terminal with:</p>
+<p><code>clang++ --version</code></p>
+<p>If it is unavailable, try <code>brew install llvm</code> or install <code>g++</code> via Homebrew.</p>
+<p>To compile a single-file program such as <code>hello.cpp</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>clang++ -std<span style="color:#f92672">=</span>c++17 -Wall -O2 <span style="color:#75715e">#filename#.cpp -o #compilename#</span>
+</span></span><span style="display:flex;"><span>clang++ <span style="color:#75715e">#filename#.cpp -o #compilename#  // you may also compile this way; it is faster, but not ideal for important code</span>
+</span></span><span style="display:flex;"><span>./#compilename#  // run
+</span></span></code></pre></div><p>On Windows, one may use Dev-C++, or install a toolchain such as MSYS2 / MinGW for use with VS Code’s integrated terminal.</p>
+<br>
+<h3 id="multi-file-compilation">Multi-File Compilation</h3>
+<p>src/ math.h, math.cpp, main.cpp</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>clang++ -std<span style="color:#f92672">=</span>c++17 -Wall -O2 src/main.cpp src/math.cpp -Iinclude -o app
+</span></span><span style="display:flex;"><span>./app
+</span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="2-data-types-operators-and-naming-rules">2. Data Types, Operators, and Naming Rules</h2>
+<br>
+<h3 id="data-types">Data Types</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> age <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;      <span style="color:#75715e">// integer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> pi <span style="color:#f92672">=</span> <span style="color:#ae81ff">3.14</span>;  <span style="color:#75715e">// floating-point number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> grade <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;A&#39;</span>;  <span style="color:#75715e">// character
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> flag <span style="color:#f92672">=</span> true;  <span style="color:#75715e">// Boolean value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> constant;  <span style="color:#75715e">// allowed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> constant;  <span style="color:#75715e">// not allowed: a constant must be initialized at declaration time
+</span></span></span></code></pre></div><p>Note that in C there is another common way to define constants: <code>#define constant 42</code>. But it is only a preprocessor substitution, not a real typed constant, and it may easily create inconsistencies across files.</p>
+<br>
+<h3 id="operators">Operators</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">double</span>(<span style="color:#ae81ff">4</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">5</span>;  <span style="color:#75715e">// 4
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> n <span style="color:#f92672">=</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">4.2</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;  <span style="color:#75715e">// 2.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> p <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">5</span>;  <span style="color:#75715e">// 0.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// so to obtain a fractional result, at least one operand in the expression should be of type `double` or `float`
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iomanip&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> setprecision(<span style="color:#ae81ff">3</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3.141592</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;/n&#34;</span>;  <span style="color:#75715e">// keep three decimal places
+</span></span></span></code></pre></div><p>Increment operators (the same logic applies to decrement):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> a<span style="color:#f92672">++</span>;  <span style="color:#75715e">// assign first, then increment: a=1, x=0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> <span style="color:#f92672">++</span>b;  <span style="color:#75715e">// increment first, then assign: b=1, y=1
+</span></span></span></code></pre></div><h4 id="boolean-operators">Boolean Operators</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#66d9ef">double</span>(<span style="color:#ae81ff">2.0</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">bool</span>(true)  <span style="color:#75715e">// every nonzero number is true; true &amp;&amp; true is true
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#f92672">||</span> NULL <span style="color:#f92672">!=</span> false  <span style="color:#75715e">// nonempty character strings are true; true || false is true
+</span></span></span></code></pre></div><p>Ternary operator:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> ((a <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;Even&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Odd&#34;</span>) <span style="color:#f92672">&lt;&lt;</span> endl;  
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// if the condition before ? is true, output the first option; otherwise output the second
+</span></span></span></code></pre></div><br>
+<p>The <code>string</code> type should be included explicitly. Sometimes <code>iostream</code> indirectly pulls it in, but one should not rely on that.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>string name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;csc3200&#34;</span>
+</span></span></code></pre></div><p>To include a standard library header, write <code>#include &lt;...&gt;</code> — <strong>without a semicolon</strong>.</p>
+<p>To include a local header file, write <code>#include &quot;....h&quot;</code> — again, no semicolon.</p>
+<p>A <code>.cpp</code> source file is not included the same way a header is.</p>
+<br>
+<h3 id="naming-rules">Naming Rules</h3>
+<ul>
+<li>Use only letters, digits, and underscores; identifiers cannot begin with a digit.</li>
+<li>C++ is case-sensitive: <code>Age</code> and <code>age</code> are different variables.</li>
+<li>Keywords such as <code>int</code>, <code>if</code>, and <code>class</code> cannot be used as identifiers.</li>
+<li>Common naming styles include <code>camelCase</code> and <code>snake_case</code>.</li>
+</ul>
+<p>Many standard-library symbols are stored in the <code>std</code> namespace. One may either declare</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;   <span style="color:#75715e">// to import only one symbol, write: using std::string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>string name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;csc3200&#34;</span>;
+</span></span></code></pre></div><p>Otherwise, one must write:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span> std<span style="color:#f92672">::</span>string name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;csc3200&#34;</span>;
+</span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="3-standard-io">3. Standard I/O</h2>
+<br>
+<h3 id="cout">cout</h3>
+<ul>
+<li>short for &ldquo;character output&rdquo;; it denotes the standard output stream, usually the screen</li>
+<li>provided by the header <code>#include &lt;iostream&gt;</code>
+Example:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Hello, world!&#34;</span>;  <span style="color:#75715e">// output to the screen
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><br>
+<h3 id="-stream-insertion-operator"><code>&lt;&lt;</code> (stream insertion operator)</h3>
+<ul>
+<li>stream insertion operator</li>
+<li>It inserts the content on the right into the output stream on the left.</li>
+<li>Under all circumstances, <code>&lt;&lt;</code> does not automatically insert spaces between output items.
+Example 1:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;The answer is: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">42</span>;
+</span></span></code></pre></div><ul>
+<li>the string <code>&quot;The answer is: &quot;</code> is inserted into <code>cout</code> and displayed on the screen.</li>
+<li>then <code>42</code> is inserted into the same stream and displayed immediately after it.</li>
+<li>output：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>The answer is: <span style="color:#ae81ff">42</span>
+</span></span></code></pre></div><p>Example 2:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>string s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Hello&#34;</span>;
+</span></span><span style="display:flex;"><span>s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34; World&#34;</span>;              <span style="color:#75715e">// 拼接
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> s <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; 长度: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> s.length() <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span></code></pre></div><ul>
+<li>output：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Hello World 长度: <span style="color:#ae81ff">11</span>
+</span></span></code></pre></div><br>
+<h3 id="endl">endl</h3>
+<ul>
+<li>short for &ldquo;end line&rdquo;</li>
+<li>It creates a newline (similar to the escape sequence <code>&quot;\n&quot;</code>) <strong>and</strong> flushes the output buffer.</li>
+<li>provided by the header <code>#include &lt;iostream&gt;</code>
+Example:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;2&#34;</span>
+</span></span><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;3</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;4&#34;</span>;
+</span></span></code></pre></div><ul>
+<li>output：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">4</span>
+</span></span></code></pre></div><p>Difference:</p>
+<ul>
+<li><code>\n</code> is only a newline escape sequence.</li>
+<li><code>endl</code> = newline + forced buffer flush (immediate display).</li>
+<li>When output goes to a <strong>terminal</strong>, <code>\n</code> often appears to flush naturally. But if the output target is a <strong>file</strong> or a <strong>pipe</strong>, <code>\n</code> does not trigger flushing, so writing may wait until the buffer fills.</li>
+</ul>
+<br>
+<h3 id="-stream-extraction-operator"><code>&gt;&gt;</code> (stream extraction operator)</h3>
+<p>This is usually paired with <code>cin</code> (“character input”) to read information from the keyboard:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> age;
+</span></span><span style="display:flex;"><span>    string name;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;请输入姓名和年龄: &#34;</span>;
+</span></span><span style="display:flex;"><span>    cin <span style="color:#f92672">&gt;&gt;</span> name <span style="color:#f92672">&gt;&gt;</span> age;   <span style="color:#75715e">// 变量之间空格或换行皆可
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;结果: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> name <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">&lt;&lt;</span> age <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>If you do not want input to stop at spaces, read the whole line directly:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>string name;
+</span></span><span style="display:flex;"><span>getline(cin, name);  <span style="color:#75715e">// 读到回车为止
+</span></span></span></code></pre></div><p>However, if <code>getline()</code> comes immediately after another <code>cin</code> or <code>getline</code>, the leftover newline may be read as the next input:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>cin <span style="color:#f92672">&gt;&gt;</span> age;  <span style="color:#75715e">// 输入 18↵
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cin.ignore(numeric_limits<span style="color:#f92672">&lt;</span>streamsize<span style="color:#f92672">&gt;::</span>max(), <span style="color:#e6db74">&#39;\n&#39;</span>);
+</span></span><span style="display:flex;"><span>getline(cin, name);  <span style="color:#75715e">// 省略上一行的话，这里直接读到空行！
+</span></span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="-4-function-definition-and-invocation">## 4. Function Definition and Invocation</h2>
+<br>
+<ul>
+<li><code>main()</code> is the entry function. It runs automatically and should not be called manually. Its return type is always an integer; returning <strong>0</strong> indicates normal termination.</li>
+<li>A function may contain multiple <code>return</code> statements, but any single execution path hits only one of them. Every <code>return</code> must match the declared return type.</li>
+</ul>
+<p>Example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 计算差值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">diff</span>(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (a <span style="color:#f92672">&gt;</span> b) <span style="color:#66d9ef">return</span> a <span style="color:#f92672">-</span> b;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (a <span style="color:#f92672">&lt;=</span> b) <span style="color:#66d9ef">return</span> b <span style="color:#f92672">-</span> a;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> diff(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>) <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;   <span style="color:#75715e">// cpp-11 以后的版本中可以省略
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><ul>
+<li>General form:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-md" data-lang="md"><span style="display:flex;"><span>返回类型 函数名(参数列表) {
+</span></span><span style="display:flex;"><span>    // 函数体
+</span></span><span style="display:flex;"><span>    return 值;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="-5-conditional-control">## 5. Conditional Control</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;positive&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (x <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;zero&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;negative&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>switch:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">switch</span> (<span style="color:#960050;background-color:#1e0010">#变量或表达式#</span>) {
+</span></span><span style="display:flex;"><span>    case1:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#条件#;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#条件#;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="-6-loops">## 6. Loops</h2>
+<br>
+<h3 id="for-loop"><code>for</code> Loop</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Output: <code>0 1 2 3 4</code></p>
+<br>
+<h3 id="while-loop"><code>while</code> Loop</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span>;
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><br>
+<h3 id="do-while-loop"><code>do-while</code> Loop</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span>;
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>);
+</span></span></code></pre></div><p>(executes at least once)</p>
+<hr>
+<br>
+<br>
+<h2 id="7-addresses-pointers-references-and-passing">7. Addresses, Pointers, References, and Passing</h2>
+<br>
+<p><code>&amp;a</code>: take the address of variable <code>a</code>.</p>
+<p><code>int&amp; r = a</code>: create a reference to <code>a</code> (give <code>a</code> another name <code>r</code>).</p>
+<p><code>int* p = &amp;a</code>: declare <code>p</code> as a pointer to <code>a</code>.</p>
+<p><code>*p</code>: access the value pointed to by <code>p</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>a;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> r <span style="color:#f92672">=</span> a;  <span style="color:#75715e">// r 引用 a
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">*</span>p;  <span style="color:#75715e">// 输出 12 位 16 进制整数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;  <span style="color:#75715e">//指针也可以直接修改对应变量的值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>r;  <span style="color:#75715e">//指针可以改变对象，但此时位置不变，因为 r 引用 a
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#f92672">&amp;</span>r <span style="color:#f92672">==</span> <span style="color:#f92672">&amp;</span>a) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;  <span style="color:#75715e">// return 1 （C++ 里输出 true 会变成 1）
+</span></span></span></code></pre></div><br>
+<p><code>const int&amp; r = a</code>: constant reference (you cannot modify <code>a</code> through <code>r</code>).</p>
+<p><code>int* const p = &amp;a</code>: constant pointer (you may modify the pointee, but cannot redirect the pointer).</p>
+<p><code>const int* p = &amp;a</code>: pointer to const (you cannot modify the pointee, but the pointer may be redirected).</p>
+<p><code>const int* const p = &amp;x</code>: const pointer to const.</p>
+<br>
+<ul>
+<li>Pass by pointer: modify <code>a</code> without copying it by passing pointer <code>p</code>; this is compatible with C.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setZero</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p) { <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span> setZero(<span style="color:#f92672">&amp;</span>a); <span style="color:#75715e">// a 变成 0
+</span></span></span></code></pre></div><ul>
+<li>Pass by reference: modify <code>a</code> without copying it by passing alias <code>b</code>; this is not a C feature.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">SetZero</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> b) { b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; } 
+</span></span><span style="display:flex;"><span>SetZero(a);
+</span></span></code></pre></div><ul>
+<li>Pass by value: do not modify <code>a</code>; only the copied parameter value changes. This is a <strong>shallow copy</strong> of the value.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setZero</span>(<span style="color:#66d9ef">int</span> b) { b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span>setZero(a);
+</span></span></code></pre></div><ul>
+<li>Pass by const reference:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">SetZero</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> b) { <span style="color:#75715e">/* b = 0 在这里是无效的 */</span> } 
+</span></span><span style="display:flex;"><span>SetZero(a); <span style="color:#75715e">// 会报错
+</span></span></span></code></pre></div><hr>
+<br>
+<br>
+<h2 id="8-classes-and-objects-instances--oop">8. Classes and Objects (Instances) — OOP</h2>
+<br>
+<ul>
+<li>If <code>int</code> were a class, then <code>42</code> would be an instance.</li>
+<li>Objects are instances of classes.</li>
+<li>Functions inside a class — member functions — are “methods.”</li>
+<li>Instantiation means constructing an object and giving values to its members.</li>
+<li>Data members of a class are generally private.</li>
+<li>A class may have multiple constructors, but only one destructor.</li>
+<li>After a complete class definition, <strong>the final closing brace must be followed by a semicolon</strong>.</li>
+<li>rule of three</li>
+</ul>
+<p>Basic class model:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#960050;background-color:#1e0010">类</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">返回类型</span> <span style="color:#960050;background-color:#1e0010">成员函数</span>(<span style="color:#960050;background-color:#1e0010">函数参数</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">成员变量</span> <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">函数参数；</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">数据类型</span> <span style="color:#960050;background-color:#1e0010">成员变量；</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>If object <code>obj</code> calls member function <code>func(int, v)</code> defined in class <code>C</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>C obj;
+</span></span><span style="display:flex;"><span>obj.func(<span style="color:#ae81ff">3</span>);
+</span></span></code></pre></div><p>If an object accesses member variable <code>variab</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>C obj;
+</span></span><span style="display:flex;"><span>obj.variab <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+</span></span></code></pre></div><br>
+<p>Object declaration:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>IntCell m1;            <span style="color:#75715e">// OK：默认构造
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>IntCell <span style="color:#a6e22e">m2</span>(<span style="color:#ae81ff">12</span>);        <span style="color:#75715e">// OK：有参构造
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>IntCell<span style="color:#f92672">*</span> m3;           <span style="color:#75715e">// OK：指针声明
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>Intcell <span style="color:#a6e22e">m4</span>();          <span style="color:#75715e">// 这其实是函数声明，不是对象！
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>m3<span style="color:#f92672">-&gt;</span>function();  <span style="color:#75715e">// 指针访问成员要用箭头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>m1.function();
+</span></span></code></pre></div><br>
+<h3 id="interfaceimplementation-separation">Interface–Implementation Separation</h3>
+<p><code>IntCell.h</code>: header file, including the class declaration and constructor.</p>
+<ul>
+<li>Header files may also use <code>#pragma once</code> to prevent repeated inclusion.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#ifndef INTCELL_H     </span><span style="color:#75715e">// 防止重复包含
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define INTCELL_H
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IntCell</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    IntCell(<span style="color:#66d9ef">int</span> initialValue <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">// 构造函数声明
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">read</span>() <span style="color:#66d9ef">const</span>;              <span style="color:#75715e">// 读取
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">write</span>(<span style="color:#66d9ef">int</span> x);             <span style="color:#75715e">// 写入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> storedValue;               <span style="color:#75715e">// 私有成员
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span></code></pre></div><p>IntCell.cpp：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;IntCell.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>IntCell<span style="color:#f92672">::</span>IntCell(<span style="color:#66d9ef">int</span> initialValue)   <span style="color:#75715e">// 类::成员函数(变量)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> storedValue(initialValue) { }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> IntCell<span style="color:#f92672">::</span>read() <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> storedValue;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> IntCell<span style="color:#f92672">::</span>write(<span style="color:#66d9ef">int</span> x) {
+</span></span><span style="display:flex;"><span>    storedValue <span style="color:#f92672">=</span> x;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><br>
+<h3 id="the-this-pointer">The <code>this</code> Pointer</h3>
+<ul>
+<li>The difference between a member function and an ordinary free function is that the member function implicitly receives a <code>this</code> pointer.</li>
+<li>When an object calls a member function, the compiler implicitly passes the address of that object into the function. <code>this</code> is therefore a pointer to <strong>the current object</strong>.</li>
+<li><code>this-&gt;value = v</code> means: assign <code>v</code> to the member variable <code>value</code> of the current object.</li>
+<li><code>-&gt;</code> is the operator for accessing a member through a pointer.</li>
+<li><code>this-&gt;value</code> is <strong>equivalent</strong> to <code>(*this).value</code>.</li>
+<li>Since <code>value</code> is already a member variable, one may simply write <code>value = v</code>. But if the parameter and the member share the same name, <code>this-&gt;</code> becomes necessary:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Tick</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> value;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> setValue(<span style="color:#66d9ef">int</span> value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>value <span style="color:#f92672">=</span> value;  <span style="color:#75715e">// 左边是成员变量，右边是参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>Tick b1, b2;  <span style="color:#75715e">// instantiate `Tick`, producing objects
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>b1.setValue <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>b2.setValue <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;
+</span></span><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> b1.value <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">&lt;&lt;</span> b2.value; <span style="color:#75715e">// 输出 10 20
+</span></span></span></code></pre></div><br>
+<h3 id="rule-of-three">Rule of Three</h3>
+<p>If a custom class manages resources manually, then the <strong>copy constructor</strong>, <strong>copy assignment operator</strong>, and <strong>destructor</strong> usually must be defined together.</p>
+<h4 id="copy-constructor">Copy Constructor</h4>
+<ul>
+<li>Called when one object is used to initialize a new object.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyArray</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> size;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    MyArray(<span style="color:#66d9ef">int</span> s) <span style="color:#f92672">:</span> size(s) {data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size];}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ✅ 拷贝构造函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    MyArray(<span style="color:#66d9ef">const</span> MyArray<span style="color:#f92672">&amp;</span> other) {
+</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">=</span> other.size;
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size];
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> size; i<span style="color:#f92672">++</span>) data[i] <span style="color:#f92672">=</span> other.data[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>MyArray <span style="color:#a6e22e">a1</span>(<span style="color:#ae81ff">5</span>);
+</span></span><span style="display:flex;"><span>MyArray a2 <span style="color:#f92672">=</span> a1; <span style="color:#75715e">// 调用运行
+</span></span></span></code></pre></div><p>The copy constructor above performs a <strong>deep copy</strong> of <code>other</code>, ensuring that the new array has its own storage. Otherwise the destructor could free shared memory twice and crash the program.</p>
+<h4 id="copy-assignment-operator">Copy Assignment Operator</h4>
+<ul>
+<li>Called when assigning to an already existing object.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyArray</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> size;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    MyArray(<span style="color:#66d9ef">int</span> s) <span style="color:#f92672">:</span> size(s) { data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size]; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ✅ 拷贝赋值运算符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    MyArray<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> MyArray<span style="color:#f92672">&amp;</span> other) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">&amp;</span>other) {            <span style="color:#75715e">// 防止自赋值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">delete</span>[] data;               <span style="color:#75715e">// 先释放旧资源
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            size <span style="color:#f92672">=</span> other.size;
+</span></span><span style="display:flex;"><span>            data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size];
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> size; i<span style="color:#f92672">++</span>) data[i] <span style="color:#f92672">=</span> other.data[i];
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;  <span style="color:#75715e">// 允许链式赋值 a = b = c;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>MyArray <span style="color:#a6e22e">a1</span>(<span style="color:#ae81ff">5</span>);
+</span></span><span style="display:flex;"><span>MyArray <span style="color:#a6e22e">a2</span>(<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>a2 <span style="color:#f92672">=</span> a1; <span style="color:#75715e">// 调用运行
+</span></span></span></code></pre></div><p>This ensures that the old resource is safely released before allocating and copying the new one.</p>
+<h4 id="destructor">Destructor</h4>
+<ul>
+<li>Used to release resources such as heap memory.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyArray</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> size;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    MyArray(<span style="color:#66d9ef">int</span> s) <span style="color:#f92672">:</span> size(s) { data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[size]; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ✅ 析构函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">~</span>MyArray() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">delete</span>[] data;   <span style="color:#75715e">// 释放内存
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 对象遇到这一段自动销毁
+</span></span></span></code></pre></div><ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3200/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3200</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#csc3200-lec-1-2-introduction-to-c">CSC3200 LEC 1-2 Introduction to C++</a>
+      <ul>
+        <li><a href="#1-how-do-you-run-it">1. How Do You Run It?</a>
+          <ul>
+            <li><a href="#multi-file-compilation">Multi-File Compilation</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-data-types-operators-and-naming-rules">2. Data Types, Operators, and Naming Rules</a>
+          <ul>
+            <li><a href="#data-types">Data Types</a></li>
+            <li><a href="#operators">Operators</a></li>
+            <li><a href="#naming-rules">Naming Rules</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-standard-io">3. Standard I/O</a>
+          <ul>
+            <li><a href="#cout">cout</a></li>
+            <li><a href="#-stream-insertion-operator"><code>&lt;&lt;</code> (stream insertion operator)</a></li>
+            <li><a href="#endl">endl</a></li>
+            <li><a href="#-stream-extraction-operator"><code>&gt;&gt;</code> (stream extraction operator)</a></li>
+          </ul>
+        </li>
+        <li><a href="#-4-function-definition-and-invocation">## 4. Function Definition and Invocation</a></li>
+        <li><a href="#-5-conditional-control">## 5. Conditional Control</a></li>
+        <li><a href="#-6-loops">## 6. Loops</a>
+          <ul>
+            <li><a href="#for-loop"><code>for</code> Loop</a></li>
+            <li><a href="#while-loop"><code>while</code> Loop</a></li>
+            <li><a href="#do-while-loop"><code>do-while</code> Loop</a></li>
+          </ul>
+        </li>
+        <li><a href="#7-addresses-pointers-references-and-passing">7. Addresses, Pointers, References, and Passing</a></li>
+        <li><a href="#8-classes-and-objects-instances--oop">8. Classes and Objects (Instances) — OOP</a>
+          <ul>
+            <li><a href="#interfaceimplementation-separation">Interface–Implementation Separation</a></li>
+            <li><a href="#the-this-pointer">The <code>this</code> Pointer</a></li>
+            <li><a href="#rule-of-three">Rule of Three</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

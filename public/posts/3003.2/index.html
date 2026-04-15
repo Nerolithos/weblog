@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🎨 DDA3003 Midterm revision | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 选修课程 DDA3003 Visualization。期中复习 InfoVis, Tufte&rsquo;s Design Principles, Gestalt Laws of encoding data, Visual perception, Color scheme, D3, HTML, CSS as well as Multivariate data cleaning, common tables and plots.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3003.2/">
+    <meta property="og:url" content="http://localhost:1313/posts/3003.2/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🎨 DDA3003 Midterm revision">
+  <meta property="og:description" content="CUHKSZ 选修课程 DDA3003 Visualization。期中复习 InfoVis, Tufte’s Design Principles, Gestalt Laws of encoding data, Visual perception, Color scheme, D3, HTML, CSS as well as Multivariate data cleaning, common tables and plots.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-26T17:30:34+08:00">
+    <meta property="article:modified_time" content="2026-03-26T17:30:34+08:00">
+    <meta property="article:tag" content="DDA3003">
+
+  <meta itemprop="name" content="🎨 DDA3003 Midterm revision">
+  <meta itemprop="description" content="CUHKSZ 选修课程 DDA3003 Visualization。期中复习 InfoVis, Tufte’s Design Principles, Gestalt Laws of encoding data, Visual perception, Color scheme, D3, HTML, CSS as well as Multivariate data cleaning, common tables and plots.">
+  <meta itemprop="datePublished" content="2026-03-26T17:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-03-26T17:30:34+08:00">
+  <meta itemprop="wordCount" content="4470">
+  <meta itemprop="keywords" content="DDA3003">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🎨 DDA3003 Midterm revision">
+  <meta name="twitter:description" content="CUHKSZ 选修课程 DDA3003 Visualization。期中复习 InfoVis, Tufte’s Design Principles, Gestalt Laws of encoding data, Visual perception, Color scheme, D3, HTML, CSS as well as Multivariate data cleaning, common tables and plots.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30032.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🎨 DDA3003 Midterm revision</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🎨 DDA3003 Midterm revision</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-03-26T17:30:34+08:00">March 26, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"></br>
+<p>⚠️ <strong>本篇末尾有 26Spring 模拟卷及答案</strong></p>
+<blockquote>
+<p>考后留言：26 年概念题通共 20 分左右，D3 只考了一题 3 分，剩余都是作图、修改或批判可视化案例，所以死揪概念没有太大用。题目大多来自复习卷和讲义，作图不需精准，但请尽量带五种颜色的笔。</p>
+<p>对于给数据画图，你需要把所有数据都展现出来。比如今年有一题是将 “中美德三国三年的生育率、寿命期望和 cGDP” 作图，你可以考虑用点阵图：大小表示生育率、颜色表示国家、横轴表示寿命，纵轴表示人均 GDP，然后标注 legends，这样就可以拿满分。</p>
+<p>对于设计网页，你无需展示所有数据，只要指出如何交互显示哪些数据即可。</p>
+<p>对于批判可视化，你需要尽量列举多的设计缺点，可以将 Chart Junk 分开阐述，比如 “不需要背景”、“柱状图不需要特殊形状”、“无效 3D” 等等。</p>
+</blockquote>
+</br>
+<h1 id="infovis-design-principles">InfoVis Design Principles</h1>
+<p><strong>InfoVis</strong>: interactive visual representation of abstract data to amplify cognition</p>
+<ul>
+<li>Purpose: insight, not pictures</li>
+<li>Best for: EDA (<strong>Exploratory Data Analysis</strong>)</li>
+<li>当不知道要研究什么时用 EDA</li>
+<li><strong>Two aspects</strong>: representation / interaction</li>
+<li><strong>Two challenges</strong>: scale / diversity</li>
+</ul>
+</br>
+<h3 id="edward-tuftes-principles">Edward Tufte&rsquo;s Principles</h3>
+<ul>
+<li><strong>Graphical Integrity</strong>: tell the truth (Check: baseline / scale / context) Avoid distortion and ambiguity of data in charts. (图应与数据正比例；数据标清楚) 不能展示同个数据的差分图。
+<strong>Zero Tolerance: 所有柱状图都应当有 0 基准线</strong>，否则导致 distortion and exaggeration。比如点图就不一定基准在 0（因为视觉上不比较长短）
+<strong>Lie Factor</strong> = size of effect in graph / size of effect in data，超过 <strong>1.05</strong> 的图就算显著变形。
+当使用面积而不是长短时（比如圆形），要保证面积而不是直径与数据正比例</li>
+<li><strong>Tufte Data-Ink Ratio</strong>: DIR = Data_Ink / Total_Ink, need to MAXIMIZE.
+方法: erase non-data-ink / erase redundant data-ink / revise &amp; edit。
+有些图 (尤其是柱状图) 需要具体数据、数据多或对比不明显，用表格反而更好</li>
+<li><strong>Avoid Chart junk</strong>: 3D / unnecessary color，junk 比如：恒纵轴、图中横线、方框、数据标注过于密集、不必要的形状 (比如箱形图)</li>
+<li><strong>Data Density</strong> = Number of Entries / Area of Graph</li>
+<li><strong>Small multiples</strong>: same design, another variable changes</li>
+<li><strong>Macro/Micro</strong>: big picture + fine details</li>
+<li><strong>Content is King</strong></li>
+</ul>
+</br>
+<h3 id="gestalt-laws">Gestalt Laws</h3>
+<ul>
+<li>proximity：人在归类时，空间接近性的优先性高于颜色和图形</li>
+<li>similarity</li>
+<li>connectedness</li>
+<li>continuity：人类的注意力能跟随 ”部分断开的路径“，将其视为连续</li>
+<li>closure：人脑会自动补充不完整图片/图形</li>
+<li>symmetry：Glide-reflectional 旋转对称；translational 平移对称</li>
+<li>relative-size：越大的物体会被判定为越近/越重要，可能造成误解</li>
+<li>figure-ground</li>
+<li>Prägnanz：Less is More</li>
+</ul>
+</br>
+</br>
+<h1 id="visual-perception">Visual Perception</h1>
+<h2 id="perception">Perception</h2>
+<ul>
+<li>active / contextual, influenced by values, experience and background</li>
+</ul>
+<p><strong>Two-stage model</strong>:</p>
+<ul>
+<li>Early stage: Low-level, Parallel (color, shape&hellip;) 直觉性的自动迅速思考;</li>
+<li>Later stage: Sequential, Top-down, Goal-Directed (pattern, meaning&hellip;) 缓慢且需要长期记忆，可分为 2 subsystems: verbal, motor</li>
+</ul>
+<p><strong>Three-stage model</strong>:</p>
+<ul>
+<li><strong>Selection</strong>: 先注意什么; <strong>Organization</strong>: 怎么分组; <strong>Interpretation</strong>: 如何理解</li>
+</ul>
+</br>
+<h3 id="preattentive-processing">Preattentive Processing</h3>
+<p>不需要集中注意力、通常在 <strong>200–250 ms</strong> 内完成的快速 parallel 视觉处理</p>
+<ul>
+<li>Tasks: target detection / boundary detection / counting</li>
+<li>Single feature 才可以 preattentive</li>
+<li><strong>Conjuction</strong> of features (like shape and hue) 就需要 Sequential Search</li>
+<li><strong>Key properties</strong>: color / form / movement / spatial position</li>
+<li>Change Blindness: 有时人对视觉变化无法感知</li>
+</ul>
+</br>
+<h3 id="color-scheme">Color Scheme</h3>
+<p>即 <strong>0.4~0.7</strong> 微米之间的光。专业者可分别 1M 种，普通人 20,000 种。</p>
+<ul>
+<li>RGB (3 cone cells) 常用于显示屏；CMYK (cyan, magenta, yellow, key-black) 常用于出版物、实体商品</li>
+<li><strong>HSL</strong>: Hue, Saturation, Lightness 白度
+L=0 黑色, L=100 白色, <strong>L=50 且 S=100 正常纯色</strong></li>
+<li><strong>HSV</strong>: Hue, Saturation, Value
+V=0 黑色, <strong>V=100 正常纯色</strong>, S=0 白色</li>
+<li><strong>Luminance</strong>: foreground/background 要有亮度差</li>
+<li><strong>Quantitative color</strong>: avoid rainbow scale for quantitative data
+Ware’s suggestion: <strong>12 colors</strong>
+Less is more: <strong>more than 20~30 colors brings harm</strong>.
+建议：蓝色可以大面积用（不能太饱和，否则会有残影），不要用很接近的蓝色，红和绿只在视野中心用（人对其不敏感），可以用同个 H 的不同 SL。</li>
+</ul>
+</br>
+</br>
+<h1 id="d3js-and-html">D3.js and HTML</h1>
+<p>网页的标准结构：</p>
+<ol>
+<li>HyperText Markup Language (HTML) —— 网页的渲染语言</li>
+<li>Document Object Model (DOM) —— HTML 写的易操作网页结构</li>
+<li>Cascading Style Sheets (CSS) —— 视觉风格呈现 (颜色、字体、大小、布局…)</li>
+<li>Scalable Vector Graphics (SVG) —— 矢量绘图系统，不会失真</li>
+<li>JS-D3 —— 核心：存储/处理数据，实现动态化…</li>
+</ol>
+</br>
+<h3 id="css">CSS</h3>
+<ul>
+<li>Internal CSS： 在 HTML 文件的 <code>&lt;head&gt; &lt;style&gt;</code> 区域原地编辑 h1, p, body  等组件的 color, font&hellip;</li>
+<li>External CSS：在 HTML 文件引用链接 <code>&lt;link rel=&quot;stylesheet&quot; href=&quot;xxx.css&quot;&gt;</code></li>
+</ul>
+</br>
+<h3 id="js">JS</h3>
+<ul>
+<li><strong>console.log()</strong>：打印</li>
+<li><strong>object.key 等价于 object[“key”]</strong>：对象属性可用 <strong>dot notation</strong> 或 <strong>square bracket notation</strong> 访问。
+⚠️ 坑人：当属性名以特殊字符或数字开头，或要用 <strong>variable as key</strong> 时只能用方框。</li>
+<li>单双引号不敏感、分号不敏感</li>
+<li>所有没有标明 var 或 let 的声明产生的变量都是 <strong>global</strong></li>
+<li><code>[x, y, z]</code> 代表数组，<code>{a: b, c: d}</code> 代表字典</li>
+<li><strong>this</strong>: 在对象方法里，通常指当前对象。</li>
+<li><strong>const</strong>: constant reference, not constant value
+⚠️ 坑人：<strong>can</strong> change array elements / object properties; but <strong>cannot</strong> reassign the whole array/object reference (改字段可以，整个改不行)</li>
+</ul>
+</br>
+<h3 id="js-arrays">JS Arrays</h3>
+<p><code>[]</code>: 数组本质上也是 object。</p>
+<ul>
+<li>对象靠字符 key，数组靠数字 index，从 0 开始。</li>
+<li><strong>push()</strong>: 加入数组尾部</li>
+<li><strong>pop()</strong>: 返回最后一项并删除它</li>
+<li><strong>shift()</strong>: 返回第一项并删除它</li>
+<li><strong>unshift()</strong>: 加入一个或多个元素到数组头上并返回数组长度</li>
+<li><strong>slice(start, end)</strong>: 浅拷贝 <code>[start, end)</code>
+⚠️ 返回数组一部分的<strong>浅拷贝</strong>，原数组不变。</li>
+<li><strong>map()</strong>: 通过某个函数映射所有元素到新数组，返回这个新数组 <code>map1 = arr.map(x =&gt; x + 2)</code>
+⚠️ <strong>When not to use map()</strong>:not using the returned array; or not returning a value from callback</li>
+<li><strong>forEach()</strong>: calls a function once for each array element
+⚠️ 和 map 不同，它重点是“遍历执行”，不是生成新数组。</li>
+</ul>
+</br>
+<h3 id="d3">D3</h3>
+<p>JavaScript library, data-driven DOM / HTML / SVG manipulation</p>
+<ul>
+<li><strong>Selection</strong>: based on CSS selectors
+<strong>select()</strong> first matching; <strong>selectAll()</strong> all matching
+select by ID (&quot;#xxx&quot;), by className (&quot;.xxx&quot;), by tag (&ldquo;div&rdquo;, &ldquo;h1&rdquo;, &ldquo;p&rdquo;, &ldquo;span&rdquo;, etc.)
+The return value of most selection methods is the selection itself. This means that selection methods such as .style, .attr and .on can be <strong>chain</strong>ed. E.g.: <code>selection.attr(...).style(...).text(...)</code></li>
+<li><strong>append()</strong> 追加元素 child</li>
+<li><strong>text()</strong>  设置文字</li>
+<li>改 HTML 内容用什么？→ <strong>html()</strong></li>
+<li>改属性用什么？→ <strong>attr()</strong></li>
+<li>改 CSS 样式用什么？→ <strong>style()</strong></li>
+</ul>
+</br>
+<h3 id="svg">SVG</h3>
+<p>scalable vector graphics <code>&lt;svg&gt;</code>: SVG 图形的画布。Create with**: d3.select(&quot;#vis&quot;).append(&ldquo;svg&rdquo;)</p>
+<ul>
+<li><strong>circle</strong>: cx, cy, r. 可选：<strong>fill</strong>, <strong>stroke</strong>, <strong>stroke-width</strong>. <strong>Create with</strong>: .append(&ldquo;circle&rdquo;)</li>
+<li><strong>rect</strong>: x, y, width, height (后两者不能为负)</li>
+<li><strong>line</strong>: 起点 x1, y1; 终点 x2, y2</li>
+<li>path: <strong>Capital letters</strong>: absolute position；<strong>Lowercase letters</strong>: relative position</li>
+<li><strong>text</strong>: x, y, text-anchor</li>
+<li><strong>g</strong>: vis.append(&ldquo;g&rdquo;) 然后再 group.append(&ldquo;circle&rdquo;), group.append(&ldquo;rect&rdquo;), group.append(&ldquo;text&rdquo;)。</li>
+<li>显示元素的更新、控制：
+<strong>d</strong> = datum; <strong>i</strong> = index. <strong>Use i for position (where), Use d for size / style (what/how)</strong>
+⚠️ <strong>data join</strong> 四步骤  d3.select() → .selectAll() → .data() → .join()
+数据一旦变化，通常需要重新做 join，这样以后 update(newData) 就能重画 / 更新
+<strong>.join(enter, update, exit)</strong> 三个函数分别处理有数据时元素的进入和更新；没有数据时元素的退出。</li>
+<li>元素的变换：
+<strong>translate(tx, ty)</strong>: move along x and y
+<strong>rotate(angle)</strong>: rotate around origin or specified center
+<strong>scale(sx, sy)</strong>: resize, if sy omitted then sy = sx
+<strong>Linear scale</strong>: domain → range
+<strong>scaleSqrt</strong>: circle area encoding 控制面积而不是直径与数据成比例
+<strong>axis</strong>: axisBottom / Left / Right / Top + .call() (生成 + 调用)
+<strong>transition</strong>: state change animation</li>
+</ul>
+</br>
+</br>
+<h1 id="multivariate-data--tables">Multivariate Data &amp; Tables</h1>
+<h3 id="data">Data</h3>
+<ul>
+<li>Variables of data are attributes (特性) or dimensions (维度)</li>
+<li><strong>Data model</strong>: often described by <strong>Objects 对象</strong>, <strong>Attributes 属性</strong> and <strong>Relations 关系</strong></li>
+<li>Data table：<strong>Case</strong> = 行里那个“个体“，<strong>Variable</strong> = 列里那个“属性”
+Wide table: each attribute gets a column (e.g. year)
+Long table: each data case has an attribute-value pair，更整洁 (便于作图)
+Variable Type:
+<ol>
+<li><strong>Categorial</strong>: <strong>Norminal</strong> (不可排序：如 sex, country_tag) or <strong>Ordinal</strong>(可排序：如 clothing_size)</li>
+<li><strong>Quantitative</strong> (可数的 Numeric)
+Metadata 元数据: 描述数据的数据 (such as yaml/toml header)</li>
+</ol>
+</li>
+<li>数据编码和提高空间利用率的方案：Composition, allignment, folding, recursion, overloading。</li>
+</ul>
+</br>
+<h3 id="data-issues-and-cleaning">Data Issues and Cleaning：</h3>
+<ul>
+<li>Data Issue: <strong>Missing fields</strong>, <strong>Duplicates</strong>, <strong>Conflicts</strong>, <strong>Delimiters 反斜杠</strong>, white spaces, encoding, abbrev., typos, syntax &hellip;&hellip;..</li>
+<li>Data cleaning: <strong>remove, impute (guess) or flag (e.g. NAN) missing ones</strong>. Only remove an outlier if you can prove that it’s <strong>erroneous</strong>.</li>
+<li>Cleaning steps: Remove unwanted or irrelevant observations, Fix structural errors, Standardization (单位、格式、大小写), Remove unwanted outliers, Fix contradiction, Type conversion and syntax errors, Deal with missing data, Validate dataset.</li>
+</ul>
+</br>
+<h3 id="multivariate-data-table-and-graph">Multivariate Data, Table and Graph:</h3>
+<ul>
+<li><strong>Univariate</strong> data graph: x-axis: independent cases, y-axis: dependent variables</li>
+<li><strong>Bivariate</strong>: Scatter-point is most often</li>
+<li><strong>Trivariate</strong> and <strong>Hypervariate</strong> scatter graph: <strong>use small multiples, or colors in 2D</strong></li>
+<li><strong>Table</strong> = exact values. 数字通常右对齐，并按小数位数对齐，更利于比较。</li>
+<li><strong>Graph</strong> = patterns / shape / relationships。</li>
+</ul>
+</br>
+</br>
+<h1 id="multivariate-graphs--charts">Multivariate Graphs &amp; Charts</h1>
+<p><strong>Few’s process</strong>: Choose chart (or table) based on data type and analytic goal, not decoration.</p>
+</br>
+<h3 id="basic-plots">Basic Plots:</h3>
+<p><strong>Scatter plot</strong>: 适合展示 <strong>2</strong> 个 quantitative variables 的关系，对多变量关系不佳。</p>
+<ul>
+<li>如果非规则时间间隔，scatterplot 可能比 line chart 更合适。
+<strong>Line chart</strong>: 用于连续时间上的变化趋势。</li>
+<li>只要不会误导，纵坐标可以不从 0 开始。</li>
+<li><strong>Banking to 45°</strong></li>
+<li>如果太多重合线 (Overplotting)，用 <strong>Small Multiples</strong>。</li>
+<li>当数值跨越不同数量级，而你想比较 <strong>growth rate</strong>（比如都增长 10%），<strong>Log scale</strong> 比 Linear scale 好。
+<strong>Bar chart</strong>: 因为比较的是 <strong>length</strong>，纵坐标不从 0 开始会严重夸大差异。</li>
+<li><strong>Horizontal bars</strong> 在 <strong>标签太长</strong> 、 <strong>case 太多</strong>  或者 <strong>柱太长</strong> 的情况下比竖直柱状图好。</li>
+<li><strong>Stacked bars</strong>: 可以在一个 bar 里叠加分类组成。
+<strong>Trellis display</strong>: 本质就是 small multiples。比如 Stacked Bar 信息过多可采用
+<strong>Crosstab</strong>: 适合类别变量之间的多变量 (超过 2x2) 交叉分析。
+<strong>Pareto chart</strong>: 本质是 <strong>bar chart + line chart</strong> 的组合。</li>
+<li>⚠️ <strong>80/20 Rule</strong>: 80% of effect comes from 20% of causes (<strong>Vital few</strong>)。</li>
+<li>适合分析问题或缺陷的根源，处理投诉/销量/事故分析
+<strong>Bump chart</strong>: 展示排序关系随时间变动。</li>
+</ul>
+</br>
+<h3 id="distribution-analysis-plots">Distribution Analysis Plots:</h3>
+<p><strong>Box plot</strong>: 箱型图用于看分布、离散程度、可能的异常值。
+<strong>Histogram</strong>: 直方图用于连续数据，柱子相连，展示分布。⚠️ 柱状图则是离散数据、柱子不相连。</p>
+<ul>
+<li>多个 dataset 叠加时可能 cluttered—— <strong>可以用 line chart 解决</strong>。
+<strong>Dot plot</strong>: 解释一些数据在数据集中出现的频率 (用点表示，类似于用点的直方图)</li>
+<li>⚠️ 主要是单变量或少数组别比较（1维为主），Scatter plot 是成对双变量（2维）。
+<strong>Strip plot</strong>: 一种有轴带类别的散点图，display individual observations for each category along a single axis。
+<strong>Stem-and-leaf plot</strong>: 茎叶图 display shape and spread of a continuous distribution，可看 <strong>central tendency, variability, skewness, outliers</strong>。</li>
+</ul>
+</br>
+<h3 id="cyclical-data-plots">Cyclical Data Plots:</h3>
+<p><strong>Radar graph</strong>: represent data across the cyclical nature of time</p>
+<ul>
+<li>适合带周期性的时间结构。
+<strong>Heatmap</strong>: display a large quantity of cyclical data</li>
+<li>⚠️ 当周期性数据太多，不适合 radar 时可用 heatmap。</li>
+</ul>
+<p><strong>Overplotting</strong>: 数据点重合，难度。</p>
+<ul>
+<li>解决方案：Reduce size, <strong>Jitter points</strong>,Make points transparent, Aggregate or sample data, <strong>Encode density</strong>。</li>
+</ul>
+</br>
+</br>
+<h1 id="graph-theory-and-graph-visualization">Graph theory and graph visualization</h1>
+<h3 id="graph-theory">Graph theory</h3>
+<p>图由节点 (实体) 和边 (关系) 构成，𝑮=(𝑽,𝑬)。<a href="https://blog.nero-lithos.com/posts/3200.f2/">具体图论请点击此处</a>。
+图的两种表达方式：</p>
+<ul>
+<li>
+<p><strong>Adjacency Matrix</strong>：随机访问，O(|𝑽|2)，矩阵中 (a, b) 为 1 表示 ab 边存在；</p>
+</li>
+<li>
+<p><strong>Adjacency List</strong>：顺序访问，O(|𝑬|)，用列表 a: b 表示 ab 边存在。</p>
+<p>节点一般用数字 Index，便于 manage and program；通过 map (Java), dictionary (Python) 或者 SQLite 分配数字 ID。
+⚠️ 图可以帮助 Business: Detect risk patterns, simulate internet/railway/supply chain etc., maximize asset mix in market, map social hierarchy, detect communities&hellip;&hellip;</p>
+</li>
+<li>
+<p>图不一定是简单的 (Multiple Edges)，比如 <em>LinkedIn</em> 中的人际关系。</p>
+</li>
+</ul>
+</br>
+<h3 id="graph-in-visualization">Graph in Visualization</h3>
+<p>图的应用和对应种类 (<strong>Graph Layouts</strong>)：</p>
+<ul>
+<li>
+<p>(Node-link) <strong>Relationships</strong> → nodes + links, conceptual picture</p>
+</li>
+<li>
+<p><strong>Hierarchies</strong> → trees, sunburst 日冕图</p>
+</li>
+<li>
+<p><strong>Communities</strong> → clustered layouts, labels, computational clustering</p>
+</li>
+<li>
+<p><strong>Flows</strong> → Sankey, chord diagram</p>
+</li>
+<li>
+<p><strong>Spatial networks</strong> → schematic layout for routes/nodes</p>
+</li>
+<li>
+<p><strong>Large graphs</strong> → overplotting or tile-based aggregation</p>
+</li>
+<li>
+<p><strong>Process of Visualization Graphs</strong> (作图过程)：
+<strong>1. Prepare Data</strong>
+<strong>2. Layout</strong>  编排点和边
+<strong>3. Add Visual Attributes</strong> 大小颜色位置、标注边
+<strong>4. ⚠️ Interact, Explain, Further Analysis</strong>：Zoom and pan, Identify (Hover / Click), <strong>Filter</strong> (⚠️ 不是删除，只是隐藏), Isolate, Neighbors, Paths, <strong>Drag-move-modify-delete-group</strong>, Explanation Sequence (e.g. <em>Gephi</em>), Annotate, <strong>Legend</strong> (图例), Export.</p>
+</li>
+<li>
+<p>⚠️ 2 <em>Gephi</em> Filters：<strong>Giant component 拓扑的去除小或离散的点</strong>，<strong>Edge weight 去掉出现频率低的点。</strong></p>
+</li>
+<li>
+<p><strong>ego-network:</strong> 某个中心点及其所有邻居 (focal node + its direct neighbors / relationships)。</p>
+</li>
+</ul>
+</br> 
+<p>图的基础知识：</p>
+<ul>
+<li>
+<p>⚠️ <strong>Basic graph statistics</strong>：<strong>Density</strong>, <strong>Components</strong>, <strong>Degree</strong>, <strong>Path</strong>, <strong>Centrality</strong>. (Hue 不算)</p>
+<p>Centrality：<strong>Betweeness</strong> Centrality (经过最短路径的个数，越大越中心), <strong>Katz</strong> Centrality (距离所有点的反比例加权和的大小), <strong>Degree</strong> Centrality (度数，越大越中心), <strong>Closeness</strong> Centrality (到所有点的平均距离)。</p>
+<p>Diameter：最长的 “最短路径” (即 Critical Path)。</p>
+</li>
+<li>
+<p>⚠️ <strong>Essential visual attributes</strong>: Node size, Node color, Label, Edge weight, Edge color, Edge type.</p>
+</li>
+</ul>
+</br>
+<p>编排 (<strong>Layouts</strong> 方案)：</p>
+<p>页面编排：</p>
+<ul>
+<li><strong>Random node layouts</strong>：空间中随机分布，比如 <strong>Force Atlas 2 layout</strong></li>
+<li><strong>force-directed layout</strong>：一个巨大的聚簇以及零星分散的点</li>
+</ul>
+<p>图 (本身的) 编排：</p>
+<ul>
+<li>Force-directed (力导向), Node-only (只有点), Time-oriented (按时间排序的树图), Top-down (从上到下从打到小), Radial (辐射状), Treemap (nested-rectangle 方块面积表示阶级), Hierarchical Pie (<strong>圆形 hierarchy，和 sunburst 很像</strong>), Maps , Chord, Parallel Coordinates (与 Bipartite 交互)。</li>
+<li>⚠️ Hierarchy Layout 包括了 <strong>tree 非圆形树图</strong> 和 <strong>radial 发散图</strong>。其中 tree 表示非圆形的整齐排列，包括了 top-down 和 left-to-right，top-down 因为太宽容易写不下 label。如果阶级很宽 (点很多) 更适合用 radial 。radial 包括了 radial-tree (普通的树状发散图) 和 sunburst chart (类似于 pie)。</li>
+<li>Sankey diagram 适合有方向、步骤、路径的 flow (比如产品供应流向)；而 Chord diagram 适合多对多无既定关系的 flow (比如全球进出口)</li>
+</ul>
+</br>
+<p>图的 Encoding：<strong>Node</strong> = entity，<strong>Link</strong> = relationship，<strong>Size</strong> often encodes importance / popularity，<strong>Color</strong> often encodes frequency / attribute，<strong>Width</strong> often encodes link amount / strength。</p>
+<ul>
+<li>
+<p>Communities Vis：<strong>Clique</strong> 即 “完全子图” (内部两两相连)，用颜色区分不同主要的 Cliques。</p>
+<p><strong>Convex hull</strong> 即包裹每个组 (community) 周围的 ”壳“，适合突出 group，而非细看每条 link。</p>
+</li>
+<li>
+<p>Flow Vis：用于display transactional events, depict systems / behavioral models, supply chain.</p>
+<p>⚠️ <strong>Transactional data 通常用 Sankey Diagram</strong>。<strong>Sankey</strong> = multi-step flow + link <strong>width encodes volume</strong>。</p>
+</li>
+</ul>
+</br>
+</br>
+<h1 id="dda3003-26s-mock-paper--answer">DDA3003 (26S) Mock Paper + Answer</h1>
+<embed src="http://localhost:1313/pdf/dda3003mid.pdf" type="application/pdf" width="100%" height="600px" />
+</br>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/dda3003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">DDA3003</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#infovis-design-principles">InfoVis Design Principles</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#edward-tuftes-principles">Edward Tufte&rsquo;s Principles</a></li>
+            <li><a href="#gestalt-laws">Gestalt Laws</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#visual-perception">Visual Perception</a>
+      <ul>
+        <li><a href="#perception">Perception</a>
+          <ul>
+            <li><a href="#preattentive-processing">Preattentive Processing</a></li>
+            <li><a href="#color-scheme">Color Scheme</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#d3js-and-html">D3.js and HTML</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#css">CSS</a></li>
+            <li><a href="#js">JS</a></li>
+            <li><a href="#js-arrays">JS Arrays</a></li>
+            <li><a href="#d3">D3</a></li>
+            <li><a href="#svg">SVG</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#multivariate-data--tables">Multivariate Data &amp; Tables</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#data">Data</a></li>
+            <li><a href="#data-issues-and-cleaning">Data Issues and Cleaning：</a></li>
+            <li><a href="#multivariate-data-table-and-graph">Multivariate Data, Table and Graph:</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#multivariate-graphs--charts">Multivariate Graphs &amp; Charts</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#basic-plots">Basic Plots:</a></li>
+            <li><a href="#distribution-analysis-plots">Distribution Analysis Plots:</a></li>
+            <li><a href="#cyclical-data-plots">Cyclical Data Plots:</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#graph-theory-and-graph-visualization">Graph theory and graph visualization</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#graph-theory">Graph theory</a></li>
+            <li><a href="#graph-in-visualization">Graph in Visualization</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#dda3003-26s-mock-paper--answer">DDA3003 (26S) Mock Paper + Answer</a></li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3003.2/">🎨 DDA3003 Midterm revision</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3003.1/">🎨 DDA3003 Introduction to D3</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3003.1/">🎨 DDA3003 Introduction to D3</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🌐 Attempting to Fetch CUHKSZ Mailbox Data | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="A shareable but unresolved attempt to automate LGU mailbox access.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/outlook/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/outlook/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🌐 Attempting to Fetch CUHKSZ Mailbox Data">
+  <meta property="og:description" content="A shareable but unresolved attempt to automate LGU mailbox access.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2024-09-11T09:26:58+08:00">
+    <meta property="article:modified_time" content="2024-09-11T09:26:58+08:00">
+    <meta property="article:tag" content="技术">
+
+  <meta itemprop="name" content="🌐 Attempting to Fetch CUHKSZ Mailbox Data">
+  <meta itemprop="description" content="A shareable but unresolved attempt to automate LGU mailbox access.">
+  <meta itemprop="datePublished" content="2024-09-11T09:26:58+08:00">
+  <meta itemprop="dateModified" content="2024-09-11T09:26:58+08:00">
+  <meta itemprop="wordCount" content="947">
+  <meta itemprop="keywords" content="技术">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🌐 Attempting to Fetch CUHKSZ Mailbox Data">
+  <meta name="twitter:description" content="A shareable but unresolved attempt to automate LGU mailbox access.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🌐 Attempting to Fetch CUHKSZ Mailbox Data</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2024-09-11T09:26:58+08:00">September 11, 2024</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h2 id="preface">Preface</h2>
+<p><strong>Important: if this is your first time using the <code>exchangelib</code> module, do not test it directly with your institutional or university account. Use another account first and make sure it is safe.</strong></p>
+<p>This topic began when I tried to write a Python script for my CUHKSZ mailbox so that OpenAI could automatically analyze and summarize emails into a log-like digest. However, as a beginner, I got stuck at the very first step: pulling the emails out of Outlook. Is there anyone who can reliably achieve this over the long term with basic authentication (that is, directly entering the account and password)? And if one uses OAuth for a desktop application, how should authorization actually be configured? It is quite troublesome.</p>
+<p>In any case, I found that I was unable to complete interaction between <code>exchangelib</code> and an Outlook mailbox using any authentication method.</p>
+<p>Note: the naming format for the methods below is “authentication scheme – Python package.”</p>
+<h2 id="method-1-basic-auth--exchangelib-highly-unstable">Method 1: Basic Auth – exchangelib (highly unstable)</h2>
+<p><strong>Although I did succeed a few times, this method is generally considered no longer viable (and I was never able to finish documenting a stable command-line procedure for it).</strong> Online discussions say the following:</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/74058525/python-exchangelib-invalid-credentials">stackoverflow discussion</a></li>
+<li><a href="https://github.com/ecederstrand/exchangelib/issues">github issues</a></li>
+<li>“Microsoft is gradually deprecating support for basic authentication (username and password), so using only a username and password to access the EWS API is usually invalid.”
+——GPT4</li>
+</ul>
+<p>Although many sources online claim that Office 365 has already disabled the traditional username-and-password EWS authentication mode, it seems that not everyone is completely unable to use it. I did manage to access it successfully two or three times and download part of my mailbox.</p>
+<p><strong>For users in mainland China, this appears to be related to VPN conditions. Only certain nodes on certain proxy servers at certain times can avoid errors. In my own case, the Osaka node of 12vpn occasionally worked.</strong> But in general, it still throws <code>UnauthorizedError: Invalid credentials</code> every now and then. (See below.)</p>
+<p><strong>In fact, the issue seems to be caused by certain undocumented protective mechanisms on Microsoft&rsquo;s servers. Microsoft appears to have relatively strict network-security requirements. Some IP addresses may be classified by Microsoft as “unsafe,” which triggers risk control and blocks access. This issue remained unresolved as of 2024-08-17.</strong></p>
+<p><strong>A piece of evidence for this speculation can be found in Microsoft&rsquo;s own statement:</strong>
+<a href="https://support.microsoft.com/zh-cn/office/outlook-com-%E7%9A%84-pop-imap-%E5%92%8C-smtp-%E8%AE%BE%E7%BD%AE-d088b986-291d-42b8-9564-9c414e2aa040">see the “Outlook.com IMAP connection errors” section near the bottom of this page</a></p>
+<h3 id="although-i-do-not-recommend-trying-it-the-concrete-steps-are-still-listed-below">Although I do not recommend trying it, the concrete steps are still listed below:</h3>
+<ol>
+<li>
+<p>Make sure your computer has Python 3.11.9 or above installed, along with Miniconda or Anaconda. Then run <code>pip install exchangelib</code> in the terminal.</p>
+</li>
+<li>
+<p>In a suitable local directory, and with a suitable editor (such as Sublime Text or PyCharm), write the following code and save it as <code>test.py</code>.</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>from exchangelib import Credentials, Account
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>credentials <span style="color:#f92672">=</span> Credentials<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#your email address&#34;</span>, <span style="color:#e6db74">&#34;#your email password&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>account <span style="color:#f92672">=</span> Account<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#your email address&#34;</span>, credentials<span style="color:#f92672">=</span>credentials, autodiscover<span style="color:#f92672">=</span>True<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> item in account.inbox.all<span style="color:#f92672">()</span>.order_by<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;-datetime_received&#34;</span><span style="color:#f92672">)[</span>:100<span style="color:#f92672">]</span>:
+</span></span><span style="display:flex;"><span>    print<span style="color:#f92672">(</span>item.subject, item.sender, item.datetime_received<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>(The code comes from the GitHub homepage of <code>exchangelib</code>; see the reference section.)</p>
+<ol start="3">
+<li>
+<p>Run <code>python test.py</code> in the terminal.</p>
+</li>
+<li>
+<p>If an error occurs and the last line of the error message looks like this:</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>UnauthorizedError: Invalid credentials <span style="color:#66d9ef">for</span> https://autodiscover.hotmail.com/autodiscover/autodiscover.svc
+</span></span></code></pre></div><p>then you may try disabling server autodiscovery and replacing the full content of <code>test.py</code> with the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>from exchangelib import Credentials, Account, DELEGATE, Configuration
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>credentials <span style="color:#f92672">=</span> Credentials<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;#your email address&#39;</span>, <span style="color:#e6db74">&#39;#your email password&#39;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>config <span style="color:#f92672">=</span> Configuration<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>    server<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;#your mailbox server address&#39;</span>,  
+</span></span><span style="display:flex;"><span>    credentials<span style="color:#f92672">=</span>credentials
+</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>account <span style="color:#f92672">=</span> Account<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>    primary_smtp_address<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;#your email address&#39;</span>,
+</span></span><span style="display:flex;"><span>    config<span style="color:#f92672">=</span>config,
+</span></span><span style="display:flex;"><span>    autodiscover<span style="color:#f92672">=</span>False,
+</span></span><span style="display:flex;"><span>    access_type<span style="color:#f92672">=</span>DELEGATE
+</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> item in account.inbox.all<span style="color:#f92672">()</span>.order_by<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;-datetime_received&#39;</span><span style="color:#f92672">)[</span>:100<span style="color:#f92672">]</span>:
+</span></span><span style="display:flex;"><span>    print<span style="color:#f92672">(</span>item.subject, item.sender, item.datetime_received<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>If no error occurs, you can skip Step 4. If a different error appears, check whether you followed the instructions correctly or whether your network connection is normal.</p>
+<ol start="5">
+<li>Run the script again. If it still fails, and the final line of the error message looks like this:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>UnauthorizedError: Invalid credentials <span style="color:#66d9ef">for</span> https://outlook.office365.com/EWS/Exchange.asmx
+</span></span></code></pre></div><p>then open the above URL in any browser (<code>https://outlook.office365.com/EWS/Exchange.asmx</code>), enter your account and password as required, enable EWS, then return to the terminal and run <code>test.py</code> again.</p>
+<ol start="6">
+<li>If the terminal still throws errors, or if that page cannot be opened, remains blank, or fails authentication, then that is actually the “normal” outcome. If anyone has discovered a way to use basic authentication <strong>reliably and stably over the long term</strong>, please share it for the benefit of everyone else.</li>
+</ol>
+<h2 id="method-2-oauth-20--exchangelib">Method 2: OAuth 2.0 – exchangelib</h2>
+<p>Please log in to the Microsoft cloud portal: <a href="https://portal.azure.com">Microsoft Azure</a>. If this is your first registration, I recommend <strong>not</strong> using your school or institutional account. Then register an application and consult <a href="https://www.whuanle.cn/archives/21385">this guide to Microsoft Graph and Outlook OAuth 2.0 authorization</a>. (The example in that link is for a web application, but what I wanted was a desktop application so that I could implement the functions mentioned at the beginning. So that route also turned out not to work for me.)</p>
+<h2 id="other-ideas">Other ideas</h2>
+<p>One possible workaround is to use <strong>IFTTT</strong> to forward Outlook emails in bulk to another mailbox, after which IFTTT can generate an email log in Google Sheets. However, CUHKSZ emails often contain images or other non-textual messages, and such content is difficult to store meaningfully in spreadsheet form. In the end, I could not continue with this approach either.</p>
+<h2 id="reference">Reference</h2>
+<p><a href="https://www.whuanle.cn/archives/21385">https://www.whuanle.cn/archives/21385</a></p>
+<p><a href="https://github.com/ecederstrand/exchangelib/issues">https://github.com/ecederstrand/exchangelib/issues</a></p>
+<p><a href="https://github.com/ecederstrand/exchangelib/discussions/954">https://github.com/ecederstrand/exchangelib/discussions/954</a></p>
+<p><a href="https://stackoverflow.com/questions/74058525/python-exchangelib-invalid-credentials">https://stackoverflow.com/questions/74058525/python-exchangelib-invalid-credentials</a></p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">技术</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#preface">Preface</a></li>
+        <li><a href="#method-1-basic-auth--exchangelib-highly-unstable">Method 1: Basic Auth – exchangelib (highly unstable)</a>
+          <ul>
+            <li><a href="#although-i-do-not-recommend-trying-it-the-concrete-steps-are-still-listed-below">Although I do not recommend trying it, the concrete steps are still listed below:</a></li>
+          </ul>
+        </li>
+        <li><a href="#method-2-oauth-20--exchangelib">Method 2: OAuth 2.0 – exchangelib</a></li>
+        <li><a href="#other-ideas">Other ideas</a></li>
+        <li><a href="#reference">Reference</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/outlook/">🌐 龙大邮箱抓取尝试</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/weblog_deploy/">🌐 在 cloudflare 部署 Hugo 构架博客的 manual</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

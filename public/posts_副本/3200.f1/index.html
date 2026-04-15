@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性) | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3200.f1/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3200.f1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:published_time" content="2025-11-21T13:29:34+08:00">
+    <meta property="article:modified_time" content="2025-11-21T13:29:34+08:00">
+    <meta property="article:tag" content="CSC3200">
+
+  <meta itemprop="name" content="💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构">
+  <meta itemprop="datePublished" content="2025-11-21T13:29:34+08:00">
+  <meta itemprop="dateModified" content="2025-11-21T13:29:34+08:00">
+  <meta itemprop="wordCount" content="8250">
+  <meta itemprop="keywords" content="CSC3200">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/hm.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-11-21T13:29:34+08:00">November 21, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="c-数据结构线性-链表栈队列映射集合">C++ 数据结构(线性) ：链表、栈、队列、映射、集合</h1>
+</br>
+<p><strong>数组</strong>、<strong>向量</strong>和<strong>链表</strong>是 C++ 比较基础的数据结构，可以简单的从零建立；<strong>树</strong>和<strong>映射</strong>则为 STD 中有实现的复杂数据结构。</p>
+<p><strong>栈</strong>和<strong>队列</strong>是对“线性表”操作受限后的抽象（LIFO/FIFO），实现可以用数组或链表；而<strong>集合</strong>可以用四种基础数据结构实现。</p>
+<p>数组已在先前阐释过，故在本文中，我们将先着重于<strong>线性数据结构</strong>的理解。在下半部分，我们学习树、图、堆三个非线性数据结构。</p>
+</br>
+</br>
+<h1 id="一链表-linkedlist数组-vs-链表与指针操作">一、链表 LinkedList：“数组 vs 链表”与指针操作</h1>
+</br>
+<h2 id="抽象定义">抽象定义</h2>
+<p><strong>单链表</strong>是用<strong>指针</strong>单向连起来的<strong>离散</strong>内存块：<strong>每个节点都存储着下个节点的指针</strong>。</p>
+<p><img src="https://i.postimg.cc/G3vPxpMw/LLdrawio.png" alt=""></p>
+<ul>
+<li><strong>目标</strong>：存一串数据，支持比数组更简单地<strong>插入</strong>或<strong>删除</strong>，可以做到遍历</li>
+<li><strong>数组和向量</strong>的特点：<strong>访问快、插删难</strong>。连续内存，O(1) 随机访问，但中间插入删除要整体移动，长度不易动态改变</li>
+<li><strong>链表</strong>的特点：<strong>插删快、访问慢</strong>。每个结点单独 new 出来，用 next 串起来，内存不连续。插入/删除只改指针，O(1)；但随机访问变成 O(n)</li>
+</ul>
+</br>
+</br>
+<h2 id="核心代码模板">核心代码模板</h2>
+<p>结点与基本表体：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span> {  <span style="color:#75715e">// 节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T element;  <span style="color:#75715e">// 成员变量：任意数据类型的数据
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Node <span style="color:#f92672">*</span>next;  <span style="color:#75715e">// 成员变量：指向节点类的空指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    Node(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> e <span style="color:#f92672">=</span> T(), Node <span style="color:#f92672">*</span>n <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>)  <span style="color:#75715e">// 类构造函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 节点里装着数据 element，以及指向“下一个节点”的指针 next
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">:</span> element(e), next(n) {}  
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 初始化成员变量，调用时比如：new Node&lt;int&gt;(5, nullptr)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">List</span> {  <span style="color:#75715e">// 表体
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>dummyHead;  <span style="color:#75715e">// 空占位头结点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    List() {  <span style="color:#75715e">// 无参数构造
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        dummyHead <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(T(), <span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> zeroth() { <span style="color:#66d9ef">return</span> dummyHead; }
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> first()  { <span style="color:#66d9ef">return</span> dummyHead<span style="color:#f92672">-&gt;</span>next; }  <span style="color:#75715e">// 指针用箭头访问成员
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> first() <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>; }  <span style="color:#75715e">//判断表是否空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><p><strong>带 dummy head 的好处</strong>：</p>
+<ul>
+<li><code>dummyHead</code> 是一个 <code>Node&lt;T&gt;</code> 的实例，作为链表的表头，其数据为<code>T()</code>也就是空字符/0， 其指针默认为空指针</li>
+<li>保证新建立的链表<strong>永远有头结点</strong> (即使实际为空)，<strong>后续代码可兼容 <code>dummyHead</code></strong></li>
+<li>链表 “是否为空” 只需判断 <code>dummyHead-&gt;next == nullptr</code></li>
+</ul>
+</br>
+<p>复习点：</p>
+<ul>
+<li><code>Node&lt;T&gt; *nPtr = new Node&lt;T&gt;(…)</code> 不是说 <code>Node&lt;T&gt;</code> 是指针类，而是说创建一个实例后直接获得其指针 nPtr</li>
+<li>指针对应数据在内存中的位置：<code>T *ptr = &amp;a</code>，<code>*ptr</code> 等价于 <code>a</code>，<code>&amp;a</code> 等价于 <code>ptr</code></li>
+<li><code>ptr-&gt;member</code> 与 <code>(*ptr).member</code> 等价，<strong>指针只能通过 <code>-&gt;</code> 访问成员变量和方法</strong></li>
+<li><strong>模版类</strong>可以让代码段兼容不同数据类型：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// 或写 class T，等价
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>T add(T a, T b) { <span style="color:#66d9ef">return</span> a <span style="color:#f92672">+</span> b; }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> x <span style="color:#f92672">=</span> add(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);  <span style="color:#75715e">// 类型自动推导 -&gt; add&lt;int&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> y <span style="color:#f92672">=</span> add<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2.5</span>);  <span style="color:#75715e">// 显式指明模板实参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 以及在模板类外，调用模板：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Stack</span> { <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span>); };  <span style="color:#75715e">// 类内成员函数不需重申 template
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// 在类外的成员函数必须再写一次 template
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> Stack<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>push(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) { <span style="color:#75715e">/*...*/</span> }
+</span></span></code></pre></div></br>
+</br>
+<h2 id="典型成员函数">典型成员函数</h2>
+<h3 id="在结点-p-之后插入-data">在结点 p 之后插入 data</h3>
+<p><img src="https://i.postimg.cc/j5pwmBh9/jie-ping2025-11-21-14-43-49.png" alt=""></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>insert(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> data, Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> p) {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// p 是老节点的内存位置（插在哪）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> newNode <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(data, p<span style="color:#f92672">-&gt;</span>next);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 此刻 新节点的 next 被初始化为“插入前 p 的 next 指针的原本值”。如果新节点插在 p、q 间，那么 newNode-&gt;next 指向 q；如果 p 后原本没有节点，就指向 nullptr
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> newNode;  <span style="color:#75715e">// 将老节点的 next 改指向这个新节点，完成插入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>链表的基本结构如下 (实际中节点都是直接指针传参，<code>&amp;</code> 不用写在代码中)：</p>
+<p><code>&lt;头&gt; DH(null, &amp;N1)→N1(e1, &amp;N2)→N2(e2, nullptr) &lt;尾&gt;</code></p>
+<p>注意：</p>
+<ol>
+<li>“新建”和“改指”两行顺序不能反，否则会链表会断，但是两行可以<strong>合并</strong>成：<code>p-&gt;next = new Node&lt;T&gt;(data, p-&gt;next);</code>。这是因为<strong>赋值符号优先级较低</strong>，右边的运算会先进行，所以 new 去到的 p-&gt;next 是老的值。</li>
+<li><code>dummyHead</code> 也可以用这个插入函数</li>
+<li>需保证 <code>p != nullptr</code> 且 p 属于这条链表</li>
+<li>用了裸指针 + new，别忘记在 List <strong>析构函数遍历 delete</strong> 所有结点</li>
+</ol>
+</br>
+<h3 id="查找值为-data-的节点的指针">查找值为 data 的节点(的指针)</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>find(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> data) {
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> p <span style="color:#f92672">=</span> first();  <span style="color:#75715e">// 指向 dummyHead 后的第一个实节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (p) {  <span style="color:#75715e">// 遍历，直到 nullptr (等价于 false) 断开
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (p<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">==</span> data) <span style="color:#66d9ef">return</span> p;
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;  <span style="color:#75715e">// 改指向下一个节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>;  <span style="color:#75715e">// 没找到
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div></br>
+<h3 id="删除值为-data-的节点先需要先找到前驱结点">删除值为 data 的节点，先需要先找到<strong>前驱结点</strong></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>findPrevious(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> data) {  <span style="color:#75715e">// 找前一项才能得到指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> p <span style="color:#f92672">=</span> zeroth();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (p<span style="color:#f92672">-&gt;</span>next) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (p<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">==</span> data) <span style="color:#66d9ef">return</span> p;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// “当前项指向下一项的指针”访问下一项的数据，符合就传回这个“指向下一项的指针”
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        p <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>remove(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> data) {
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> p <span style="color:#f92672">=</span> findPrevious(data);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (p) {  <span style="color:#75715e">// 之前没找到 data 就不会删任何东西，因为指针为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> tmp <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;  <span style="color:#75715e">// 指向 data 再后面一项
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>next;  <span style="color:#75715e">// 前一项跳过 data 指向再后面一项
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">delete</span> tmp;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意：其实并没有“删除”数据本身，只是将相邻项指针连起来，把这一项移出链表而已</p>
+<p>同时要实现：</p>
+<ul>
+<li>析构函数 ~List()：从 <code>zeroth()</code> 开始删除所有节点</li>
+<li>拷贝构造、赋值运算符：<strong>深拷贝</strong>每个结点，不能只拷贝指针</li>
+</ul>
+</br>
+</br>
+<h2 id="和数组的对比复杂度">和数组的对比复杂度</h2>
+<p>数组：</p>
+<ul>
+<li>访问 <code>a[i]</code>：O(1)</li>
+<li>头插、头删：O(n)（需要整体移动）</li>
+</ul>
+<p>单链表：</p>
+<ul>
+<li>顺序访问第 k 个：O(k)</li>
+<li>已知指针 p 的前提下，在 p 后插入 / 删除：O(1)</li>
+</ul>
+<p>典型考点：<strong>什么时候用数组，什么时候用链表？</strong></p>
+<ul>
+<li>需要大量随机访问 → 数组 / vector</li>
+<li>经常在中间插入/删除，长度不确定 → 链表</li>
+</ul>
+</br>
+</br>
+<h2 id="注意点">注意点</h2>
+<ol>
+<li>插入/删除顺序：<strong>先接再断</strong>或者<strong>先接再删</strong>，否则会丢链</li>
+<li><strong>带 dummy head 的版本</strong> vs 不带版本的差异</li>
+<li><strong>深拷贝/析构</strong>：避免内存泄漏与浅拷贝问题</li>
+</ol>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="二栈-stacklifo数组--链表版">二、栈 Stack：LIFO、数组 &amp; 链表版</h1>
+</br>
+<h2 id="抽象定义-1">抽象定义</h2>
+<ul>
+<li>接口：push(x), pop(), peek(), isEmpty()</li>
+<li>特性：后进先出 (LIFO)。类似于牌堆，后放上去的先被抽走。只有单向操作 (在栈顶)。所有基本操作时间复杂度都是 O(1)。</li>
+</ul>
+</br>
+</br>
+<h2 id="栈类的结构模板">栈类的结构模板</h2>
+<ul>
+<li>头文件：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Stack</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Stack();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x);
+</span></span><span style="display:flex;"><span>    T<span style="color:#f92672">&amp;</span> pop();   <span style="color:#75715e">// 删除并返回栈顶
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    T<span style="color:#f92672">&amp;</span> peak();  <span style="color:#75715e">// 只读栈顶
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div></br>
+</br>
+<h2 id="数组实现-顺序栈">数组实现 (顺序栈)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> MAX_STACK <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>;  <span style="color:#75715e">// 固定容量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Stack</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T items[MAX_STACK];  <span style="color:#75715e">// “数组”栈
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> top;  <span style="color:#75715e">// top == 当前占用位数 == 下次插入位置(当前栈顶以上一项)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Stack() <span style="color:#f92672">:</span> top(<span style="color:#ae81ff">0</span>) {}  <span style="color:#75715e">// 初始化：top=0，数组为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> top <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (top <span style="color:#f92672">&gt;=</span> MAX_STACK)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> StackException(<span style="color:#e6db74">&#34;stack full&#34;</span>);
+</span></span><span style="display:flex;"><span>        items[top<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> x;  <span style="color:#75715e">// 先写入，再把 top 加 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    T<span style="color:#f92672">&amp;</span> pop() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> StackException(<span style="color:#e6db74">&#34;stack empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> items[<span style="color:#f92672">--</span>top];
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 先将 top-1 ，然后返回这个值(顶项值)。下一次push 会占用 top-1，盖掉这个原本的值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> peek() {  <span style="color:#75715e">// 不能改变栈
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (isEmpty())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> StackException(<span style="color:#e6db74">&#34;stack empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> items[top <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>];  <span style="color:#75715e">// 返回顶项指
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>数组栈从底到顶的结构如下：</p>
+<p><code>&lt;底&gt; [i_0, i_1,......, i_n] &lt;顶&gt;,   top=n+1</code></p>
+<ul>
+<li>问题：<strong>容量固定</strong>，可能溢出；可以改用动态数组 <code>std::vector</code>（<code>new T[capacity]</code> 并在满时扩容）</li>
+<li>复习：<code>++x</code> 先自增后调用；<code>x++</code> 先调用后自增</li>
+</ul>
+</br>
+</br>
+<h2 id="链表实现-链栈">链表实现 (链栈)</h2>
+<p>需要实现：指向栈顶的成员指针变量 topPtr、next 指针指向旧节点</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StackNode</span> {  <span style="color:#75715e">// 节点类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T item;
+</span></span><span style="display:flex;"><span>    StackNode <span style="color:#f92672">*</span>next;
+</span></span><span style="display:flex;"><span>    StackNode(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> e <span style="color:#f92672">=</span> T(), StackNode<span style="color:#f92672">*</span> n <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">:</span> item(e), next(n) {}
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Stack</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    StackNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>topPtr;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Stack() <span style="color:#f92672">:</span> topPtr(<span style="color:#66d9ef">nullptr</span>) {}  <span style="color:#75715e">// 初始化：topPtr指向空，链表为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> topPtr <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">auto</span> <span style="color:#f92672">*</span>newPtr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StackNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(x, topPtr);  <span style="color:#75715e">// 自动推导指针类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        topPtr <span style="color:#f92672">=</span> newPtr;  <span style="color:#75715e">// 下一个节点会指向现在的节点：后进先出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> peek() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty()) <span style="color:#66d9ef">throw</span> StackException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> topPtr<span style="color:#f92672">-&gt;</span>item;
+</span></span><span style="display:flex;"><span>    } 
+</span></span><span style="display:flex;"><span>    T<span style="color:#f92672">&amp;</span> pop() {
+</span></span><span style="display:flex;"><span>        T<span style="color:#f92672">&amp;</span> stackTop <span style="color:#f92672">=</span> T();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>isEmpty()) {
+</span></span><span style="display:flex;"><span>	        stackTop <span style="color:#f92672">=</span> topPtr<span style="color:#f92672">-&gt;</span>item;
+</span></span><span style="display:flex;"><span>	        StackNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>tmp <span style="color:#f92672">=</span> topPtr;
+</span></span><span style="display:flex;"><span>	        topPtr <span style="color:#f92672">=</span> topPtr<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>	        <span style="color:#66d9ef">delete</span> tmp;  <span style="color:#75715e">// 将顶项的指针移出了链表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    }
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> stackTop;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><ul>
+<li>
+<p>链栈类似于一个反过来的链表，next 指针朝向老节点，从底到顶结构如下 (N 代表 StackNode)：</p>
+<p><code>&lt;底&gt; N1(nullptr, i1)←N2(&amp;N1, i2)←N3(&amp;N2, i3)←N4(&amp;N3, i4)←...</code></p>
+</li>
+</ul>
+<p><img src="https://i.postimg.cc/dQGRj0Ww/jie-ping2025-11-21-13-44-51.png" alt=""></p>
+</br>
+</br>
+<h2 id="注意点-1">注意点</h2>
+<p>栈一般用于：</p>
+<ul>
+<li><strong>括号</strong>/HTML 标签匹配、<strong>表达式求值</strong>（运算符栈、操作数栈）</li>
+<li><strong>回溯</strong>算法（数独、全排列、路径搜索中的状态回退）
+这些撤销、反推类问题。</li>
+</ul>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="三队列-queuefifo循环数组--链表版">三、队列 Queue：FIFO、循环数组 &amp; 链表版</h1>
+</br>
+<h2 id="抽象定义-2">抽象定义</h2>
+<ul>
+<li>接口：enqueue(x) 入队 (从尾部)、dequeue() 出队 (从头部)、getFront() 查看队头、isEmpty()。</li>
+<li>特性：先进先出 FIFO。类似于水管，先流入的也先流出。常用于排队、任务调度、缓冲区。和栈的明显区别是：首尾双向操作。和栈的相同点：基本操作时间复杂度都是 O(1)。</li>
+</ul>
+</br>
+</br>
+<h2 id="链表实现-带-frontback-指针">链表实现 (带 front/back 指针)</h2>
+<p>需要实现：指向首尾项的成员指针变量——用于插入和踢出、next 指针指向新节点</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QueueNode</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T item;
+</span></span><span style="display:flex;"><span>    QueueNode <span style="color:#f92672">*</span>next;
+</span></span><span style="display:flex;"><span>    QueueNode(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> e <span style="color:#f92672">=</span> T(), QueueNode<span style="color:#f92672">*</span> n <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">:</span> item(e), next(n) {}
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Queue</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    QueueNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>frontPtr;  <span style="color:#75715e">// 双向检索
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    QueueNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>backPtr;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Queue() <span style="color:#f92672">:</span> frontPtr(<span style="color:#66d9ef">nullptr</span>), backPtr(<span style="color:#66d9ef">nullptr</span>) {}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> frontPtr <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">enqueue</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> newPtr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QueueNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(x, <span style="color:#66d9ef">nullptr</span>);  <span style="color:#75715e">// 指向新节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (isEmpty()) frontPtr <span style="color:#f92672">=</span> newPtr;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> backPtr<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> newPtr;  <span style="color:#75715e">// 原本队尾的 next 指向新节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        backPtr <span style="color:#f92672">=</span> newPtr;  <span style="color:#75715e">// 队尾变成这个新节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dequeue</span>() {
+</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">if</span> (isEmpty()) <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> old <span style="color:#f92672">=</span> frontPtr;              <span style="color:#75715e">// 旧队头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    frontPtr <span style="color:#f92672">=</span> frontPtr<span style="color:#f92672">-&gt;</span>next;         <span style="color:#75715e">// 前移指针，将旧队头移出队列范围
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>frontPtr) backPtr <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;  <span style="color:#75715e">// 若队列被删空，把尾指针也置空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    <span style="color:#66d9ef">delete</span> old;                        <span style="color:#75715e">// 释放旧队头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">getFront</span>(T<span style="color:#f92672">&amp;</span> x) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty()) <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">=</span> frontPtr<span style="color:#f92672">-&gt;</span>item;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><ul>
+<li>
+<p>所有基本操作都 O(1)，与栈类似。</p>
+</li>
+<li>
+<p>链队列和链栈不同，是正向的链表，next 指针朝向新节点 (队尾)，从头到尾结构如下 (N 代表 QueueNode)：</p>
+<p><code>&lt;头&gt; N1(&amp;N2, i1)→N2(&amp;N3, i2)→N3(&amp;N4, i3)→N4(nullptr, i4) &lt;尾&gt;</code></p>
+</li>
+</ul>
+<p><img src="https://i.postimg.cc/zDTwFfd5/jie-ping2025-11-21-13-46-05.png" alt=""></p>
+</br>
+</br>
+<h2 id="循环数组实现-顺序队列">循环数组实现 (顺序队列)</h2>
+<p>需要实现：有限数组首尾相连成环，即使数组容量固定也永远<strong>不会溢出</strong>，这样删除队首时就无需整体前移一位，而是在超出索引范围后<strong>绕回 0(数组开头)</strong>。这种数组的<strong>首项位置是不固定</strong>的，如图：</p>
+<p><img src="https://i.postimg.cc/xd4r551N/jie-ping2025-11-21-13-53-10.png" alt=""></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> MAX_QUEUE <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Queue</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T items[MAX_QUEUE];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> front;  <span style="color:#75715e">// 队头下标，注意不一定是 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> back;   <span style="color:#75715e">// 队尾下标
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> count;  <span style="color:#75715e">// 当前元素数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Queue() <span style="color:#f92672">:</span> front(<span style="color:#ae81ff">0</span>), back(MAX_QUEUE<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), count(<span style="color:#ae81ff">0</span>) {}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> count <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">enqueue</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (count <span style="color:#f92672">==</span> MAX_QUEUE) <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;full&#34;</span>);
+</span></span><span style="display:flex;"><span>        back <span style="color:#f92672">=</span> (back <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> MAX_QUEUE;  <span style="color:#75715e">// *核心逻辑*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// back 一旦超出 MAX_QUEUE 就从 0 开始回填，保证索引不溢出 (上一行的 throw Exception 确保这种“回填”绝对不会覆盖掉 front，因为超出 MAX_QUEUE 了)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        items[back] <span style="color:#f92672">=</span> x;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">++</span>count;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dequeue</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        front <span style="color:#f92672">=</span> (front <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> MAX_QUEUE;  <span style="color:#75715e">// 同理，防止索引向负数溢出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">--</span>count;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    T<span style="color:#f92672">&amp;</span> getFront() <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> items[front];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>注意：对于一个长度 1000 的数组，索引在 0～999 范围。因为 dequeue 时数组首项被移出队列范围 (还在数组中)，为了防止 enqueue 到 1000 时索引溢出，用<strong>求余</strong> <code>MAX_QUEUE</code> 实现“<strong>循环数组</strong>”，即数组首尾成环：1000≡0、1001≡1 …。这样就无需 dequeue 时所有元素整体向前移动。所以说，back 完全可能在 front 之前。</p>
+</br>
+</br>
+<h2 id="注意点-2">注意点</h2>
+<ol>
+<li><strong>循环数组下标更新公式</strong>：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>   back <span style="color:#f92672">=</span> (back <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> MAX_QUEUE; <span style="color:#f92672">++</span>count;    <span style="color:#75715e">//  enqueue 扩容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   front <span style="color:#f92672">=</span> (front <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> MAX_QUEUE; <span style="color:#f92672">--</span>count;  <span style="color:#75715e">// dequeue 减容
+</span></span></span></code></pre></div><ol start="2">
+<li>
+<p>链表 vs 数组队列的比较：</p>
+<p>链表不需要固定容量；</p>
+<p>数组实现需处理「满 vs 空」区分问题，但常数因子小。</p>
+</li>
+<li>
+<p>队列一般用于：操作系统任务队列、网络包缓冲队列、打印队列等。</p>
+</li>
+</ol>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="四映射-map键值对哈希函数与桶">四、映射 Map：键值对、哈希函数与桶</h1>
+</br>
+<h2 id="抽象定义-3">抽象定义</h2>
+<ul>
+<li>Map (字典类) 维护一组 (key, value) 键值对。类似于数学中的函数映射，两组元素必须有某种映射关系，<strong>不一定满足双射</strong> (键值对完美一一对应)。</li>
+<li>典型操作：操作符 <code>operator[]</code>：既可插入也可查找；<code>put(key, value)</code>：插入或更新；<code>get(key)</code>：根据 key 查 value；<code>containsKey(key)</code>；<code>remove(key)</code>；<code>size()</code> / <code>isEmpty()</code>。</li>
+</ul>
+<p>在标准 C++ 库中已经存在两种实现方法：</p>
+<ul>
+<li>std::map&lt;K,V&gt;：基于平衡 BST 红黑树，有序；O(log n)。</li>
+<li>std::unordered_map&lt;K,V&gt;：基于HashMap 哈希表，无序；平均 O(1)。</li>
+</ul>
+</br>
+</br>
+<h2 id="向量-动态数组-实现线性查找--二分查找">向量 (动态数组) 实现：线性查找 / 二分查找</h2>
+<p>简单地实现 string → string 映射字典：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">KeyValuePair</span> {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string key;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string value;  <span style="color:#75715e">// 键值对 {key, value}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StringMap</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    StringMap() {}
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">~</span>StringMap() {}
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 构造/析构都没自定义逻辑，vector 类会自己管理元素生命周期
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>string get(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> key) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> findKey(key);  <span style="color:#75715e">// 见 private 域，获取索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> (index <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">:</span> bindings[index].value;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 找不到则返回空字符串
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">put</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> key, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> findKey(key);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (index <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {  <span style="color:#75715e">//  如果当前不存在这个 key
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            KeyValuePair kv{key, value};
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 这是一个在第一行声明的键值对实例，被打包塞进 bindings
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            bindings.push_back(kv);  <span style="color:#75715e">// vector 类的成员方法（插入）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            bindings[index].value <span style="color:#f92672">=</span> value;  <span style="color:#75715e">// 存在就覆盖原本的值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>KeyValuePair<span style="color:#f92672">&gt;</span> bindings;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 用动态数组 bindings 存储键值对 {key, value}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findKey</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> k) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> (<span style="color:#66d9ef">int</span>)bindings.size(); <span style="color:#f92672">++</span>i)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (bindings[i].key <span style="color:#f92672">==</span> k) <span style="color:#66d9ef">return</span> i;  <span style="color:#75715e">// 遍历返回对应索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// 找不到，返回异常状态码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><ul>
+<li>
+<p><code>std::vector</code> 本质是动态数组，用 <code>.size()</code> 看大小；用 <code>.push_back(e)</code> 末尾插入元素 e；用 <code>.value</code> / <code>.key</code> 分别访问键和值</p>
+</li>
+<li>
+<p>bindings 动态数组中存储信息的结构：</p>
+<p><code>std::vector [{key1, value1}, {key2, value2}, ... , {键值对}]</code></p>
+</li>
+<li>
+<p>这个实现<strong>无法满射</strong>，因为 bindings 中 <strong>key 无法重复</strong>，就不能同个 key 对应多个 value；put() 给 已知的 key 新 value 时会直接覆盖就 value</p>
+</li>
+<li>
+<p>这个实现<strong>可以单射</strong>，因为不同 key 可以有相同 value (<strong>value 可以重复</strong>)</p>
+</li>
+<li>
+<p>这段代码的查找/插入都是 O(n)，极其低效，仅用于演示</p>
+</li>
+<li>
+<p>复习：上述代码中出现了用于分情况处理的“<strong>三元运算符</strong>”</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> (index <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">:</span> bindings[index].value;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 核心结构：&lt;cond ? expr1 : expr2&gt;，逻辑：cond 真就传回 expr1；假就传回 expr2
+</span></span></span></code></pre></div></br>
+</br>
+<h2 id="哈希表-unordered_map-实现">哈希表 (unordered_map) 实现</h2>
+<p>哈希表是一个 std 库中用 “哈希函数” 实现映射的方法</p>
+<p>关键思想：</p>
+<ol>
+<li>核心是<strong>哈希函数 hashCode(key)</strong>：把 key 映射为非负整数；取余得到它属于的桶下标：<code>index = hashCode(key) % nBuckets;</code>，如果哈希函数不优质会导致哈希表退化。</li>
+<li><strong>桶</strong>：可以理解为 “一个槽位 + 指向该桶第一个节点的指针” 组成的数组</li>
+<li><strong>链表</strong>：每个节点保存 {key, value, next}；同一桶中的节点通过 next 串起来</li>
+<li>每个桶存一条<strong>链表</strong>（或 vector）来处理<strong>冲突</strong>（separate chaining）</li>
+</ol>
+<p>哈希表的三个部件：</p>
+<ol>
+<li>哈希函数 hashCode(key): 把键映成一个<strong>尽量不相同</strong>的整数。</li>
+<li>桶数组 (bucket array): 固定长度 B 的数组，每个槽位叫“桶”。</li>
+<li><strong>碰撞处理</strong>: 两个不同键被哈希函数映到同一桶时的处理。unordered_map 采用<strong>分离链表 (separate chaining)</strong>：每个桶保存一条小链表。</li>
+</ol>
+</br>
+<p>哈希表的私有域：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StringMap</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Cell</span> {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>string key;
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>string value;  <span style="color:#75715e">// 键值对
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Cell <span style="color:#f92672">*</span>link;  <span style="color:#75715e">// 链指针，指向下个键值对节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    };
+</span></span><span style="display:flex;"><span>    Cell <span style="color:#f92672">**</span>buckets;  <span style="color:#75715e">// 指向桶数组
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> nBuckets;    <span style="color:#75715e">// 桶个数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> count;       <span style="color:#75715e">// 已存 key 数量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Cell<span style="color:#f92672">*</span> <span style="color:#a6e22e">findCell</span>(<span style="color:#66d9ef">int</span> bucket, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> key);
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>哈希表的结构大致为：</p>
+<pre tabindex="0"><code>桶数组 → (键, 值,  next指针)
+[0]   →  (&#34;AR&#34;, &#34;5&#34;, ptr) → (&#34;AK&#34;, ... ) → null
+[1]   →  (&#34;AL&#34;, ... ) → null
+[2]   →  null
+...
+[nBuckets]   →  (&#34;NV&#34;, ... ) → ...
+</code></pre></br>
+</br>
+<h2 id="哈希表-stdunordered_map-的实例化">哈希表 std::unordered_map 的实例化</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unordered_map&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>unordered_map<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> m;  <span style="color:#75715e">// 实例化“字符串→整数”哈希表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m.reserve(<span style="color:#ae81ff">1024</span>);              <span style="color:#75715e">// 预留 1024 个键值对，减少 rehash 频率
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m.max_load_factor(<span style="color:#ae81ff">0.7f</span>);      <span style="color:#75715e">// 限制装载因子，限制桶内链表长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    m.emplace(<span style="color:#e6db74">&#34;alice&#34;</span>, <span style="color:#ae81ff">1</span>);   <span style="color:#75715e">// 等价于 insert({k, v})，不会覆盖存在的键值对
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m[<span style="color:#e6db74">&#34;bob&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;  <span style="color:#75715e">// 这是操作符：operator[](k) = v，会覆盖存在的键值对
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">auto</span> it <span style="color:#f92672">=</span> m.find(<span style="color:#e6db74">&#34;alice&#34;</span>); it <span style="color:#f92672">!=</span> m.end())
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> it<span style="color:#f92672">-&gt;</span>first <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; -&gt; &#34;</span> <span style="color:#f92672">&lt;&lt;</span> it<span style="color:#f92672">-&gt;</span>second <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>size_t bc <span style="color:#f92672">=</span> m.bucket_count();
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>size_t b  <span style="color:#f92672">=</span> m.bucket(<span style="color:#e6db74">&#34;alice&#34;</span>);  <span style="color:#75715e">// &#34;alice&#34; 键被哈希函数放到了哪个桶？
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;bucket_count=&#34;</span> <span style="color:#f92672">&lt;&lt;</span> bc
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;, bucket(alice)=&#34;</span> <span style="color:#f92672">&lt;&lt;</span> b
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;, bucket_size=&#34;</span> <span style="color:#f92672">&lt;&lt;</span> m.bucket_size(b) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>哈希表-键值对结构：<code>unordered_map&lt;first, second&gt;</code></p>
+<p>桶大小与桶扩容 (rehash)：</p>
+<ul>
+<li><code>.size()</code> 代表所有桶中的键值对数量；<code>.bucket_size(i)</code> 代表第 i 个桶的键值对数量；<code>.bucket_count()</code> 代表哈希表数组中桶的个数；<code>.reserve(e)</code> 代表预留 e 个键值对位置</li>
+<li>装载因子=$\frac{.size()}{.bucketcount()}$，就是<strong>每个桶平均装了多少个键值对</strong>。<code>.max_load_factor()</code> 设定最大装载因子，超过时触发 <strong>rehash</strong>：扩容桶数组，重新分配所有 key
+<strong>无论是插入还是查找，都要先用哈希函数推导出对象应该在哪个 bucket</strong>
+插入项目：</li>
+<li>不覆盖：<code>emplace(k, v)</code> 或 <code>insert({k, v})</code></li>
+<li>覆盖：用操作符 <code>operator[](k) = v</code> 比如 <code>map[k]=v</code></li>
+<li>查找项目：<code>.find(k)</code> 按键查找，平均 O(1)。若找到，返回指向该元素的指针；否则等于 <code>.end()</code></li>
+</ul>
+</br>
+</br>
+<h2 id="map-实现方式对比">Map 实现方式对比</h2>
+<ol>
+<li><strong>平衡 BST (std::map)</strong>：(后续再讲具体操作)
+<ul>
+<li>有序（可以按 key 递增遍历）</li>
+<li>操作复杂度：O(log n)</li>
+</ul>
+</li>
+<li><strong>哈希表 (std::unordered_map)</strong>：
+<ul>
+<li>无序，迭代顺序不稳定</li>
+<li>平均 O(1)，最坏 O(n)（当复杂因子超过 0.7，出现大量冲突）</li>
+<li>关键是 hash 函数好坏、负载因子控制</li>
+</ul>
+</li>
+<li>教学用的 <strong>向量 + 线性/二分查找</strong> 实现：
+<ul>
+<li>性能一般（O(n)）</li>
+</ul>
+</li>
+</ol>
+</br>
+</br>
+<h2 id="注意点-3">注意点</h2>
+<ol>
+<li>
+<p><strong>理解哈希表的结构</strong>：</p>
+<p>哈希函数将 key 映射到 bucket 数组的整数下标 → 分配桶 → 装入桶中的链表</p>
+<p>为什么冲突不可避免？不完美的哈希函数和有限的桶，导致不同 key 被映射到同个桶</p>
+</li>
+<li>
+<p><strong>负载因子与 rehash</strong>：</p>
+<p>为什么负载因子大了性能会恶化？链表变长，导致查找/插入功能退化</p>
+<p>rehash 的代价与摊还复杂度</p>
+</li>
+</ol>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="五集合-set集合运算--实现">五、集合 Set：集合运算 &amp; 实现</h1>
+</br>
+<h2 id="抽象定义-4">抽象定义</h2>
+<p>集合是无序、不重复的枚举数据结构。同一组数据，插入到数组 A 和 集合 S 后，可以得到数据的总重复次数：</p>
+<p><code>A.size() - S.size()</code></p>
+<p>集合类的接口：</p>
+<ul>
+<li>add(x) / insert(x)：加入元素；remove(x)：删除元素；contains(x)：是否属于；</li>
+<li>以及数学运算：∪（并）、∩（交）、-（差）。</li>
+</ul>
+</br>
+</br>
+<h2 id="四种实现方式对比">四种实现方式对比</h2>
+<p>你只需要熟练掌握“链集合”的实现方法即可</p>
+</br>
+<h3 id="1-指针-链表-实现">1. 指针 (链表) 实现</h3>
+<ul>
+<li>实现方法类似 LinkedList：可以用占位空节点 (dummyHead)，每个结点对应一个元素，先找到前项再用其 next 指针 remove 后项。两者的区别是<strong>插入前要调用 contains() 防止重复。</strong></li>
+<li>时间：搜索、插入、删除平均 O(n)。
+以下是 contains() + insert() 的 “在头部插入” 实现例：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// 对于 Node {T val; Node* next;}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">contains</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> dummyHead<span style="color:#f92672">-&gt;</span>next; p; p<span style="color:#f92672">=</span>p<span style="color:#f92672">-&gt;</span>next) {  <span style="color:#75715e">// head 代表占位空节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	        <span style="color:#66d9ef">if</span>(p<span style="color:#f92672">-&gt;</span>val<span style="color:#f92672">==</span>x) <span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>	    }
+</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">return</span> false;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {<span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>contains(x)) dummyHead<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(x, dummyHead<span style="color:#f92672">-&gt;</span>next);}  <span style="color:#75715e">// 先查重
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 先将 head-&gt;next 赋给 new Node，然后把 new Node 的指针赋给 head-&gt;next
+</span></span></span></code></pre></div><p>这种“链集合”从头开始的结构如下：</p>
+<p><code>DH(null, &amp;N1)→ &lt;insert 位置&gt; →N1(v1, &amp;N2)→N2(v2, nullptr)</code></p>
+<p><strong>优点</strong>：实现基础简便；对<strong>很小</strong>的集合 (几十个以内)足够；擅长查重。</p>
+<p><strong>缺点</strong>：时间复杂度高、查找慢、指针开销大、缓存 (chache) 对此不太高兴。</p>
+</br>
+<h3 id="2--bst-实现-标准库-stdset">2.  BST 实现 (标准库 std::set)：</h3>
+<ul>
+<li>C++ 中 BST (平衡二叉搜索树)一般用的是“<strong>红黑树</strong>”。</li>
+<li>关键操作 insert/erase/find 平均/最坏都是 O(log n)。</li>
+<li>支持<strong>有序遍历</strong> (中序遍历)。具体如何实现，我们放在树之后阐述</li>
+</ul>
+</br>
+<h3 id="3-哈希函数实现-stdunordered_set">3. 哈希函数实现 (std::unordered_set)：</h3>
+<p><strong>哈希集合</strong>是一个 std 库中用 “哈希函数” 实现集合的方法</p>
+<ul>
+<li>利用哈希函数将键映射到桶；桶内冲突用链表解决。平均 O(1) 插入/删除/查找，最坏 O(n)（装载因子过高，哈希退化）</li>
+<li>不保证顺序；需要良好的哈希函数和 rehash 机制控制负载因子。
+以下是实例化哈希集合，实现<strong>储存”点“的集合</strong>：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unordered_set&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Point</span> { <span style="color:#66d9ef">int</span> x,y; };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">PointHash</span> {  <span style="color:#75715e">// 哈希函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    size_t <span style="color:#a6e22e">operator</span>()(<span style="color:#66d9ef">const</span> Point<span style="color:#f92672">&amp;</span> p) <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">noexcept</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 把 x,y 混合成一个 64 位数，也就是把 Point 映射成 size_t
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> std<span style="color:#f92672">::</span>hash<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span><span style="color:#f92672">&gt;</span>()(( (<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span>)p.x<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">32</span> ) <span style="color:#f92672">^</span> (<span style="color:#66d9ef">unsigned</span>)p.y);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">PointEq</span> {  <span style="color:#75715e">// 相等比较函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">operator</span>()(<span style="color:#66d9ef">const</span> Point<span style="color:#f92672">&amp;</span> a, <span style="color:#66d9ef">const</span> Point<span style="color:#f92672">&amp;</span> b) <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">noexcept</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> a.x<span style="color:#f92672">==</span>b.x <span style="color:#f92672">&amp;&amp;</span> a.y<span style="color:#f92672">==</span>b.y;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>unordered_set<span style="color:#f92672">&lt;</span>Point, PointHash, PointEq<span style="color:#f92672">&gt;</span> us;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// unordered_set 要求进入其中的类型传入”元素、哈希函数、比较相等函数“
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>us.reserve(<span style="color:#ae81ff">1024</span>);  <span style="color:#75715e">// 预留 1024 个点位，减少 rehash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>us.insert(Point{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>});
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> has <span style="color:#f92672">=</span> us.find(Point{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>}) <span style="color:#f92672">!=</span> us.end();  
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 判断找到的指针不等于空，返回 true
+</span></span></span></code></pre></div><p>哈希集合的三个部件：</p>
+<ol>
+<li>自定义的存储元素类型</li>
+<li>优质的哈希函数</li>
+<li>判断两个元素相等的方法</li>
+</ol>
+<p><strong>优点</strong>：大多数场景下<strong>最快的成员查询</strong> (判断是否属于集合)；不关心顺序。</p>
+<p><strong>缺点</strong>：无序；对哈希函数的质量敏感；再哈希会使迭代器失效；内存碎片化。</p>
+<p>何时选它：主要优势是在数据规模大时“<strong>判断是否在集合里</strong>”，不需要顺序。</p>
+</br>
+<h3 id="4-位向量集合-stdbitset-与集合运算">4. 位向量集合 (std::bitset) 与集合运算：</h3>
+<ul>
+<li>当元素的“取值域”是<strong>有限且可编号</strong>的 (如 ASCII 字符、小范围的整数)，就可以用 <strong>1 bit 表示一个元素是否属于集合</strong>：1 表示在集合中，0 表示不在。把这一整排 bit 组成的数就叫<strong>特征向量 (characteristic vector) 或位向量</strong>。这样，集合运算就能退化为<strong>整数位运算</strong>，用 bit 运算完成集合运算——并：A | B ；交：A &amp; B；差：A &amp; ~B。速度极快针对「小整数 / 字符集」特别高效。注意<strong>位运算是从右到左</strong>的，如图：</li>
+</ul>
+<p><img src="https://i.postimg.cc/vmLhHHpV/jie-ping2025-11-21-14-08-12.png" alt=""></p>
+<ul>
+<li>
+<p>单元素操作 O(1)；批量并/交/差为 <strong>O(n/word_size)</strong>。</p>
+<p>以下是实例化位向量，实现集合运算（固定上界，用 <code>std::bitset&lt;N&gt;</code> 表示 <code>[0,N-1]</code>）：</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bitset&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>bitset<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1000</span><span style="color:#f92672">&gt;</span> A, B;  <span style="color:#75715e">// std::bitset 不可以在之后运算时扩容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>A.set(<span style="color:#ae81ff">3</span>); A.set(<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> has3 <span style="color:#f92672">=</span> A.test(<span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>A.reset(<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> C <span style="color:#f92672">=</span> A <span style="color:#f92672">&amp;</span> B;        <span style="color:#75715e">// 交集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> D <span style="color:#f92672">=</span> A <span style="color:#f92672">|</span> B;        <span style="color:#75715e">// 并集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> E <span style="color:#f92672">=</span> A <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>B;       <span style="color:#75715e">// 差集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> F <span style="color:#f92672">=</span> A <span style="color:#f92672">^</span> B         <span style="color:#75715e">// 异或
+</span></span></span></code></pre></div><p>位操作：</p>
+<ul>
+<li>置 1：<code>.set(index)</code>，将集合第 index 位变成 1，<strong>囊括</strong>到集合；无参数则全集合变 1</li>
+<li>置 0：<code>.set(index)</code>，将集合第 index 位变成 0，<strong>剔除</strong>出集合；无参数则全集合变 0</li>
+<li>运算符 <code>operator[](index)</code>：<code>bitSet[index] = bin</code>，将 第 index 位向量变成 bin</li>
+<li>数 1：<code>.count()</code>，计算集合有多少元素 (有多少 1)</li>
+</ul>
+</br>
+<p>以下是从零开始实现位向量集合的示例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> BITS_PER_BYTE <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> BITS_PER_LONG <span style="color:#f92672">=</span> BITS_PER_BYTE <span style="color:#f92672">*</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">long</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> requiredWords <span style="color:#f92672">=</span> (RANGE_SIZE <span style="color:#f92672">+</span> BITS_PER_LONG <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> BITS_PER_LONG;  <span style="color:#75715e">// ceil(R/W) = (R+W-1)/W 是向上取整的标准形式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// requiredWords：大小为 RANGE_SIZE 的集合需要多少长整数来储存其特征向量？
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">CharacteristicVector</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> words[requiredWords];
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 定义”无符号长整数型“数组 words 及其容量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">createMask</span>(<span style="color:#66d9ef">int</span> k) {  
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//  第 k 位掩码：只有第 k 位是 1。与它进行 AND 操作会只剩下第 k “向量维度”
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>(<span style="color:#ae81ff">1</span>) <span style="color:#f92672">&lt;&lt;</span> k <span style="color:#f92672">%</span> BITS_PER_LONG;
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 强制转化 1 为长整型，然后左移 ”k 在所属 long 中的位数“，创造掩码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">testBit</span>(CharacteristicVector <span style="color:#f92672">&amp;</span> cv, <span style="color:#66d9ef">int</span> k) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> k <span style="color:#f92672">&gt;=</span> RANGE_SIZE) {
+</span></span><span style="display:flex;"><span>       error(<span style="color:#e6db74">&#34;testBit: Bit index is out of range&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> cv.words[k <span style="color:#f92672">/</span> BITS_PER_LONG] <span style="color:#f92672">&amp;</span> createMask(k);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 如果整个数组的第 k bit 为 1 就返回真
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setBit</span>(CharacteristicVector <span style="color:#f92672">&amp;</span> cv, <span style="color:#66d9ef">int</span> k) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> k <span style="color:#f92672">&gt;=</span> RANGE_SIZE) {
+</span></span><span style="display:flex;"><span>      error(<span style="color:#e6db74">&#34;setBit: Bit index is out of range&#34;</span>);
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   cv.words[k <span style="color:#f92672">/</span> BITS_PER_LONG] <span style="color:#f92672">|=</span> createMask(k);
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 将第 k bit 所在的那个 long 替换成它 OR 第 k 位掩码，也就是把它变 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearBit</span>(CharacteristicVector <span style="color:#f92672">&amp;</span> cv, <span style="color:#66d9ef">int</span> k) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> k <span style="color:#f92672">&gt;=</span> RANGE_SIZE) {
+</span></span><span style="display:flex;"><span>      error(<span style="color:#e6db74">&#34;setBit: Bit index is out of range&#34;</span>);
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   cv.words[k <span style="color:#f92672">/</span> BITS_PER_LONG] <span style="color:#f92672">&amp;=</span> <span style="color:#f92672">~</span>createMask(k);
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 将第 k bit 所在的那个 long 替换成它 AND 第 k 位掩码的否定，也就是把它变 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><ul>
+<li>unsigned long 的长度是 32 或 64 bit，取决于计算机。复习：long() 是强制转换类型为 long 的意思，对字符(串)无效。</li>
+<li>复习：向上取整 <code>ceil(A/B)=(A+B-1)/B</code>，向下取整 <code>floor(A/B)=(A-B+1)/B</code></li>
+<li>这段代码的核心是“<strong>掩码</strong>”的概念：一个通过 AND 操作掩盖掉无关的位的数。</li>
+</ul>
+<p><img src="https://i.postimg.cc/nLFxLMCN/jie-ping2025-11-21-14-19-30.png" alt=""></p>
+<ul>
+<li>
+<p>在 bitwise calculation 的语境下，<strong>数字是从右往左读的</strong>，比如 long(3) 是 ”000…011“， <code>long(3) &lt;&lt; 2</code> 是 ”000…01100“，同理 ”<strong>置 5</strong>“ 就是 <code>long(1) &lt;&lt; 5</code></p>
+</li>
+<li>
+<p><code>k/BITS_PER_LONG</code> 和 <code>k%BITS_PER_LONG</code> 分别返回 ”k 在第几个 long 里？“ 和 ”k 在所属 long 的第几位？“</p>
+</li>
+<li>
+<p><code>words[]</code> 的<strong>所有</strong>长整型元素代表了<strong>一个</strong>集合的<strong>特征向量</strong>，它们各自都包含 <code>BITS_PER_LONG</code> 个 bit 的二进制信息。</p>
+</li>
+</ul>
+<p><strong>优点</strong>：<strong>极快、极省内存</strong> (每元素 1 bit)；批量运算高效；适合<strong>字符集、稠密小整数集</strong>、图算法的“访问标记”。</p>
+<p><strong>缺点</strong>：需要<strong>已知且不太大的域上界</strong>；<code>std::bitset&lt;N&gt;</code> 的 N 必须是<strong>编译期常量</strong>；动态范围需用 <code>vector&lt;uint64_t&gt;</code> 或 boost::dynamic_bitset。</p>
+<p>何时选它：元素是<strong>小范围整数</strong>（如 0..10^6 内）且集合运算很多；或需要极快的成员测试与批量并/交。</p>
+</br>
+</br>
+<h2 id="注意点-4">注意点</h2>
+<ol>
+<li>
+<p><strong>理解不同实现的时间复杂度、是否有序</strong>：</p>
+<p>set vs unordered_set vs 位向量。</p>
+</li>
+<li>
+<p>能把<strong>数学集合运算</strong>映射到实际代码：</p>
+<p>用 bit 运算写 union/intersection/difference。</p>
+</li>
+<li>
+<p>知道为什么 bitset 对「字符集合、少量小整数集合」非常高效。</p>
+</li>
+</ol>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3200/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3200</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.f1/">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

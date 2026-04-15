@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Bohr-Style Periodic Table</title>
+  <link rel="stylesheet" href="element_hues.css" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0b1020;
+      --bg-alt: #151a2b;
+      --fg: #f7f7ff;
+      --muted: #a5adc6;
+      --accent: #4fc3f7;
+      --accent-soft: rgba(79, 195, 247, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      /* 略微减小元素格子尺寸，让整张表在常见屏幕高度下一屏可见 */
+      --tile-size: 2.2rem;
+      --transition-fast: 120ms ease-out;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: auto;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top left, #202849, #050814 55%, #000 100%);
+      color: var(--fg);
+      padding: 1.5rem;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      background: linear-gradient(145deg, rgba(15, 20, 40, 0.98), rgba(6, 10, 26, 0.98));
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: var(--shadow-soft);
+      padding: 1.25rem 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      backdrop-filter: blur(14px) saturate(140%);
+    }
+
+    header.app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.6rem;
+    }
+
+    .title-block h1 {
+      font-size: 1.25rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .title-block p {
+      margin-top: 0.2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .meta-badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 195, 247, 0.7);
+      color: var(--accent);
+      background: radial-gradient(circle at top left, rgba(79, 195, 247, 0.18), transparent 55%);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: nowrap;
+    }
+
+    .meta-badge span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4fc3f7;
+      box-shadow: 0 0 9px rgba(79, 195, 247, 0.9);
+    }
+
+    main.layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(260px, 0.7fr);
+      /* 两行高度都由内容决定，允许整个页面垂直滚动 */
+      grid-template-rows: auto auto;
+      gap: 0.9rem;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .panel-ptable {
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      /* 让高度由内容自然决定，避免额外撑高造成整屏看不到底部行 */
+      padding-bottom: 1.0rem;
+    }
+
+    .panel-bohr {
+      grid-column: 2 / 3;
+      grid-row: 1 / 2;
+    }
+
+    .panel-notes {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+    }
+
+    .panel-extra {
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .extra-stack {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .extra-box {
+      flex: 1;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(40, 60, 100, 0.4), rgba(5, 8, 18, 0.96));
+      padding: 0.55rem 0.7rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 960px) {
+      main.layout {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto auto;
+      }
+
+      .panel-ptable,
+      .panel-bohr,
+      .panel-notes,
+      .panel-extra {
+        grid-column: 1 / 2;
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(27, 35, 65, 0.95), rgba(10, 14, 33, 0.96));
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.9rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      min-height: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .panel-header h2 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .panel-tabs {
+      display: inline-flex;
+      gap: 0.3rem;
+      background: rgba(5, 8, 18, 0.85);
+      padding: 0.16rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .panel-tab {
+      font-size: 0.7rem;
+      padding: 0.16rem 0.55rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .panel-tab.active {
+      background: rgba(79, 195, 247, 0.18);
+      color: var(--accent);
+    }
+
+    /* Thermal sub-modes: m.p. / b.p. / temp. bar */
+    .thermal-controls {
+      margin-top: 0.3rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .thermal-controls.active {
+      display: flex;
+    }
+
+    .thermal-subtabs {
+      display: inline-flex;
+      gap: 0.25rem;
+      background: rgba(5, 8, 18, 0.85);
+      padding: 0.12rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .thermal-tab {
+      font-size: 0.68rem;
+      padding: 0.14rem 0.5rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .thermal-tab.active {
+      background: rgba(255, 255, 255, 0.09);
+      color: #ffe082;
+    }
+
+    .thermal-bar {
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.15rem;
+    }
+
+    .thermal-bar.active {
+      display: flex;
+    }
+
+    .thermal-play {
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(5, 8, 18, 0.9);
+      color: var(--fg);
+      border-radius: 999px;
+      width: 1.6rem;
+      height: 1.35rem;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .thermal-slider {
+      flex: 1;
+      accent-color: #ffb74d;
+    }
+
+    .thermal-temp-label {
+      min-width: 4.2rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Periodic table grid */
+    .ptable-wrapper {
+      position: relative;
+      overflow-x: auto;
+      overflow-y: visible;
+      padding: 0.25rem 0.1rem 0.15rem;
+    }
+
+    .ptable-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(18, minmax(2rem, var(--tile-size)));
+      grid-auto-rows: var(--tile-size);
+      gap: 0.08rem;
+      justify-content: center;
+      padding-bottom: 0.15rem;
+      min-width: max-content;
+      font-size: 0.7rem;
+    }
+
+    .mode-legend {
+      display: none;
+      margin: 0.2rem 0 0.1rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .mode-legend.active {
+      display: block;
+    }
+
+    .legend-title {
+      margin-bottom: 0.12rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .legend-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .legend-gradient-wrap {
+      position: relative;
+      flex: 1;
+      height: 0.9rem;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .legend-gradient {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.05rem;
+      height: 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      /* multi-stop blue→cyan→green→yellow→red to match tile colors */
+      background: linear-gradient(
+        90deg,
+        hsl(230, 70%, 62%),
+        hsl(200, 70%, 60%),
+        hsl(140, 70%, 60%),
+        hsl(60, 80%, 60%),
+        hsl(15, 80%, 42%)
+      );
+    }
+
+    .legend-ticks {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.80rem;
+      display: none;
+      align-items: flex-end;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .legend-tick {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.55rem;
+      color: var(--muted);
+    }
+
+    .legend-tick-line {
+      width: 1px;
+      height: 0.28rem;
+      background: rgba(255, 255, 255, 0.75);
+      margin-bottom: 0.02rem;
+    }
+
+    .legend-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .legend-categories {
+      display: none;
+      margin-top: 0.18rem;
+      display: none;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      font-size: 0.65rem;
+    }
+
+    .legend-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.18rem;
+      padding: 0.05rem 0.4rem;
+      border-radius: 999px;
+      background: rgba(5, 8, 18, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .legend-swatch {
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 999px;
+      background: #888;
+    }
+
+    .legend-swatch.alkali {
+      background: linear-gradient(135deg,#ef5350,#c62828);
+    }
+
+    .legend-swatch.alkaline {
+      background: linear-gradient(135deg,#ffb74d,#fb8c00);
+    }
+
+    .legend-swatch.dblock {
+      background: linear-gradient(135deg,#64b5f6,#1976d2);
+    }
+
+    .legend-swatch.pblock {
+      background: linear-gradient(135deg,#4db6ac,#00796b);
+    }
+
+    .legend-swatch.platinum {
+      background: linear-gradient(135deg,#fff59d,#ffca28);
+    }
+
+    .legend-swatch.lanthanide {
+      background: linear-gradient(135deg,#b39ddb,#5e35b1);
+    }
+
+    .legend-swatch.postzn {
+      background: linear-gradient(135deg,#5c6bc0,#283593);
+    }
+
+    .legend-swatch.semi {
+      background: linear-gradient(135deg,#d7b68a,#a6763e);
+    }
+
+    .legend-swatch.noble {
+      background: linear-gradient(135deg,#b3e5fc,#29b6f6);
+    }
+
+    .legend-swatch.halogen {
+      background: linear-gradient(135deg,#ce93d8,#8e24aa);
+    }
+
+    .legend-swatch.nonmetal {
+      background: linear-gradient(135deg,#81c784,#2e7d32);
+    }
+
+    .legend {
+      display: none;
+    }
+
+    /* Element tiles */
+    .el-tile {
+      position: relative;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.1), transparent 55%),
+                  radial-gradient(circle at 100% 120%, rgba(79, 195, 247, 0.18), rgba(3, 8, 20, 0.96));
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+      padding: 0.22rem 0.25rem 0.25rem;
+      cursor: pointer;
+      transition: transform var(--transition-fast),
+                  box-shadow var(--transition-fast),
+                  border-color var(--transition-fast),
+                  background 160ms ease-out;
+      overflow: hidden;
+    }
+
+    /* 金属光泽：左上高光、右下阴影的叠加层（仅 Hue 模式下启用） */
+    .mode-hue .el-tile.metallic::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.5) 26%,
+        rgba(255, 255, 255, 0.1) 46%,
+        rgba(0, 0, 0, 0.32) 72%,
+        rgba(0, 0, 0, 0.7) 100%
+      );
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .mode-hue .el-tile.metallic::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: radial-gradient(circle at 130% 130%, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.55) 32%, rgba(0, 0, 0, 0) 70%);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    /* 半径模式下只看圆，不要金属高光叠加避免干扰 */
+    .el-tile.metallic.radius-mode::before,
+    .el-tile.metallic.radius-mode::after {
+      display: none;
+    }
+
+    .el-tile.small {
+      font-size: 0.6rem;
+    }
+
+    .el-tile.selected {
+      border-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55), 0 16px 30px rgba(0, 0, 0, 0.65);
+      transform: translateY(-2px);
+    }
+
+    /* Atomic radius 模式下：只保留圆形，去掉深色背景框 */
+    .el-tile.radius-mode {
+      background: transparent !important;
+      box-shadow: none;
+    }
+
+    .el-tile.locked {
+      border-color: #3eff47;
+      border-width: 2px;
+      box-shadow: 0 0 0 2px #3eff47, 0 20px 36px rgba(0, 0, 0, 0.78);
+    }
+
+    .el-tile:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+      border-color: rgba(79, 195, 247, 0.9);
+    }
+
+    /* 锁定的元素在悬浮时仍保持绿色粗框 */
+    .el-tile.locked:hover {
+      border-color: #3eff47;
+      border-width: 2px;
+      box-shadow: 0 0 0 2px #3eff47, 0 20px 36px rgba(0, 0, 0, 0.78);
+    }
+
+    .el-inner {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      align-items: center;
+    }
+
+    .radius-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.1));
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 0 10px 22px rgba(0, 0, 0, 0.7);
+      pointer-events: none;
+      display: none;
+      opacity: 0.96;
+    }
+
+    .el-tile.radius-mode .el-inner {
+      opacity: 0;
+    }
+
+    .el-tile.radius-mode .radius-circle {
+      display: block;
+    }
+
+    .el-atomic {
+      font-size: 0.55rem;
+      color: #000;
+      text-align: right;
+    }
+
+    .el-symbol {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+
+    .row-label {
+      align-self: center;
+      justify-self: end;
+      opacity: 0.55;
+      font-size: 0.62rem;
+      padding-right: 0.2rem;
+      color: var(--muted);
+    }
+
+    .block-label {
+      grid-column: 1 / -1;
+      font-size: 0.6rem;
+      text-align: left;
+      color: var(--muted);
+      padding-top: 0.3rem;
+      opacity: 0.7;
+    }
+
+    /* Right panel */
+    .info-body {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 0.5rem;
+      min-height: 0;
+    }
+
+    .info-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+
+    .info-main-title {
+      display: flex;
+      flex-direction: column;
+      gap: 0.08rem;
+    }
+
+    .info-main-title .symbol {
+      font-size: 1.8rem;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .info-main-title .name {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .info-atomic {
+      text-align: right;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .info-atomic span.num {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--fg);
+    }
+
+    .bohr-wrapper {
+      position: relative;
+      border-radius: 14px;
+      background: radial-gradient(circle at 0 0, rgba(79, 195, 247, 0.22), transparent 50%),
+                  radial-gradient(circle at 100% 100%, rgba(233, 30, 99, 0.26), rgba(3, 7, 18, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.5rem;
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .bohr-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    #bohr-svg {
+      width: 100%;
+      max-width: 260px;
+      height: auto;
+      display: block;
+    }
+
+    .bohr-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .bohr-meta strong {
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    .bohr-shells {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.28rem;
+      margin-top: 0.2rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .chip {
+      padding: 0.14rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(5, 9, 20, 0.9);
+    }
+
+    .bohr-extra {
+      margin-top: 0.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .valence-line {
+      color: var(--fg);
+    }
+
+    .oxidation-main {
+      color: #3eff47;
+    }
+
+    .footer-note {
+      font-size: 0.66rem;
+      color: var(--muted);
+      opacity: 0.85;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .footer-note a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+
+    .notes-body {
+      flex: 1;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+      padding-top: 0.2rem;
+    }
+
+    .pt-tooltip {
+      position: fixed;
+      z-index: 9999;
+      padding: 0.16rem 0.4rem;
+      border-radius: 4px;
+      background: #fdfdfd;
+      color: #111;
+      font-size: 0.7rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      pointer-events: none;
+      max-width: 220px;
+      line-height: 1.4;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="title-block">
+        <h1>Periodic Visualization of Elements</h1>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel panel-ptable" aria-label="Periodic Table">
+        <div class="panel-header">
+          <h2>Periodic Table</h2>
+          <div class="panel-tabs" aria-label="Color encoding mode">
+            <button type="button" class="panel-tab" data-mode="names">Grouping</button>
+            <button type="button" class="panel-tab" data-mode="en">Electronegativity</button>
+            <button type="button" class="panel-tab" data-mode="ionization">1st Ionization</button>
+            <button type="button" class="panel-tab" data-mode="radius">Atomic radius</button>
+            <button type="button" class="panel-tab" data-mode="melting">m./b. point</button>
+            <button type="button" class="panel-tab" data-mode="crust">Crust abundance</button>
+            <button type="button" class="panel-tab active" data-mode="hue">Hue</button>
+          </div>
+        </div>
+        <div class="mode-legend" id="mode-legend" aria-hidden="true">
+          <div class="legend-title" id="legend-title"></div>
+          <div class="legend-bar">
+            <span class="legend-label" id="legend-min-label"></span>
+            <div class="legend-gradient-wrap">
+              <div class="legend-gradient" id="legend-gradient"></div>
+              <div class="legend-ticks" id="legend-ticks"></div>
+            </div>
+            <span class="legend-label" id="legend-max-label"></span>
+          </div>
+          <div class="legend-categories" id="legend-categories">
+            <div class="legend-chip"><span class="legend-swatch alkali"></span><span>Alkali Metals</span></div>
+            <div class="legend-chip"><span class="legend-swatch alkaline"></span><span>Alkaline Earth Metals</span></div>
+            <div class="legend-chip"><span class="legend-swatch dblock"></span><span>Transition D-block Metals</span></div>
+            <div class="legend-chip"><span class="legend-swatch pblock"></span><span>P-block Metals</span></div>
+            <div class="legend-chip"><span class="legend-swatch platinum"></span><span>Platinum Group</span></div>
+            <div class="legend-chip"><span class="legend-swatch lanthanide"></span><span>Lanthanides</span></div>
+            <div class="legend-chip"><span class="legend-swatch postzn"></span><span>Post-Transition D-block Metals</span></div>
+            <div class="legend-chip"><span class="legend-swatch semi"></span><span>Semi Metals</span></div>
+            <div class="legend-chip"><span class="legend-swatch noble"></span><span>Noble Gases</span></div>
+            <div class="legend-chip"><span class="legend-swatch halogen"></span><span>Halogens</span></div>
+            <div class="legend-chip"><span class="legend-swatch nonmetal"></span><span>Non-halogen Nonmetals</span></div>
+          </div>
+        </div>
+        <div class="ptable-wrapper">
+          <div id="ptable" class="ptable-grid" aria-label="Periodic table grid"></div>
+        </div>
+        <div class="thermal-controls" id="thermal-controls" aria-hidden="true">
+          <div class="thermal-subtabs" id="thermal-subtabs">
+            <button type="button" class="thermal-tab active" data-thermal="mp">m.p.</button>
+            <button type="button" class="thermal-tab" data-thermal="bp">b.p.</button>
+            <button type="button" class="thermal-tab" data-thermal="bar">temp. bar</button>
+          </div>
+          <div class="thermal-bar" id="thermal-bar">
+            <button type="button" class="thermal-play" id="thermal-play" aria-label="Play/pause temperature animation">▶</button>
+            <input type="range" class="thermal-slider" id="thermal-slider" min="-273" max="5700" step="1" />
+            <div class="thermal-temp-label"><span id="thermal-temp-value"></span> °C</div>
+          </div>
+        </div>
+      </section>
+      <section class="panel panel-bohr" aria-label="Bohr model details">
+        <div class="panel-header">
+          <h2>Bohr Shell Diagram</h2>
+        </div>
+        <div class="info-body">
+          <div class="info-header">
+            <div class="info-main-title">
+              <span class="symbol" id="info-symbol">H</span>
+              <span class="name" id="info-name">Hydrogen</span>
+            </div>
+            <div class="info-atomic">
+              Z = <span class="num" id="info-z">1</span>
+              <div id="info-meta-small">Period 1 · Group 1</div>
+            </div>
+          </div>
+
+          <div class="bohr-wrapper">
+            <svg id="bohr-svg" viewBox="0 0 200 200" role="img" aria-label="Bohr model diagram"></svg>
+          </div>
+
+          <div>
+            <div class="bohr-meta">
+              <div>
+                Shell configuration:
+                <strong class="bohr-shells" id="info-shells">1</strong>
+              </div>
+              <div id="info-electrons">Electrons: 1</div>
+            </div>
+            <div class="bohr-extra">
+              <div class="valence-line">
+                Valence:
+                <span id="info-valence">—</span>
+              </div>
+              <div class="valence-line">
+                Oxidation states:
+                <span id="info-oxidation">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">
+          <span>Only listed calculable integer oxidation states.</span>
+        </div>
+      </section>
+
+      <section class="panel panel-notes" aria-label="Element notes">
+        <div class="panel-header">
+          <h2>Element Notes</h2>
+        </div>
+        <div class="notes-body" id="notes-body">
+          <!-- TODO: 这里可以写每个元素的简介或课堂重点 -->
+        </div>
+      </section>
+
+      <section class="panel panel-extra" aria-label="Extra panels">
+        <div class="panel-header">
+          <h2>Extra</h2>
+        </div>
+        <div class="extra-stack">
+          <div class="extra-box">
+            <!-- TODO: 上方小框，可以放课堂问题、练习等 -->
+          </div>
+          <div class="extra-box">
+            <!-- TODO: 下方小框，可以放备注、链接等 -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="pt-tooltip" class="pt-tooltip" role="tooltip"></div>
+
+  <script>
+    // --- Basic element data (Z, symbol, name, grid x/y, block) ---
+    // Grid is 18 columns; y is table row (1–8 for lanthanides).
+    const ELEMENTS = [
+      // Row 1
+      { z: 1, symbol: "H",  name: "Hydrogen",       x: 1,  y: 1, block: "s", period: 1, group: 1 },
+      { z: 2, symbol: "He", name: "Helium",         x: 18, y: 1, block: "p", period: 1, group: 18 },
+      // Row 2
+      { z: 3, symbol: "Li", name: "Lithium",        x: 1,  y: 2, block: "s", period: 2, group: 1 },
+      { z: 4, symbol: "Be", name: "Beryllium",      x: 2,  y: 2, block: "s", period: 2, group: 2 },
+      { z: 5, symbol: "B",  name: "Boron",          x: 13, y: 2, block: "p", period: 2, group: 13 },
+      { z: 6, symbol: "C",  name: "Carbon",         x: 14, y: 2, block: "p", period: 2, group: 14 },
+      { z: 7, symbol: "N",  name: "Nitrogen",       x: 15, y: 2, block: "p", period: 2, group: 15 },
+      { z: 8, symbol: "O",  name: "Oxygen",         x: 16, y: 2, block: "p", period: 2, group: 16 },
+      { z: 9, symbol: "F",  name: "Fluorine",       x: 17, y: 2, block: "p", period: 2, group: 17 },
+      { z: 10,symbol: "Ne", name: "Neon",           x: 18, y: 2, block: "p", period: 2, group: 18 },
+      // Row 3
+      { z: 11,symbol: "Na", name: "Sodium",         x: 1,  y: 3, block: "s", period: 3, group: 1 },
+      { z: 12,symbol: "Mg", name: "Magnesium",      x: 2,  y: 3, block: "s", period: 3, group: 2 },
+      { z: 13,symbol: "Al", name: "Aluminium",      x: 13, y: 3, block: "p", period: 3, group: 13 },
+      { z: 14,symbol: "Si", name: "Silicon",        x: 14, y: 3, block: "p", period: 3, group: 14 },
+      { z: 15,symbol: "P",  name: "Phosphorus",     x: 15, y: 3, block: "p", period: 3, group: 15 },
+      { z: 16,symbol: "S",  name: "Sulfur",         x: 16, y: 3, block: "p", period: 3, group: 16 },
+      { z: 17,symbol: "Cl", name: "Chlorine",       x: 17, y: 3, block: "p", period: 3, group: 17 },
+      { z: 18,symbol: "Ar", name: "Argon",          x: 18, y: 3, block: "p", period: 3, group: 18 },
+      // Row 4
+      { z: 19,symbol: "K",  name: "Potassium",      x: 1,  y: 4, block: "s", period: 4, group: 1 },
+      { z: 20,symbol: "Ca", name: "Calcium",        x: 2,  y: 4, block: "s", period: 4, group: 2 },
+      { z: 21,symbol: "Sc", name: "Scandium",       x: 3,  y: 4, block: "d", period: 4, group: 3 },
+      { z: 22,symbol: "Ti", name: "Titanium",       x: 4,  y: 4, block: "d", period: 4, group: 4 },
+      { z: 23,symbol: "V",  name: "Vanadium",       x: 5,  y: 4, block: "d", period: 4, group: 5 },
+      { z: 24,symbol: "Cr", name: "Chromium",       x: 6,  y: 4, block: "d", period: 4, group: 6 },
+      { z: 25,symbol: "Mn", name: "Manganese",      x: 7,  y: 4, block: "d", period: 4, group: 7 },
+      { z: 26,symbol: "Fe", name: "Iron",           x: 8,  y: 4, block: "d", period: 4, group: 8 },
+      { z: 27,symbol: "Co", name: "Cobalt",         x: 9,  y: 4, block: "d", period: 4, group: 9 },
+      { z: 28,symbol: "Ni", name: "Nickel",         x: 10, y: 4, block: "d", period: 4, group: 10 },
+      { z: 29,symbol: "Cu", name: "Copper",         x: 11, y: 4, block: "d", period: 4, group: 11 },
+      { z: 30,symbol: "Zn", name: "Zinc",           x: 12, y: 4, block: "d", period: 4, group: 12 },
+      { z: 31,symbol: "Ga", name: "Gallium",        x: 13, y: 4, block: "p", period: 4, group: 13 },
+      { z: 32,symbol: "Ge", name: "Germanium",      x: 14, y: 4, block: "p", period: 4, group: 14 },
+      { z: 33,symbol: "As", name: "Arsenic",        x: 15, y: 4, block: "p", period: 4, group: 15 },
+      { z: 34,symbol: "Se", name: "Selenium",       x: 16, y: 4, block: "p", period: 4, group: 16 },
+      { z: 35,symbol: "Br", name: "Bromine",        x: 17, y: 4, block: "p", period: 4, group: 17 },
+      { z: 36,symbol: "Kr", name: "Krypton",        x: 18, y: 4, block: "p", period: 4, group: 18 },
+      // Row 5
+      { z: 37,symbol: "Rb", name: "Rubidium",       x: 1,  y: 5, block: "s", period: 5, group: 1 },
+      { z: 38,symbol: "Sr", name: "Strontium",      x: 2,  y: 5, block: "s", period: 5, group: 2 },
+      { z: 39,symbol: "Y",  name: "Yttrium",        x: 3,  y: 5, block: "d", period: 5, group: 3 },
+      { z: 40,symbol: "Zr", name: "Zirconium",      x: 4,  y: 5, block: "d", period: 5, group: 4 },
+      { z: 41,symbol: "Nb", name: "Niobium",        x: 5,  y: 5, block: "d", period: 5, group: 5 },
+      { z: 42,symbol: "Mo", name: "Molybdenum",     x: 6,  y: 5, block: "d", period: 5, group: 6 },
+      { z: 43,symbol: "Tc", name: "Technetium",     x: 7,  y: 5, block: "d", period: 5, group: 7 },
+      { z: 44,symbol: "Ru", name: "Ruthenium",      x: 8,  y: 5, block: "d", period: 5, group: 8 },
+      { z: 45,symbol: "Rh", name: "Rhodium",        x: 9,  y: 5, block: "d", period: 5, group: 9 },
+      { z: 46,symbol: "Pd", name: "Palladium",      x: 10, y: 5, block: "d", period: 5, group: 10 },
+      { z: 47,symbol: "Ag", name: "Silver",         x: 11, y: 5, block: "d", period: 5, group: 11 },
+      { z: 48,symbol: "Cd", name: "Cadmium",        x: 12, y: 5, block: "d", period: 5, group: 12 },
+      { z: 49,symbol: "In", name: "Indium",         x: 13, y: 5, block: "p", period: 5, group: 13 },
+      { z: 50,symbol: "Sn", name: "Tin",            x: 14, y: 5, block: "p", period: 5, group: 14 },
+      { z: 51,symbol: "Sb", name: "Antimony",       x: 15, y: 5, block: "p", period: 5, group: 15 },
+      { z: 52,symbol: "Te", name: "Tellurium",      x: 16, y: 5, block: "p", period: 5, group: 16 },
+      { z: 53,symbol: "I",  name: "Iodine",         x: 17, y: 5, block: "p", period: 5, group: 17 },
+      { z: 54,symbol: "Xe", name: "Xenon",          x: 18, y: 5, block: "p", period: 5, group: 18 },
+      // Row 6 main
+      { z: 55,symbol: "Cs", name: "Cesium",         x: 1,  y: 6, block: "s", period: 6, group: 1 },
+      { z: 56,symbol: "Ba", name: "Barium",         x: 2,  y: 6, block: "s", period: 6, group: 2 },
+      // gap at x=3 (lanthanides row)
+      { z: 72,symbol: "Hf", name: "Hafnium",        x: 4,  y: 6, block: "d", period: 6, group: 4 },
+      { z: 73,symbol: "Ta", name: "Tantalum",       x: 5,  y: 6, block: "d", period: 6, group: 5 },
+      { z: 74,symbol: "W",  name: "Tungsten",       x: 6,  y: 6, block: "d", period: 6, group: 6 },
+      { z: 75,symbol: "Re", name: "Rhenium",        x: 7,  y: 6, block: "d", period: 6, group: 7 },
+      { z: 76,symbol: "Os", name: "Osmium",         x: 8,  y: 6, block: "d", period: 6, group: 8 },
+      { z: 77,symbol: "Ir", name: "Iridium",        x: 9,  y: 6, block: "d", period: 6, group: 9 },
+      { z: 78,symbol: "Pt", name: "Platinum",       x: 10, y: 6, block: "d", period: 6, group: 10 },
+      { z: 79,symbol: "Au", name: "Gold",           x: 11, y: 6, block: "d", period: 6, group: 11 },
+      { z: 80,symbol: "Hg", name: "Mercury",        x: 12, y: 6, block: "d", period: 6, group: 12 },
+      { z: 81,symbol: "Tl", name: "Thallium",       x: 13, y: 6, block: "p", period: 6, group: 13 },
+      { z: 82,symbol: "Pb", name: "Lead",           x: 14, y: 6, block: "p", period: 6, group: 14 },
+      { z: 83,symbol: "Bi", name: "Bismuth",        x: 15, y: 6, block: "p", period: 6, group: 15 },
+      // Lanthanides row (period 6, f-block)
+      { z: 57,symbol: "La", name: "Lanthanum",      x: 4,  y: 8, block: "f", period: 6, group: 3 },
+      { z: 58,symbol: "Ce", name: "Cerium",         x: 5,  y: 8, block: "f", period: 6, group: 3 },
+      { z: 59,symbol: "Pr", name: "Praseodymium",   x: 6,  y: 8, block: "f", period: 6, group: 3 },
+      { z: 60,symbol: "Nd", name: "Neodymium",      x: 7,  y: 8, block: "f", period: 6, group: 3 },
+      { z: 61,symbol: "Pm", name: "Promethium",     x: 8,  y: 8, block: "f", period: 6, group: 3 },
+      { z: 62,symbol: "Sm", name: "Samarium",       x: 9,  y: 8, block: "f", period: 6, group: 3 },
+      { z: 63,symbol: "Eu", name: "Europium",       x: 10, y: 8, block: "f", period: 6, group: 3 },
+      { z: 64,symbol: "Gd", name: "Gadolinium",     x: 11, y: 8, block: "f", period: 6, group: 3 },
+      { z: 65,symbol: "Tb", name: "Terbium",        x: 12, y: 8, block: "f", period: 6, group: 3 },
+      { z: 66,symbol: "Dy", name: "Dysprosium",     x: 13, y: 8, block: "f", period: 6, group: 3 },
+      { z: 67,symbol: "Ho", name: "Holmium",        x: 14, y: 8, block: "f", period: 6, group: 3 },
+      { z: 68,symbol: "Er", name: "Erbium",         x: 15, y: 8, block: "f", period: 6, group: 3 },
+      { z: 69,symbol: "Tm", name: "Thulium",        x: 16, y: 8, block: "f", period: 6, group: 3 },
+      { z: 70,symbol: "Yb", name: "Ytterbium",      x: 17, y: 8, block: "f", period: 6, group: 3 },
+      { z: 71,symbol: "Lu", name: "Lutetium",       x: 18, y: 8, block: "f", period: 6, group: 3 },
+    ];
+
+    // --- Ground-state shell electrons by principal quantum number n (K, L, M, ...) ---
+    // Each entry is [n=1, n=2, ...] derived from the standard electron configuration (1s^2 2s^2 ...).
+    // This captures exceptions in transition metals and lanthanides (e.g. Cr, Cu, Nb, Mo, Ru, Rh, Pd, Ag, Gd, Pt, Au).
+    const SHELL_ELECTRONS = {
+      1:  [1],
+      2:  [2],
+      3:  [2, 1],
+      4:  [2, 2],
+      5:  [2, 3],
+      6:  [2, 4],
+      7:  [2, 5],
+      8:  [2, 6],
+      9:  [2, 7],
+      10: [2, 8],
+      11: [2, 8, 1],
+      12: [2, 8, 2],
+      13: [2, 8, 3],
+      14: [2, 8, 4],
+      15: [2, 8, 5],
+      16: [2, 8, 6],
+      17: [2, 8, 7],
+      18: [2, 8, 8],
+      19: [2, 8, 8, 1],
+      20: [2, 8, 8, 2],
+      21: [2, 8, 9, 2],
+      22: [2, 8, 10, 2],
+      23: [2, 8, 11, 2],
+      24: [2, 8, 13, 1], // Cr: [Ar] 3d5 4s1
+      25: [2, 8, 13, 2],
+      26: [2, 8, 14, 2],
+      27: [2, 8, 15, 2],
+      28: [2, 8, 16, 2],
+      29: [2, 8, 18, 1], // Cu: [Ar] 3d10 4s1
+      30: [2, 8, 18, 2],
+      31: [2, 8, 18, 3],
+      32: [2, 8, 18, 4],
+      33: [2, 8, 18, 5],
+      34: [2, 8, 18, 6],
+      35: [2, 8, 18, 7],
+      36: [2, 8, 18, 8],
+      37: [2, 8, 18, 8, 1],
+      38: [2, 8, 18, 8, 2],
+      39: [2, 8, 18, 9, 2],
+      40: [2, 8, 18, 10, 2],
+      41: [2, 8, 18, 12, 1], // Nb: [Kr] 4d4 5s1
+      42: [2, 8, 18, 13, 1], // Mo: [Kr] 4d5 5s1
+      43: [2, 8, 18, 13, 2],
+      44: [2, 8, 18, 15, 1], // Ru: [Kr] 4d7 5s1
+      45: [2, 8, 18, 16, 1], // Rh: [Kr] 4d8 5s1
+      46: [2, 8, 18, 18, 0], // Pd: [Kr] 4d10 5s0
+      47: [2, 8, 18, 18, 1], // Ag: [Kr] 4d10 5s1
+      48: [2, 8, 18, 18, 2],
+      49: [2, 8, 18, 18, 3],
+      50: [2, 8, 18, 18, 4],
+      51: [2, 8, 18, 18, 5],
+      52: [2, 8, 18, 18, 6],
+      53: [2, 8, 18, 18, 7],
+      54: [2, 8, 18, 18, 8],
+      55: [2, 8, 18, 18, 8, 1],
+      56: [2, 8, 18, 18, 8, 2],
+      57: [2, 8, 18, 18, 9, 2],     // La: [Xe] 5d1 6s2
+      58: [2, 8, 18, 19, 9, 2],    // Ce: [Xe] 4f1 5d1 6s2
+      59: [2, 8, 18, 20, 9, 2],    // Pr
+      60: [2, 8, 18, 21, 9, 2],    // Nd
+      61: [2, 8, 18, 22, 9, 2],    // Pm
+      62: [2, 8, 18, 23, 9, 2],    // Sm
+      63: [2, 8, 18, 24, 9, 2],    // Eu
+      64: [2, 8, 18, 25, 9, 2],    // Gd: [Xe] 4f7 5d1 6s2
+      65: [2, 8, 18, 26, 9, 2],    // Tb
+      66: [2, 8, 18, 27, 9, 2],    // Dy
+      67: [2, 8, 18, 28, 9, 2],    // Ho
+      68: [2, 8, 18, 29, 9, 2],    // Er
+      69: [2, 8, 18, 30, 9, 2],    // Tm
+      70: [2, 8, 18, 31, 9, 2],    // Yb
+      71: [2, 8, 18, 32, 9, 2],    // Lu
+      72: [2, 8, 18, 32, 10, 2],   // Hf
+      73: [2, 8, 18, 32, 11, 2],   // Ta
+      74: [2, 8, 18, 32, 12, 2],   // W
+      75: [2, 8, 18, 32, 13, 2],   // Re
+      76: [2, 8, 18, 32, 14, 2],   // Os
+      77: [2, 8, 18, 32, 15, 2],   // Ir
+      78: [2, 8, 18, 32, 17, 1],   // Pt: [Xe] 4f14 5d9 6s1
+      79: [2, 8, 18, 32, 18, 1],   // Au: [Xe] 4f14 5d10 6s1
+      80: [2, 8, 18, 32, 18, 2],   // Hg
+      81: [2, 8, 18, 32, 18, 3],   // Tl
+      82: [2, 8, 18, 32, 18, 4],   // Pb
+      83: [2, 8, 18, 32, 18, 5],   // Bi
+    };
+
+    function electronsPerShell(z) {
+      const shells = SHELL_ELECTRONS[z];
+      if (!shells) return [0];
+      return shells.slice();
+    }
+
+    // Color by family: noble gases (light blue), alkali (red), alkaline earth (orange),
+    // halogens (purple), other nonmetals (green), fallback by block.
+    const Z_NOBLE = new Set([2, 10, 18, 36, 54]);
+    const Z_ALKALI = new Set([3, 11, 19, 37, 55]);
+    const Z_ALKALINE = new Set([4, 12, 20, 38, 56]);
+    const Z_HALOGEN = new Set([9, 17, 35, 53]);
+    const Z_NONMETAL = new Set([
+      1,  // H
+      5,  // B
+      6,  // C
+      7,  // N
+      8,  // O
+      14, // Si
+      15, // P
+      16, // S
+      33, // As
+      34, // Se
+      52, // Te
+    ]);
+
+    // Semi-metals singled out for separate coloring in Grouping mode
+    const Z_SEMI_METAL = new Set([5, 14, 32, 33, 51, 52]); // B, Si, Ge, As, Sb, Te
+
+    // 具有“金属光泽”高光效果的基础集合：金、所有准金属，以及 Si / Se / I / Te / As 指定元素
+    const Z_METALLIC_LUSTER = new Set([
+      79, // Au
+      5, 14, 32, 33, 51, 52, // 准金属：B, Si, Ge, As, Sb, Te
+      34, // Se
+      53  // I
+    ]);
+
+    // 判断某个元素是否应视作“金属 / 金属光泽”
+    function hasMetallicLuster(el) {
+      const z = el.z;
+      // 显式指定的一定有金属光泽
+      if (Z_METALLIC_LUSTER.has(z)) return true;
+      // 明确的非金属或惰性气体、卤素（不包括 I）默认不加金属高光
+      if (Z_NOBLE.has(z) || Z_HALOGEN.has(z) || Z_NONMETAL.has(z)) return false;
+      // 其它（大部分 s/d/f 以及金属 p 区元素）都按“金属”处理
+      if (z === 1) return false; // 氢特殊排除
+      return z >= 3 && z <= 83;
+    }
+
+    // Platinum-group elements: Ru, Rh, Pd, Os, Ir, Pt
+    const Z_PLATINUM_GROUP = new Set([44, 45, 46, 76, 77, 78]);
+
+    const VALENCE_DATA = new Map();
+    const ELEMENT_NOTES = new Map();
+
+    // Pauling electronegativity (approx., H=2.20). null for undefined values.
+    const ELECTRONEGATIVITY = {
+      1: 2.20,  2: null,
+      3: 0.98,  4: 1.57,  5: 2.04,  6: 2.55,  7: 3.04,  8: 3.44,  9: 3.98, 10: null,
+      11: 0.93, 12: 1.31, 13: 1.61, 14: 1.90, 15: 2.19, 16: 2.58, 17: 3.16, 18: null,
+      19: 0.82, 20: 1.00, 21: 1.36, 22: 1.54, 23: 1.63, 24: 1.66, 25: 1.55, 26: 1.83,
+      27: 1.88, 28: 1.91, 29: 1.90, 30: 1.65, 31: 1.81, 32: 2.01, 33: 2.18, 34: 2.55,
+      35: 2.96, 36: 3.00,
+      37: 0.82, 38: 0.95, 39: 1.22, 40: 1.33, 41: 1.60, 42: 2.16, 43: 1.90, 44: 2.20,
+      45: 2.28, 46: 2.20, 47: 1.93, 48: 1.69, 49: 1.78, 50: 1.96, 51: 2.05, 52: 2.10,
+      53: 2.66, 54: 2.60,
+      55: 0.79, 56: 0.89,
+      57: 1.10, 58: 1.12, 59: 1.13, 60: 1.14, 61: 1.13, 62: 1.17, 63: 1.20, 64: 1.20,
+      65: 1.10, 66: 1.22, 67: 1.23, 68: 1.24, 69: 1.25, 70: 1.10, 71: 1.27,
+      72: 1.30, 73: 1.50, 74: 2.36, 75: 1.90, 76: 2.20, 77: 2.20, 78: 2.28, 79: 2.54,
+      80: 2.00, 81: 1.62, 82: 1.87, 83: 2.02
+    };
+
+    // First ionization energy in kJ/mol (approx. values for trend visualization).
+    const IONIZATION1 = {
+      1: 1312,  2: 2372,
+      3: 520,   4: 900,   5: 801,   6: 1086,  7: 1402,  8: 1314,  9: 1681, 10: 2080,
+      11: 496,  12: 738,  13: 578,  14: 787,  15: 1012, 16: 1000, 17: 1251, 18: 1521,
+      19: 419,  20: 590,  21: 633,  22: 659,  23: 651,  24: 653,  25: 717,  26: 759,
+      27: 760,  28: 736,  29: 746,  30: 906,  31: 579,  32: 762,  33: 947,  34: 941,
+      35: 1140, 36: 1351,
+      37: 403,  38: 549,  39: 600,  40: 640,  41: 663,  42: 684,  43: 702,  44: 710,
+      45: 719,  46: 804,  47: 731,  48: 868,  49: 559,  50: 708,  51: 834,  52: 869,
+      53: 1008, 54: 1170,
+      55: 376,  56: 503,
+      57: 538,  58: 534,  59: 527,  60: 533,  61: 540,  62: 545,  63: 547,  64: 593,
+      65: 566,  66: 573,  67: 581,  68: 589,  69: 597,  70: 603,  71: 524,
+      72: 659,  73: 761,  74: 770,  75: 760,  76: 840,  77: 880,  78: 870,  79: 890,
+      80: 1007, 81: 589,  82: 716,  83: 703
+    };
+    // Covalent atomic radii in picometres (approximate teaching values)
+    const ATOMIC_RADIUS = {
+      1: 31,   2: 28,
+      3: 128,  4: 96,   5: 84,   6: 76,   7: 71,   8: 66,   9: 57,   10: 58,
+      11: 166, 12: 141, 13: 121, 14: 111, 15: 107, 16: 105, 17: 102, 18: 106,
+      19: 203, 20: 176, 21: 170, 22: 160, 23: 153, 24: 139, 25: 139, 26: 132,
+      27: 126, 28: 124, 29: 132, 30: 122, 31: 122, 32: 120, 33: 119, 34: 120,
+      35: 120, 36: 116,
+      37: 216, 38: 191, 39: 185, 40: 175, 41: 164, 42: 154, 43: 147, 44: 146,
+      45: 142, 46: 139, 47: 145, 48: 144, 49: 142, 50: 139, 51: 139, 52: 138,
+      53: 139, 54: 140,
+      55: 235, 56: 198,
+      57: 188, 58: 180, 59: 180, 60: 181, 61: 183, 62: 182, 63: 181, 64: 180,
+      65: 178, 66: 177, 67: 176, 68: 175, 69: 174, 70: 173, 71: 172,
+      72: 167, 73: 149, 74: 141, 75: 137, 76: 135, 77: 136, 78: 139, 79: 144,
+      80: 151, 81: 148, 82: 147, 83: 146
+    };
+
+    // Melting points in Celsius (approximate recommended "use" values from reference tables)
+    // null 表示在 1 atm 下没有明确的熔点（例如 C、As 升华等）
+    const MELTING_POINT_C = {
+      1:  -259.16,
+      2:  -272.2,
+      3:  180.50,
+      4:  1287,
+      5:  2076,
+      6:  null,     // C 在 1 atm 下升华
+      7:  -210.00,
+      8:  -218.79,
+      9:  -219.67,
+      10: -248.59,
+      11: 97.794,
+      12: 650,
+      13: 660.32,
+      14: 1414,
+      15: 44.15,
+      16: 115.21,
+      17: -101.5,
+      18: -189.34,
+      19: 63.5,
+      20: 842,
+      21: 1541,
+      22: 1668,
+      23: 1910,
+      24: 1907,
+      25: 1246,
+      26: 1538,
+      27: 1495,
+      28: 1455,
+      29: 1084.62,
+      30: 419.53,
+      31: 29.7646,
+      32: 938.25,
+      33: null,     // As 升华
+      34: 221,
+      35: -7.3,
+      36: -157.37,
+      37: 39.30,
+      38: 777,
+      39: 1526,
+      40: 1855,
+      41: 2477,
+      42: 2623,
+      43: 2157,
+      44: 2334,
+      45: 1964,
+      46: 1554.9,
+      47: 961.78,
+      48: 321.07,
+      49: 156.6,
+      50: 231.93,
+      51: 630.63,
+      52: 449.51,
+      53: 113.7,
+      54: -111.8,
+      55: 28.5,
+      56: 727,
+      57: 920,
+      58: 795,
+      59: 935,
+      60: 1024,
+      61: 1042,
+      62: 1072,
+      63: 826,
+      64: 1312,
+      65: 1356,
+      66: 1407,
+      67: 1461,
+      68: 1529,
+      69: 1545,
+      70: 824,
+      71: 1652,
+      72: 2233,
+      73: 3017,
+      74: 3422,
+      75: 3186,
+      76: 3033,
+      77: 2446,
+      78: 1768.3,
+      79: 1064.18,
+      80: -38.83,
+      81: 304,
+      82: 327.46,
+      83: 271.5
+    };
+
+    // Boiling points in Celsius (approximate values for teaching use)
+    // null 表示在 1 atm 下没有稳定沸点或数据不常用
+    const BOILING_POINT_C = {
+      1:   -252.9,
+      2:   -268.9,
+      3:   1342,
+      4:   2471,
+      5:   3927,
+      6:   3825,
+      7:   -195.8,
+      8:   -182.9,
+      9:   -188.1,
+      10:  -246.1,
+      11:  883,
+      12:  1090,
+      13:  2470,
+      14:  3265,
+      15:  280,
+      16:  444.6,
+      17:  -34.0,
+      18:  -185.8,
+      19:  759,
+      20:  1484,
+      21:  2831,
+      22:  3287,
+      23:  3407,
+      24:  2671,
+      25:  2061,
+      26:  2862,
+      27:  2927,
+      28:  2913,
+      29:  2562,
+      30:  907,
+      31:  2204,
+      32:  2833,
+      33:  613,
+      34:  685,
+      35:  58.8,
+      36:  -153.4,
+      37:  688,
+      38:  1382,
+      39:  3338,
+      40:  4377,
+      41:  4744,
+      42:  4639,
+      43:  4265,
+      44:  4150,
+      45:  3727,
+      46:  2963,
+      47:  2162,
+      48:  767,
+      49:  2072,
+      50:  2602,
+      51:  1587,
+      52:  988,
+      53:  184.3,
+      54:  -108.1,
+      55:  671,
+      56:  1870,
+      57:  3464,
+      58:  3360,
+      59:  3520,
+      60:  3074,
+      61:  3130,
+      62:  1900,
+      63:  1597,
+      64:  3273,
+      65:  3123,
+      66:  2562,
+      67:  2700,
+      68:  2868,
+      69:  1950,
+      70:  1196,
+      71:  3464,
+      72:  4603,
+      73:  5458,
+      74:  5555,
+      75:  5596,
+      76:  5285,
+      77:  4428,
+      78:  3825,
+      79:  2856,
+      80:  356.7,
+      81:  1473,
+      82:  1749,
+      83:  1564
+    };
+
+    // Crustal abundance in Earth's continental crust (ppm by mass, ~mg/kg)
+    // 数据主要参考 Wikipedia Abundance of elements in Earth's crust 表格；
+    // 只覆盖 Z ≤ 83 的常见元素，极罕见/合成元素留空 (null)。
+    const CRUST_ABUND_PPM = {
+      1:   1400,
+      2:   0.008,
+      3:   20,
+      4:   2.8,
+      5:   10,
+      6:   200,
+      7:   19,
+      8:   461000,
+      9:   585,
+      10:  0.005,
+      11: 23600,
+      12: 23300,
+      13: 82300,
+      14: 282000,
+      15: 1050,
+      16: 350,
+      17: 145,
+      18: 3.5,
+      19: 20900,
+      20: 41500,
+      21: 22,
+      22: 5650,
+      23: 120,
+      24: 102,
+      25: 950,
+      26: 56300,
+      27: 25,
+      28: 84,
+      29: 60,
+      30: 70,
+      31: 19,
+      32: 1.5,
+      33: 1.8,
+      34: 0.05,
+      35: 2.4,
+      36: 0.0001,
+      37: 90,
+      38: 370,
+      39: 33,
+      40: 165,
+      41: 20,
+      42: 1.2,
+      43: null,
+      44: 0.001,
+      45: 0.001,
+      46: 0.015,
+      47: 0.075,
+      48: 0.15,
+      49: 0.25,
+      50: 2.3,
+      51: 0.2,
+      52: 0.001,
+      53: 0.45,
+      54: 0.00003,
+      55: 3.0,
+      56: 425,
+      57: 39,
+      58: 66.5,
+      59: 9.2,
+      60: 41.5,
+      61: null,
+      62: 7.05,
+      63: 2.0,
+      64: 6.2,
+      65: 1.2,
+      66: 5.2,
+      67: 1.3,
+      68: 3.5,
+      69: 0.52,
+      70: 3.2,
+      71: 0.8,
+      72: 3.0,
+      73: 2.0,
+      74: 1.25,
+      75: 0.0007,
+      76: 0.0015,
+      77: 0.001,
+      78: 0.005,
+      79: 0.004,
+      80: 0.085,
+      81: 0.85,
+      82: 14,
+      83: 0.0085
+    };
+
+    let currentMode = "hue"; // "names" | "en" | "ionization" | "radius" | "melting" | "crust" | "hue"
+
+    // Thermal visualization sub-mode: "mp" (melting point), "bp" (boiling point), "bar" (phase vs temperature)
+    let thermalMode = "mp";
+
+    const ABS_ZERO_C = -273.15;
+    const MAX_BOIL_C = 5710; // 略高于最高沸点，用于温度条上限
+    let currentTempC = 25;   // 默认从室温开始
+    let tempBarTimer = null;
+
+    // 外部 Hue 配色表：从 CSS 变量 --el-N 载入
+    const HUE_MAP = new Map();
+
+    async function loadValenceData() {
+      try {
+        const res = await fetch("valences.json");
+        if (!res.ok) return;
+        const arr = await res.json();
+        if (!Array.isArray(arr)) return;
+        arr.forEach(item => {
+          if (item && typeof item.z === "number") {
+            VALENCE_DATA.set(item.z, item);
+          }
+        });
+      } catch (err) {
+        console.warn("Failed to load valences.json", err);
+      }
+    }
+
+    async function loadElementNotes() {
+      try {
+        const res = await fetch("element_notes.json");
+        if (!res.ok) return;
+        const arr = await res.json();
+        if (!Array.isArray(arr)) return;
+        arr.forEach(entry => {
+          if (entry && typeof entry === "object") {
+            Object.keys(entry).forEach(sym => {
+              const text = entry[sym];
+              if (typeof text === "string") {
+                ELEMENT_NOTES.set(sym, text);
+              }
+            });
+          }
+        });
+      } catch (err) {
+        console.warn("Failed to load element_notes.json", err);
+      }
+    }
+
+    function loadHueFromCSSVars() {
+      try {
+        const style = getComputedStyle(document.documentElement);
+        for (let z = 1; z <= 83; z++) {
+          const varName = `--el-${z}`;
+          let val = style.getPropertyValue(varName);
+          if (!val) continue;
+          val = val.trim();
+          if (!val || val.toUpperCase() === "NAN") continue;
+          HUE_MAP.set(z, val);
+        }
+      } catch (err) {
+        console.warn("Failed to load hues from CSS vars", err);
+      }
+    }
+
+    function getPhaseAtTempC(z, tC) {
+      const mp = MELTING_POINT_C[z];
+      const bp = BOILING_POINT_C[z];
+      if ((mp == null || !isFinite(mp)) && (bp == null || !isFinite(bp))) {
+        return "unknown";
+      }
+      if (bp != null && isFinite(bp)) {
+        const mVal = (mp != null && isFinite(mp)) ? mp : bp - 1; // 对升华元素给一个窄的“固体区”
+        if (tC < mVal) return "solid";
+        if (tC < bp) return "liquid";
+        return "gas";
+      }
+      // 只有熔点：低于熔点视为固体，高于则视为气体
+      if (mp != null && isFinite(mp)) {
+        return tC < mp ? "solid" : "gas";
+      }
+      return "unknown";
+    }
+
+    function modeColor(el) {
+      const z = el.z;
+      if (currentMode === "en") {
+        const v = ELECTRONEGATIVITY[z];
+        if (v == null) {
+          return "linear-gradient(135deg,#424242,#212121)";
+        }
+        const minV = 0.7;
+        const maxV = 4.0;
+        let t = (v - minV) / (maxV - minV);
+        if (!isFinite(t)) t = 0;
+        t = Math.min(1, Math.max(0, t));
+        const hue = 230 - 230 * t; // blue -> red
+        return `linear-gradient(135deg,hsl(${hue},70%,62%),hsl(${hue + 15},80%,42%))`;
+      }
+      if (currentMode === "ionization") {
+        const v = IONIZATION1[z];
+        if (v == null) {
+          return "linear-gradient(135deg,#424242,#212121)";
+        }
+        const minV = 350;
+        const maxV = 2500;
+        let t = (v - minV) / (maxV - minV);
+        if (!isFinite(t)) t = 0;
+        t = Math.min(1, Math.max(0, t));
+        const hue = 230 - 230 * t;
+        return `linear-gradient(135deg,hsl(${hue},70%,62%),hsl(${hue + 15},80%,42%))`;
+      }
+      if (currentMode === "radius") {
+        const v = ATOMIC_RADIUS[z];
+        if (v == null) {
+          return "linear-gradient(135deg,#424242,#212121)";
+        }
+        // Radius mode: color no longer encodes size, use neutral tile color
+        return "linear-gradient(135deg,#78909c,#455a64)";
+      }
+      if (currentMode === "crust") {
+        const v = CRUST_ABUND_PPM[z];
+        if (v == null || !isFinite(v) || v <= 0) {
+          return "linear-gradient(135deg,#424242,#212121)";
+        }
+        // 使用对数刻度把宽范围的丰度压缩到 0–1
+        const logV = Math.log10(v);
+        const minLog = -4;  // ≈ 1e-4 ppm
+        const maxLog = 6;   // ≈ 1e6 ppm
+        let t = (logV - minLog) / (maxLog - minLog);
+        if (!isFinite(t)) t = 0;
+        t = Math.min(1, Math.max(0, t));
+        // 白 → 黄 → 橙 → 红 渐变：稀少几乎白，越丰富颜色越暖越深
+        // 为了拉开稀有元素层次，适当放大白～黄的占比
+        // 关键颜色点：0.00 白 (#ffffff)；0.25 黄 (#fff176)；0.65 橙 (#ffb74d)；1.00 红 (#e53935)
+        let r, g, b;
+        if (t <= 0.25) {
+          const u = t / 0.25;
+          const r0 = 0xff, g0 = 0xff, b0 = 0xff;      // 白
+          const r1 = 0xff, g1 = 0xf1, b1 = 0x76;      // 黄
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        } else if (t <= 0.65) {
+          const u = (t - 0.25) / (0.65 - 0.25);
+          const r0 = 0xff, g0 = 0xf1, b0 = 0x76;      // 黄
+          const r1 = 0xff, g1 = 0xb7, b1 = 0x4d;      // 橙
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        } else {
+          const u = (t - 0.65) / (1.00 - 0.65);
+          const r0 = 0xff, g0 = 0xb7, b0 = 0x4d;      // 橙
+          const r1 = 0xe5, g1 = 0x39, b1 = 0x35;      // 红
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        }
+        const base = `rgb(${r},${g},${b})`;
+        return `linear-gradient(135deg,${base},${base})`;
+      }
+      if (currentMode === "melting") {
+        if (thermalMode === "bar") {
+          const phase = getPhaseAtTempC(z, currentTempC);
+          if (phase === "solid") {
+            return "linear-gradient(135deg,#ffffff,#f5f5f5)";
+          } else if (phase === "liquid") {
+            return "linear-gradient(135deg,#ffcc80,#ffb74d)";
+          } else if (phase === "gas") {
+            return "linear-gradient(135deg,#ef5350,#e53935)";
+          }
+          return "linear-gradient(135deg,#424242,#212121)";
+        }
+        const table = thermalMode === "bp" ? BOILING_POINT_C : MELTING_POINT_C;
+        const v = table[z];
+        if (v == null || !isFinite(v)) {
+          return "linear-gradient(135deg,#424242,#212121)";
+        }
+        // 白 → 黄 → 橙 → 红 渐变：缩小白色和黄色区间，扩展橙/红区间
+        const minC = -260;
+        const maxC = thermalMode === "bp" ? 5600 : 3400;
+        let t = (v - minC) / (maxC - minC);
+        if (!isFinite(t)) t = 0;
+        t = Math.min(1, Math.max(0, t));
+        // 关键颜色点：
+        // 0.00 → 白 (#ffffff)
+        // 0.12 → 黄 (#fff176)
+        // 0.45 → 橙 (#ffb74d)
+        // 1.00 → 红 (#e53935)
+        let r, g, b;
+        if (t <= 0.12) {
+          const u = t / 0.12;
+          const r0 = 0xff, g0 = 0xff, b0 = 0xff;      // 白
+          const r1 = 0xff, g1 = 0xf1, b1 = 0x76;      // 黄
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        } else if (t <= 0.45) {
+          const u = (t - 0.12) / (0.45 - 0.12);
+          const r0 = 0xff, g0 = 0xf1, b0 = 0x76;      // 黄
+          const r1 = 0xff, g1 = 0xb7, b1 = 0x4d;      // 橙
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        } else {
+          const u = (t - 0.45) / (1.00 - 0.45);
+          const r0 = 0xff, g0 = 0xb7, b0 = 0x4d;      // 橙
+          const r1 = 0xe5, g1 = 0x39, b1 = 0x35;      // 红
+          r = Math.round(r0 + (r1 - r0) * u);
+          g = Math.round(g0 + (g1 - g0) * u);
+          b = Math.round(b0 + (b1 - b0) * u);
+        }
+        const base = `rgb(${r},${g},${b})`;
+        return `linear-gradient(135deg,${base},${base})`;
+      }
+      if (currentMode === "hue") {
+        const base = HUE_MAP.get(z);
+        if (!base) {
+          // fallback: 用 Grouping 的颜色
+          return tileColor(el);
+        }
+        // 用单色为主，轻微加一点高光渐变
+        return `linear-gradient(135deg,${base},${base})`;
+      }
+      // default: family colors
+      return tileColor(el);
+    }
+
+    function refreshTileColors() {
+      const tiles = document.querySelectorAll(".el-tile");
+      tiles.forEach(tile => {
+        const z = Number(tile.dataset.z);
+        const el = ELEMENTS.find(e => e.z === z);
+        if (!el) return;
+        tile.style.backgroundImage = modeColor(el);
+      });
+    }
+
+    function updateRadiusVisuals() {
+      const tiles = document.querySelectorAll(".el-tile");
+      const maxV = 240;
+
+      // 全局统一比例：先找所有格子里最小的边长，用它来决定缩放因子，
+      // 确保最大原子半径的球刚好在所有格子内都不被裁剪。
+      let minTileSize = Infinity;
+      tiles.forEach(tile => {
+        const w = tile.clientWidth || tile.offsetWidth || 32;
+        const h = tile.clientHeight || tile.offsetHeight || w;
+        const s = Math.min(w, h);
+        if (s && s < minTileSize) minTileSize = s;
+      });
+      if (!isFinite(minTileSize) || minTileSize <= 0) minTileSize = 32;
+      const scale = (minTileSize * 0.8) / maxV; // 直径(px) = 半径(pm) * scale
+
+      tiles.forEach(tile => {
+        const z = Number(tile.dataset.z);
+        const el = ELEMENTS.find(e => e.z === z);
+        if (!el) return;
+        const inner = tile.querySelector(".el-inner");
+        const circle = tile.querySelector(".radius-circle");
+        if (!circle) return;
+
+        if (currentMode === "radius") {
+          tile.classList.add("radius-mode");
+          if (inner) inner.setAttribute("aria-hidden", "true");
+
+          const v = ATOMIC_RADIUS[z];
+          if (v == null) {
+            circle.style.display = "none";
+            return;
+          }
+
+          const width = tile.clientWidth || tile.offsetWidth || 32;
+          const height = tile.clientHeight || tile.offsetHeight || width;
+          const size = v * scale;
+          circle.style.display = "block";
+          circle.style.width = size + "px";
+          circle.style.height = size + "px";
+          circle.style.left = (width - size) / 2 + "px";
+          circle.style.top = (height - size) / 2 + "px";
+        } else {
+          tile.classList.remove("radius-mode");
+          if (inner) inner.removeAttribute("aria-hidden");
+          circle.style.display = "none";
+        }
+      });
+    }
+
+    function updateLegend() {
+      const legend = document.getElementById("mode-legend");
+      const titleEl = document.getElementById("legend-title");
+      const minEl = document.getElementById("legend-min-label");
+      const maxEl = document.getElementById("legend-max-label");
+      const gradEl = document.getElementById("legend-gradient");
+      const catEl = document.getElementById("legend-categories");
+      const ticksEl = document.getElementById("legend-ticks");
+      if (!legend || !titleEl || !minEl || !maxEl || !gradEl || !catEl || !ticksEl) return;
+
+      // Atomic radius 模式不需要 legend
+      if (currentMode === "radius") {
+        legend.classList.remove("active");
+        legend.setAttribute("aria-hidden", "true");
+        ticksEl.style.display = "none";
+        return;
+      }
+
+      legend.classList.add("active");
+      legend.setAttribute("aria-hidden", "false");
+
+      if (currentMode === "names") {
+        // Grouping: 分类图例，隐藏数值渐变条
+        titleEl.textContent = "Grouping legend";
+        minEl.textContent = "";
+        maxEl.textContent = "";
+        gradEl.style.visibility = "hidden";
+        catEl.style.display = "flex";
+        ticksEl.style.display = "none";
+        ticksEl.innerHTML = "";
+      } else if (currentMode === "en") {
+        titleEl.textContent = "Electronegativity (Pauling)";
+        minEl.textContent = "low (≈0.7)";
+        maxEl.textContent = "high (≈4.0)";
+        gradEl.style.backgroundImage = "linear-gradient(90deg,hsl(230,70%,62%),hsl(200,70%,60%),hsl(140,70%,60%),hsl(60,80%,60%),hsl(15,80%,42%))";
+        gradEl.style.visibility = "visible";
+        catEl.style.display = "none";
+        // 7 个均匀刻度（含两端），标注数值
+        ticksEl.style.display = "flex";
+        ticksEl.innerHTML = "";
+        const minV = 0.7;
+        const maxV = 4.0;
+        const n = 7;
+        for (let i = 0; i < n; i++) {
+          const t = i / (n - 1);
+          const v = minV + t * (maxV - minV);
+          const tick = document.createElement("div");
+          tick.className = "legend-tick";
+          const line = document.createElement("div");
+          line.className = "legend-tick-line";
+          const label = document.createElement("div");
+          label.className = "legend-tick-label";
+          label.textContent = v.toFixed(1);
+          tick.appendChild(line);
+          tick.appendChild(label);
+          ticksEl.appendChild(tick);
+        }
+      } else if (currentMode === "ionization") {
+        titleEl.textContent = "1st Ionization (kJ/mol)";
+        minEl.textContent = "low (≈350)";
+        maxEl.textContent = "high (≈2500)";
+        gradEl.style.backgroundImage = "linear-gradient(90deg,hsl(230,70%,62%),hsl(200,70%,60%),hsl(140,70%,60%),hsl(60,80%,60%),hsl(15,80%,42%))";
+        gradEl.style.visibility = "visible";
+        catEl.style.display = "none";
+        ticksEl.style.display = "flex";
+        ticksEl.innerHTML = "";
+        const minV = 350;
+        const maxV = 2500;
+        const n = 7;
+        for (let i = 0; i < n; i++) {
+          const t = i / (n - 1);
+          const v = minV + t * (maxV - minV);
+          const tick = document.createElement("div");
+          tick.className = "legend-tick";
+          const line = document.createElement("div");
+          line.className = "legend-tick-line";
+          const label = document.createElement("div");
+          label.className = "legend-tick-label";
+          label.textContent = Math.round(v).toString();
+          tick.appendChild(line);
+          tick.appendChild(label);
+          ticksEl.appendChild(tick);
+        }
+      } else if (currentMode === "crust") {
+        titleEl.textContent = "Crustal abundance (ppm, log10)";
+        minEl.textContent = "low (≈10⁻⁴)";
+        maxEl.textContent = "high (≈10⁶)";
+        // 白 → 黄 → 橙 → 红 渐变，与格子颜色一致
+        gradEl.style.backgroundImage = "linear-gradient(90deg,#ffffff 0%,#fff176 12%,#ffb74d 45%,#e53935 100%)";
+        gradEl.style.visibility = "visible";
+        catEl.style.display = "none";
+        ticksEl.style.display = "flex";
+        ticksEl.innerHTML = "";
+        const minLog = -4;
+        const maxLog = 6;
+        const n = 7;
+        for (let i = 0; i < n; i++) {
+          const t = i / (n - 1);
+          const logV = minLog + t * (maxLog - minLog);
+          const v = Math.pow(10, logV);
+          const tick = document.createElement("div");
+          tick.className = "legend-tick";
+          const line = document.createElement("div");
+          line.className = "legend-tick-line";
+          const label = document.createElement("div");
+          label.className = "legend-tick-label";
+          if (v >= 1000) {
+            // 用科学计数法表示
+            const exp = Math.round(logV);
+            label.textContent = "1e" + exp.toString();
+          } else if (v >= 1) {
+            label.textContent = v.toFixed(0);
+          } else {
+            const exp = Math.round(logV);
+            label.textContent = "1e" + exp.toString();
+          }
+          tick.appendChild(line);
+          tick.appendChild(label);
+          ticksEl.appendChild(tick);
+        }
+      } else if (currentMode === "melting") {
+        if (thermalMode === "bar") {
+          // 温度条模式下，数值图例意义不大，交给温度条控件
+          legend.classList.remove("active");
+          legend.setAttribute("aria-hidden", "true");
+          ticksEl.style.display = "none";
+          return;
+        }
+        const isBP = thermalMode === "bp";
+        titleEl.textContent = isBP ? "Boiling point (°C)" : "Melting point (°C)";
+        minEl.textContent = "low (≈ -260)";
+        maxEl.textContent = isBP ? "high (≈ 5600)" : "high (≈ 3400)";
+        // 白 → 黄 → 橙 → 红 的连续渐变，与单元格颜色一致（黄占比较小，橙/红更长）
+        gradEl.style.backgroundImage = "linear-gradient(90deg,#ffffff 0%,#fff176 12%,#ffb74d 45%,#e53935 100%)";
+        gradEl.style.visibility = "visible";
+        catEl.style.display = "none";
+        ticksEl.style.display = "flex";
+        ticksEl.innerHTML = "";
+        const minV = -260;
+        const maxV = isBP ? 5600 : 3400;
+        const n = 7;
+        for (let i = 0; i < n; i++) {
+          const t = i / (n - 1);
+          const v = minV + t * (maxV - minV);
+          const tick = document.createElement("div");
+          tick.className = "legend-tick";
+          const line = document.createElement("div");
+          line.className = "legend-tick-line";
+          const label = document.createElement("div");
+          label.className = "legend-tick-label";
+          label.textContent = v.toFixed(0) + "°";
+          tick.appendChild(line);
+          tick.appendChild(label);
+          ticksEl.appendChild(tick);
+        }
+      } else if (currentMode === "hue") {
+        // Hue: 只显示说明文字，不需要渐变条或分类 chip
+        titleEl.textContent = "Hue (most stable form at r.t.)";
+        minEl.textContent = "";
+        maxEl.textContent = "";
+        gradEl.style.visibility = "hidden";
+        catEl.style.display = "none";
+        ticksEl.style.display = "none";
+        ticksEl.innerHTML = "";
+      }
+    }
+
+    function setMode(mode) {
+      if (mode !== "names" && mode !== "en" && mode !== "ionization" && mode !== "radius" && mode !== "melting" && mode !== "crust" && mode !== "hue") return;
+      const prevMode = currentMode;
+      currentMode = mode;
+
+      document.querySelectorAll(".panel-tab").forEach(btn => {
+        const m = btn.getAttribute("data-mode");
+        if (m === mode) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+
+      // 只在 Hue 模式下启用金属高光 / 阴影效果
+      document.documentElement.classList.toggle("mode-hue", mode === "hue");
+
+      // 进入 m./b. point 模式时，默认切到 temp. bar 并自动播放
+      if (mode === "melting") {
+        if (prevMode !== "melting") {
+          setThermalMode("bar");
+          startTempBarAnimation();
+        }
+      } else {
+        // 离开 m./b. point 时停止动画
+        stopTempBarAnimation();
+      }
+
+      updateLegend();
+      refreshTileColors();
+      updateRadiusVisuals();
+      updateThermalUI();
+    }
+
+    function updateThermalUI() {
+      const controls = document.getElementById("thermal-controls");
+      const bar = document.getElementById("thermal-bar");
+      const slider = document.getElementById("thermal-slider");
+      const tempLabel = document.getElementById("thermal-temp-value");
+      const playBtn = document.getElementById("thermal-play");
+      if (!controls || !bar || !slider || !tempLabel || !playBtn) return;
+
+      const inThermalMode = currentMode === "melting";
+      controls.classList.toggle("active", inThermalMode);
+      controls.setAttribute("aria-hidden", inThermalMode ? "false" : "true");
+
+      const showBar = inThermalMode && thermalMode === "bar";
+      bar.classList.toggle("active", showBar);
+
+      slider.min = Math.round(ABS_ZERO_C).toString();
+      slider.max = Math.round(MAX_BOIL_C).toString();
+      slider.value = Math.round(currentTempC).toString();
+      tempLabel.textContent = `${Math.round(currentTempC)}`;
+
+      // 播放按钮图标：有定时器时显示暂停，反之显示播放
+      playBtn.textContent = tempBarTimer ? "❚❚" : "▶";
+    }
+
+    function setThermalMode(mode) {
+      if (mode !== "mp" && mode !== "bp" && mode !== "bar") return;
+      if (thermalMode === mode) return;
+      thermalMode = mode;
+
+      document.querySelectorAll(".thermal-tab").forEach(btn => {
+        const m = btn.getAttribute("data-thermal");
+        if (m === mode) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+
+      if (thermalMode !== "bar") {
+        stopTempBarAnimation();
+      }
+
+      updateLegend();
+      refreshTileColors();
+      updateThermalUI();
+    }
+
+    function startTempBarAnimation() {
+      if (tempBarTimer) return;
+      tempBarTimer = setInterval(() => {
+        if (currentMode !== "melting" || thermalMode !== "bar") {
+          stopTempBarAnimation();
+          return;
+        }
+        currentTempC += 40;
+        if (currentTempC > MAX_BOIL_C) currentTempC = ABS_ZERO_C;
+        refreshTileColors();
+        updateThermalUI();
+      }, 80);
+      updateThermalUI();
+    }
+
+    function stopTempBarAnimation() {
+      if (!tempBarTimer) return;
+      clearInterval(tempBarTimer);
+      tempBarTimer = null;
+      updateThermalUI();
+    }
+
+    // --- Tooltip helpers ---
+    function showTooltip(evt, el) {
+      const tooltip = document.getElementById("pt-tooltip");
+      if (!tooltip) return;
+      if (currentMode === "names") {
+        tooltip.style.display = "none";
+        return;
+      }
+
+      const z = el.z;
+      let label = el.name;
+      if (currentMode === "en") {
+        const v = ELECTRONEGATIVITY[z];
+        const vStr = v == null ? "n/a" : v.toFixed(2);
+        label += ` – EN: ${vStr}`;
+      } else if (currentMode === "ionization") {
+        const v = IONIZATION1[z];
+        const vStr = v == null ? "n/a" : `${v} kJ/mol`;
+        label += ` – 1st IE: ${vStr}`;
+      } else if (currentMode === "radius") {
+        const v = ATOMIC_RADIUS[z];
+        const vStr = v == null ? "n/a" : `${v} pm`;
+        label += ` – Atomic radius: ${vStr}`;
+      } else if (currentMode === "crust") {
+        const v = CRUST_ABUND_PPM[z];
+        if (v == null || !isFinite(v) || v <= 0) {
+          label += " – Crustal abundance: n/a";
+        } else if (v >= 10000) {
+          const pct = (v / 10000).toFixed(2);
+          label += ` – Crustal abundance: ${v.toLocaleString()} ppm (~${pct}%)`;
+        } else if (v >= 1) {
+          label += ` – Crustal abundance: ${v.toFixed(1)} ppm`;
+        } else {
+          // 极低丰度，用科学计数法标出 ppm 值
+          const exp = Math.floor(Math.log10(v));
+          const mant = v / Math.pow(10, exp);
+          label += ` – Crustal abundance: ${mant.toFixed(1)}e${exp} ppm`;
+        }
+      } else if (currentMode === "melting") {
+        if (thermalMode === "bar") {
+          const phase = getPhaseAtTempC(z, currentTempC);
+          let phaseLabel;
+          if (phase === "solid") phaseLabel = "solid";
+          else if (phase === "liquid") phaseLabel = "liquid";
+          else if (phase === "gas") phaseLabel = "gas";
+          else phaseLabel = "unknown";
+          label += ` – Phase at ${Math.round(currentTempC)} °C: ${phaseLabel}`;
+          const mp = MELTING_POINT_C[z];
+          const bp = BOILING_POINT_C[z];
+          const mpStr = mp == null || !isFinite(mp) ? "n/a" : (Math.abs(mp) < 100 ? mp.toFixed(2) : mp.toFixed(0)) + " °C";
+          const bpStr = bp == null || !isFinite(bp) ? "n/a" : (Math.abs(bp) < 100 ? bp.toFixed(2) : bp.toFixed(0)) + " °C";
+          label += ` (m.p.: ${mpStr}, b.p.: ${bpStr})`;
+        } else if (thermalMode === "bp") {
+          const v = BOILING_POINT_C[z];
+          const vStr = v == null || !isFinite(v)
+            ? "n/a"
+            : (Math.abs(v) < 100 ? v.toFixed(2) : v.toFixed(0)) + " °C";
+          label += ` – Boiling point: ${vStr}`;
+        } else {
+          const v = MELTING_POINT_C[z];
+          const vStr = v == null || !isFinite(v)
+            ? "n/a"
+            : (Math.abs(v) < 100 ? v.toFixed(2) : v.toFixed(0)) + " °C";
+          label += ` – Melting point: ${vStr}`;
+          if (z === 6 || z === 33) {
+            label += " (sublimes at 1 atm)";
+          }
+        }
+      } else if (currentMode === "hue") {
+        const c = HUE_MAP.get(z) || "(default group color)";
+        label += ` – Hue color: ${c}`;
+      }
+
+      tooltip.textContent = label;
+      tooltip.style.display = "block";
+
+      const offset = 10;
+      const x = evt.clientX + offset;
+      const y = evt.clientY + offset;
+      tooltip.style.left = x + "px";
+      tooltip.style.top = y + "px";
+    }
+
+    function moveTooltip(evt) {
+      const tooltip = document.getElementById("pt-tooltip");
+      if (!tooltip || tooltip.style.display === "none") return;
+      const offset = 10;
+      tooltip.style.left = evt.clientX + offset + "px";
+      tooltip.style.top = evt.clientY + offset + "px";
+    }
+
+    function hideTooltip() {
+      const tooltip = document.getElementById("pt-tooltip");
+      if (!tooltip) return;
+      tooltip.style.display = "none";
+    }
+
+    function tileColor(el) {
+      // Special highlight for platinum-group elements in Group mode
+      if (currentMode === "names" && Z_PLATINUM_GROUP.has(el.z)) {
+        return "linear-gradient(135deg,#fff59d,#ffca28)";
+      }
+      // Deep blue for Zn, Cd, Hg as a small post-transition group in Group mode
+      if (currentMode === "names" && (el.z === 30 || el.z === 48 || el.z === 80)) {
+        return "linear-gradient(135deg,#5c6bc0,#283593)";
+      }
+      // Semi-metals: B, Si, Ge, As, Sb, Te in Grouping mode as light brown
+      if (currentMode === "names" && Z_SEMI_METAL.has(el.z)) {
+        return "linear-gradient(135deg,#d7b68a,#a6763e)";
+      }
+      if (Z_NOBLE.has(el.z)) {
+        return "linear-gradient(135deg,#b3e5fc,#29b6f6)";
+      }
+      if (Z_ALKALI.has(el.z)) {
+        return "linear-gradient(135deg,#ef5350,#c62828)";
+      }
+      if (Z_ALKALINE.has(el.z)) {
+        return "linear-gradient(135deg,#ffb74d,#fb8c00)";
+      }
+      if (Z_HALOGEN.has(el.z)) {
+        return "linear-gradient(135deg,#ce93d8,#8e24aa)";
+      }
+      if (Z_NONMETAL.has(el.z)) {
+        return "linear-gradient(135deg,#81c784,#2e7d32)";
+      }
+
+      // Fallback by block
+      switch (el.block) {
+        case "s": return "linear-gradient(135deg,#ffe082,#ffb300)";
+        case "p": return "linear-gradient(135deg,#4db6ac,#00796b)";
+        case "d": return "linear-gradient(135deg,#64b5f6,#1976d2)";
+        case "f": return "linear-gradient(135deg,#b39ddb,#5e35b1)";
+        default: return "linear-gradient(135deg,#90a4ae,#455a64)";
+      }
+    }
+
+    // --- Rendering: periodic table grid ---
+    function renderPeriodicTable() {
+      const container = document.getElementById("ptable");
+      container.innerHTML = "";
+
+      const maxRow = Math.max(...ELEMENTS.map(e => e.y));
+      const elementsByRow = new Map();
+      for (const el of ELEMENTS) {
+        if (!elementsByRow.has(el.y)) elementsByRow.set(el.y, []);
+        elementsByRow.get(el.y).push(el);
+      }
+
+      for (let row = 1; row <= maxRow; row++) {
+        // Row label on the left
+        const rowLabel = document.createElement("div");
+        rowLabel.className = "row-label";
+        rowLabel.textContent = row <= 7 ? row : "La";
+        rowLabel.style.gridColumn = "1 / 2";
+        rowLabel.style.gridRow = row;
+        container.appendChild(rowLabel);
+      }
+
+      for (const el of ELEMENTS) {
+        const tile = document.createElement("button");
+        tile.type = "button";
+        let tileClass = "el-tile" + (el.y >= 8 ? " small" : "");
+        if (hasMetallicLuster(el)) {
+          tileClass += " metallic";
+        }
+        tile.className = tileClass;
+        tile.style.gridColumn = String(el.x + 1); // +1 because col1 is row label
+        tile.style.gridRow = String(el.y);
+        tile.dataset.z = String(el.z);
+
+        const inner = document.createElement("div");
+        inner.className = "el-inner";
+
+        const atomic = document.createElement("div");
+        atomic.className = "el-atomic";
+        atomic.textContent = el.z;
+
+        const symbol = document.createElement("div");
+        symbol.className = "el-symbol";
+        symbol.textContent = el.symbol;
+
+        inner.appendChild(atomic);
+        inner.appendChild(symbol);
+        tile.appendChild(inner);
+
+  const radiusCircle = document.createElement("div");
+  radiusCircle.className = "radius-circle";
+  tile.appendChild(radiusCircle);
+
+        tile.style.backgroundImage = modeColor(el);
+
+        tile.addEventListener("mouseenter", (evt) => {
+          handleHover(el.z);
+          if (lockedZ === null || lockedZ === el.z) {
+            showTooltip(evt, el);
+          }
+        });
+        tile.addEventListener("mousemove", (evt) => {
+          if (lockedZ === null || lockedZ === el.z) {
+            moveTooltip(evt);
+          }
+        });
+        tile.addEventListener("mouseleave", () => {
+          hideTooltip();
+        });
+        tile.addEventListener("focus", () => handleHover(el.z));
+        tile.addEventListener("click", () => handleClick(el.z));
+
+        container.appendChild(tile);
+      }
+    }
+
+    // --- Rendering: Bohr diagram SVG ---
+    function renderBohrDiagram(shells, totalElectrons) {
+      const svg = document.getElementById("bohr-svg");
+      const ns = "http://www.w3.org/2000/svg";
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+      const cx = 100;
+      const cy = 100;
+      const maxRadius = 70;
+      const shellCount = shells.length;
+      const baseRadius = 26;
+      const step = shellCount > 1 ? (maxRadius - baseRadius) / (shellCount - 1) : 0;
+
+      const defs = document.createElementNS(ns, "defs");
+      const glow = document.createElementNS(ns, "filter");
+      glow.setAttribute("id", "eGlow");
+      glow.innerHTML = "<feGaussianBlur in='SourceGraphic' stdDeviation='1.6' result='blur'/>" +
+                       "<feColorMatrix in='blur' type='matrix' values='0 0 0 0 0.4  0 0 0 0 0.9  0 0 0 0 1  0 0 0 0.9 0'/>";
+      defs.appendChild(glow);
+      svg.appendChild(defs);
+
+      // Background subtle halo
+      const halo = document.createElementNS(ns, "circle");
+      halo.setAttribute("cx", cx);
+      halo.setAttribute("cy", cy);
+      halo.setAttribute("r", String(maxRadius + 10));
+      halo.setAttribute("fill", "radial-gradient(circle,#263238,transparent)");
+
+      // SVG can't use CSS gradients directly on attributes in all browsers, use solid fallback
+      halo.setAttribute("fill", "#121a24");
+      svg.appendChild(halo);
+
+      // Shell circles
+      shells.forEach((count, i) => {
+        const r = baseRadius + step * i;
+        const orbit = document.createElementNS(ns, "circle");
+        orbit.setAttribute("cx", cx);
+        orbit.setAttribute("cy", cy);
+        orbit.setAttribute("r", String(r));
+        orbit.setAttribute("fill", "none");
+        orbit.setAttribute("stroke", "rgba(255,255,255,0.28)");
+        orbit.setAttribute("stroke-width", "1.2");
+        svg.appendChild(orbit);
+
+        const electrons = count;
+        const electronRadius = 3.4;
+        for (let k = 0; k < electrons; k++) {
+          const angle = (2 * Math.PI * k) / electrons - Math.PI / 2;
+          const ex = cx + r * Math.cos(angle);
+          const ey = cy + r * Math.sin(angle);
+          const e = document.createElementNS(ns, "circle");
+          e.setAttribute("cx", ex.toFixed(2));
+          e.setAttribute("cy", ey.toFixed(2));
+          e.setAttribute("r", String(electronRadius));
+          e.setAttribute("fill", "#4fc3f7");
+          e.setAttribute("filter", "url(#eGlow)");
+          svg.appendChild(e);
+        }
+      });
+
+      // Nucleus
+      const nucleusOuter = document.createElementNS(ns, "circle");
+      nucleusOuter.setAttribute("cx", cx);
+      nucleusOuter.setAttribute("cy", cy);
+      nucleusOuter.setAttribute("r", "13");
+      nucleusOuter.setAttribute("fill", "#ff4081");
+      nucleusOuter.setAttribute("fill-opacity", "0.92");
+      svg.appendChild(nucleusOuter);
+
+      const nucleusInner = document.createElementNS(ns, "circle");
+      nucleusInner.setAttribute("cx", cx);
+      nucleusInner.setAttribute("cy", cy);
+      nucleusInner.setAttribute("r", "7.5");
+      nucleusInner.setAttribute("fill", "#ffeb3b");
+      svg.appendChild(nucleusInner);
+
+      const nucleusText = document.createElementNS(ns, "text");
+      nucleusText.setAttribute("x", cx);
+      nucleusText.setAttribute("y", cy + 3);
+      nucleusText.setAttribute("text-anchor", "middle");
+      nucleusText.setAttribute("font-size", "9");
+      nucleusText.setAttribute("fill", "#000");
+      nucleusText.textContent = String(totalElectrons);
+      svg.appendChild(nucleusText);
+    }
+
+    // --- State & interaction ---
+    let currentActiveZ = 1;
+    let lockedZ = null;
+
+    function applySelection(z) {
+      currentActiveZ = z;
+
+      const el = ELEMENTS.find(e => e.z === z);
+      if (!el) return;
+
+      // Update tiles selection
+      document.querySelectorAll(".el-tile.selected").forEach(tile => tile.classList.remove("selected"));
+      const tile = document.querySelector('.el-tile[data-z="' + z + '"]');
+      if (tile) tile.classList.add("selected");
+
+      // Compute shells
+      const shells = electronsPerShell(z);
+      const totalElectrons = shells.reduce((a, b) => a + b, 0);
+
+      // Update textual info
+      document.getElementById("info-symbol").textContent = el.symbol;
+      document.getElementById("info-name").textContent = el.name;
+      document.getElementById("info-z").textContent = el.z;
+      document.getElementById("info-meta-small").textContent = `Period ${el.period} · Group ${el.group}`;
+      document.getElementById("info-shells").textContent = shells.join(", ");
+      document.getElementById("info-electrons").textContent = `Electrons: ${totalElectrons}`;
+
+      const valenceSpan = document.getElementById("info-valence");
+      const oxidationSpan = document.getElementById("info-oxidation");
+      const vInfo = VALENCE_DATA.get(z);
+      if (valenceSpan) {
+        if (vInfo && vInfo.valence) {
+          valenceSpan.innerHTML = vInfo.valence;
+        } else {
+          valenceSpan.textContent = "—";
+        }
+      }
+      if (oxidationSpan) {
+        if (vInfo && Array.isArray(vInfo.oxidation) && vInfo.oxidation.length) {
+          const states = vInfo.oxidation;
+          const anyMarked = states.some(s => typeof s === "string" && s.includes("**"));
+          const html = states
+            .map((s, idx) => {
+              if (typeof s !== "string") return String(s);
+              const isMarked = s.includes("**");
+              const clean = s.replace(/\*\*/g, "");
+              if (anyMarked) {
+                return isMarked ? `<span class="oxidation-main">${clean}</span>` : clean;
+              }
+              // 兼容旧数据：如果没有 ** 标记，就默认第一个为主要化合价
+              return idx === 0 ? `<span class="oxidation-main">${clean}</span>` : clean;
+            })
+            .join(", ");
+          oxidationSpan.innerHTML = html;
+        } else {
+          oxidationSpan.textContent = "—";
+        }
+      }
+
+      const notesDiv = document.getElementById("notes-body");
+      if (notesDiv) {
+        const noteHtml = ELEMENT_NOTES.get(el.symbol);
+        if (noteHtml && noteHtml.trim().length > 0) {
+          notesDiv.innerHTML = noteHtml;
+        } else {
+          notesDiv.innerHTML = "";
+        }
+      }
+
+      renderBohrDiagram(shells, totalElectrons);
+    }
+
+    function handleHover(z) {
+      if (lockedZ !== null) return;
+      if (currentActiveZ === z) return;
+      applySelection(z);
+    }
+
+    function handleClick(z) {
+      const tile = document.querySelector('.el-tile[data-z="' + z + '"]');
+
+      // 如果已经锁定在这个元素上，再点一次则取消锁定
+      if (lockedZ === z) {
+        lockedZ = null;
+        if (tile) tile.classList.remove("locked");
+        // 仍然保持当前选中元素为 z，只是恢复 hover 可用
+        return;
+      }
+
+      // 如果已经锁定在别的元素上，则忽略其他元素的点击
+      if (lockedZ !== null && lockedZ !== z) {
+        return;
+      }
+
+      // 当前没有锁定，则锁定到这个元素
+      lockedZ = z;
+      // 先移除之前可能的锁定样式
+      document.querySelectorAll(".el-tile.locked").forEach(t => t.classList.remove("locked"));
+      if (tile) tile.classList.add("locked");
+
+      applySelection(z);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPeriodicTable();
+      document.querySelectorAll(".panel-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const mode = btn.getAttribute("data-mode");
+          setMode(mode);
+        });
+      });
+
+      document.querySelectorAll(".thermal-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const mode = btn.getAttribute("data-thermal");
+          setThermalMode(mode);
+        });
+      });
+
+      const slider = document.getElementById("thermal-slider");
+      const playBtn = document.getElementById("thermal-play");
+      if (slider) {
+        slider.addEventListener("input", () => {
+          const v = Number(slider.value);
+          if (!Number.isNaN(v)) {
+            currentTempC = v;
+            stopTempBarAnimation();
+            if (currentMode === "melting" && thermalMode === "bar") {
+              refreshTileColors();
+            }
+            updateThermalUI();
+          }
+        });
+      }
+      if (playBtn) {
+        playBtn.addEventListener("click", () => {
+          if (tempBarTimer) {
+            stopTempBarAnimation();
+          } else {
+            if (currentMode !== "melting") setMode("melting");
+            setThermalMode("bar");
+            startTempBarAnimation();
+          }
+        });
+      }
+
+      // 先从 CSS 变量载入 Hue 颜色，保证你在 element_hues.css 里调的颜色立即生效
+      loadHueFromCSSVars();
+
+      Promise.allSettled([
+        loadValenceData(),
+        loadElementNotes()
+      ]).finally(() => {
+        // 默认进入 Hue 模式，m./b. point 在切换时自动进入 temp. bar
+        setMode("hue");
+        // 默认选中氢元素
+        applySelection(1);
+        const firstTile = document.querySelector('.el-tile[data-z="1"]');
+        if (firstTile) firstTile.classList.add("selected");
+      });
+    });
+  </script>
+</body>
+</html>

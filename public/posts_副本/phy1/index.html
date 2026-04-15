@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/phy1/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/phy1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学">
+  <meta property="og:description" content="CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:published_time" content="2025-09-16T11:29:34+08:00">
+    <meta property="article:modified_time" content="2025-09-16T11:29:34+08:00">
+    <meta property="article:tag" content="PHY1001">
+
+  <meta itemprop="name" content="⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学">
+  <meta itemprop="description" content="CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway">
+  <meta itemprop="datePublished" content="2025-09-16T11:29:34+08:00">
+  <meta itemprop="dateModified" content="2025-09-16T11:29:34+08:00">
+  <meta itemprop="wordCount" content="698">
+  <meta itemprop="keywords" content="PHY1001">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学">
+  <meta name="twitter:description" content="CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/phy1.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-09-16T11:29:34+08:00">September 16, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="phy-week1">PHY week1</h1>
+<ul>
+<li>
+<p>基础微分方程：
+$$a={dv\over{dt}},\ v={dx\over{dt}}$$</p>
+</li>
+<li>
+<p><strong>变加速度位移方程</strong>(用于推 导 v(x))：
+$$a=\boxed{a(v)}={dv\over{dt}}={dv\over{dx}}\times{dx\over{dt}}=\boxed{v\ dv\over{dx}}\to\ \int_{v_0}^{v_t}{v\over{a(v)}}dv=\int_{x_0}^{x_t} dx=\Delta x\to v(x)=&hellip;$$
+(需要尽量剥离 a(v)中的 v)</p>
+</li>
+<li>
+<p>正交分解：</p>
+</li>
+</ul>
+<p>$$Orthodecomp.：\vec r(t)=\vec v(0)t+{1\over 2}at^2\to r_x(t)=v_x(0)+{1\over 2}at^2$$</p>
+<ul>
+<li>30 degrees north to east：北偏东 30°</li>
+<li>向量叉乘：</li>
+</ul>
+<p>$$(x_1,x_2,x_3) \times (y_1,y_2,y_3)\ 等于：两个向量和单位向量组成的三阶行列式 (反斜方向为正项)$$</p>
+<br>
+<br>
+<h1 id="phy-week2">PHY week2</h1>
+<ul>
+<li>匀速圆周运动公式：
+$$v=ωr,\ \ \vec a={\vec v^2\over r}=ω^2={4\pi ^2r\over T^2}$$
+$$v={2\pi r\over T},\ \ ω={2\pi\over T}$$</li>
+<li>牛顿三定理：
+$$NFL:\ \vec F_{net}=0\iff const\ \vec v\ ,\ \vec a=0$$
+$$NSL:\ \vec F_{net}=m\vec a,\ \ \vec F_{x\ net}=m\vec a_x\ &hellip;$$
+$$NTL:for\ two\ entities\ A,\ B:\ ∀\  \vec F_{AB},\ ∃\ \vec F_{BA},\ \vec F_{AB}=-F_{BA}$$_</li>
+<li><strong>变加速度时间方程</strong>(用于推导 v(t), x(t) 和 a(t))
+$$a={dv\over dt}={F(v)\over m}\to \int_{v_0}^{v_t}{1\over F(v)}dv=\int_0^t{1\over m}dt\to v(t)=&hellip;$$
+(需要尽量剥离 F(v)中的 v)
+$$trivially,\ a(t)={d\ v(t)\over dt};\ \ x(t)=\int_0^t v(t)\ dt$$</li>
+</ul>
+<p>用小量等价或泰勒首项化成分式/幂次比较，常用等价（x→0）：</p>
+<ul>
+<li>sin x ~ x，tan x ~ x，arcsin x ~ x</li>
+<li>1 - cos x ~ x^2/2</li>
+<li>e^x - 1 ~ x，ln(1+x) ~ x</li>
+<li>√(1+x) - 1 ~ x/2</li>
+<li>a^x - 1 ~ x ln a（a&gt;0）</li>
+</ul>
+<br>
+<br>
+<h1 id="phy-week3">PHY week3</h1>
+<br>
+<h3 id="斯多克斯模型">斯多克斯模型</h3>
+<p>理想黏性流体阻力方程：(只适用于高黏度流体中的低速运动)$$f = kv$$
+比如用“变加速度时间方程”(from week2)可以推导 铁球在油中 位移、速度和加速度随时间的变化公式：$$ma_y = mg - kv_y\ \to m \frac{dv_y}{dt} = mg - kv_y\ \to v_y(t) = v_t \big(1 - e^{-\tfrac{k}{m}t}\big)$$</p>
+<br>
+<h3 id="压强差模型">压强差模型</h3>
+<p>理想惯性流体阻力方程：（只用于低黏度流体中的高速运动）$$drag:\ D = \tfrac{1}{2} C \rho A,\ \ drag\ force:\ f = Dv^2\ \ equillibrium:\  \tfrac{1}{2} C \rho A v_t^2 - F_g = ma $$</p>
+<ul>
+<li>C：阻力系数（无量纲，取决于形状、流动状态）</li>
+<li>ρ：流体密度</li>
+<li>A：迎风面积（截面积）</li>
+<li>v：相对流速（逆流逆风速度正叠加）</li>
+</ul>
+<p>比如计算半径为 R 的水滴在空气中的最终速度满足：$$\tfrac{1}{2}C \rho_{air} \pi R^2 v_t^2 = {4\over3}\pi R^3 \rho_{water}g$$</p>
+<br>
+<ul>
+<li>
+<p><strong>变加速度速度方程</strong>：(用于推导 x(v) 和极限位移)</p>
+<p>（假设受到两个力 f, F)</p>
+<p>$$ma=m{dv\over dt}=f(x)+F(x)\to {dv\over dt}={f(x)+F(x)\over m},\ multiply\ by\ dx=vdt:$$
+$$\int dx=\int{mvdv\over f(x)+F(x)},\ then\ we\ have\ x(v)$$</p>
+</li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/phy1001/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">PHY1001</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/phy1/">⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

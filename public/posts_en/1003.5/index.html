@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC1003 LEC13-15 Recursion | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="An introduction to recursion, the stack and heap, and stack overflow.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/1003.5/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/1003.5/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC1003 LEC13-15 Recursion">
+  <meta property="og:description" content="An introduction to recursion, the stack and heap, and stack overflow.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2024-10-22T17:23:58+08:00">
+    <meta property="article:modified_time" content="2024-10-22T17:23:58+08:00">
+    <meta property="article:tag" content="CSC1003">
+    <meta property="article:tag" content="讲座">
+
+  <meta itemprop="name" content="💻 CSC1003 LEC13-15 Recursion">
+  <meta itemprop="description" content="An introduction to recursion, the stack and heap, and stack overflow.">
+  <meta itemprop="datePublished" content="2024-10-22T17:23:58+08:00">
+  <meta itemprop="dateModified" content="2024-10-22T17:23:58+08:00">
+  <meta itemprop="wordCount" content="712">
+  <meta itemprop="keywords" content="CSC1003,讲座">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC1003 LEC13-15 Recursion">
+  <meta name="twitter:description" content="An introduction to recursion, the stack and heap, and stack overflow.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/recursion.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC1003 LEC13-15 Recursion</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC1003 LEC13-15 Recursion</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2024-10-22T17:23:58+08:00">October 22, 2024</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="recursion">Recursion</h1>
+<h3 id="the-structure-of-recursion">The Structure of Recursion</h3>
+<ul>
+<li>
+<p>Recursion is a technique in which a definition refers to itself.</p>
+</li>
+<li>
+<p><strong>Base case</strong>: a recursive process must have a stopping condition. Once the problem has been reduced sufficiently, the result is returned directly.</p>
+</li>
+<li>
+<p><strong>Recursive case</strong>: the problem is decomposed into one or more smaller subproblems, which are then solved recursively.</p>
+</li>
+</ul>
+<h3 id="example-converting-an-integer-to-binary">Example: Converting an Integer to Binary</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Binary</span> 
+</span></span><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">convert</span>(<span style="color:#66d9ef">int</span> N)
+</span></span><span style="display:flex;"><span>   { 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (N <span style="color:#f92672">==</span> 1) <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;1&#34;</span>;   <span style="color:#75715e">// (Base Case)基准条件</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> convert(N<span style="color:#f92672">/</span>2) <span style="color:#f92672">+</span> (N <span style="color:#f92672">%</span> 2);   <span style="color:#75715e">// 方法中调用自己</span>
+</span></span><span style="display:flex;"><span>   } 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) 
+</span></span><span style="display:flex;"><span>   { 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">parseInt</span>(args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>); 
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(convert(N)); 
+</span></span><span style="display:flex;"><span>   } 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>Let us examine the recursive part of <code>convert()</code> in detail:</p>
+<ol>
+<li>Suppose the command-line input is <code>42</code>. It is first converted to an integer in <code>main</code>, and then <code>main</code> calls <code>convert(42)</code>.</li>
+<li>Since <code>42 ≠ 1</code>, the method returns <code>convert(21) + 0</code>. Because the return type of <code>convert()</code> is <code>String</code>, <strong>this is not arithmetic addition but string concatenation</strong>.</li>
+<li>Then <code>convert(21)</code> calls itself again, so the return value becomes <code>convert(10) + 1 + 0</code>. This process continues until the fifth recursive call reaches the base case (input value equals 1). Since <code>return</code> immediately exits a method call once there is no further recursion, the final output is <code>101010</code>.</li>
+</ol>
+</li>
+<li>
+<p>Timeline (parentheses indicate the call is still inside recursion):</p>
+</li>
+</ul>
+<pre tabindex="0"><code>(42)→(21)+0
+	  ↓
+	 (10)+1+0
+	  ↓
+	 (5)+0+1+0
+	  ↓
+	 (2)+1+0+1+0
+	  ↓
+	 (1)+0+1+0+1+0 → 101010
+</code></pre><h3 id="stack-overflow">Stack Overflow</h3>
+<ul>
+<li>The following are two recursive definitions that may recurse indefinitely and eventually trigger stack overflow:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">bad</span>(<span style="color:#66d9ef">int</span> N) 
+</span></span><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (N <span style="color:#f92672">==</span> 1) <span style="color:#66d9ef">return</span> 1.<span style="color:#a6e22e">0</span>; 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> bad(1 <span style="color:#f92672">+</span> N<span style="color:#f92672">/</span>2) <span style="color:#f92672">+</span> 1.<span style="color:#a6e22e">0</span><span style="color:#f92672">/</span>N; 
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">worse</span>(<span style="color:#66d9ef">int</span> N) 
+</span></span><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> worse(N<span style="color:#f92672">-</span>1) <span style="color:#f92672">+</span> 1.<span style="color:#a6e22e">0</span><span style="color:#f92672">/</span>N; 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><strong>Problem</strong>: in <code>bad()</code>, the argument <code>1 + N/2</code> may fail to decrease quickly enough, which can lead to non-terminating recursion. In <code>worse()</code>, there is no base case at all, so the recursion is necessarily infinite.</li>
+<li><strong>Solution</strong>: every recursive program must have a clear base case and must guarantee that recursion terminates after a finite and reasonable number of steps.</li>
+</ul>
+<h3 id="stack-and-heap">Stack and Heap</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">Stack</th>
+          <th style="text-align: left">Heap</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Management</td>
+          <td style="text-align: left">Automatically managed by the system (for local variables and method-call stack frames)</td>
+          <td style="text-align: left">Dynamically allocated by the program; reclaimed by the garbage collector</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Size</td>
+          <td style="text-align: left">Usually small (a few MB)</td>
+          <td style="text-align: left">Usually much larger (can reach several GB)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Allocation and deallocation speed</td>
+          <td style="text-align: left">Fast, LIFO (last in, first out)</td>
+          <td style="text-align: left">Relatively slower, depends on garbage collection</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Typical contents</td>
+          <td style="text-align: left">Local variables, method-call information (stack frames), recursive calls</td>
+          <td style="text-align: left">Object instances, arrays, etc.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Main risk</td>
+          <td style="text-align: left">Deep recursion may cause <code>StackOverflowError</code></td>
+          <td style="text-align: left">Memory leaks (if unreachable objects are not effectively reclaimed)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Data access</td>
+          <td style="text-align: left">Direct and fast</td>
+          <td style="text-align: left">Indirect via references, usually slower</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="exponential-waste">Exponential Waste</h3>
+<p>A common drawback of recursion is <strong>exponential waste</strong>, especially when the same subproblems are recomputed many times. The Fibonacci sequence is a classic example.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FibonacciStack</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">F</span>(<span style="color:#66d9ef">int</span> n) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 0) <span style="color:#66d9ef">return</span> 0; 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 1) <span style="color:#66d9ef">return</span> 1; 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> F(n<span style="color:#f92672">-</span>1) <span style="color:#f92672">+</span> F(n<span style="color:#f92672">-</span>2); 
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">parseInt</span>(args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(F(n));
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>In the recursive Fibonacci example above, each level of the recursion tree contains roughly twice as many calls as the previous level, so the time complexity is approximately <code>O(2^n)</code>. This means that as <code>n</code> increases, the running time grows exponentially, making the computation very slow. For example:</p>
+</li>
+<li>
+<p>Computing <code>fibonacci(5)</code> takes roughly 15 calls.<br>
+Computing <code>fibonacci(10)</code> takes roughly 177 calls.<br>
+Computing <code>fibonacci(50)</code> may take billions of calls and can be extremely slow.</p>
+</li>
+<li>
+<p>Even larger values may directly lead to stack overflow.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: use dynamic programming or memoization to avoid repeated computation.</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FibonacciHeap</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">long</span><span style="color:#f92672">[]</span> memo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">long</span><span style="color:#f92672">[</span>100<span style="color:#f92672">]</span>; 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">F</span>(<span style="color:#66d9ef">int</span> n) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 0) <span style="color:#66d9ef">return</span> 0; 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 1) <span style="color:#66d9ef">return</span> 1; 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (memo<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0) 
+</span></span><span style="display:flex;"><span>         memo<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> F(n<span style="color:#f92672">-</span>1) <span style="color:#f92672">+</span> F(n<span style="color:#f92672">-</span>2); 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> memo<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span>; 
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">parseInt</span>(args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>); 
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(F(n)); 
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>This algorithm stores each previously computed Fibonacci number in the <code>memo</code> array. <strong>Because the array is stored on the heap, it does not cause stack overflow in the same way as repeated recursive call frames.</strong> At the same time, it avoids recomputing the same subproblems at every call.</li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc1003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC1003</a>
+   </li>
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">讲座</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#recursion">Recursion</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#the-structure-of-recursion">The Structure of Recursion</a></li>
+            <li><a href="#example-converting-an-integer-to-binary">Example: Converting an Integer to Binary</a></li>
+            <li><a href="#stack-overflow">Stack Overflow</a></li>
+            <li><a href="#stack-and-heap">Stack and Heap</a></li>
+            <li><a href="#exponential-waste">Exponential Waste</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.5/">💻 CSC1003 LEC13-15 递归</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/1003.1/">💻 CSC1003 LEC1~3 Functions, Data Types, and Computation</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.1/">💻 CSC1003 LEC1~3 函数、数据类型与计算</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/assignment1/">💻 CSC1003 Assignment 1 OJ Practice</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/assignment1/">💻 CSC1003 Assignment1 OJPractice</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/1003.2/">💻 CSC1003 TBL1 Networking and the History of Computing</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.2/">💻 CSC1003 TBL1 网络与计算机史</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

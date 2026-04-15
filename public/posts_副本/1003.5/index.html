@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC1003 LEC13-15 递归 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="介绍递归，栈与堆，以及栈溢出">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/1003.5/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/1003.5/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC1003 LEC13-15 递归">
+  <meta property="og:description" content="介绍递归，栈与堆，以及栈溢出">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:published_time" content="2024-10-22T17:23:58+08:00">
+    <meta property="article:modified_time" content="2024-10-22T17:23:58+08:00">
+    <meta property="article:tag" content="CSC1003">
+    <meta property="article:tag" content="讲座">
+
+  <meta itemprop="name" content="💻 CSC1003 LEC13-15 递归">
+  <meta itemprop="description" content="介绍递归，栈与堆，以及栈溢出">
+  <meta itemprop="datePublished" content="2024-10-22T17:23:58+08:00">
+  <meta itemprop="dateModified" content="2024-10-22T17:23:58+08:00">
+  <meta itemprop="wordCount" content="1240">
+  <meta itemprop="keywords" content="CSC1003,讲座">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC1003 LEC13-15 递归">
+  <meta name="twitter:description" content="介绍递归，栈与堆，以及栈溢出">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/recursion.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC1003 LEC13-15 递归</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC1003 LEC13-15 递归</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2024-10-22T17:23:58+08:00">October 22, 2024</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="递归recursion">递归(Recursion)</h1>
+<h3 id="递归的结构">递归的结构</h3>
+<ul>
+<li>
+<p>递归是一种在定义时引用自身的技术。</p>
+</li>
+<li>
+<p><strong>基准条件</strong>：递归必须有一个终止条件，当问题缩小到一定程度时，直接给出结果。</p>
+</li>
+<li>
+<p><strong>递归条件</strong>：问题被分解为一个或多个更小的子问题，然后递归地解决这些子问题。</p>
+</li>
+</ul>
+<h3 id="示例整数转换为二进制">示例：整数转换为二进制</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Binary</span> 
+</span></span><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">convert</span>(<span style="color:#66d9ef">int</span> N)
+</span></span><span style="display:flex;"><span>   { 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (N <span style="color:#f92672">==</span> 1) <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;1&#34;</span>;   <span style="color:#75715e">// (Base Case)基准条件</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> convert(N<span style="color:#f92672">/</span>2) <span style="color:#f92672">+</span> (N <span style="color:#f92672">%</span> 2);   <span style="color:#75715e">// 方法中调用自己</span>
+</span></span><span style="display:flex;"><span>   } 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) 
+</span></span><span style="display:flex;"><span>   { 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">parseInt</span>(args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>); 
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(convert(N)); 
+</span></span><span style="display:flex;"><span>   } 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>我们来详细的解释 <code>convert()</code> 递归部分：</p>
+<ol>
+<li>假设命令行输入“42”，它先在 <code>main</code> 方法中转为整型数据，然后 <code>main</code> 方法调用  <code>convert</code> 方法，42被输入。</li>
+<li>42 ≠ 1，所以方法返回值为 “convert(21) + 0”。因为 <code>convert()</code> 方法的返回值是  String 类型的，<strong>所以这不是加法而是字符的拼接</strong>。</li>
+<li>接着 <code>convert(21)</code> 再次调用自己，返回值变为 “convert(10) + 1 + 0&quot;。以此类推，直到第五次递归时达到基准条件(即输入值为 1)，因为 return 在没有递归时<strong>会立即结束一个方法</strong>，最终会输出”101010“。</li>
+</ol>
+</li>
+<li>
+<p>时间轴(括号代表还在递归内)：</p>
+</li>
+</ul>
+<pre tabindex="0"><code>(42)→(21)+0
+	  ↓
+	 (10)+1+0
+	  ↓
+	 (5)+0+1+0
+	  ↓
+	 (2)+1+0+1+0
+	  ↓
+	 (1)+0+1+0+1+0 → 101010
+</code></pre><h3 id="栈溢出stack-overflow">栈溢出(Stack Overflow)</h3>
+<ul>
+<li>以下是两个可能无线递归并导致栈溢出的递归：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">bad</span>(<span style="color:#66d9ef">int</span> N) 
+</span></span><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (N <span style="color:#f92672">==</span> 1) <span style="color:#66d9ef">return</span> 1.<span style="color:#a6e22e">0</span>; 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> bad(1 <span style="color:#f92672">+</span> N<span style="color:#f92672">/</span>2) <span style="color:#f92672">+</span> 1.<span style="color:#a6e22e">0</span><span style="color:#f92672">/</span>N; 
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">worse</span>(<span style="color:#66d9ef">int</span> N) 
+</span></span><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> worse(N<span style="color:#f92672">-</span>1) <span style="color:#f92672">+</span> 1.<span style="color:#a6e22e">0</span><span style="color:#f92672">/</span>N; 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><strong>问题</strong>：<code>bad()</code> 中，1 + N/2 的增长太慢，可能导致无限递归。<code>worse()</code> 中，没有基准条件，导致无限递归。</li>
+<li><strong>解决方案</strong>：递归程序必须有明确的基准条件，确保递归能够在有限且合理次数的步骤内结束。</li>
+</ul>
+<h3 id="栈stack与堆heap">栈(Stack)与堆(Heap)</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">特性</th>
+          <th style="text-align: left">栈(Stack)</th>
+          <th style="text-align: left">堆(Heap)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">管理方式</td>
+          <td style="text-align: left">全部由操作系统自动管理(用于局部变量和方法调用栈帧)</td>
+          <td style="text-align: left">由程序员手动分配，垃圾回收器自动回收</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">空间大小</td>
+          <td style="text-align: left">通常较小(几MB)</td>
+          <td style="text-align: left">通常较大（可达到数GB）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">分配与释放速度</td>
+          <td style="text-align: left">快速，LIFO(后进先出)</td>
+          <td style="text-align: left">相对较慢，依赖垃圾回收(GC)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">使用对象</td>
+          <td style="text-align: left">局部变量、方法调用信息(栈帧)、递归调用</td>
+          <td style="text-align: left">对象实例、数组等</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">主要风险</td>
+          <td style="text-align: left">递归过深可能导致栈溢出（<code>StackOverflowError</code>）</td>
+          <td style="text-align: left">内存泄漏(如果垃圾回收器无法释放无用对象)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">数据访问</td>
+          <td style="text-align: left">直接访问，速度快</td>
+          <td style="text-align: left">通过引用间接访问，速度较慢</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="指数级浪费">指数级浪费</h3>
+<p>递归的一个常见问题是指数级的浪费，特别是在涉及到重复计算时。Fibonacci 序列是一个典型的例子。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FibonacciStack</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">F</span>(<span style="color:#66d9ef">int</span> n) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 0) <span style="color:#66d9ef">return</span> 0; 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 1) <span style="color:#66d9ef">return</span> 1; 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> F(n<span style="color:#f92672">-</span>1) <span style="color:#f92672">+</span> F(n<span style="color:#f92672">-</span>2); 
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">parseInt</span>(args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(F(n));
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>在如上的斐波那契递归中，递归树的每一层大约会有两倍于上一层的递归调用，因此时间复杂度大约是 O(2^n)。这意味着输入 n 增加时，计算所需的时间将会呈现指数级增长，导致计算非常慢。比如：</p>
+</li>
+<li>
+<p>计算 fibonacci(5) 需要大约 15 次调用。
+计算 fibonacci(10) 需要大约 177 次调用。
+计算 fibonacci(50) 可能需要数十亿次调用，时间会非常长。</p>
+</li>
+<li>
+<p>更大的数可能直接导致栈溢出。</p>
+</li>
+<li>
+<p><strong>解决方案</strong>：使用动态规划（Dynamic Programming）或者记忆化（Memoization）来避免重复计算。</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FibonacciHeap</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">long</span><span style="color:#f92672">[]</span> memo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">long</span><span style="color:#f92672">[</span>100<span style="color:#f92672">]</span>; 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">F</span>(<span style="color:#66d9ef">int</span> n) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 0) <span style="color:#66d9ef">return</span> 0; 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 1) <span style="color:#66d9ef">return</span> 1; 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (memo<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0) 
+</span></span><span style="display:flex;"><span>         memo<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> F(n<span style="color:#f92672">-</span>1) <span style="color:#f92672">+</span> F(n<span style="color:#f92672">-</span>2); 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> memo<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span>; 
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">parseInt</span>(args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>); 
+</span></span><span style="display:flex;"><span>      System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(F(n)); 
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>该算法会将每个计算过的 Fibonacci 数存储在 memo 数组中，<strong>因为数组存储在堆中，不会发生溢出</strong>。同时避免每次调用方法需要重复计算。</li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc1003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC1003</a>
+   </li>
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">讲座</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.5/">💻 CSC1003 LEC13-15 递归</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/1003.1/">💻 CSC1003 LEC1~3 函数、数据类型与计算</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.1/">💻 CSC1003 LEC1~3 函数、数据类型与计算</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/1003.4/">💻 CSC1003 LEC10-12 Midterm Revision</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/assignment1/">💻 CSC1003 Assignment1 OJPractice</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/assignment1/">💻 CSC1003 Assignment1 OJPractice</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/1003.2/">💻 CSC1003 TBL1 网络与计算机史</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/1003.2/">💻 CSC1003 TBL1 网络与计算机史</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

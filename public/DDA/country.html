@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Country Energy Cluster · D3 Globe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../css/custom.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #ffffff;
+      color: #222222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .country-page {
+      flex: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+    }
+    .country-top-bar {
+      margin: 0.75rem 0 0.75rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .country-layout {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      margin-top: 1.5rem;
+    }
+    .country-left,
+    .country-right {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .country-left,
+    .country-right {
+      display: flex;
+    }
+    .country-globe-card {
+      position: relative;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+      /* 进入页面时，让左侧视图从中间轻微平移到左边，模拟主页内容滑动效果 */
+      transform: translateX(6%);
+      transition: transform 0.45s ease-out;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .country-view-toggle {
+      position: absolute;
+      left: 50%;
+      top: 0.9rem;
+      transform: translateX(-50%);
+      display: inline-flex;
+      background: rgba(255,255,255,0.95);
+      border-radius: 999px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border: 1px solid rgba(15,23,42,0.12);
+      overflow: hidden;
+      z-index: 10;
+      font-size: 0.8rem;
+    }
+    .country-view-toggle button {
+      padding: 0.2rem 0.8rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #374151;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+    .country-view-toggle button.country-view-toggle--active {
+      background: #111827;
+      color: #ffffff;
+    }
+    .country-color-controls {
+      margin-top: 0.75rem;
+    }
+    .country-color-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #4b5563;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .country-color-toggle-label {
+      opacity: 0.9;
+    }
+    .country-color-toggle button {
+      padding: 0.15rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.18);
+      background: #f9fafb;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: #111827;
+    }
+    .country-color-toggle button.country-color-toggle--active {
+      background: #111827;
+      color: #ffffff;
+    }
+    .country-legend {
+      margin: 0.3rem auto 0;
+      max-width: 420px;
+      font-size: 0.75rem;
+    }
+    .country-legend-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 0.15rem;
+    }
+    .country-legend-labels {
+      position: relative;
+      display: block;
+      font-size: 0.72rem;
+      opacity: 0.8;
+      margin-top: 0.1rem;
+      height: 1.1rem;
+    }
+    .country-globe-svg {
+      width: 100%;
+      max-width: 100%;
+      height: min(70vh, 600px);
+      display: block;
+      margin: 0;
+    }
+    .country-tile-svg {
+      width: 100%;
+      max-width: 100%;
+      height: min(85vh, 720px);
+      display: none;
+      margin: 0;
+    }
+    #country-map-svg {
+      height: min(75vh, 640px);
+    }
+    .globe-sphere {
+      fill: #e6f2ff;
+      stroke: #4f83cc;
+      stroke-width: 1.2px;
+    }
+    .globe-graticule {
+      fill: none;
+      stroke: rgba(120, 150, 200, 0.4);
+      stroke-width: 0.6px;
+      stroke-dasharray: 2 2;
+    }
+    .globe-country {
+      stroke: rgba(255, 255, 255, 0.9);
+      stroke-width: 0.5px;
+      cursor: pointer;
+    }
+    .globe-country:hover {
+      stroke-width: 2px;
+      stroke: #111111;
+    }
+    .globe-country--highlight {
+      fill: #279e6d !important;
+    }
+    .globe-country--selected {
+      stroke: #111111;
+      stroke-width: 2.2px;
+    }
+    .tile-country {
+      stroke: #ffffff;
+      stroke-width: 0.5px;
+      cursor: pointer;
+    }
+    .tile-country:hover {
+      stroke-width: 1.0px;
+      stroke: #111827;
+    }
+    .tile-country--highlight {
+      fill: #279e6d !important;
+    }
+    .tile-country--selected {
+      stroke: #111111;
+      stroke-width: 2.2px;
+    }
+    .country-right-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem 1.5rem;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .country-mode-toggle {
+      display: inline-flex;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+      padding: 0.18rem;
+      border-radius: 999px;
+      background: #f3f4f6;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-size: 0.8rem;
+    }
+    .country-mode-toggle button {
+      border: none;
+      background: transparent;
+      padding: 0.2rem 0.9rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: #4b5563;
+      white-space: nowrap;
+    }
+    .country-mode-toggle button.country-mode-toggle--active {
+      background: #111827;
+      color: #ffffff;
+    }
+    .country-profile-wrapper {
+      margin-top: 0.5rem;
+    }
+    .country-title {
+      margin: 0 0 0.4rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    .country-cluster-summary {
+      margin: 0 0 0.6rem;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+    .country-cluster-detail {
+      margin: 0 0 1.1rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .country-cluster-detail strong {
+      font-weight: 600;
+    }
+    .pie-title {
+      margin: 0 0 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .pie-subtitle {
+      margin: 0 0 0.75rem;
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+    .pie-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .pie-svg {
+      width: 260px;
+      height: 260px;
+    }
+    .pie-legend {
+      font-size: 0.8rem;
+      max-width: 260px;
+    }
+    .pie-legend-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      margin-bottom: 0.25rem;
+    }
+    .pie-legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .country-energy-card {
+      margin-top: 0.5rem;
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      border: none;
+      font-size: 0.85rem;
+      position: relative;
+    }
+    .country-energy-title {
+      margin: 0 0 0.3rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .country-energy-subtitle {
+      margin: 0 0 0.55rem;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+    .country-energy-slider-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: #374151;
+      flex: 1;
+      min-width: 260px;
+    }
+    .country-energy-slider-wrapper input[type="range"] {
+      flex: 1;
+    }
+    .country-energy-play-button {
+      padding: 0.26rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.6);
+      background: #111827;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .country-energy-play-button:hover {
+      background: #020617;
+    }
+    .country-energy-bar {
+      width: 100%;
+      height: 120px;
+      display: block;
+    }
+    .country-energy-empty {
+      margin-top: 0.4rem;
+      font-size: 0.78rem;
+      color: #6b7280;
+    }
+    .country-share-card {
+      margin-top: 0.9rem;
+      position: relative;
+      font-size: 0.85rem;
+    }
+    .country-share-title {
+      margin: 0 0 0.3rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .country-share-subtitle {
+      margin: 0 0 0.4rem;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+    .country-share-line {
+      width: 100%;
+      height: 130px;
+      display: block;
+    }
+    .country-share-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.35rem 0.6rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.78rem;
+      color: #111827;
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.12s ease-out;
+      z-index: 18;
+      white-space: nowrap;
+    }
+    .country-energy-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.4rem 0.6rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.78rem;
+      color: #111827;
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.12s ease-out;
+      z-index: 20;
+      white-space: nowrap;
+    }
+    .country-back-arrow {
+      position: fixed;
+      top: 1.25rem;
+      left: 1.25rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: none;
+      background: #e5e7eb;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+      z-index: 50;
+    }
+    .country-back-arrow:hover {
+      background: #d1d5db;
+    }
+    .country-back-arrow:focus-visible {
+      outline: 2px solid #4b5563;
+      outline-offset: 2px;
+    }
+    .country-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.5rem 0.7rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.78rem;
+      color: #222;
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.12s ease-out;
+      z-index: 20;
+      white-space: nowrap;
+    }
+    @media (max-width: 900px) {
+      .country-layout {
+        flex-direction: column;
+      }
+      .country-globe-svg {
+        max-width: 100%;
+        height: min(70vh, 480px);
+      }
+      #country-tile-svg {
+        height: min(90vh, 600px);
+      }
+      .pie-wrapper {
+        justify-content: center;
+      }
+      .country-right-card {
+        margin-top: 1rem;
+      }
+    }
+
+    .country-layout.country-layout--entered .country-globe-card {
+      transform: translateX(0);
+    }
+  </style>
+</head>
+<body>
+  <button class="country-back-arrow" type="button" onclick="window.history.back();">&#8592;</button>
+  <main class="country-page">
+    <section class="country-top-bar">
+      <div class="country-mode-toggle">
+        <button id="country-mode-cluster" type="button">Clustering</button>
+        <button id="country-mode-profile" class="country-mode-toggle--active" type="button">Country profile</button>
+      </div>
+      <div class="country-energy-slider-wrapper">
+        <button id="country-energy-play-toggle" class="country-energy-play-button" type="button">▶</button>
+        <span>Year: <span id="country-energy-year-label">-</span></span>
+        <input id="country-energy-year-slider" type="range" min="0" max="0" step="1" value="0" />
+      </div>
+    </section>
+
+    <section class="country-layout">
+      <div class="country-left">
+        <div class="country-globe-card">
+          <div class="country-view-toggle">
+            <button id="country-view-globe" type="button">Globe</button>
+            <button id="country-view-tiles" class="country-view-toggle--active" type="button">Tile map</button>
+            <button id="country-view-map" type="button">Map</button>
+          </div>
+          <svg id="country-globe-svg" class="country-globe-svg"></svg>
+          <svg id="country-tile-svg" class="country-tile-svg"></svg>
+          <svg id="country-map-svg" class="country-tile-svg"></svg>
+          <div class="country-color-controls">
+            <div id="country-share-legend" class="country-legend" style="display: none;">
+              <div class="country-legend-bar"></div>
+              <div class="country-legend-labels">
+                <span>0%</span>
+                <span>5%</span>
+                <span>10%</span>
+                <span>15%</span>
+                <span>20%</span>
+                <span>25%</span>
+                <span>30%+</span>
+              </div>
+            </div>
+          </div>
+          <div id="country-tooltip" class="country-tooltip"></div>
+        </div>
+      </div>
+      <div class="country-right">
+        <article class="country-right-card">
+          <div id="country-panel-cluster" style="display: none;">
+            <h2 id="country-title" class="country-title">Selected country</h2>
+            <p id="country-cluster-summary" class="country-cluster-summary"></p>
+            <p id="country-cluster-detail" class="country-cluster-detail"></p>
+
+            <h3 class="pie-title">Average energy mix of this cluster</h3>
+            <p class="pie-subtitle">Shares are normalized to 1 across all products in the cluster.</p>
+            <div class="pie-wrapper">
+              <svg id="cluster-pie" class="pie-svg"></svg>
+              <div id="pie-legend" class="pie-legend"></div>
+            </div>
+          </div>
+
+          <div id="country-panel-profile" class="country-profile-wrapper">
+            <div class="country-energy-card">
+              <h3 class="country-energy-title">Annual Share of Each Electricity Source: </h3>
+              <p class="country-energy-subtitle">Bar chart shows renewable vs non-renewable electricity share of total production.</p>
+              <svg id="country-energy-bar" class="country-energy-bar"></svg>
+              <div id="country-energy-tooltip" class="country-energy-tooltip"></div>
+              <div id="country-energy-empty" class="country-energy-empty">Annual energy data is not available for this country.</div>
+              <p class="country-energy-subtitle" style="margin-top: 0.35rem; font-weight: 600; color: #111827;">
+                Tip: <span style="color: #ff2a13; font-weight: 700;">click the horizontal bar</span> to see each energy source in a global map view.
+              </p>
+            </div>
+
+            <div class="country-share-card">
+              <h3 class="country-share-title">Renewables share over time</h3>
+              <p class="country-share-subtitle">Same metric as the main map: renewables share of total electricity production.</p>
+              <svg id="country-share-line" class="country-share-line"></svg>
+              <div id="country-share-tooltip" class="country-share-tooltip"></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // ==========================
+    // Helpers
+    // ==========================
+    function makeCountryKey(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/&/g, "and")
+        .replace(/[^a-z]/g, "");
+    }
+
+    // ==========================
+    // Cluster definitions (populated from true_clustering.csv)
+    // ==========================
+    const clusters = {};
+
+    // English labels and descriptions for clusters defined in true_clustering.csv
+    const CLUSTER_NAME_EN = {
+      "C1": "Nuclear-dominated systems",
+      "C2": "Coal-dominated systems",
+      "C3": "Oil/other-fossil dominated systems",
+      "C4": "Hydro-led diversified systems",
+      "C5": "Gas-led mixed systems",
+      "C6": "High-hydro dominated systems",
+      "C7": "Hydro–oil dual-peak systems",
+      "C8": "Oil/other-fossil mixed systems",
+      "C9": "High-gas dominated systems"
+    };
+
+    const CLUSTER_DESC_EN = {
+      "C1": "Average mix: nuclear 38.6%, coal 21.0%, gas 14.6%, renewables around 22.4%. Typically countries with high nuclear shares such as France, Belgium and Slovakia.",
+      "C2": "Average mix: coal 67.0%, hydro 9.4%, gas 9.3%. Typically large economies or resource-based economies where coal generation dominates.",
+      "C3": "Average mix: other fossil 96.4%, all other sources are almost negligible. Mostly small economies or islands where diesel or fuel oil generation is overwhelmingly dominant.",
+      "C4": "Average mix: hydro 51.6%, gas 13.6%, coal 12.9%, renewables around 64.7%. Hydro provides the main share, but some fossil generation remains in a diversified structure.",
+      "C5": "Average mix: gas 50.4%, hydro 14.7%, other fossil 12.7%, coal 10.5%. Gas is the primary source but the system remains a mixed, multi-source structure.",
+      "C6": "Average mix: hydro 89.0%, renewables around 92.2%. Almost all electricity is supplied by hydropower in these high-hydro countries.",
+      "C7": "Average mix: hydro 50.1%, other fossil 41.8%. Both hydro and oil-fired generation are important, forming a dual-peak structure.",
+      "C8": "Average mix: other fossil 62.5%, hydro 12.3%, gas 8.8%, solar 3.6%. Oil-fired generation is dominant but the system is more diversified than Cluster C3.",
+      "C9": "Average mix: gas 89.5%, with other sources playing much smaller roles. These countries are highly dependent on gas-fired generation."
+    };
+
+    const VIEW_MODE_KEY = "dda_view_mode";
+
+    // Display-name overrides for sensitive entities (UI only; ISO3 and data remain unchanged)
+    const COUNTRY_NAME_OVERRIDES = new Map([
+      ["HKG", "HongKong, China SAR"],
+      ["MAC", "Macau, China SAR"],
+      ["TWN", "Taiwan, China RoC"]
+    ]);
+
+    function getDisplayCountryName(iso3, fallbackName) {
+      const code = (iso3 || "").toUpperCase();
+      if (COUNTRY_NAME_OVERRIDES.has(code)) {
+        return COUNTRY_NAME_OVERRIDES.get(code);
+      }
+      return fallbackName;
+    }
+
+    const countryByIso3 = {};
+    const clusterByIso3 = {};
+    const isoByCountryName = new Map();
+
+    function registerIsoMapping(name, iso3) {
+      if (!name || !iso3) return;
+      const cleanName = String(name).trim();
+      const cleanIso = String(iso3).trim().toUpperCase();
+      if (!cleanName || !cleanIso) return;
+
+      countryByIso3[cleanIso] = cleanName;
+      isoByCountryName.set(cleanName, cleanIso);
+      isoByCountryName.set(cleanName.toLowerCase(), cleanIso);
+
+      const key = makeCountryKey(cleanName);
+      if (key) {
+        isoByCountryName.set(key, cleanIso);
+      }
+    }
+
+    // Manual aliases for countries whose names differ between
+    // true_clustering.csv and the world/tile datasets.
+    const ISO_MANUAL_ALIASES = [
+      ["United Kingdom", "GBR"],
+      ["Great Britain", "GBR"],
+      ["Czechia", "CZE"],
+      ["Czech Republic", "CZE"],
+      ["Russian Federation (the)", "RUS"],
+      ["Russian Federation", "RUS"],
+      ["United States of America", "USA"],
+      ["United States", "USA"],
+      ["Viet Nam", "VNM"],
+      ["Vietnam", "VNM"],
+      ["Lao People's Democratic Republic (the)", "LAO"],
+      ["Lao People's Democratic Republic", "LAO"],
+      ["Laos", "LAO"],
+      ["Congo (the Democratic Republic of the)", "COD"],
+      ["Democratic Republic of the Congo", "COD"],
+      ["Democratic Republic of Congo", "COD"],
+      ["Congo (the)", "COG"],
+      ["Republic of the Congo", "COG"],
+      ["Republic of the Congo", "COG"],
+      ["Congo", "COG"],
+      ["Cote d'Ivoire", "CIV"],
+      ["Côte d'Ivoire", "CIV"],
+      ["Bahamas (the)", "BHS"],
+      ["Bahamas", "BHS"],
+      ["Dominican Republic (the)", "DOM"],
+      ["Dominican Republic", "DOM"],
+      ["Central African Republic (the)", "CAF"],
+      ["Central African Republic", "CAF"],
+      ["Gambia (the)", "GMB"],
+      ["Gambia", "GMB"],
+      ["Niger (the)", "NER"],
+      ["Niger", "NER"],
+      ["Sudan (the)", "SDN"],
+      ["Sudan", "SDN"],
+      ["Syrian Arab Republic (the)", "SYR"],
+      ["Syrian Arab Republic", "SYR"],
+      ["Syria", "SYR"],
+      ["Philippines (the)", "PHL"],
+      ["Philippines", "PHL"],
+      ["Turks and Caicos Islands (the)", "TCA"],
+      ["Turks and Caicos Islands", "TCA"],
+      ["Virgin Islands (British)", "VGB"],
+      ["British Virgin Islands", "VGB"],
+      ["Virgin Islands (U.S.)", "VIR"],
+      ["United States Virgin Islands", "VIR"],
+      ["Venezuela (Bolivarian Republic of)", "VEN"],
+      ["Venezuela", "VEN"],
+      ["Palestine, State of", "PSE"],
+      ["State of Palestine", "PSE"],
+      ["Eswatini", "SWZ"],
+      ["Swaziland", "SWZ"],
+      ["Timor-Leste", "TLS"],
+      ["East Timor", "TLS"],
+      ["Antigua and Barbuda", "ATG"],
+      ["Antigua & Barbuda", "ATG"],
+      ["Barbados", "BRB"],
+      ["Mauritius", "MUS"],
+      ["Comoros", "COM"],
+      ["Comoros (the)", "COM"],
+      ["Seychelles", "SYC"],
+      ["Maldives", "MDV"],
+      ["Singapore", "SGP"],
+      ["Palau", "PLW"],
+      ["Micronesia", "FSM"],
+      ["Micronesia (Federated States of)", "FSM"],
+      ["Federated States of Micronesia", "FSM"],
+      ["Marshall Islands", "MHL"],
+      ["Nauru", "NRU"],
+      ["Kiribati", "KIR"],
+      ["Tuvalu", "TUV"],
+      ["Samoa", "WSM"],
+      ["Tonga", "TON"],
+      ["Bahrain", "BHR"],
+      ["Grenada", "GRD"],
+      ["Kyrgyz Republic", "KGZ"],
+      ["Kyrgyzstan", "KGZ"],
+      ["Cabo Verde", "CPV"],
+      ["Cape Verde", "CPV"],
+      ["Korea (the Democratic People's Republic of)", "PRK"],
+      ["Democratic People's Republic of Korea", "PRK"],
+      ["N. Korea", "PRK"],
+      ["Korea (the Republic of)", "KOR"],
+      ["Republic of Korea", "KOR"],
+      ["S. Korea", "KOR"],
+      ["United Arab Emirates", "ARE"],
+      ["UAE", "ARE"],
+      ["Tanzania, the United Republic of", "TZA"],
+      ["United Republic of Tanzania", "TZA"],
+      ["Tanzania", "TZA"]
+    ];
+
+    ISO_MANUAL_ALIASES.forEach(([name, iso3]) => {
+      registerIsoMapping(name, iso3);
+    });
+
+    function getQueryParam(key) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(key);
+    }
+
+    const selectedIso3Raw = (getQueryParam("code") || "").toUpperCase();
+    const selectedIso3 = selectedIso3Raw || "";
+    const baseSelectedCountryName = countryByIso3[selectedIso3] || selectedIso3 || "Unknown country";
+    const selectedCountryName = getDisplayCountryName(selectedIso3, baseSelectedCountryName);
+    let selectedDisplayName = selectedCountryName;
+
+    // 颜色模式：cluster 高亮（当前逻辑）或使用主页中的可再生能源占比颜色
+    const COUNTRY_COLOR_MODE_KEY = "dda_country_color_mode";
+    let countryColorMode = "share"; // "cluster" | "share"
+
+    // Cluster assignments that change by year (loaded from true_clustering.csv)
+    const clusterCsvUrl = "true_clustering.csv";
+    let clusterAssignmentsByYear = new Map(); // Map<number, Map<string, string>>
+    const clusterCountryNameByIso3 = new Map();
+    let clusterYearsForCountry = [];
+    let currentClusterYear = null;
+
+    // 与主页一致的可再生能源占比颜色刻度和数据
+    const shareCsvUrl = "renewable-share-energy.csv";   // 旧 TPES 占比（1965–2023）
+    const newShareCsvUrl = "new_renewable_share.csv";    // 新 TPES 数据（2000–2024）
+    const shareElecCsvUrl = "share-of-electricity-production-from-renewable-sources.csv"; // 电力可再生占比（1985–1999 覆盖）
+    const shareColorScale = d3.scaleLinear()
+      .range([
+        "#b30000", // 0%
+        "#e55c00", // ~15%
+        "#f6d32d", // ~30%
+        "#c5e1a5", // ~45%
+        "#2e7d32", // ~60%
+        "#006837"  // 75%+
+      ]);
+    // 每一年、每个国家的可再生能源占比：Map<year, Map<iso3, value>>
+    let shareDataByYearAndIso3 = new Map();
+    // 每一种能源、每一年、每个国家的占比：Map<source, Map<year, Map<iso3, value>>>
+    let energySourceShareByYearAndIso3 = new Map();
+    // 每种能源在全局的最大占比，用于构造颜色深浅
+    let energySourceMaxShareBySource = new Map();
+    // Africa aggregate: 使用 CSV 中 "Africa" 的行作为汇总
+    const africaAggregateIso3 = new Set([
+      "AGO","BEN","BWA","BFA","BDI","CMR","CPV","CAF","TCD","COM",
+      "COD","COG","CIV","DJI","GNQ","ERI","SWZ","ETH","GAB","GMB",
+      "GHA","GIN","GNB","KEN","LSO","LBR","LBY","MDG","MWI","MLI",
+      "MRT","MUS","MOZ","NAM","NER","NGA","RWA","STP","SEN","SLE",
+      "SOM","SSD","SDS","SDN","TZA","TGO","TUN","UGA","ZMB","ZWE","SYC","ABV"
+    ]);
+    let shareAfricaAggregateByYear = new Map(); // Map<year, value>
+    let shareColorReady = false;
+
+    // 当前左侧地图在 share 模式下使用的指标：
+    // null 表示默认的总可再生占比；
+    // 否则为 "Bioenergy"、"Hydro"、"Solar" 等具体能源名称或 "Non-renewables"。
+    let currentEnergyMetric = null;
+
+    // Elements for the annual energy bar chart
+    const energyYearLabel = document.getElementById("country-energy-year-label");
+    const energyYearSlider = document.getElementById("country-energy-year-slider");
+    const energyPlayButton = document.getElementById("country-energy-play-toggle");
+    const energyEmptyEl = document.getElementById("country-energy-empty");
+    const energyBarSvg = d3.select("#country-energy-bar");
+    const energyTooltipEl = document.getElementById("country-energy-tooltip");
+    const energyCardEl = document.querySelector(".country-energy-card");
+    const energyTitleEl = document.querySelector(".country-energy-title");
+
+    // Line chart (renewables share over time, same metric as map colors)
+    const shareLineSvg = d3.select("#country-share-line");
+    const shareLineTooltipEl = document.getElementById("country-share-tooltip");
+    const shareLineCardEl = document.querySelector(".country-share-card");
+    let shareLineSeries = null;
+    let shareLineX = null;
+    let shareLineY = null;
+    let shareLineYearDot = null;
+
+    // Annual energy bar chart now uses new_renewable_share.csv
+    const energyCsvUrl = "new_renewable_share.csv";
+    let energyDimensionFields = [];
+    // Map<ISO3, Array<{year, energies}>>
+    let energyDataByCountry = new Map();
+    let energyYearsForSelected = [];
+    let isEnergyPlaying = false;
+    let energyPlayTimer = null;
+    let energyPlayIndex = 0;
+
+    // ==========================
+    // Elements and helpers for cluster / right panel
+    // ==========================
+    const titleEl = document.getElementById("country-title");
+    const summaryEl = document.getElementById("country-cluster-summary");
+    const detailEl = document.getElementById("country-cluster-detail");
+    const modeClusterBtn = document.getElementById("country-mode-cluster");
+    const modeProfileBtn = document.getElementById("country-mode-profile");
+    const panelCluster = document.getElementById("country-panel-cluster");
+    const panelProfile = document.getElementById("country-panel-profile");
+
+    titleEl.textContent = `${selectedCountryName} (${selectedIso3 || "N/A"})`;
+
+    let countryDetailMode = "profile"; // "cluster" | "profile"
+
+    function setCountryDetailMode(mode) {
+      countryDetailMode = mode === "profile" ? "profile" : "cluster";
+
+      if (panelCluster && panelProfile) {
+        panelCluster.style.display = countryDetailMode === "cluster" ? "block" : "none";
+        panelProfile.style.display = countryDetailMode === "profile" ? "block" : "none";
+      }
+
+      if (modeClusterBtn) {
+        if (countryDetailMode === "cluster") modeClusterBtn.classList.add("country-mode-toggle--active");
+        else modeClusterBtn.classList.remove("country-mode-toggle--active");
+      }
+      if (modeProfileBtn) {
+        if (countryDetailMode === "profile") modeProfileBtn.classList.add("country-mode-toggle--active");
+        else modeProfileBtn.classList.remove("country-mode-toggle--active");
+      }
+    }
+
+    if (modeClusterBtn) {
+      modeClusterBtn.addEventListener("click", () => {
+        setCountryDetailMode("cluster");
+        setCountryColorMode("cluster");
+      });
+    }
+    if (modeProfileBtn) {
+      modeProfileBtn.addEventListener("click", () => {
+        setCountryDetailMode("profile");
+        setCountryColorMode("share");
+      });
+    }
+
+    function getClusterIdForYear(year, iso3) {
+      if (year == null) return undefined;
+      const byIso = clusterAssignmentsByYear.get(year);
+      return byIso ? byIso.get(iso3) : undefined;
+    }
+
+    function computeCurrentCluster() {
+      let clusterId = null;
+      if (currentClusterYear != null) {
+        const id = getClusterIdForYear(currentClusterYear, selectedIso3);
+        if (id !== undefined) clusterId = id;
+      }
+      if (clusterId == null && clusterByIso3[selectedIso3] !== undefined) {
+        clusterId = clusterByIso3[selectedIso3];
+      }
+      const cluster = clusterId != null ? clusters[clusterId] : null;
+      return { clusterId, cluster };
+    }
+
+    function updateClusterTextAndPie() {
+      const { clusterId, cluster } = computeCurrentCluster();
+
+      if (!cluster) {
+        summaryEl.textContent = "This country is not part of any predefined cluster in this view.";
+        detailEl.textContent = "You navigated here from the main globe, but cluster metadata is only defined for a subset of countries in the dataset.";
+        // Hide pie chart
+        pieSvg.style("display", "none");
+        pieLegendEl.textContent = "No cluster information is available for this country.";
+        return;
+      }
+
+      const hasYear = currentClusterYear != null;
+      if (hasYear) {
+        summaryEl.innerHTML = `${selectedCountryName} belongs to <strong>${cluster.label}</strong> in <strong>${currentClusterYear}</strong>.`;
+      } else {
+        summaryEl.innerHTML = `${selectedCountryName} belongs to <strong>${cluster.label}</strong> in this view.`;
+      }
+
+      // Build peer list from dynamic assignments if we have them
+      let peerNames = [];
+      if (currentClusterYear != null) {
+        const byIso = clusterAssignmentsByYear.get(currentClusterYear);
+        if (byIso) {
+          byIso.forEach((cid, iso3) => {
+            if (cid === clusterId) {
+              const name = clusterCountryNameByIso3.get(iso3) || countryByIso3[iso3] || iso3;
+              peerNames.push(name);
+            }
+          });
+        }
+      }
+      if (!peerNames.length && cluster.countries && cluster.countries.length) {
+        peerNames = cluster.countries.map(c => c.name);
+      }
+
+      detailEl.innerHTML = `<strong>Key characteristics:</strong> ${cluster.description}<br/><strong>Countries in this cluster (${peerNames.length}):</strong> ${peerNames.join(", ")}.`;
+
+      // Update pie chart for this cluster using mix parsed from true_clustering.csv
+      let data = [];
+      const entries = Object.entries(cluster.mix || {});
+      data = entries.map(([name, value]) => ({ name, value }));
+
+      // Ensure the donut closes: if the extracted mix does not sum to 1,
+      // add an "Others" slice for the remainder; if it is slightly above 1,
+      // renormalize back to 1.
+      let total = d3.sum(data, d => d.value);
+      if (total > 0) {
+        if (total < 0.995) {
+          const remaining = Math.max(0, 1 - total);
+          if (remaining > 0.001) {
+            data.push({ name: "Others", value: remaining });
+            total += remaining;
+          }
+        } else if (total > 1.005) {
+          data = data.map(d => ({ name: d.name, value: d.value / total }));
+          total = 1;
+        }
+      }
+
+      if (!data.length) {
+        pieSvg.style("display", "none");
+        pieLegendEl.textContent = "No cluster information is available for this country.";
+        return;
+      }
+
+      pieSvg.style("display", "block");
+
+      const color = d3.scaleOrdinal()
+        .domain(data.map(d => d.name))
+        .range(["#6366f1", "#22c55e", "#f97316", "#e11d48", "#0ea5e9", "#a855f7", "#84cc16", "#eab308", "#64748b"]);
+
+      const pie = d3.pie()
+        .value(d => d.value)
+        .sort(null);
+
+      const arc = d3.arc()
+        .innerRadius(pieRadius * 0.45)
+        .outerRadius(pieRadius);
+
+      pieGroup.selectAll("path").remove();
+
+      pieGroup.selectAll("path")
+        .data(pie(data))
+        .enter()
+        .append("path")
+        .attr("d", arc)
+        .attr("fill", d => color(d.data.name))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.2);
+
+      pieLegendEl.innerHTML = "";
+      data.forEach(d => {
+        const percent = (d.value * 100).toFixed(1);
+        const row = document.createElement("div");
+        row.className = "pie-legend-item";
+        const swatch = document.createElement("span");
+        swatch.className = "pie-legend-swatch";
+        swatch.style.backgroundColor = color(d.name);
+        const text = document.createElement("span");
+        text.textContent = `${d.name}: ${percent}%`;
+        row.appendChild(swatch);
+        row.appendChild(text);
+        pieLegendEl.appendChild(row);
+      });
+    }
+
+    // ==========================
+    // Annual energy bar chart (from new_renewable_share.csv)
+    // ==========================
+
+    function parseEnergyWorkbook(rows) {
+      if (!rows || !rows.length) return;
+
+      energyDataByCountry = new Map();
+      energyDimensionFields = [];
+
+      const dimSet = new Set();
+      const byYear = new Map(); // Map<year, { year, energies }>
+
+      rows.forEach(row => {
+        const iso3 = (row["ISO 3 code"] || "").trim().toUpperCase();
+        const year = +row["Year"];
+        const source = (row["Energy_source"] || "").trim();
+        const shareRaw = row["Share"];
+
+        if (!iso3 || iso3 !== selectedIso3) return;
+        if (!year || year < 2000 || year > 2024) return;
+
+        const value = shareRaw === undefined || shareRaw === "" ? NaN : +shareRaw;
+        if (isNaN(value)) return;
+
+        if (!byYear.has(year)) {
+          byYear.set(year, { year, energies: {} });
+        }
+        const rec = byYear.get(year);
+        rec.energies[source] = (rec.energies[source] || 0) + value;
+        dimSet.add(source);
+      });
+
+      energyDimensionFields = Array.from(dimSet);
+      const records = Array.from(byYear.values()).sort((a, b) => a.year - b.year);
+      if (records.length) {
+        energyDataByCountry.set(selectedIso3, records);
+      }
+    }
+
+    function drawEnergyBar(year) {
+      if (!energyBarSvg || !energyBarSvg.node()) return;
+      const records = energyDataByCountry.get(selectedIso3);
+      if (!records || !records.length) {
+        if (energyEmptyEl) energyEmptyEl.style.display = "block";
+        energyBarSvg.selectAll("*").remove();
+        if (energyYearLabel) energyYearLabel.textContent = "-";
+        return;
+      }
+
+      const rec = records.find(r => r.year === year) || records[records.length - 1];
+      if (energyYearLabel) energyYearLabel.textContent = rec.year;
+
+      const node = energyBarSvg.node();
+      const width = node.clientWidth || 520;
+      const height = node.clientHeight || 120;
+      energyBarSvg
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .selectAll("*").remove();
+
+      if (energyEmptyEl) energyEmptyEl.style.display = "none";
+
+      const margin = { top: 18, right: 10, bottom: 18, left: 12 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const g = energyBarSvg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      // 在 new_renewable_share.csv 中，可再生能源由以下几类组成，单位为百分比：
+      // Bioenergy, Hydro, Other Renewables, Solar, Wind
+      const renewableSources = [
+        "Bioenergy",
+        "Hydro",
+        "Other Renewables",
+        "Solar",
+        "Wind"
+      ];
+
+      const segmentsRenewables = renewableSources.map(name => {
+        const v = rec.energies[name] || 0;
+        return { name, value: v };
+      });
+
+      const sumRenewableSegments = d3.sum(segmentsRenewables, d => d.value);
+      // 不可再生能源按 1 - 可再生占比计算（保持百分比刻度）
+      const sumNonRenewableSegments = Math.max(0, 100 - sumRenewableSegments);
+
+      const segments = [...segmentsRenewables, { name: "Non-renewables", value: sumNonRenewableSegments }];
+
+      const total = 100; // 以 0–100% 为固定刻度
+      if (total <= 0) {
+        if (energyEmptyEl) energyEmptyEl.style.display = "block";
+        return;
+      }
+
+      const x = d3.scaleLinear()
+        .domain([0, total])
+        .range([0, innerWidth]);
+
+      const y = d3.scaleBand()
+        .domain(["bar"])
+        .range([0, innerHeight])
+        .paddingInner(0.2);
+
+      const barHeight = y.bandwidth();
+
+      const color = d3.scaleOrdinal()
+        .domain(segmentsRenewables.map(d => d.name))
+        .range([
+          "#22c55e", "#0ea5e9", "#a855f7", "#f97316", "#e11d48",
+          "#6366f1", "#84cc16", "#facc15", "#10b981"
+        ]);
+
+      const nonRenewableColor = "#f472b6"; // pink for non-renewables
+
+      let offset = 0;
+      segments.forEach(seg => {
+        const segWidth = x(seg.value);
+        const fillColor = seg.name === "Non-renewables" ? nonRenewableColor : color(seg.name);
+        const percent = (seg.value / total) * 100;
+
+        const rect = g.append("rect")
+          .attr("x", offset)
+          .attr("y", y("bar"))
+          .attr("width", segWidth)
+          .attr("height", barHeight)
+          .attr("fill", fillColor);
+
+        if (energyTooltipEl && energyCardEl && percent > 0 && segWidth > 0) {
+          rect
+            .on("mousemove", (event) => {
+              const cardRect = energyCardEl.getBoundingClientRect();
+              const xPos = event.clientX - cardRect.left;
+              const yPos = event.clientY - cardRect.top;
+              energyTooltipEl.style.left = `${xPos}px`;
+              energyTooltipEl.style.top = `${yPos}px`;
+
+              // 悬浮时显示该段的百分比；粉色段即为不可再生能源占比
+              energyTooltipEl.innerHTML = `${rec.year} · ${seg.name}: ${percent.toFixed(1)}%`;
+
+              energyTooltipEl.style.opacity = "1";
+            })
+            .on("mouseout", () => {
+              energyTooltipEl.style.opacity = "0";
+            });
+        }
+
+        // 点击逻辑与是否有 tooltip 无关，保证始终可以切换能源视角
+        rect.on("click", () => {
+          setCountryEnergyMetric(seg.name);
+        });
+
+        offset += segWidth;
+      });
+
+      // no country label on the left; the title already shows the country name
+    }
+
+    function applyEnergyYearByIndex(index) {
+      if (!energyYearsForSelected.length) return;
+      const clamped = Math.max(0, Math.min(energyYearsForSelected.length - 1, index));
+      energyPlayIndex = clamped;
+      energyYearSlider.value = String(clamped);
+      const year = energyYearsForSelected[clamped];
+
+      // Update the bar chart
+      drawEnergyBar(year);
+
+      // Use the same year to drive cluster membership (globe + pie)
+      currentClusterYear = year;
+      updateClusterTextAndPie();
+      updateCountryHighlighting();
+
+      // Sync the moving point on the renewables-share line chart
+      updateCountryShareYearDot(year);
+    }
+
+    function initEnergyChart() {
+      if (!energyBarSvg || !energyBarSvg.node()) return;
+      d3.csv(energyCsvUrl)
+        .then(rows => {
+          parseEnergyWorkbook(rows);
+
+          const records = energyDataByCountry.get(selectedIso3);
+          if (!records || !records.length) {
+            if (energyEmptyEl) energyEmptyEl.style.display = "block";
+            return;
+          }
+
+          energyYearsForSelected = records.map(r => r.year).sort((a, b) => a - b);
+          if (!energyYearsForSelected.length) return;
+
+          energyYearSlider.min = 0;
+          energyYearSlider.max = energyYearsForSelected.length - 1;
+          energyYearSlider.step = 1;
+          energyYearSlider.value = energyYearsForSelected.length - 1;
+
+          const initialYear = energyYearsForSelected[energyYearsForSelected.length - 1];
+          applyEnergyYearByIndex(energyYearsForSelected.length - 1);
+
+          energyYearSlider.addEventListener("input", () => {
+            if (isEnergyPlaying) {
+              if (energyPlayTimer !== null) {
+                clearInterval(energyPlayTimer);
+                energyPlayTimer = null;
+              }
+              isEnergyPlaying = false;
+              if (energyPlayButton) energyPlayButton.textContent = "▶";
+            }
+            const idx = +energyYearSlider.value;
+            applyEnergyYearByIndex(idx);
+          });
+
+          function stopEnergyPlayback() {
+            if (energyPlayTimer !== null) {
+              clearInterval(energyPlayTimer);
+              energyPlayTimer = null;
+            }
+            isEnergyPlaying = false;
+            if (energyPlayButton) energyPlayButton.textContent = "▶";
+          }
+
+          if (energyPlayButton) {
+            energyPlayButton.addEventListener("click", () => {
+              if (!energyYearsForSelected.length) return;
+              if (!isEnergyPlaying) {
+                isEnergyPlaying = true;
+                energyPlayButton.textContent = "❚❚";
+                const currentIndex = Number.isFinite(+energyYearSlider.value) ? +energyYearSlider.value : 0;
+                applyEnergyYearByIndex(
+                  currentIndex >= 0 && currentIndex < energyYearsForSelected.length ? currentIndex : 0
+                );
+
+                energyPlayTimer = setInterval(() => {
+                  let nextIndex = energyPlayIndex + 1;
+                  if (nextIndex >= energyYearsForSelected.length) {
+                    nextIndex = 0;
+                  }
+                  applyEnergyYearByIndex(nextIndex);
+                }, 100); // 约 0.1s 每年
+              } else {
+                stopEnergyPlayback();
+              }
+            });
+          }
+        })
+        .catch(err => {
+          console.error("Failed to load energy Excel data", err);
+          if (energyEmptyEl) {
+            energyEmptyEl.style.display = "block";
+            energyEmptyEl.textContent = "Failed to load annual energy data.";
+          }
+        });
+    }
+
+    // ==========================
+    // Pie chart for cluster mix
+    // ==========================
+    const pieSvg = d3.select("#cluster-pie");
+    const pieWidth = 260;
+    const pieHeight = 260;
+    const pieRadius = Math.min(pieWidth, pieHeight) / 2 - 6;
+
+    const pieGroup = pieSvg
+      .attr("viewBox", `0 0 ${pieWidth} ${pieHeight}`)
+      .append("g")
+      .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
+
+    const pieLegendEl = document.getElementById("pie-legend");
+
+    // ==========================
+    // Left globe highlighting same-cluster countries
+    // ==========================
+    const globeSvg = d3.select("#country-globe-svg");
+    const mapSvg = d3.select("#country-map-svg");
+    const globeNode = globeSvg.node();
+    const rect = globeNode.getBoundingClientRect();
+    const globeWidth = rect.width || globeNode.clientWidth || 520;
+    const globeHeight = rect.height || globeNode.clientHeight || 520;
+
+    const projection = d3.geoOrthographic()
+      .scale(Math.min(globeWidth, globeHeight) / 2.1)
+      // 略微上移地球在卡片中的位置
+      .translate([globeWidth / 2, globeHeight / 2 - 20])
+      .clipAngle(90);
+
+    const mapProjection = d3.geoNaturalEarth1()
+      // 在之前基础上再缩小约 20%，整体约为原来的 64%
+      .scale(Math.min(globeWidth, globeHeight) / 2.3 * 0.64)
+      .translate([globeWidth / 2, globeHeight / 2]);
+
+    const geoPath = d3.geoPath(projection);
+    const mapPath = d3.geoPath(mapProjection);
+    const graticule = d3.geoGraticule();
+
+    const g = globeSvg.append("g");
+    const gMap = mapSvg.append("g");
+
+    g.append("path")
+      .datum({ type: "Sphere" })
+      .attr("class", "globe-sphere")
+      .attr("d", geoPath);
+
+    g.append("path")
+      .datum(graticule())
+      .attr("class", "globe-graticule")
+      .attr("d", geoPath);
+
+    const mapZoom = d3.zoom()
+      .scaleExtent([0.8, 4])
+      .on("zoom", (event) => {
+        gMap.attr("transform", event.transform);
+      });
+
+    mapSvg.call(mapZoom);
+
+    let worldFeatures = null;
+    let countryPathsSelection = null;
+    let mapCountryPathsSelection = null;
+
+    function getShareValueForYear(year, iso3) {
+      if (!shareColorReady || !iso3 || year == null) return null;
+      const byIso = shareDataByYearAndIso3.get(year);
+      let value = byIso ? byIso.get(iso3) : undefined;
+
+      // 若该国家没有有效数据（包括 NaN），但属于 Africa aggregate 分组，
+      // 则使用 CSV 中 "Africa" 这一行对应年份的汇总数值。
+      if ((value == null || isNaN(value)) && africaAggregateIso3.has(iso3)) {
+        const aggValue = shareAfricaAggregateByYear.get(year);
+        if (aggValue != null && !isNaN(aggValue)) {
+          value = aggValue;
+        }
+      }
+
+      return value != null && !isNaN(value) ? value : null;
+    }
+    function getEnergySourceValueForYear(year, iso3, source) {
+      if (!energySourceShareByYearAndIso3 || !energySourceShareByYearAndIso3.size) return null;
+      const bySource = energySourceShareByYearAndIso3.get(source);
+      if (!bySource) return null;
+      const byYear = bySource.get(year);
+      if (!byYear) return null;
+      const value = byYear.get(iso3);
+      return value != null && !isNaN(value) ? value : null;
+    }
+
+    function getEnergySourceColor(source, value) {
+      if (value == null || isNaN(value)) return "#f3f4f6";
+      const baseColors = {
+        "Bioenergy": "#22c55e",
+        "Hydro": "#0ea5e9",
+        "Other Renewables": "#a855f7",
+        "Solar": "#f97316",
+        "Wind": "#e11d48",
+        "Non-renewables": "#f472b6"
+      };
+      const base = baseColors[source] || "#22c55e";
+      const isNonRenew = source === "Non-renewables";
+      const maxVal = isNonRenew ? 85 : (energySourceMaxShareBySource.get(source) || 40);
+      const tRaw = maxVal > 0 ? value / maxVal : 0;
+      // 收紧浅色区间，让中高值区域更显色
+      const t = Math.pow(Math.max(0, Math.min(1, tRaw)), 0.75);
+      return d3.interpolateRgb("#f9fafb", base)(t * 0.95 + 0.05);
+    }
+
+    function getNonRenewablesValueForYear(year, iso3) {
+      const totalRenew = getShareValueForYear(year, iso3);
+      if (totalRenew == null || isNaN(totalRenew)) return null;
+      return Math.max(0, 100 - totalRenew);
+    }
+
+    function getMapMetricValue(year, iso3) {
+      if (currentEnergyMetric && currentEnergyMetric !== "total") {
+        if (currentEnergyMetric === "Non-renewables") {
+          return getNonRenewablesValueForYear(year, iso3);
+        }
+        return getEnergySourceValueForYear(year, iso3, currentEnergyMetric);
+      }
+      return getShareValueForYear(year, iso3);
+    }
+
+    function getShareColorForIso3(iso3) {
+      if (!shareColorReady || !iso3 || currentClusterYear == null) return "#e0e0e0";
+      const value = getMapMetricValue(currentClusterYear, iso3);
+      if (value == null) return "#e0e0e0";
+      if (currentEnergyMetric && currentEnergyMetric !== "total") {
+        return getEnergySourceColor(currentEnergyMetric, value);
+      }
+      return shareColorScale(value);
+    }
+
+    function renderGlobe() {
+      g.selectAll("path").attr("d", geoPath);
+    }
+
+    function renderMap() {
+      gMap.selectAll("path").attr("d", mapPath);
+    }
+
+    function updateCountryHighlighting() {
+      if (!countryPathsSelection) return;
+      const { clusterId } = computeCurrentCluster();
+      const useClusterColors = countryColorMode === "cluster";
+      countryPathsSelection
+        .attr("class", d => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          let countryClusterId = null;
+          let cls = "globe-country";
+          if (useClusterColors) {
+            if (currentClusterYear != null) {
+              const dynId = getClusterIdForYear(currentClusterYear, iso3);
+              if (dynId !== undefined) countryClusterId = dynId;
+            }
+            if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+              countryClusterId = clusterByIso3[iso3];
+            }
+            const inSameCluster = clusterId != null && countryClusterId === clusterId;
+            if (inSameCluster) cls += " globe-country--highlight";
+          }
+          if (iso3 === selectedIso3) cls += " globe-country--selected";
+          return cls;
+        })
+        .attr("fill", d => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          let countryClusterId = null;
+          if (useClusterColors) {
+            if (currentClusterYear != null) {
+              const dynId = getClusterIdForYear(currentClusterYear, iso3);
+              if (dynId !== undefined) countryClusterId = dynId;
+            }
+            if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+              countryClusterId = clusterByIso3[iso3];
+            }
+            const inSameCluster = clusterId != null && countryClusterId === clusterId;
+            if (inSameCluster) {
+              // 在 cluster 模式下，选中国家使用更亮的绿色，其余同簇国家用普通绿色
+              if (iso3 === selectedIso3) return "#00ff6a";
+              return "#1b9e77";
+            }
+            return "#e0e0e0";
+          }
+          return getShareColorForIso3(iso3);
+        });
+
+      // Sync tile colors as well if tiles are built
+      if (tileRects) {
+        tileRects
+          .attr("class", d => {
+            const iso3 = d.code;
+            let countryClusterId = null;
+            let cls = "tile-country";
+            if (useClusterColors) {
+              if (currentClusterYear != null) {
+                const dynId = getClusterIdForYear(currentClusterYear, iso3);
+                if (dynId !== undefined) countryClusterId = dynId;
+              }
+              if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+                countryClusterId = clusterByIso3[iso3];
+              }
+              const inSameCluster = clusterId != null && countryClusterId === clusterId;
+              if (inSameCluster) cls += " tile-country--highlight";
+            }
+            if (iso3 === selectedIso3) cls += " tile-country--selected";
+            return cls;
+          })
+          .attr("fill", d => {
+            const iso3 = d.code;
+            let countryClusterId = null;
+            if (useClusterColors) {
+              if (currentClusterYear != null) {
+                const dynId = getClusterIdForYear(currentClusterYear, iso3);
+                if (dynId !== undefined) countryClusterId = dynId;
+              }
+              if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+                countryClusterId = clusterByIso3[iso3];
+              }
+              const inSameCluster = clusterId != null && countryClusterId === clusterId;
+              if (inSameCluster) {
+                if (iso3 === selectedIso3) return "#00ff6a";
+                return "#1b9e77";
+              }
+              return "#e0e0e0";
+            }
+            return getShareColorForIso3(iso3);
+          });
+
+        // 同步平面地图上的高亮
+        if (mapCountryPathsSelection) {
+          mapCountryPathsSelection
+            .attr("class", d => {
+              const props = d.properties || {};
+              const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+              let countryClusterId = null;
+              let cls = "globe-country";
+              if (useClusterColors) {
+                if (currentClusterYear != null) {
+                  const dynId = getClusterIdForYear(currentClusterYear, iso3);
+                  if (dynId !== undefined) countryClusterId = dynId;
+                }
+                if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+                  countryClusterId = clusterByIso3[iso3];
+                }
+                const inSameCluster = clusterId != null && countryClusterId === clusterId;
+                if (inSameCluster) cls += " globe-country--highlight";
+              }
+              if (iso3 === selectedIso3) cls += " globe-country--selected";
+              return cls;
+            })
+            .attr("fill", d => {
+              const props = d.properties || {};
+              const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+              let countryClusterId = null;
+              if (useClusterColors) {
+                if (currentClusterYear != null) {
+                  const dynId = getClusterIdForYear(currentClusterYear, iso3);
+                  if (dynId !== undefined) countryClusterId = dynId;
+                }
+                if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
+                  countryClusterId = clusterByIso3[iso3];
+                }
+                const inSameCluster = clusterId != null && countryClusterId === clusterId;
+                if (inSameCluster) {
+                  if (iso3 === selectedIso3) return "#00ff6a";
+                  return "#1b9e77";
+                }
+                return "#e0e0e0";
+              }
+              return getShareColorForIso3(iso3);
+            });
+        }
+      }
+    }
+
+    const countryTooltipEl = document.getElementById("country-tooltip");
+
+    function showCountryTooltip(event, name, iso3) {
+      if (!countryTooltipEl) return;
+      const wrapper = document.querySelector(".country-globe-card");
+      if (!wrapper) return;
+      const rect = wrapper.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const displayName = getDisplayCountryName(iso3, name);
+      let content = `<div><strong>${displayName}</strong> (${iso3})</div>`;
+
+      // 在国家聚类页中，同样展示当前年份的 renewable share 百分比，
+      // 逻辑与主页一致：优先使用国家自身数据，若缺失且属于 Africa aggregate
+      // 分组，则回退到 Africa 汇总值。
+      const year = currentClusterYear;
+      if (shareColorReady && year != null && iso3) {
+        let label = "Renewables share";
+        let value = null;
+
+        if (!currentEnergyMetric || currentEnergyMetric === "total") {
+          value = getShareValueForYear(year, iso3);
+        } else if (currentEnergyMetric === "Non-renewables") {
+          label = "Non-renewables share";
+          value = getNonRenewablesValueForYear(year, iso3);
+        } else {
+          label = `${currentEnergyMetric} share`;
+          value = getEnergySourceValueForYear(year, iso3, currentEnergyMetric);
+        }
+
+        if (value == null || isNaN(value)) {
+          content += `<div>${year} · ${label}: NAN</div>`;
+        } else {
+          const v = value.toFixed(2);
+          content += `<div>${year} · ${label}: ${v}%</div>`;
+        }
+      }
+
+      countryTooltipEl.innerHTML = content;
+      countryTooltipEl.style.left = `${x}px`;
+      countryTooltipEl.style.top = `${y}px`;
+      countryTooltipEl.style.opacity = "1";
+    }
+
+    function hideCountryTooltip() {
+      if (!countryTooltipEl) return;
+      countryTooltipEl.style.opacity = "0";
+    }
+
+    function renderCountries(world) {
+      worldFeatures = world.features;
+
+      // Build name -> ISO3 mappings for later lookups when parsing
+      // true_clustering.csv (which is keyed by country names).
+      worldFeatures.forEach(f => {
+        const props = f.properties || {};
+        const name = props.name || props.ADMIN;
+        const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+        if (!name || !iso3) return;
+        registerIsoMapping(name, iso3);
+      });
+
+      // After GeoJSON is loaded and mappings are registered, update the
+      // right‑hand title to always show "Country name (ISO3)".
+      // This avoids cases like "GBR (GBR)" when we only had the code.
+      if (selectedIso3) {
+        let displayName = selectedCountryName;
+        const featureForSelected = worldFeatures.find(f => {
+          const props = f.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+          return iso3 === selectedIso3;
+        });
+        if (featureForSelected) {
+          const props = featureForSelected.properties || {};
+          const rawName = props.name || props.ADMIN || baseSelectedCountryName;
+          displayName = getDisplayCountryName(selectedIso3, rawName);
+        }
+        selectedDisplayName = displayName;
+        if (titleEl) {
+          titleEl.textContent = `${displayName} (${selectedIso3 || "N/A"})`;
+        }
+        if (energyTitleEl) {
+          energyTitleEl.textContent = `Annual Share of Each Electricity Source: ${displayName}`;
+        }
+      }
+
+      const group = g.append("g");
+
+      countryPathsSelection = group.selectAll("path")
+        .data(worldFeatures)
+        .enter()
+        .append("path")
+        .attr("d", geoPath)
+        .attr("class", "globe-country")
+        .on("mousemove", (event, d) => {
+          const props = d.properties || {};
+          const name = props.name || props.ADMIN || "Unknown country";
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          showCountryTooltip(event, name, iso3);
+        })
+        .on("mouseout", () => {
+          hideCountryTooltip();
+        })
+        .on("click", (event, d) => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          if (!iso3) return;
+          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          window.location.href = target;
+        });
+
+      // 平面投影国家路径
+      mapCountryPathsSelection = gMap.selectAll("path")
+        .data(worldFeatures)
+        .enter()
+        .append("path")
+        .attr("d", mapPath)
+        .attr("class", "globe-country")
+        .on("mousemove", (event, d) => {
+          const props = d.properties || {};
+          const name = props.name || props.ADMIN || "Unknown country";
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          showCountryTooltip(event, name, iso3);
+        })
+        .on("mouseout", () => {
+          hideCountryTooltip();
+        })
+        .on("click", (event, d) => {
+          const props = d.properties || {};
+          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          if (!iso3) return;
+          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          window.location.href = target;
+        });
+
+      updateCountryHighlighting();
+    }
+
+    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(world => {
+      if (!world || !world.features) {
+        console.error("World map data is not in the expected format", world);
+        return;
+      }
+      renderCountries(world);
+      renderGlobe();
+      renderMap();
+      buildCountryTileGrid(world);
+      updateCountryHighlighting();
+
+      // Once world names/ISO codes are available, load true_clustering.csv
+      // and build year-specific cluster assignments and energy mixes.
+      d3.csv(clusterCsvUrl)
+        .then(rows => {
+          parseTrueClusteringCsv(rows);
+        })
+        .catch(err => {
+          console.error("Failed to load true_clustering.csv", err);
+          updateClusterTextAndPie();
+          updateCountryHighlighting();
+        });
+    }).catch(err => {
+      console.error("Failed to load world geojson for country view", err);
+    });
+    // ==========================
+    // Rotation & drag interaction for country globe
+    // ==========================
+    let isDraggingGlobe = false;
+    let lastRotation = projection.rotate();
+    let lastPos = null;
+
+    function updateRotation(lambda, phi) {
+      projection.rotate([lambda, phi]);
+      renderGlobe();
+    }
+
+    let baseLambda = 0;
+    let basePhi = -15;
+    updateRotation(baseLambda, basePhi);
+
+    const rotationSpeedDegPerMs = 0.01; // match main globe speed (~5°/s)
+    let lastTickTime = Date.now();
+
+    const rotationInterval = d3.interval(() => {
+      if (isDraggingGlobe) {
+        lastTickTime = Date.now();
+        return;
+      }
+      const now = Date.now();
+      const dt = now - lastTickTime;
+      lastTickTime = now;
+      const deltaLambda = dt * rotationSpeedDegPerMs;
+      baseLambda = (baseLambda + deltaLambda) % 360;
+      updateRotation(baseLambda, basePhi);
+    }, 60);
+
+    const globeDrag = d3.drag()
+      .on("start", (event) => {
+        isDraggingGlobe = true;
+        lastRotation = projection.rotate();
+        lastPos = [event.x, event.y];
+      })
+      .on("drag", (event) => {
+        if (!lastPos) return;
+        const dx = event.x - lastPos[0];
+        const dy = event.y - lastPos[1];
+        const sensitivity = 0.25;
+        const lambda = lastRotation[0] + dx * sensitivity;
+        const phi = Math.max(-80, Math.min(80, lastRotation[1] - dy * sensitivity));
+        baseLambda = lambda;
+        basePhi = phi;
+        updateRotation(lambda, phi);
+      })
+      .on("end", () => {
+        isDraggingGlobe = false;
+        lastPos = null;
+      });
+
+    globeSvg.call(globeDrag);
+
+    // ==========================
+    // Tile map for same-cluster countries
+    // ==========================
+    const tileSvg = d3.select("#country-tile-svg");
+    let tileRects = null;
+    let tilePositionsByIso3 = new Map();
+    let countryViewMode = "tiles";
+
+    const viewGlobeBtn = document.getElementById("country-view-globe");
+    const viewTilesBtn = document.getElementById("country-view-tiles");
+    const viewMapBtn = document.getElementById("country-view-map");
+
+    const colorModeClusterBtn = document.getElementById("country-color-mode-cluster");
+    const colorModeShareBtn = document.getElementById("country-color-mode-share");
+    const countryLegendEl = document.getElementById("country-share-legend");
+
+    // Tile 视图缩放：对内部 g 应用缩放变换
+    const tileZoom = d3.zoom()
+      .scaleExtent([0.8, 4])
+      .on("zoom", (event) => {
+        const gTile = tileSvg.select("g");
+        if (!gTile.empty()) {
+          gTile.attr("transform", event.transform);
+        }
+      });
+
+    tileSvg.call(tileZoom);
+
+    function setCountryColorMode(mode) {
+      countryColorMode = mode === "share" ? "share" : "cluster";
+      try {
+        if (window && window.localStorage) {
+          window.localStorage.setItem(COUNTRY_COLOR_MODE_KEY, countryColorMode);
+        }
+      } catch (_) {}
+
+      if (colorModeClusterBtn) {
+        if (countryColorMode === "cluster") colorModeClusterBtn.classList.add("country-color-toggle--active");
+        else colorModeClusterBtn.classList.remove("country-color-toggle--active");
+      }
+      if (colorModeShareBtn) {
+        if (countryColorMode === "share") colorModeShareBtn.classList.add("country-color-toggle--active");
+        else colorModeShareBtn.classList.remove("country-color-toggle--active");
+      }
+
+      if (countryLegendEl) {
+        countryLegendEl.style.display = countryColorMode === "share" ? "block" : "none";
+      }
+
+      // 进入占比颜色模式时，如果数据和色标已经准备好，则绘制 / 刷新图例
+      if (countryColorMode === "share" && shareColorReady) {
+        renderCountryLegendGradient();
+      }
+
+      // 当切换颜色模式时重新着色
+      updateCountryHighlighting();
+    }
+
+    function setCountryViewMode(mode) {
+      countryViewMode = mode;
+      try {
+        if (window && window.localStorage) {
+          window.localStorage.setItem(VIEW_MODE_KEY, mode);
+        }
+      } catch (_) {}
+
+      const globeNodeEl = globeSvg.node();
+      const tileNodeEl = tileSvg.node();
+      const mapNodeEl = mapSvg.node();
+      if (!globeNodeEl || !tileNodeEl || !mapNodeEl) return;
+
+      globeNodeEl.style.display = mode === "globe" ? "block" : "none";
+      tileNodeEl.style.display = mode === "tiles" ? "block" : "none";
+      mapNodeEl.style.display = mode === "map" ? "block" : "none";
+
+      if (viewGlobeBtn) {
+        if (mode === "globe") viewGlobeBtn.classList.add("country-view-toggle--active");
+        else viewGlobeBtn.classList.remove("country-view-toggle--active");
+      }
+      if (viewTilesBtn) {
+        if (mode === "tiles") viewTilesBtn.classList.add("country-view-toggle--active");
+        else viewTilesBtn.classList.remove("country-view-toggle--active");
+      }
+      if (viewMapBtn) {
+        if (mode === "map") viewMapBtn.classList.add("country-view-toggle--active");
+        else viewMapBtn.classList.remove("country-view-toggle--active");
+      }
+    }
+
+    if (viewGlobeBtn) {
+      viewGlobeBtn.addEventListener("click", () => setCountryViewMode("globe"));
+    }
+    if (viewTilesBtn) {
+      viewTilesBtn.addEventListener("click", () => setCountryViewMode("tiles"));
+    }
+    if (viewMapBtn) {
+      viewMapBtn.addEventListener("click", () => setCountryViewMode("map"));
+    }
+
+    if (colorModeClusterBtn) {
+      colorModeClusterBtn.addEventListener("click", () => setCountryColorMode("cluster"));
+    }
+    if (colorModeShareBtn) {
+      colorModeShareBtn.addEventListener("click", () => setCountryColorMode("share"));
+    }
+
+    // 初次进入国家页面时，从全局视图偏好中读取默认模式；否则默认使用 tile 视图
+    (function initCountryViewMode() {
+      let initialMode = "tiles";
+      try {
+        const stored = window && window.localStorage ? window.localStorage.getItem(VIEW_MODE_KEY) : null;
+        if (stored === "globe" || stored === "tiles" || stored === "map") {
+          initialMode = stored;
+        }
+      } catch (_) {}
+      setCountryViewMode(initialMode);
+    })();
+
+    // 初始化颜色模式：与右侧默认模式保持一致（国家画像 -> 占比着色）
+    (function initCountryColorMode() {
+      setCountryColorMode(countryDetailMode === "profile" ? "share" : "cluster");
+    })();
+
+    function setCountryEnergyMetric(source) {
+      // Toggle: clicking the same source again resets to default total share
+      if (currentEnergyMetric === source) {
+        currentEnergyMetric = null;
+      } else {
+        currentEnergyMetric = source;
+      }
+
+      // Only affects "share" color mode; cluster mode ignores this
+      if (countryColorMode === "share") {
+        renderCountryLegendGradient();
+        updateCountryHighlighting();
+      }
+    }
+
+    function buildCountryTileGrid(world) {
+      if (!tileSvg || !tileSvg.node()) return;
+      const svgNode = tileSvg.node();
+      const width = svgNode.clientWidth || 520;
+      const height = svgNode.clientHeight || 520;
+      tileSvg.attr("viewBox", `0 0 ${width} ${height}`);
+      tileSvg.selectAll("*").remove();
+
+      // 为了让国家页的 tile map 与主页完全一致，这里也使用
+      // world-tile-grid.json 模板来确定每个国家的方块位置。
+
+      function nameKey(str) {
+        return String(str)
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z]/g, "");
+      }
+
+      // 从 GeoJSON 中构建 name -> ISO3 的映射，供模板匹配使用
+      const nameToCode = new Map();
+      world.features.forEach(f => {
+        const props = f.properties || {};
+        const name = props.name || props.ADMIN;
+        const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+        if (!name || !iso3) return;
+        const k = nameKey(name);
+        if (!nameToCode.has(k)) {
+          nameToCode.set(k, iso3);
+        }
+      });
+
+      // 结合已有的 ISO_MANUAL_ALIASES（包含 "N. Korea"、"S. Korea"、"UAE" 等），
+      // 为 tile 模板中的别名补充映射，避免这些国家缺少 ISO3 代码。
+      ISO_MANUAL_ALIASES.forEach(([aliasName, iso3]) => {
+        const k = nameKey(aliasName);
+        if (!nameToCode.has(k)) {
+          nameToCode.set(k, iso3.toUpperCase());
+        }
+      });
+
+      d3.json("world-tile-grid.json").then(tileTemplate => {
+        if (!Array.isArray(tileTemplate) || !tileTemplate.length) return;
+
+        const maxRow = d3.max(tileTemplate, d => d.row);
+        const maxCol = d3.max(tileTemplate, d => d.col);
+        const rowsGrid = maxRow + 1;
+        const colsGrid = maxCol + 1;
+
+        const cellSize = Math.min(width / colsGrid, height / rowsGrid);
+        const xOffset = (width - colsGrid * cellSize) / 2;
+        const yOffset = (height - rowsGrid * cellSize) / 2;
+
+        tilePositionsByIso3 = new Map();
+
+        const tileData = [];
+        tileTemplate.forEach(entry => {
+          const key = nameKey(entry.name);
+          let iso3 = nameToCode.get(key) || null;
+          if (!iso3) {
+            for (const [k, code] of nameToCode.entries()) {
+              if (k.includes(key) || key.includes(k)) {
+                iso3 = code;
+                break;
+              }
+            }
+          }
+
+          if (iso3) {
+            tilePositionsByIso3.set(iso3, { col: entry.col, row: entry.row, name: entry.name });
+          }
+
+          tileData.push({ code: iso3, name: entry.name, col: entry.col, row: entry.row });
+        });
+
+        const gTile = tileSvg.append("g");
+
+        tileRects = gTile.selectAll("rect")
+          .data(tileData)
+          .enter()
+          .append("rect")
+          .attr("class", "tile-country")
+          .attr("rx", 2)
+          .attr("ry", 2)
+          .attr("x", d => xOffset + d.col * cellSize + 1)
+          .attr("y", d => yOffset + d.row * cellSize + 1)
+          .attr("width", cellSize - 2)
+          .attr("height", cellSize - 2)
+          .on("mousemove", (event, d) => {
+            const name = d.name || d.code || "Unknown country";
+            const iso3 = d.code || "";
+            showCountryTooltip(event, name, iso3);
+          })
+          .on("mouseout", () => {
+            hideCountryTooltip();
+          })
+          .on("click", (event, d) => {
+            if (!d.code) return;
+            const target = `country.html?code=${encodeURIComponent(d.code)}`;
+            window.location.href = target;
+          });
+
+        // 模板加载完之后再同步一次聚类高亮
+        updateCountryHighlighting();
+      }).catch(err => {
+        console.error("Failed to load world tile grid template for country view", err);
+      });
+    }
+
+    // ==========================
+    // Legend for renewables-share colors (matches main page)
+    // ==========================
+    function renderCountryLegendGradient() {
+      const barContainer = d3.select(".country-legend-bar");
+      const labelsContainer = d3.select(".country-legend-labels");
+      if (barContainer.empty() || labelsContainer.empty()) return;
+
+      barContainer.selectAll("*").remove();
+      labelsContainer.selectAll("*").remove();
+
+      const barNode = barContainer.node();
+      const width = barNode.clientWidth || 260;
+      const height = barNode.clientHeight || 10;
+
+      const svg = barContainer.append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      const defs = svg.append("defs");
+      const gradient = defs.append("linearGradient")
+        .attr("id", "country-legend-gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%");
+
+      // 如果已经从柱状图中选择了具体能源，则图例改用该能源的颜色和范围
+      if (currentEnergyMetric && currentEnergyMetric !== "total") {
+        const source = currentEnergyMetric;
+        const isNonRenew = source === "Non-renewables";
+        const rawMax = isNonRenew ? 100 : (energySourceMaxShareBySource.get(source) || 40);
+        const maxVal = rawMax > 0 ? rawMax : 1;
+
+        const stops = d3.range(0, 1.01, 0.25);
+        stops.forEach(t => {
+          const v = t * maxVal;
+          gradient.append("stop")
+            .attr("offset", `${t * 100}%`)
+            .attr("stop-color", getEnergySourceColor(source, v));
+        });
+
+        svg.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", width)
+          .attr("height", height)
+          .attr("fill", "url(#country-legend-gradient)");
+
+        const tickValues = [0, 0.25, 0.5, 0.75, 1].map(t => t * maxVal);
+        const labelScale = d3.scaleLinear()
+          .domain([0, maxVal])
+          .range([5, 95]);
+
+        const labelSelection = labelsContainer
+          .style("position", "relative")
+          .selectAll("span")
+          .data(tickValues)
+          .enter()
+          .append("span")
+          .style("position", "absolute")
+          .style("transform", "translateX(-50%)")
+          .style("left", d => `${labelScale(d)}%`);
+
+        labelSelection.text(d => `${d.toFixed(1)}%`);
+        return;
+      }
+
+      // 默认：总可再生电力占比，沿用主页面的色标
+      const domain = shareColorScale.domain();
+      if (!domain.length) return;
+      const min = domain[0];
+      const max = domain[domain.length - 1];
+
+      domain.forEach(v => {
+        const t = (v - min) / (max - min || 1);
+        gradient.append("stop")
+          .attr("offset", `${t * 100}%`)
+          .attr("stop-color", shareColorScale(v));
+      });
+
+      svg.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", height)
+        .attr("fill", "url(#country-legend-gradient)");
+
+      const tickValues = [0, 15, 30, 45, 60, 75];
+      const labelScale = d3.scaleLinear()
+        .domain([0, 75])
+        .range([5, 95]);
+
+      const labelSelection = labelsContainer
+        .style("position", "relative")
+        .selectAll("span")
+        .data(tickValues)
+        .enter()
+        .append("span")
+        .style("position", "absolute")
+        .style("transform", "translateX(-50%)")
+        .style("left", d => `${labelScale(d)}%`);
+
+      labelSelection.text(d => d === 75 ? "75%+" : `${d}%`);
+    }
+
+    // ==========================
+    // Load year-specific cluster assignments from true_clustering.csv
+    // ==========================
+
+    function parseClusterDescriptionToMix(desc) {
+      const mix = {};
+      if (!desc) return mix;
+
+      const re = /([A-Za-z\u4e00-\u9fff\/\s]+?)(\d+(?:\.\d+)?)%/g;
+      let m;
+      const seen = new Set();
+
+      while ((m = re.exec(desc)) !== null) {
+        const rawLabel = (m[1] || "").trim();
+        const pct = parseFloat(m[2]);
+        if (!isFinite(pct) || pct <= 0) continue;
+
+        const lower = rawLabel.toLowerCase();
+        let fuel = null;
+        if (rawLabel.includes("核") || lower.includes("nuclear")) fuel = "Nuclear";
+        else if (rawLabel.includes("煤") || lower.includes("coal")) fuel = "Coal";
+        else if (rawLabel.includes("气") || lower.includes("gas")) fuel = "Gas";
+        else if (rawLabel.includes("水") || lower.includes("hydro")) fuel = "Hydro";
+        else if (rawLabel.includes("风") || lower.includes("wind")) fuel = "Wind";
+        else if (rawLabel.includes("太阳") || lower.includes("solar")) fuel = "Solar";
+        else if (rawLabel.includes("生物") || lower.includes("bio")) fuel = "Bioenergy";
+        else if (lower.includes("other fossil")) fuel = "Other Fossil";
+        else if (rawLabel.includes("可再生") || lower.includes("renewable")) fuel = "Other Renewables";
+
+        if (!fuel) continue;
+
+        // Skip aggregate "renewables" line if we already captured
+        // more detailed renewable categories like Hydro/Solar/Wind/Bioenergy.
+        if (fuel === "Other Renewables" && (
+          seen.has("Hydro") ||
+          seen.has("Solar") ||
+          seen.has("Wind") ||
+          seen.has("Bioenergy")
+        )) {
+          continue;
+        }
+
+        const frac = pct / 100;
+        mix[fuel] = (mix[fuel] || 0) + frac;
+        seen.add(fuel);
+      }
+
+      return mix;
+    }
+
+    function parseTrueClusteringCsv(rows) {
+      if (!rows || !rows.length) {
+        updateClusterTextAndPie();
+        updateCountryHighlighting();
+        return;
+      }
+
+      // Reset dynamic structures
+      clusterAssignmentsByYear = new Map();
+      clusterYearsForCountry = [];
+      clusterCountryNameByIso3.clear();
+
+      // Populate clusters and yearly assignments from true_clustering.csv
+      rows.forEach(row => {
+        const yearRaw = row["Year"];
+        const clusterIdRaw = row["Cluster_ID"];
+        const clusterName = row["Cluster_Name"] || "";
+        const clusterDesc = row["Cluster_Desc"] || "";
+        const countriesRaw = row["Countries"];
+
+        if (!yearRaw || !clusterIdRaw || !countriesRaw) return;
+
+        const year = +yearRaw;
+        if (!year) return;
+
+        const clusterId = String(clusterIdRaw).trim(); // e.g. "C1"
+        if (!clusterId) return;
+
+        // Ensure cluster metadata exists
+        if (!clusters[clusterId]) {
+          const labelEn = CLUSTER_NAME_EN[clusterId] || clusterName;
+          const descEn = CLUSTER_DESC_EN[clusterId] || clusterDesc;
+          clusters[clusterId] = {
+            id: clusterId,
+            label: `${clusterId} - ${labelEn}`.trim(),
+            description: descEn,
+            countries: [],
+            // Use original (possibly Chinese) description to infer the
+            // energy mix; this is independent from the display language.
+            mix: parseClusterDescriptionToMix(clusterDesc)
+          };
+        }
+
+        if (!clusterAssignmentsByYear.has(year)) clusterAssignmentsByYear.set(year, new Map());
+        const byIso = clusterAssignmentsByYear.get(year);
+
+        String(countriesRaw)
+          .split(";")
+          .map(s => s.trim())
+          .filter(Boolean)
+          .forEach(name => {
+            const key = makeCountryKey(name);
+            const iso3 =
+              isoByCountryName.get(name) ||
+              isoByCountryName.get(name.toLowerCase()) ||
+              isoByCountryName.get(key);
+            if (!iso3) return;
+
+            byIso.set(iso3, clusterId);
+            if (!clusterCountryNameByIso3.has(iso3)) {
+              clusterCountryNameByIso3.set(iso3, name);
+            }
+
+            const cluster = clusters[clusterId];
+            if (cluster && !cluster.countries.some(c => c.iso3 === iso3)) {
+              cluster.countries.push({ name, iso3 });
+            }
+
+            clusterByIso3[iso3] = clusterId;
+          });
+      });
+
+      // Cache which years exist for the selected country
+      const yearsForCountry = [];
+      clusterAssignmentsByYear.forEach((byIso, year) => {
+        if (byIso.has(selectedIso3)) yearsForCountry.push(year);
+      });
+      clusterYearsForCountry = yearsForCountry.sort((a, b) => a - b);
+
+      updateClusterTextAndPie();
+      updateCountryHighlighting();
+    }
+
+    // Initialize annual energy bar chart
+    initEnergyChart();
+
+    // ==========================
+    // Load renewables-share CSVs for color mode "share"
+    // ==========================
+    function initShareColors() {
+      Promise.all([
+        d3.csv(shareCsvUrl),
+        d3.csv(newShareCsvUrl),
+        d3.csv(shareElecCsvUrl)
+      ]).then(([rows, newRows, elecRows]) => {
+        if (!rows || !rows.length) return;
+
+        const yearMap = new Map(); // Map<year, Map<code, value>>
+
+        // 先加载旧 CSV，得到基础的 1965–2023 数据
+        rows.forEach(row => {
+          const code = row.Code && row.Code.trim();
+          const entity = row.Entity && row.Entity.trim();
+          const year = +row.Year;
+          const valueRaw = row["Renewables (% equivalent primary energy)"];
+          if (!year) return;
+          const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
+          if (isNaN(value)) return;
+
+          // 记录 "Africa" 区域汇总，用于非洲国家统一着色。
+          // 仅 2000 年及之后启用 Africa Aggregate，1999 年及以前认为不可信，不写入。
+          if (entity === "Africa" && year >= 2000) {
+            shareAfricaAggregateByYear.set(year, value);
+          }
+
+          if (!code) return;
+          if (!yearMap.has(year)) yearMap.set(year, new Map());
+          yearMap.get(year).set(code, value);
+        });
+
+        // 再解析新 CSV：Area, ISO 3 code, Year, Energy_source, Share
+        const renewableSources = new Set([
+          "Bioenergy",
+          "Hydro",
+          "Other Renewables",
+          "Solar",
+          "Wind"
+        ]);
+
+        const newYearCodeMap = new Map(); // Map<year, Map<code, value>>
+        const newAfricaAggregate = new Map(); // Map<year, value>
+        const perSourceYearCode = new Map(); // Map<source, Map<year, Map<code, value>>>
+
+        if (Array.isArray(newRows)) {
+          newRows.forEach(row => {
+            const area = (row["Area"] || "").trim();
+            const code = (row["ISO 3 code"] || "").trim();
+            const year = +row["Year"];
+            const source = (row["Energy_source"] || "").trim();
+            const shareRaw = row["Share"];
+
+            if (!year || year < 2000 || year > 2024) return; // 仅 2000–2024 使用新数据
+            if (!renewableSources.has(source)) return;
+
+            const share = shareRaw === undefined || shareRaw === "" ? NaN : +shareRaw;
+            if (isNaN(share)) return;
+
+            // Africa 区域汇总（无 ISO 代码）
+            if (!code && area === "Africa") {
+              const prevAgg = newAfricaAggregate.get(year) || 0;
+              newAfricaAggregate.set(year, prevAgg + share);
+            }
+
+            if (!code) return; // 只对有 ISO3 的国家累加
+
+            if (!newYearCodeMap.has(year)) newYearCodeMap.set(year, new Map());
+            const byCode = newYearCodeMap.get(year);
+            const prev = byCode.get(code) || 0;
+            byCode.set(code, prev + share);
+
+            // 记录每种能源的单独占比，供左侧地图在点击条形图后使用
+            if (!perSourceYearCode.has(source)) perSourceYearCode.set(source, new Map());
+            const byYearForSource = perSourceYearCode.get(source);
+            if (!byYearForSource.has(year)) byYearForSource.set(year, new Map());
+            const mapForYear = byYearForSource.get(year);
+            mapForYear.set(code, (mapForYear.get(code) || 0) + share);
+          });
+        }
+
+        // 覆盖 2000–2024 年的国家数值
+        newYearCodeMap.forEach((byCode, year) => {
+          if (!yearMap.has(year)) yearMap.set(year, new Map());
+          const target = yearMap.get(year);
+          byCode.forEach((val, code) => {
+            target.set(code, val);
+          });
+        });
+
+        // 覆盖 2000–2024 年的 Africa 汇总
+        newAfricaAggregate.forEach((val, year) => {
+          shareAfricaAggregateByYear.set(year, val);
+        });
+
+        // 第三份 CSV：电力可再生占比，仅用于 1985–1999 年覆盖旧数据
+        if (Array.isArray(elecRows)) {
+          elecRows.forEach(row => {
+            const code = row.Code && row.Code.trim();
+            const year = +row.Year;
+            const valueRaw = row.Renewables;
+
+            if (!code || !year || year < 1985 || year > 1999) return;
+            const value = valueRaw === undefined || valueRaw === "" ? NaN : +valueRaw;
+            if (isNaN(value)) return;
+
+            if (!yearMap.has(year)) yearMap.set(year, new Map());
+            const target = yearMap.get(year);
+            target.set(code, value);
+          });
+        }
+
+        // 删除 1985 年以前的年份，避免在占比视图中使用 1965–1984 年的不可信数据
+        Array.from(yearMap.keys()).forEach(year => {
+          if (year < 1985) {
+            yearMap.delete(year);
+          }
+        });
+
+        shareDataByYearAndIso3 = yearMap;
+
+        // 计算每种能源的全局最大占比，并缓存下来用于颜色映射
+        energySourceShareByYearAndIso3 = perSourceYearCode;
+        energySourceMaxShareBySource = new Map();
+        perSourceYearCode.forEach((yearMap, source) => {
+          let maxVal = 0;
+          yearMap.forEach(byCode => {
+            byCode.forEach(val => {
+              if (val != null && !isNaN(val) && val > maxVal) {
+                maxVal = val;
+              }
+            });
+          });
+          energySourceMaxShareBySource.set(source, maxVal || 0);
+        });
+
+        // 与主页保持相同的 0–75%+ domain 设置
+        shareColorScale
+          .domain([0, 15, 30, 45, 60, 75])
+          .clamp(true);
+
+        shareColorReady = true;
+
+        // 如果当前模式是占比颜色，则立刻渲染图例并刷新着色
+        if (countryColorMode === "share") {
+          renderCountryLegendGradient();
+          updateCountryHighlighting();
+        }
+
+        // Once share data is ready, draw the renewables-share time series
+        // line chart in the Country profile panel.
+        initCountryShareLineChart();
+      }).catch(err => {
+        console.error("Failed to load renewables share CSV for country view", err);
+      });
+    }
+
+    initShareColors();
+
+    // ==========================
+    // Renewables-share time series line chart (Country profile)
+    // ==========================
+
+    function initCountryShareLineChart() {
+      if (!shareLineSvg || !shareLineSvg.node()) return;
+      if (!shareColorReady || !shareDataByYearAndIso3 || !shareDataByYearAndIso3.size) return;
+
+      const years = Array.from(shareDataByYearAndIso3.keys()).sort((a, b) => a - b);
+      if (!years.length) return;
+
+      const series = years.map(year => {
+        const value = getShareValueForYear(year, selectedIso3);
+        return { year, value };
+      });
+
+      const valid = series.filter(d => d.value != null && !isNaN(d.value));
+      if (valid.length < 2) {
+        // Not enough data to draw a meaningful line
+        shareLineSvg.style("display", "none");
+        return;
+      }
+
+      // cache for later updates of the moving point
+      shareLineSeries = series;
+
+      const node = shareLineSvg.node();
+      const width = node.clientWidth || 520;
+      const height = node.clientHeight || 130;
+
+      shareLineSvg
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .style("display", "block")
+        .selectAll("*").remove();
+
+      const margin = { top: 16, right: 18, bottom: 22, left: 40 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const g = shareLineSvg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const x = d3.scaleLinear()
+        .domain(d3.extent(series, d => d.year))
+        .range([0, innerWidth]);
+
+      const rawMaxVal = d3.max(valid, d => d.value) || 0;
+      const maxVal = rawMaxVal > 0 ? rawMaxVal : 1;
+      // y 轴显示刻度取一位小数（向上取到 0.1 精度），保证标签整洁
+      const maxTick = Math.ceil(maxVal * 10) / 10;
+      // 纵轴上界略高于显示刻度最大值，避免折线贴边
+      const yMax = maxTick * 1.05;
+
+      const y = d3.scaleLinear()
+        .domain([0, yMax])
+        .range([innerHeight, 0]);
+
+      shareLineX = x;
+      shareLineY = y;
+
+      const xAxis = d3.axisBottom(x)
+        .ticks(Math.min(6, years.length))
+        .tickFormat(d3.format("d"));
+
+      const yAxis = d3.axisLeft(y)
+        // 只显示 0% 和该国序列的最大值（保留一位小数）
+        .tickValues([0, maxTick])
+        .tickFormat(d => `${d.toFixed(1)}%`);
+
+      g.append("g")
+        .attr("transform", `translate(0,${innerHeight})`)
+        .attr("class", "country-share-axis-x")
+        .call(xAxis);
+
+      g.append("g")
+        .attr("class", "country-share-axis-y")
+        .call(yAxis);
+
+      // 按数值使用与主地图相同的色标为折线分段上色
+      const segments = [];
+      for (let i = 1; i < series.length; i++) {
+        const a = series[i - 1];
+        const b = series[i];
+        if (a.value == null || b.value == null || isNaN(a.value) || isNaN(b.value)) continue;
+        const midVal = (a.value + b.value) / 2;
+        segments.push({
+          x1: x(a.year),
+          y1: y(a.value),
+          x2: x(b.year),
+          y2: y(b.value),
+          color: shareColorScale(midVal)
+        });
+      }
+
+      g.selectAll(".country-share-line-seg")
+        .data(segments)
+        .enter()
+        .append("line")
+        .attr("class", "country-share-line-seg")
+        .attr("x1", d => d.x1)
+        .attr("y1", d => d.y1)
+        .attr("x2", d => d.x2)
+        .attr("y2", d => d.y2)
+        .attr("stroke", d => d.color)
+        .attr("stroke-width", 2)
+        .attr("stroke-linecap", "round");
+
+      // moving dot following mouse hover
+      const focusDot = g.append("circle")
+        .attr("r", 3.5)
+        .attr("fill", "#f97316")
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.2)
+        .style("opacity", 0);
+
+      // time-synchronized dot that follows the global year
+      shareLineYearDot = g.append("circle")
+        .attr("r", 3.5)
+        .attr("fill", "#f97316")
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.2)
+        .style("opacity", 0);
+
+      const bisectYear = d3.bisector(d => d.year).left;
+
+      function handleMove(event) {
+        if (!shareLineCardEl || !shareLineTooltipEl) return;
+        const [mx] = d3.pointer(event, g.node());
+        const hoveredYear = Math.round(x.invert(mx));
+        const index = bisectYear(series, hoveredYear);
+
+        let nearest = null;
+        [index - 1, index, index + 1].forEach(i => {
+          if (i < 0 || i >= series.length) return;
+          const d = series[i];
+          if (d.value == null || isNaN(d.value)) return;
+          const diff = Math.abs(d.year - hoveredYear);
+          if (!nearest || diff < nearest.diff) {
+            nearest = { d, diff };
+          }
+        });
+
+        if (!nearest) {
+          focusDot.style("opacity", 0);
+          shareLineTooltipEl.style.opacity = "0";
+          return;
+        }
+
+        const d = nearest.d;
+        const cx = x(d.year);
+        const cy = y(d.value);
+
+        focusDot
+          .attr("cx", cx)
+          .attr("cy", cy)
+          .attr("fill", shareColorScale(d.value))
+          .style("opacity", 1);
+
+        const cardRect = shareLineCardEl.getBoundingClientRect();
+        const svgRect = shareLineSvg.node().getBoundingClientRect();
+        const absoluteX = svgRect.left + margin.left + cx;
+        const absoluteY = svgRect.top + margin.top + cy;
+
+        const xPos = absoluteX - cardRect.left;
+        const yPos = absoluteY - cardRect.top;
+
+        const name = selectedDisplayName || selectedCountryName || selectedIso3;
+        shareLineTooltipEl.style.left = `${xPos}px`;
+        shareLineTooltipEl.style.top = `${yPos}px`;
+        shareLineTooltipEl.innerHTML = `${d.year} · ${name}<br/>Renewables share: ${d.value.toFixed(2)}%`;
+        shareLineTooltipEl.style.opacity = "1";
+      }
+
+      function handleLeave() {
+        focusDot.style("opacity", 0);
+        if (shareLineTooltipEl) shareLineTooltipEl.style.opacity = "0";
+      }
+
+      g.append("rect")
+        .attr("fill", "transparent")
+        .attr("pointer-events", "all")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", innerWidth)
+        .attr("height", innerHeight)
+        .on("mousemove", handleMove)
+        .on("mouseleave", handleLeave);
+
+      // After chart is ready, position the year dot at the
+      // current cluster/energy year if available.
+      if (currentClusterYear != null) {
+        updateCountryShareYearDot(currentClusterYear);
+      }
+    }
+
+    function updateCountryShareYearDot(year) {
+      if (!shareLineYearDot || !shareLineSeries || !shareLineX || !shareLineY) return;
+      if (year == null) {
+        shareLineYearDot.style("opacity", 0);
+        return;
+      }
+
+      const point = shareLineSeries.find(d => d.year === year && d.value != null && !isNaN(d.value));
+      if (!point) {
+        shareLineYearDot.style("opacity", 0);
+        return;
+      }
+
+      const cx = shareLineX(point.year);
+      const cy = shareLineY(point.value);
+
+      shareLineYearDot
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("fill", shareColorScale(point.value))
+        .style("opacity", 1);
+    }
+
+    // ==========================
+    // Page-load animation: slide left views slightly into place
+    // ==========================
+    document.addEventListener("DOMContentLoaded", () => {
+      const layout = document.querySelector(".country-layout");
+      if (layout) {
+        // 触发 CSS 过渡，让左侧视图从中间“滑动”到左半边
+        layout.classList.add("country-layout--entered");
+      }
+    });
+
+  </script>
+</body>
+</html>

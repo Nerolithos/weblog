@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Technology on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/tags/technology/</link>
+    <description>Recent content in Technology on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <atom:link href="http://localhost:1313/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🌐 Manual for Deploying a Hugo Blog on Cloudflare</title>
+      <link>http://localhost:1313/posts_en/weblog_deploy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts_en/weblog_deploy/</guid>
+      <description>People often say that building a blog with GitHub and Cloudflare is cheap and easy. In practice, however, the process can be surprisingly full of pitfalls.</description>
+    </item>
+  </channel>
+</rss>

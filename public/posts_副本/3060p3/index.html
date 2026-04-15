@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Project: Code Scheduling | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060p3/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060p3/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Project: Code Scheduling">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:published_time" content="2026-03-14T10:37:34+08:00">
+    <meta property="article:modified_time" content="2026-03-14T10:37:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Project: Code Scheduling">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等">
+  <meta itemprop="datePublished" content="2026-03-14T10:37:34+08:00">
+  <meta itemprop="dateModified" content="2026-03-14T10:37:34+08:00">
+  <meta itemprop="wordCount" content="3443">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Project: Code Scheduling">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/3060p3.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Project: Code Scheduling</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Project: Code Scheduling</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-03-14T10:37:34+08:00">March 14, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"></br>
+<h1 id="code-scheduling">Code Scheduling</h1>
+<blockquote>
+<p>这个项目的主题是 code scheduling (指令调度)：在<strong>不改变程序语义</strong>的前提下，重新排列指令顺序，让总执行周期更短。目标是在保持依赖关系前提下尽量<strong>隐藏长指令的等待时间</strong>、<strong>优先安排关键路径上的指令</strong> 。</p>
+</blockquote>
+</br>
+<p>Code Scheduling 以少量的 compile-time 为代价换来显著的 runtime 提升。说到 compilation……</p>
+<p><img src="https://i.postimg.cc/Hkky6Pm7/compilecircleoflife-v0-zk74efewqv6f1.webp" alt=""></p>
+</br>
+<ul>
+<li>
+<p>调度过程：解析指令、制作依赖图、计算优先级、产出最终调度方案</p>
+</li>
+<li>
+<p>重要性：不同指令延迟不同，例如 <code>lw</code>、<code>mul</code> 通常比 <code>add</code>、<code>jal</code> 慢。如果仅仅是按原始顺序傻等，就会产生空泡 (idle cycles, bubbles)。调度器<strong>在等待某些长延迟指令时，把其他独立指令塞进去执行。</strong></p>
+</li>
+</ul>
+</br>
+<h2 id="static-latency-model-静态延迟模型">Static Latency Model 静态延迟模型</h2>
+<p>我们假设每类指令有一个<strong>固定 latency</strong>，调度器据此估计什么时候结果可用。虽然真实硬件里同一条指令的耗时不固定，但 SLM 给调度器一个简单、稳定的简化近似，指导依赖分析和重排。</p>
+<p><img src="https://i.postimg.cc/nLH1tC0F/jie-ping2026-03-14-11-00-05.png" alt="">SLM 的延迟明显是一种 “平均情况” 下的估计。真实延迟的波动不太影响 SLM 的工作，一是你可以将 “延迟” 类比为 A*/Dijkstra 等最优寻路算法中的 “权重”，能反映相对代价即可；二是如果估测值粗糙的反映大体趋势 (命令之间的相对时间开销)，类似于 Amdahl&rsquo;s Law，速度优化会很明显，而追求精确不仅失去泛用性，且去会出现显著边际效应。</p>
+<ul>
+<li>乘法可拆成“生成部分积 + 逐级相加”，通常在 3～4 周期；而除法每一位都反复比较、做减法、再移位取新一位、然后商位修正，效率很低，在十甚至数十周期量级。</li>
+<li>load 指令在缓存命中情况下最优可到 5 周期，而 store 永远是 1 周期。这是因为 load 会修改寄存器，产生 RAW 依赖，即后续某些 Read 指令需等待这个前序 load 指令从主存把数据搬到寄存器。而 store 不会动寄存器，所以没有产生依赖性也不必等待。</li>
+</ul>
+</br>
+</br>
+<h2 id="dependency-dag">Dependency DAG</h2>
+<p>依赖图把每条指令看成一个节点并用有向边表示指令间的依赖/顺序。例如：I0 → I3 表示 I3 依赖 I0，I0 不能排在 I3 后面。</p>
+<blockquote>
+<p>为什么一定是 Directed Acyclic Graph?</p>
+</blockquote>
+<p>因为依赖表示的是一种<strong>拓扑顺序关系</strong>。如果图里有环，比如：A → B, B → C, C → A，这样环中任何指令都不能先执行，调度无解。</p>
+<p>哪里需要有边可以通过分析指令间的寄存器依赖得到——</p>
+</br>
+<h3 id="数据流依赖raw-read-after-write">数据流依赖：RAW (Read After Write)</h3>
+<p>RAW 表示后续的指令要读前面指令写出的寄存器值。这是一种 “真依赖” (数据依赖)，后继必须等前驱指令彻底完成，而这会带来真实的延迟。RAW 也是唯一有具体延迟的依赖 (而不是只要求有顺序性)。</p>
+<p>例如：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">I0: lw  x1, 0(x5)
+I1: add x3, x1, x2
+</code></pre><ul>
+<li>I1 读取 x1，而 x1 是 I0 写的，所以 I1 对 I0 有 RAW 依赖，I1 开始时间必须晚于 “I0 开始时间 +5cycles”。</li>
+<li>通常会维护一个 LastWriter[reg]，对读同一寄存器的后继建立 RAW。</li>
+</ul>
+</br>
+<h3 id="反依赖war-write-after-read">反依赖：WAR (Write After Read)</h3>
+<p>WAR 表示前面的指令先读某寄存器，后面的指令又写同一个寄存器。这是一种 “反依赖”，即前序指令反过来依赖后续指令执行的足够晚。WAR 不要求等待具体时间，只要求顺序约束 (order-only dependency)。</p>
+<p>例如：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">I0: add x3, x1, x2
+I1: li  x1, 0
+</code></pre><ul>
+<li>
+<p>如果把 I1 提前到 I0 前面，I0 读到的就不是原来的 x1 了，所以 I1 开始时间必须晚于 “I0 开始时间”。</p>
+</li>
+<li>
+<p>通常是维护某种 LastReaders[reg] 结构。当遇到一个写寄存器的指令时，对之前尚需约束的<u>所有</u> reader 建 WAR 边。</p>
+</li>
+</ul>
+</br>
+<h3 id="输出依赖waw-write-after-write">输出依赖：WAW (Write After Write)</h3>
+<p>WAW 表示两条指令都写同一个寄存器，必须保持写入顺序。这也是一种 “反依赖”，也是 “输出依赖”，即只依赖最终写的结果的正确性。WAW 不要求等待具体时间，只要求顺序约束 (order-only dependency)。</p>
+<p>例如：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">I0: li x1, 5
+I1: li x1, 9
+</code></pre><ul>
+<li>
+<p>最终程序要保留最后一次写的结果，如果乱序就会破坏最终寄存器值，所以 I1 开始时间必须晚于 “I0 开始时间”。</p>
+</li>
+<li>
+<p>通常会维护一个 LastWriter[reg]，对写同一寄存器的后继建立 WAW 边。</p>
+</li>
+</ul>
+</br>
+<p>总结下来，画 DAG 要做的事情就是：（Bonus：可以一次性做完）</p>
+<ul>
+<li><strong>RAW</strong>：当前要 <strong>读</strong>，去找之前最近的 <strong>写</strong>，连 RAW 依赖边；</li>
+<li><strong>WAW</strong>：当前要 <strong>写</strong>，去找之前最近的 <strong>写</strong>，连 WAW 依赖边；</li>
+<li><strong>WAR</strong>：当前要 <strong>写</strong>，去找之前⚠️<u>所有相关的读</u>，<u>全部</u>连 WAR 依赖边。</li>
+</ul>
+<blockquote>
+<p>为什么 WAR 要找先前全部读者？</p>
+</blockquote>
+<p>→ 你怎么知道这些前序 “读” 指令有没有乱序？所以 WAR 通常需要的是 <strong>list of readers</strong>，而不只是单个 last reader。</p>
+<blockquote>
+<p>为什么 WAR 和 WAW 不需要延迟？</p>
+</blockquote>
+<p>→ WAR 和 WAW 只有顺序约束，因为它们都只保证 “覆盖寄存器” 的安全性，不需要读前序指令的结果。通过保证前序指令先开始执行，两个指令的顺序就固定了，就不需要额外等待时间。</p>
+<blockquote>
+<p>为什么没有 RAR (Read After Read)?</p>
+</blockquote>
+<p>→ 两个 “读” 都不会改变寄存器内容，便不存在依赖。前后交换顺序不影响正确性，就没有必要存在这种依赖边。</p>
+<p><img src="https://i.postimg.cc/t4wY3gmm/jie-ping2026-03-14-12-09-26.png" alt=""></p>
+<p>⚠️注意：如果一个指令既读又写同个寄存器，比如 <code>add x1, x1, x2</code>，不能被自动检测为自己对自己有依赖，否则就会形成自环 (loop)，导致卡死。</p>
+</br>
+</br>
+<h2 id="项目的简化假设">*项目的简化假设</h2>
+<p>我们为了把项目做得清晰、教学化，它使用了非常简化的执行模型：</p>
+<ul>
+<li>所有依赖都只看<strong>寄存器依赖</strong></li>
+<li><strong>没有 memory aliasing</strong></li>
+<li>单线程</li>
+<li>没有控制流 / 异常 / side effects</li>
+<li>指令对内存是原子的</li>
+</ul>
+<p>在这个模型里：</p>
+<blockquote>
+<p>寄存器是唯一共享状态，因此 correctness 约束就等价于 RAW/WAR/WAW。</p>
+</blockquote>
+<p>而因为现实世界更复杂：store / load 可能通过内存地址 alias 形成依赖、多线程里 lock / release 顺序非常关键、只看寄存器会漏掉真实约束 …… 如果没有这些简化假设，寄存器 DAG 就不够了。</p>
+</br>
+</br>
+<h2 id="priority-critical-path-length">Priority: Critical Path Length</h2>
+<blockquote>
+<p>为什么，怎么算 priority?</p>
+</blockquote>
+<p>当多个节点都 ready 时，调度器要知道先发哪个，我们选用的 priority 是 <strong>Critical Path Length</strong>。 <strong>CPL</strong> (Priority)  = 从当前节点到任一出口节点的<strong>最长路径长度</strong>（即时间开销）。</p>
+<p>因为关键路径越长说明后面还有更多依赖工作在等它——越早安排它越能尽早解锁后续指令并降低总时间。</p>
+<p><img src="https://i.postimg.cc/85dw69wz/jie-ping2026-03-14-14-11-56.png" alt=""></p>
+<p>只有 RAW 是有真实延迟要求的，故 CPL 不是无脑所有边都加 latency：</p>
+<ul>
+<li>对 <strong>RAW successors</strong>：要加上当前节点 latency；</li>
+<li>对 <strong>WAR/WAW successors</strong>：不加当前 latency，只保留顺序关系 。</li>
+</ul>
+</br>
+</br>
+<h2 id="list-scheduling-列表调度">List Scheduling 列表调度</h2>
+<p>这是本项目最核心的算法部分，这是最经典的调度算法之一。</p>
+<ul>
+<li>ready 集合：当前所有<strong>前驱约束已经满足</strong>，可以被开始的节点。</li>
+<li>inflight 集合：已经开始但还没结束的节点，形式大致是：(node, finish_cycle)</li>
+</ul>
+<h3 id="算法流程">算法流程</h3>
+<ol>
+<li>初始化 cycle = 0</li>
+<li>把所有 unscheduled_predecessors = 0 的点放进 ready</li>
+<li>每个 cycle：
+<ul>
+<li>如果 ready 非空，选一个 best 节点 issue</li>
+<li>把它加入 inflight，记录 finish cycle</li>
+<li>对 WAR/WAW successors：<strong>issue 时立即释放</strong></li>
+</ul>
+</li>
+<li>cycle 自增</li>
+<li>检查 inflight 中哪些节点在这个 cycle retire
+<ul>
+<li>对这些节点的 RAW successors：<strong>finish 时释放</strong></li>
+</ul>
+</li>
+<li>重复直到所有节点都 schedule 完成</li>
+</ol>
+<p>再次强调——什么时候 release successor：</p>
+<ul>
+<li>
+<p>RAW successor 只能在 predecessor <strong>完成时</strong>释放：因为后继真的需要前驱产生的数据。</p>
+</li>
+<li>
+<p>WAR / WAW successor 可以在 predecessor 开始时释放：因为这类边只管顺序，不涉及结果返回。</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="完整示例">完整示例</h2>
+<p>用一个 5 条指令的例子展示整个流程：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">1 I0: lw x1 , 0( x5)     ; latency =5, writes x1
+2 I1: lw x2 , 4( x5)     ; latency =5, writes x2
+3 I2: add x3 , x6 , x7   ; latency =1, independent
+4 I3: mul x4 , x1 , x2   ; latency =3, reads x1 , x2
+5 I4: sw x4 , 8( x5)     ; latency =1, reads x4
+</code></pre><p>分析：先是两个独立的 <code>lw</code>，然后一个独立 <code>add</code>，一个依赖两个 <code>lw</code> 的 <code>mul</code>，最后是一个依赖 <code>mul</code> 的 <code>sw</code>。</p>
+<p>得到 DAG：I0 → I3、I1 → I3、I3 → I4、I2 独立 。</p>
+<p><img src="https://i.postimg.cc/CLMJk7R7/jie-ping2026-03-14-14-59-31.png" alt=""></p>
+<p>计算 CPL：priority(I4) = 1，priority(I3) = 3 + 1 = 4，priority(I0) = 5 + 4 = 9，priority(I1) = 5 + 4 = 9。所以 CPL Priority 等于 9。</p>
+<p>⚠️ 但考虑资源约束，由于我们的前提是 <strong>single-issue</strong> scheduler，每个周期只能发射 (开始) 一个任务，I0 和 I1 必有一个在第二周期才能开始，故：<code>max(finish_time(I0), finish_time(I1)) + latency(I3) + latency(I4) = 6 + 3 + 1 = 10</code>，最短完成时间下界等于 10。</p>
+<p>Scheduling：{I0, I1, I2, I3, I4}。虽然最终 issue 顺序恰好和原程序一样，但调度器把独立的 I2 塞进了 load 等待期间，从而隐藏了两周期空转。文档明确说这是在<strong>fill idle slot</strong>、<strong>hide latency</strong>。</p>
+<blockquote>
+<p>调度优化不一定表现为“大幅改变程序顺序”，根本目的是聪明地利用空档。</p>
+</blockquote>
+</br>
+</br>
+<h2 id="tie-breaking-policy-同优先级时如何选择">Tie-Breaking Policy 同优先级时如何选择</h2>
+<p>当多个 ready node 的 priority 一样时，需要进一步决定先发谁——用三种策略做一个多级比较器 (selectBestNode())</p>
+<ol>
+<li>
+<p>SMALLER_INDEX：选原始程序顺序里 index 更小的节点。优点：更接近原程序顺序，属于 “保守型 tie-breaker”。</p>
+</li>
+<li>
+<p>MOST_CHILD：选后继 (successors) 更多的节点。 优点：如果一个节点能解锁更多后续指令，先执行它会让更多节点更早 ready，提升填充延迟 bubble 的概率。</p>
+</li>
+<li>
+<p>LPT (Longest Processing Time)：选 latency 最长的节点。 优点：长延迟指令越早开始，后面的指令越可能填充这延迟 bubble。当 ready 集合长/短延迟都有，而后续工作能覆盖长延迟时，LPT 往往优于 Index。</p>
+</li>
+</ol>
+<blockquote>
+<p>比较并择优 MOST_CHILD 和 LPT，如果还相等就用 SMALLER_INDEX 做最终 tie-breaker。</p>
+</blockquote>
+</br>
+</br>
+<h2 id="complexity-analysis">Complexity Analysis</h2>
+<p>(假设有 N 个命令节点和 E 个依赖边)</p>
+<p><strong>1. naive list scheduling</strong>：如果每一轮都扫所有节点找 ready nodes，那么复杂度会比较高：O(N<sup>2</sup>+E)</p>
+<p><strong>2. recursive memoized priority calculation</strong>：CPL 如果用“递归 + 记忆化”，通常每个点和边只会被有效处理有限次，复杂度近似于 O(N+E)</p>
+</br>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

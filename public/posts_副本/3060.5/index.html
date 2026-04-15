@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.5/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.5/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:published_time" content="2026-03-17T10:37:34+08:00">
+    <meta property="article:modified_time" content="2026-03-17T10:37:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险">
+  <meta itemprop="datePublished" content="2026-03-17T10:37:34+08:00">
+  <meta itemprop="dateModified" content="2026-03-17T10:37:34+08:00">
+  <meta itemprop="wordCount" content="6304">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30605.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-03-17T10:37:34+08:00">March 17, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><strong>⚠️ 本篇结尾有 Quiz-2 的 cheating paper。</strong></p>
+</br>
+<h1 id="week-8--pipelined-implementation">Week 8  Pipelined Implementation</h1>
+<blockquote>
+<p>流水线 (pipelining) 的核心思想即<strong>让多条指令的不同阶段“重叠执行”</strong>。理想流水线是 “单发射” 的——即<strong>每个 short cycle 开始 1 条指令</strong>。</p>
+</blockquote>
+<p>基础概念：</p>
+<ul>
+<li>吞吐量 (Throughput)：平均多少周期完成一个指令？</li>
+<li>指令延迟 (Latency)：单条指令从发射开始需要多少时间完成？</li>
+<li>阶段 (Stage)：所有指令可以被分为多个互相硬件独立的阶段。</li>
+<li>Fill：指令依次被发射；Drain：等待最后一条指令的延迟。</li>
+</ul>
+<p>⚠️ <strong>RISC-V ISA 天然适合流水线</strong>：</p>
+<ul>
+<li><strong>指令长度固定 32-bit</strong> (除了 &ldquo;C-Extention&rdquo;)，更易将指令划分成规律的阶段 (而 x86 可变长 1–17B)。</li>
+<li><strong>指令格式少且规则</strong>：译码 + 读寄存器能在同一步完成。</li>
+<li><strong>L/S 架构</strong>：只有 load/store 访存；地址计算在 EX，访存在 MEM，分工清晰。</li>
+</ul>
+</br>
+<h2 id="五级流水吞吐与耗时计算">五级流水、吞吐与耗时计算</h2>
+<p>经典 5 级流水：将指令划为五个阶段，分别占用处理器不同的区块</p>
+<ol>
+<li><strong>IF</strong>：取指（Instruction Fetch），包括 PC(内含 Clk)、ADD4、IMEM；</li>
+<li><strong>ID</strong>：译码 + 读寄存器（Instruction Decode &amp; Register Read），包括 Regs、ImmGen(Sign-Extend)；</li>
+<li><strong>EX</strong>：执行/算地址（Execute / Address Calculate），包括 ALU，及其 Asel、Bsel；</li>
+<li><strong>MEM</strong>：访问数据存储器（Memory Access），包括 DMEM；</li>
+<li><strong>WB</strong>：写回寄存器（Write Back），包括四元计算器 WBsel。</li>
+</ol>
+<p>单周期机最小周期为<u>最慢指令 lw 的总时长</u> (&ldquo;long cycle&rdquo;)；多周期机和流水线机最小周期为<u>最慢阶段时长</u> (&ldquo;short cycle&rdquo;)，比如 MEM/EX。周期 (ps) 的倒数为频率 (GHz)。</p>
+<p><img src="https://i.postimg.cc/7L9T17R1/jie-ping2026-03-17-11-23-35.png" alt=""></p>
+<ul>
+<li>
+<p>如果 <code>1 long cycle = 5 short cycles</code>，LW 要 5sc (所有阶段都要)、SW/ADD/SUB/JAL 要 4sc (后三者没有 MEM，SW 没有 WB)、BEQ 要 3sc (没有 MEM 和 WB)。那么执行 <code>LW, LW, ADD, SUB, BEQ, SW, SW</code> 需要：</p>
+<ul>
+<li>
+<p>单周期：“延迟向上对齐”——<code>7lc = 35sc</code>，理想吞吐量 (<strong>Throughput</strong>) 为 <u>1条指令 / 5sc</u>；</p>
+</li>
+<li>
+<p>多周期：“实际需求”——<code>5sc x 2 + 4sc x 4 + 3sc x 1 = 29sc</code>，理想吞吐量为 <u>1 条指令 / 平均 CPI (sc)</u>；</p>
+</li>
+<li>
+<p>流水线：“阶段向上对齐” <strong>fill + drain</strong> (等最后一条指令走完剩下4个阶段)——<code>7sc + 4sc = 11sc</code>，理想吞吐量 (⚠️ 不算 drain) 为 <u>1 条指令 / sc (CPI≈1)</u>。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>故而，三者在五级流水下理想吞吐量为：<strong>1/5、1/3~1/5、1</strong>。</p>
+</li>
+</ul>
+<blockquote>
+<p>⚠️ 单周期受到最慢指令延迟限制、多周期受到 CPI 限制、流水线受到最慢阶段限制。</p>
+</blockquote>
+</br>
+<h3 id="通用公式">通用公式</h3>
+<p>(short cycle = n；流水线阶段数 = N)</p>
+<ul>
+<li>
+<p><strong>单周期</strong> (用最慢指令定周期)：$T = n \times T_{long}$。</p>
+</li>
+<li>
+<p><strong>多周期</strong> (指令数为 i)：$T = \sum_i CPI(i)$。</p>
+</li>
+<li>
+<p><strong>理想 N 级流水</strong>：$T = n + (N-1)$，即 <strong>drain = latency - 1</strong>。</p>
+</li>
+<li>
+<p><strong>流水的提速 (speedup) 公式</strong>：$T_{pipe} = \frac{T_{SingleCycle}}{N}$，即提速 N 倍。(前提是各阶段平衡，如果各阶段耗时差异大，会导致提速下降)</p>
+</li>
+<li>
+<p>⚠️ 流水相对于多周期非流水的提速：$T_{pipe} = \frac{\sum_i CPI(i)}{i}$，即提速 “平均 CPI” 倍。</p>
+</li>
+</ul>
+<blockquote>
+<p>⚠️ 流水线加速来自 throughput 增加，而不是 latency 减少，事实上单条指令的 latency 反而可能更大 (若不平衡)。</p>
+</blockquote>
+</br>
+</br>
+<h2 id="流水线的代价">流水线的代价</h2>
+<p>流水线要想“每个短周期都推进一条指令”，前提是——</p>
+<ul>
+<li>每个阶段需要的硬件资源能同时服务不同指令；</li>
+<li>否则就会出现<strong>结构冒险 (structural hazard)</strong>：资源冲突导致必须停顿（stall），流水线“断流”。</li>
+</ul>
+<p>E.g.：如果 IF 和 MEM 共用同一个单端口内存，那么当某条 LW/SW 在 MEM 阶段访问内存时，下一条指令在 IF 阶段就必须等 (插入 bubble/stall)。解决需要<strong>把内存资源翻倍</strong> (I-cache + D-cache 分离，或多端口存储器)，增大硬件开销。</p>
+<blockquote>
+<p>流水线的代价是硬件冗余或更复杂的控制，理想的 “CPI=1” 只在 “资源足够且结构冒险都被解决” 时成立。</p>
+</blockquote>
+<p>此问题在下文 (WEEK 9 部分) 展开讨论。</p>
+</br>
+</br>
+<h2 id="例题">例题</h2>
+<p><img src="https://i.postimg.cc/XvZYqz5x/jie-ping2026-03-17-12-09-39.png" alt=""></p>
+<ul>
+<li>
+<p>时钟周期为？——1250ps (单周期非流水)，350ps (多周期非流水)，350ps (流水)。</p>
+</li>
+<li>
+<p><code>lw</code> 命令的延迟为：？——1250ps (非流水)，<strong>350ps x 5 = 1750ps</strong> (流水)。</p>
+</li>
+<li>
+<p>如果改成六级流水，应该把哪个阶段拆开，拆开后周期为？——拆 ID，周期为 300ps。</p>
+</li>
+<li>
+<p>提速？——1250/350 (相对于单周期)，60% x 4 + 20% x 5 + 20% x 3 = 4 (相对于多周期)。</p>
+</li>
+</ul>
+</br>
+</br>
+<h2 id="流水线的实际实现">流水线的实际实现</h2>
+<p>流水线的 “节拍” 由最慢阶段决定，不同于多周期非流水，流水线中所有指令不能跳过阶段，否则会打乱节拍。</p>
+<p><img src="https://i.postimg.cc/wMqs3dd2/jie-ping2026-03-17-14-04-32.png" alt=""></p>
+<ul>
+<li>
+<p>Sequentially 串行：同个指令的不同阶段，不能乱序；</p>
+</li>
+<li>
+<p>Simultaneously 并行：不同指令的不同阶段可以同时进行。</p>
+</li>
+</ul>
+<p>特殊的，不是所有指令的 EX 都可以在单个短周期内算完，比如 <code>div</code>，对于这种高延迟操作：</p>
+<p>1、<strong>Stall (停住流水线)</strong>：下一个指令停在 EX 前面一个阶段，形成气泡 bubble。操作简单，但会导致吞吐和提速崩溃。</p>
+<p>2、<strong>Separate long-latency pipeline (另开长延迟功能单元)</strong>：把 DIV / FP 这种操作交给专用单元 M-Extentions 和 F/D-Extentions，让主流水线能继续推进其它独立指令，这就是 <a href="https://blog.nero-lithos.com/posts/3060.2/">RISC-V 分离模块</a>的缘由。通常，指令在 WB 阶段<strong>按程序顺序</strong>退休，原因是 “异常/陷阱 (traps)” 语义：如果后面的指令先退休了，而前面的指令后来触发异常，会导致程序状态不一致。然而 RISC-V <strong>避免了很多算术异常</strong>，所以乱序退休也是可行的。</p>
+</br>
+<h3 id="真正实现流水线的关键插入流水寄存器">真正实现流水线的关键：插入流水寄存器</h3>
+<p>在单周期里，一条指令的控制信号“只服务这一条”，没歧义；但在流水线里，同一时刻有多条指令分别处于不同阶段，你就会遇到一些典型的混乱：</p>
+<ul>
+<li>“现在该用哪条指令的 rs1/rs2/imm？”</li>
+<li>“现在 WB 应该写哪条指令的 rd？”</li>
+</ul>
+<p>解决方法就是：<strong>在阶段之间插入 pipeline registers (IF/ID、ID/EX、EX/MEM、MEM/WB)</strong>，把“数据 + 控制信号”一起往后带，保证每个阶段用到的都是“属于同一条指令”的那份信息。</p>
+<p><img src="https://i.postimg.cc/QdgpSSdr/jie-ping2026-03-17-14-47-53.png" alt=""></p>
+<blockquote>
+<p>Pipeline registers <strong>不是 architectural state</strong>。上下文切换需要保存的是架构态（寄存器、PC、内存等），而流水寄存器、分支预测器、cache 等属于微架构态。</p>
+</blockquote>
+</br>
+</br>
+</br>
+<h1 id="week-9--pipeline-hazards">Week 9  Pipeline Hazards</h1>
+<p>除去 Fill &amp; Drain 的开销、阶段划分不平衡的限制，Pipelining 还面临着 <strong>data</strong> hazards，<strong>structural</strong> hazards 和 <strong>control</strong> hazards。三类 hazards 通常会使后续指令被卡在 <strong>ID 阶段</strong>，形成 <strong>stall</strong>，从而产生 <strong>bubble</strong>，效率下降。</p>
+<p>Fill &amp; Drain 的开销决定了 ⚠️流水线偏爱长程序——</p>
+<blockquote>
+<p>流水线的 fill/drain 都是额外成本，只有中间的完全并行时才是最优的。 流水线优化的是长程序，而对很短的代码段加速未必明显。</p>
+</blockquote>
+</br>
+<h2 id="结构风险">结构风险</h2>
+<blockquote>
+<p>结构风险是最朴素的资源冲突：硬件不够，导致两条指令同时争抢同一资源。</p>
+</blockquote>
+<h4 id="例子-aimem-和-dmem-端口冲突">例子 A：IMEM 和 DMEM 端口冲突</h4>
+<ul>
+<li>IF 阶段要取指令，要访问 <strong>IMEM</strong>；</li>
+<li>MEM 阶段的 load/store 要访问 <strong>DMEM</strong>。</li>
+</ul>
+<p>如果机器采用的是 <strong>Von Neumann architecture (冯·诺依曼结构)</strong>，即指令和数据共用一套内存端口，那么当一条指令在 MEM 阶段访问数据时，另一条指令在 IF 阶段就没法同时取指了，于是冲突发生。</p>
+<p><img src="https://i.postimg.cc/HsKMQfp9/jie-ping2026-03-18-15-08-55.png" alt=""></p>
+<h4 id="例子-b两个相邻的除法指令">例子 B：两个相邻的除法指令</h4>
+<p>除法器往往不是 1 个周期做完，而是要占用功能单元很多周期，例如 32、64 个周期。如果两条除法指令连续出现，第二条除法就会发现：除法器还没腾出来。</p>
+</br>
+<h4 id="规避结构风险">规避结构风险</h4>
+<p>1、<strong>Pipeline stalls</strong></p>
+<p>最直接的方法就是冲突时让后继指令在 ID 阶段等着，插入 bubble。 简单但性能下降。</p>
+<p>2、<strong>增加资源</strong></p>
+<p>在 <strong>标量架构 (scalar architectures)</strong> 中，结构冒险相对不常见，因为 —— 寄存器文件通常有足够的端口；有多个乘/除法单元或者这些功能单元本身就可流水化；IMEM 和 DMEM 通常分离；常有两个加法器：一个给 PC+4，一个给算术运算。拿硬件换性能。</p>
+<p>3、<strong>Instruction Reordering</strong></p>
+<p>可以由：编译器静态调度 (static scheduling) 或硬件动态调度 (dynamic scheduling) 来尽量错开那些会争资源的指令。 拿顺序安排换性能。</p>
+<p>4、<strong>ISA design</strong></p>
+<p>某些指令形式会额外要求更多写端口，比如 post-increment。或直接在 ISA 层禁止某些容易引发冲突的设计，例如 ALU 指令禁用 MEM。</p>
+<ul>
+<li>比如 R-Type 不存在 MEM 阶段，但不能提早 WB 打乱节拍，<u>导致结构风险</u>。</li>
+</ul>
+</br>
+</br>
+<h2 id="数据风险">数据风险</h2>
+<blockquote>
+<p>数据冒险是指**后继的指令依赖前序指令产生的数据，但数据还没准备好。**即 <strong>RAW</strong> 依赖。</p>
+</blockquote>
+<p>比如：</p>
+<p><code>add x9, x0, x1</code>：结果在 EXE 末尾算出来，在 WB 阶段写回 <code>x9</code></p>
+<p><code>sub x10, x9, x3</code>：它需要在 ID 阶段读 <code>x9</code></p>
+<p>当 sub 到 ID 时，add 可能还没把 x9 正式写回寄存器堆。最糟糕时，就只能让 <code>sub</code> 等到 <code>add</code> 写回完成，<u>形成 2 个周期的 bubble</u>。</p>
+</br>
+<p>数据风险可以大致分为三类：</p>
+<h3 id="register-access-issues">Register Access Issues</h3>
+<p>如果写和读同个寄存器恰好发生在同一周期，我们显然只需**同周期先写后读 (write-then-read) **解决。不必 stall。</p>
+</br>
+<h3 id="alu-result-access-issues">ALU Result Access Issues</h3>
+<p>下图中， <code>xor</code> 指令的 Register Access Issue 被 Write-then-read 解决了，但 <code>sub</code> 和 <code>or</code> 因为 <code>add</code> 尚未 WB 得到错误值。</p>
+<p><img src="https://i.postimg.cc/j2YyTztF/jie-ping2026-03-18-18-57-58.png" alt=""></p>
+<h4 id="方案-1pipeline-stall-at-id-stage">方案 1：Pipeline Stall at ID stage</h4>
+<blockquote>
+<p>按照上文中的例子那样，紧接着的下条指令 <strong>stall 2 cycles</strong>。</p>
+</blockquote>
+<p>这种方法属于 <strong>Interlocking</strong> …… Which is terrible.</p>
+<h4 id="方案-2data-forwarding-bypassing">方案 2：Data Forwarding (Bypassing)</h4>
+<blockquote>
+<p>不等写回寄存器堆再读，直接把依赖对象流水中已经算出来的结果 “旁路” 送给 ALU。</p>
+</blockquote>
+<p>能成功是因为后续指令进行到 EX 时，前序依赖<strong>至少</strong>已经结束了 EX 进入 MEM，所以可以直接从那里拿一份值。</p>
+<p>这是现代流水线解决 ALU 数据冒险的核心机制之一。</p>
+</br>
+<h3 id="load-issues">Load Issues</h3>
+<blockquote>
+<p>Load 产生的数据在 MEM 阶段缓慢的访存后得到，⚠️ 紧接着的命令若依赖<strong>必须 Stall 1 cycle</strong>。</p>
+</blockquote>
+<p>现实中，Load DMEM 也有 Latency，需要的时间与数据从哪里来有关：Cache 2 需要 2~3 cycle；Cache 3 需要 20 cycle；DRAM 需要 200 cycle。</p>
+</br>
+<h3 id="数据风险的检测">数据风险的检测</h3>
+<blockquote>
+<p>前面流水级里将要写回的目标寄存器 RegRd，是否正好等于当前指令将要读取的源寄存器 RegRs？</p>
+</blockquote>
+<p>从 EX/MEM 流水寄存器 Bypass：</p>
+<ul>
+<li>EX/MEM.RegRd = ID/EX.RegRs1</li>
+<li>EX/MEM.RegRd = ID/EX.RegRs2</li>
+</ul>
+<p>从 MEM/WB 流水寄存器 Bypass：</p>
+<ul>
+<li>MEM/WB.RegRd = ID/EX.RegRs1</li>
+<li>MEM/WB.RegRd = ID/EX.RegRs2</li>
+</ul>
+<p>额外判断：</p>
+<ul>
+<li>如果前面的指令<strong>根本不写寄存器</strong>，就不 forward。<strong>所以要检查 RegWr</strong>；</li>
+<li>如果目标寄存器是 $0，也不 forward，因为零号寄存器恒为 0。<strong>所以要检查 RegRd ≠ 0</strong>。</li>
+</ul>
+</br>
+<h3 id="mips">MIPS</h3>
+<blockquote>
+<p><strong>MIPS = Micro-Processor without Interlocked Pipe Stages</strong>——硬件尽量不做复杂的流水线 interlock，数据冒险交给编译器。</p>
+</blockquote>
+<p>这就是 <a href="https://blog.nero-lithos.com/posts/3060p3/">code scheduling</a>：编译器乱序重排指令，避开 <strong>WAW、WAR、RAW</strong> 依赖，如果找不到合适指令填空，就插入 NOP。非 MIPS 机中亦可用于减少 Interlock，从而减少 Stall。</p>
+<p><img src="https://i.postimg.cc/CL87tspj/jie-ping2026-03-18-19-49-44.png" alt=""></p>
+</br>
+</br>
+<h2 id="控制风险">控制风险</h2>
+<blockquote>
+<p>在分支条件尚未判定 <strong>T/NT</strong> 或者跳跃地址尚未算出前，下次发射 IF 时并不知道真正应该执行谁。</p>
+</blockquote>
+<ul>
+<li>
+<p>控制风险来自：条件分支指令 (branch) 或 跳转指令 (<code>jal</code> or <code>jalr</code>)。</p>
+</li>
+<li>
+<p>分支指令比例约占 <strong>15% 到 30%</strong>。约每 <strong>4 到 5 条</strong> 指令就有一条分支。意味着控制风险是<strong>流水线性能的关键之一</strong>。</p>
+</li>
+<li>
+<p>⚠️ 最难预测的控制风险是 &ldquo;<strong>indirect jump for branch JALR</strong>&quot;。</p>
+</li>
+</ul>
+<p>⚠️ 控制风险的原因<u>不是 “跳转” 这个行为本身</u>，而在于直到 <strong>EX</strong> 这一步计算 (ALU/Comparator) 之后 (<strong>MEM</strong>) 才知道下个流水级真正的 IF 对象。故 <code>jal</code> 和 <code>jalr</code> <strong>都会</strong>产生控制风险。</p>
+<p>我们先讨论 Branch 的 T/NT 问题。</p>
+<p><img src="https://i.postimg.cc/Bbj3swBJ/jie-ping2026-03-18-20-05-29.png" alt=""></p>
+<ul>
+<li>
+<p>如果不做风险防护，在 Branch 的风险发生期间，最多可能紧接着执行 <strong>3</strong> 个错误命令 (即 branch/jalr 执行 ID、EX、MEM <strong>三个阶段</strong>发射的三条指令)。</p>
+</li>
+<li>
+<p>如果我们直接 <strong>flush</strong> 所有错误命令：20% 的指令是 branch，其中 50% 执行跳跃，基础 CPI = 1，flush 3 条指令 —— 导致至少 3 × 0.2 × 0.5 = <strong>30% CPI Penalty</strong>。(实际在 30~60%)</p>
+</li>
+<li>
+<p>如果在 EX 阶段就知道分支结果 (比如 bypass 出来)，flush 的代价变为 2 条指令： 2 × 0.2 × 0.5 = <strong>20% CPI Penalty</strong> (实际在 20~50%)。所以——</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>分支结果越早决定越好。</strong></p>
+</blockquote>
+</br>
+<h3 id="方案一predict-not-taken">方案一：Predict Not Taken</h3>
+<p>最简单的预测方法——假设所有分支都不跳转，即默认下一条 PC = PC + 4，再在 MEM 阶段验证。“理论上” 性能损失减少一半。⚠️ 但是通常代码中 <strong>Branch 由 Loop (循环) 为主</strong>——每个循环 T 或有好多次，但 NT 只有一次，实际上平均准确率约 <strong>30~40%</strong>，<strong>CPI Penalty 约 28%</strong>。</p>
+<h3 id="方案二static-branch-prediction">方案二：Static Branch Prediction</h3>
+<blockquote>
+<p>静态预测：预测结果在编译期就基本决定好，运行时不怎么变。</p>
+</blockquote>
+<p>比如：</p>
+<ul>
+<li>
+<p><strong>回跳 (backward branch) 预测为 T</strong>，因为循环 (Loop) 回跳大多在迭代，都会成立，到循环结束时也只会失败一次；</p>
+<p>比如 <code>beq r3, r4, -8</code> → predict taken。</p>
+</li>
+<li>
+<p><strong>前跳 (forward branch) 预测为 NT</strong>，因为编译器常把 &ldquo;<strong>then</strong>&rdquo; 部分放在顺序路径 (if, then, else&hellip;)；</p>
+<p>比如 <code>beq r3, r4, 8</code> → predict fall-through。</p>
+</li>
+<li>
+<p>记录预测结果：ISA 可以为 branch 指令预留 prediction bit；或者像 HP 用指令中寄存器顺序表示 (beq r3, r4, 8 表示 NT / beq r4, r3, 8 表示 T，⚠️ 其它不对称 Branch 不能直接交换寄存器顺序)</p>
+</li>
+</ul>
+<p>但无论如何，这种静态预测准确率通常只有 <strong>60%~70%</strong>。编译器分析产生的静态预测约 <strong>80~85%</strong></p>
+</br>
+<h3 id="方案三dynamic-branch-prediction">方案三：Dynamic Branch Prediction</h3>
+<blockquote>
+<p>在<strong>运行时</strong>根据同个指令的历史行为不断学习和更新的预测方法，准确率常能到 <strong>90%–99%</strong>。</p>
+</blockquote>
+<h4 id="bhtbranch-history-table">BHT：Branch History Table</h4>
+<p>用最近 branch 指令的地址 (tag) 来索引，表里存分支过去的结果。⚠️ <strong>IF 阶段</strong>查表，按记录预测下一次结果，<strong>没有记录默认 NT</strong>；再根据实际结果更新 BHT。</p>
+<p>⚠️ 表项里历史信息可能只要 1~2 bit，但 tag 可能要 30–46 bit。所以实际中往往直接拿 <strong>PC 的低若干位</strong> 去索引 BHT，而不做完整 tag。这会带来一个现象：<strong>aliasing (别名冲突)</strong>。不同分支可能映射到同一个 BHT 表项，互相污染历史。虽然 untagged BHT 简单、高性价比，但高性能处理器倾向于用 tagged BHT 来减少 aliasing。</p>
+<h4 id="1-bit-predictor">1-bit Predictor</h4>
+<p>(上次 T，这次就预测 T，vice versa)</p>
+<p>⚠️ 它在处理<u>嵌套循环</u> (<strong>Nested Loop</strong>) 时发生典型的 “双连错”，准确率约 <strong>70~80%</strong>：</p>
+<ol>
+<li>内层循环大部分都在迭代，都是 T；</li>
+<li>最后一次退出循环时，真实结果突然变成 NT，于是第一次误判，更新成 NT；</li>
+<li>下次再进入内层循环时，第一轮其实应该 T，但预测器还记着 NT，于是第二次误判。</li>
+</ol>
+<h4 id="2-bit-predictor-fsm">2-bit Predictor (FSM)</h4>
+<blockquote>
+<p>只有连续两次预测错，才改变预测倾向。</p>
+</blockquote>
+<p><img src="https://i.postimg.cc/1Xt0JDch/jie-ping2026-03-18-20-58-52.png" alt="">这是一个<strong>有限状态机 (finite-state machine)</strong>。准确率约 <strong>85~95%</strong></p>
+</br>
+<h3 id="方案四correlated-prediction">方案四：Correlated Prediction</h3>
+<p>也叫 <strong>2-level adaptive branch prediction</strong>，它不是只看 “这个分支自己上次怎样”，而是看：</p>
+<blockquote>
+<p><strong>最近若干个分支的整体模式，是否能帮助预测当前分支。准确率约 94~96%</strong></p>
+</blockquote>
+<h4 id="1-ghbglobal-branch-history-register"><strong>1. GHB：Global Branch History Register</strong></h4>
+<p>GHB 是一个移位寄存器，记录最近几个 branch 的结果。每个 bit 表示一次 branch T/NT。每来一个新分支结果，就 shift 一次，把旧的出队。相当于记录最近控制流的上下文。</p>
+<h4 id="2-phtpattern-history-table">2. PHT：Pattern History Table</h4>
+<p>PHT 里放的是 <strong>2-bit saturating counters</strong>。GHB 的内容作为其索引，如果当前 branch 实际 T，就把对应计数器 +1，否则 -1。它反映的不是 “某条 branch 永远怎样”，而是在某种全局历史下，这条 branch 倾向于怎样。</p>
+<p>比如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (a<span style="color:#f92672">==</span><span style="color:#ae81ff">2</span>) a<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;   <span style="color:#75715e">// B1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (b<span style="color:#f92672">==</span><span style="color:#ae81ff">2</span>) b<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;   <span style="color:#75715e">// B2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (a<span style="color:#f92672">!=</span>b) {...}  <span style="color:#75715e">// B3
+</span></span></span></code></pre></div><p>如果 B1 T，B2 也 T，说明 a 和 b 都被置 0，那么 B3 很可能 <strong>not taken</strong>。B3 的结果和它前面两个分支的结果存在相关性 (correlation)。</p>
+</br>
+<blockquote>
+<p>准确率从 98% 到 99% 的提升不是 1% 而是 100%，因为性能由预测失败率主导，而非预测成功率主导 (长程序中失败代价高)。</p>
+</blockquote>
+</br>
+<h3 id="光顾着跳不跳了你到底要跳哪里去">光顾着跳不跳了，你到底要跳哪里去？</h3>
+<p>即使有各种 Predictor，跳转时仍可能有 <strong>1～2-cycle penalty</strong>，取决于 target address 是在 ID 还是 EXE 阶段算出来——</p>
+<blockquote>
+<p>分支预测有两个问题：Whether (跳不跳) &amp; <strong>Where (跳到哪)</strong>。</p>
+</blockquote>
+<p>为了解决“where”的问题，引入 <strong>BTB</strong>，它本质上是 <strong>target address 的 cache。</strong></p>
+<ul>
+<li>
+<p>target address 通常不变，因为 branch immediate 不变；</p>
+</li>
+<li>
+<p>因此可按 PC 建一个小缓存。在 IF 阶段取指时，用 PC 查 BTB；</p>
+</li>
+<li>
+<p>如果命中，并且预测为 taken，就可以立刻去取 target 指令，而不用等后面阶段再慢慢算地址 。</p>
+</li>
+</ul>
+<p>这就是为何现代处理器常把 BHT 和 BTB 配合使用：BHT 负责 whether，BTB 负责 where。</p>
+</br>
+</br>
+<h2 id="流水线中控制信号如何流动">流水线中控制信号如何流动？</h2>
+<blockquote>
+<p><strong>Pipeline Regs, BHT, BTB 都属于 Microarchitecture</strong></p>
+</blockquote>
+<p><strong>EX stage</strong></p>
+<p>数据通路要有：rs1 内容、rs2 内容、PC、Imm 值</p>
+<p>控制信号有：<a href="https://blog.nero-lithos.com/posts/3060.4/">Asel</a>、Bsel、ALUsel (所以需要两个 Adder)</p>
+<p><strong>MEM stage</strong></p>
+<p>数据通路里需要：ALUout (作为地址)、rs2 内容 (store 时要写入内存的数据)</p>
+<p>控制信号有：MemRW、BrLt、BrEq</p>
+<p><strong>WB stage</strong></p>
+<p>数据通路里可能写回的来源有：ALUout、PC+4 (给 link register)、MEMout</p>
+<p>控制信号有：<strong>Wbsel、rd、WRen</strong></p>
+<p><strong>延迟使用：</strong></p>
+<ul>
+<li>EX 用的控制信号，<strong>1 个周期后</strong> 才真正用；</li>
+<li>MEM 用的控制信号，是 <strong>2 个周期后</strong>；</li>
+<li>WB 用的控制信号，是 <strong>3 个周期后</strong>；</li>
+<li>RD (rd) 也要一路传到 WB 阶段。</li>
+</ul>
+<p>当一条指令在 ID 阶段被译码出来时，控制单元已经知道将来要做什么，但它此刻还没到 EX/MEM/WB。所以这些控制位不能立刻消失，必须随同该指令一起存进<strong>流水寄存器</strong>，一级级往后传。</p>
+</br>
+</br>
+</br>
+<h1 id="cheating-paper-for-csc3060-quiz2">Cheating-paper for CSC3060 Quiz2</h1>
+<embed src="http://localhost:1313/pdf/3060cp2.pdf" type="application/pdf" width="100%" height="600px" />
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

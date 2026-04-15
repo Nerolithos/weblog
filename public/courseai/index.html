@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>LGU 选课 AI 助手</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f7fb;
+      color: #222;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+    .subtitle {
+      color: #555;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #d0d7de;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.55rem 1.2rem;
+      background: #0969da;
+      color: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    button.secondary {
+      background: #eaeef2;
+      color: #24292f;
+    }
+    .status {
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .answer {
+      white-space: pre-wrap;
+      border-radius: 8px;
+      border: 1px solid #d0d7de;
+      padding: 0.75rem 0.9rem;
+      background: #fff;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      min-height: 120px;
+    }
+    .answer.empty {
+      color: #999;
+    }
+    .footer-note {
+      margin-top: 1.25rem;
+      font-size: 0.8rem;
+      color: #6a737d;
+    }
+    .link-btn {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>LGU 选课 AI 助手</h1>
+    <p class="subtitle">
+      利用 courses.txt 中的课程评价与信息，帮助你解答香港中文大学（深圳）相关的选课问题。
+    </p>
+
+    <div class="controls">
+      <label for="question">你想问选课方面的什么问题？（可以用中文）：</label>
+      <textarea id="question" placeholder="例如：‘ECO3610 这门课值得上吗，给分如何？’ 或者 ‘LIU Mengmeng 教授的风评怎么样？’。注意：测试版，教师信息可能有较大缺失。"></textarea>
+
+      <div class="button-row">
+        <button id="ask-btn">
+          <span>🧠 开始咨询</span>
+        </button>
+        <a class="link-btn" href="#" id="download-guard">
+          <button type="button" class="secondary">📄 下载 prompt 和 课程信息源数据</button>
+        </a>
+        <span id="status" class="status"></span>
+      </div>
+    </div>
+
+    <div id="answer" class="answer empty">等待你的提问……</div>
+
+    <div class="footer-note">
+      提示：本助手调用 OpenRouter 上的免费模型 Qwen，回答仅供参考，请结合最新教学计划与官方信息综合判断。
+    </div>
+  </div>
+
+  <script>
+    const askBtn = document.getElementById('ask-btn');
+    const questionInput = document.getElementById('question');
+    const answerEl = document.getElementById('answer');
+    const statusEl = document.getElementById('status');
+    const apiBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'https://blog.nero-lithos.com'
+      : '';
+
+    async function ask() {
+      const question = questionInput.value.trim();
+      if (!question) {
+        alert('请先输入一个与选课相关的问题。');
+        return;
+      }
+
+      askBtn.disabled = true;
+      statusEl.textContent = '正在加载 courses.txt 与调用模型，请稍候……';
+      answerEl.textContent = '';
+      answerEl.classList.remove('empty');
+
+      let coursesText = '';
+      try {
+        const resp = await fetch('/courses.txt');
+        if (!resp.ok) throw new Error('无法加载 courses.txt');
+        coursesText = await resp.text();
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = '加载 courses.txt 失败，请稍后重试。';
+        askBtn.disabled = false;
+        return;
+      }
+
+      statusEl.textContent = '正在向 LGU 选课 AI 提问，并逐字生成回答……';
+
+      try {
+        const resp = await fetch(`${apiBase}/api/chatap`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            // 使用 OpenRouter 免费 Qwen 模型
+            model: 'qwen/qwen-2.5-7b-instruct',
+            temperature: 0.4,
+            messages: [
+              {
+                role: 'system',
+                content: coursesText,
+              },
+              {
+                role: 'user',
+                content: question,
+              },
+            ],
+          }),
+        });
+
+        if (!resp.ok) {
+          const errText = await resp.text().catch(() => '');
+          console.error('API 返回错误状态', resp.status, errText);
+          const snippet = (errText || '').slice(0, 160).replace(/\s+/g, ' ').trim();
+          statusEl.textContent = `LGU 选课 AI 接口错误：HTTP ${resp.status}${snippet ? ' - ' + snippet : ''}`;
+          return;
+        }
+
+        if (!resp.body) {
+          throw new Error('API 响应无流式内容');
+        }
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buffer = '';
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+
+          const parts = buffer.split('\n\n');
+          buffer = parts.pop() || '';
+
+          for (const part of parts) {
+            const lines = part.split('\n');
+            for (const line of lines) {
+              if (!line.startsWith('data:')) continue;
+              const data = line.slice(5).trim();
+              if (!data || data === '[DONE]') continue;
+              try {
+                const json = JSON.parse(data);
+                const delta = json.choices?.[0]?.delta?.content || '';
+                if (delta) {
+                  answerEl.textContent += delta;
+                }
+              } catch (e) {
+                console.warn('解析 SSE data 失败', e, data);
+              }
+            }
+          }
+        }
+
+        statusEl.textContent = '回答已生成完成。';
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = '调用 LGU 选课 AI 失败，请稍后重试。';
+      } finally {
+        askBtn.disabled = false;
+      }
+    }
+
+    askBtn.addEventListener('click', () => {
+      ask();
+    });
+
+    questionInput.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        ask();
+      }
+    });
+
+    const downloadGuard = document.getElementById('download-guard');
+    if (downloadGuard) {
+      downloadGuard.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('Guests do NOT have Admin authorities. If you want raw data, contact the owner of this site via email or GitHub.');
+      });
+    }
+  </script>
+</body>
+</html>

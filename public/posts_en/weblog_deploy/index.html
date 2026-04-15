@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🌐 Manual for Deploying a Hugo Blog on Cloudflare | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="People often say that building a blog with GitHub and Cloudflare is cheap and easy. In practice, however, the process can be surprisingly full of pitfalls.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/weblog_deploy/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/weblog_deploy/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🌐 Manual for Deploying a Hugo Blog on Cloudflare">
+  <meta property="og:description" content="People often say that building a blog with GitHub and Cloudflare is cheap and easy. In practice, however, the process can be surprisingly full of pitfalls.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:tag" content="Technology">
+
+  <meta itemprop="name" content="🌐 Manual for Deploying a Hugo Blog on Cloudflare">
+  <meta itemprop="description" content="People often say that building a blog with GitHub and Cloudflare is cheap and easy. In practice, however, the process can be surprisingly full of pitfalls.">
+  <meta itemprop="wordCount" content="1718">
+  <meta itemprop="keywords" content="Technology">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🌐 Manual for Deploying a Hugo Blog on Cloudflare">
+  <meta name="twitter:description" content="People often say that building a blog with GitHub and Cloudflare is cheap and easy. In practice, however, the process can be surprisingly full of pitfalls.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🌐 Manual for Deploying a Hugo Blog on Cloudflare</h1>
+
+      
+
+      
+      
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>This post extends material originally discussed on <a href="blog.sunneyseeds.net">sunnyseeds’s personal blog</a>.</p>
+<h2 id="preface">Preface</h2>
+<p>I had often heard that building a blog by taking advantage of GitHub and Cloudflare was both cheap and easy. But after actually doing it, I found that many online guides contain traps.</p>
+<p>This includes the Hugo documentation, the Cloudflare documentation, and even GPT-style advice.</p>
+<p><strong>Prerequisite: your terminal CLI must be able to access GitHub reasonably reliably.</strong></p>
+<p>(Otherwise, even if you follow the official documentation word for word, things may still mutate unpredictably. Consider yourself warned.)</p>
+<h2 id="i-initialize-a-hugo-blog-project">I. Initialize a Hugo Blog Project</h2>
+<h3 id="install-hugo">Install Hugo</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>brew install hugo <span style="color:#75715e"># MacOS</span>
+</span></span></code></pre></div><h3 id="create-a-hugo-site">Create a Hugo Site</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>hugo new site &lt;your_blog_project_name&gt; 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This creates a project named `your_blog_project_name`</span>
+</span></span></code></pre></div><h3 id="configure-the-hugo-theme">Configure the Hugo Theme</h3>
+<ol>
+<li>From the project root, initialize the Hugo module system (if you have not already done so):</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>hugo mod init github.com/&lt;your_user&gt;/&lt;your_project&gt;
+</span></span></code></pre></div><ol start="2">
+<li>Enter the Hugo site directory we just created and open the <strong><code>hugo.toml</code></strong> file (in some versions it may instead be called <strong><code>config.toml</code></strong>). It sits at the top level of the project root.</li>
+</ol>
+<p>There is one pitfall here: the <code>newsroom</code> theme used in ayu’s example seems problematic: <code>github.com/onweru/newsroom</code>.</p>
+<p>Modify it as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#39;https://blog.sunnyseeds.net/&#39;</span>  <span style="color:#75715e"># your purchased domain</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">defaultContentLanguage</span> = <span style="color:#e6db74">&#34;zh-cn&#34;</span> <span style="color:#75715e"># default language</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">defaultContentLanguageInSubdir</span> = <span style="color:#66d9ef">false</span> <span style="color:#75715e"># do not show the current language in the URL</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">languageCode</span> = <span style="color:#e6db74">&#39;zh-cn&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#34;sunnyseeds&#39; Blog&#34;</span> <span style="color:#75715e"># Blog title </span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">theme</span> = [<span style="color:#e6db74">&#34;github.com/theNewDynamic/gohugo-theme-ananke&#34;</span>] <span style="color:#75715e"># your chosen theme</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">hasCJKLanguage</span> = <span style="color:#66d9ef">true</span> <span style="color:#75715e"># CJK stands for Chinese, Japanese, and Korean</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">canonifyurls</span> = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pagination</span>.<span style="color:#a6e22e">pagerSize</span> = <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">module</span>]
+</span></span><span style="display:flex;"><span>[[<span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">imports</span>]]
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">path</span> = <span style="color:#e6db74">&#34;github.com/theNewDynamic/gohugo-theme-ananke&#34;</span>
+</span></span></code></pre></div><p><a href="https://github.com/theNewDynamic/gohugo-theme-ananke">Ananke: Hugo Theme</a> contains more detailed examples for controlling many aspects of the theme, though I have not used them yet.</p>
+<h3 id="pull-the-theme-repository-locally">Pull the Theme Repository Locally</h3>
+<p>Run the following inside the root directory of your Hugo site:</p>
+<pre tabindex="0"><code>git init
+
+git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke
+</code></pre><p>Note: <code>git submodule add</code> is used to add another Git repository as a submodule inside the current one. Submodule commits and updates are tracked through the main repository’s <strong><code>.gitmodules</code></strong> file, which records the path of the copied theme repository. This is very likely the reason for some of the errors discussed below.</p>
+<p><img src="https://img.sunnyseed.me/2024/09/10/3025d116d27d1.png" alt="image.png"></p>
+<p>If that problem cannot be solved, you may try modifying the configuration file (<code>hugo.toml</code>) as follows, omitting the explicit theme path and letting <code>.gitmodules</code> resolve it instead:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#39;https://blog.sunnyseeds.net/&#39;</span>  <span style="color:#75715e"># your purchased domain</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">defaultContentLanguage</span> = <span style="color:#e6db74">&#34;zh-cn&#34;</span> <span style="color:#75715e"># default language</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">defaultContentLanguageInSubdir</span> = <span style="color:#66d9ef">false</span> <span style="color:#75715e"># do not show the current language in the URL</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">languageCode</span> = <span style="color:#e6db74">&#39;zh-cn&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#34;sunnyseeds&#39; Blog&#34;</span> <span style="color:#75715e"># Blog title </span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">theme</span> = <span style="color:#e6db74">&#39;anake&#39;</span> <span style="color:#75715e"># 你选择的主题</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">hasCJKLanguage</span> = <span style="color:#66d9ef">true</span> <span style="color:#75715e"># CJK stands for Chinese, Japanese, and Korean</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">canonifyurls</span> = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pagination</span>.<span style="color:#a6e22e">pagerSize</span> = <span style="color:#ae81ff">6</span>
+</span></span></code></pre></div><h4 id="create-a-new-post">Create a New Post</h4>
+<pre tabindex="0"><code>hugo new content posts/hello-world.md
+</code></pre><p>Each Hugo post needs front matter in TOML or YAML format, used to control how the article is displayed.</p>
+<p>Edit <code>content\posts\hello-world.md</code>.</p>
+<p>Hugo site configuration commonly uses two fairly readable formats that are closer to natural language than raw HTML.
+YAML format: connect keys and values with colons.
+TOML format: connect keys and values with equal signs.
+<strong>The front matter must be properly delimited, and the two formats must not be mixed, or Cloudflare may fail during deployment.</strong>
+Typical fields include:
+<code>title</code>, <code>date</code>, <code>draft</code>, <code>featured_picture</code>, <code>summary</code>, <code>tag</code>, and so on.</p>
+<p>Note: <strong>delete the line <code>draft = true</code></strong>, otherwise the post will not appear.</p>
+<p>Also note: <strong>make sure the Markdown file is located in <code>content/posts/</code>, not directly under <code>content/</code></strong>, or rendering behavior may become strange. Do not ask how I learned that.</p>
+<h4 id="local-preview">Local Preview</h4>
+<pre tabindex="0"><code>hugo server
+</code></pre><p>According to reference 2, there used to be a manual <code>npm ci</code> step before this point, but I did not use it. Perhaps newer versions no longer require it.</p>
+<h2 id="ii-upload-to-github">II. Upload to GitHub</h2>
+<h3 id="1-create-a-repository">1. Create a Repository</h3>
+<p><img src="https://img.sunnyseed.me/2024/09/10/4569accd95619.png" alt="image.png"></p>
+<h3 id="2create-a-new-repository-on-the-command-line">2、create a new repository on the command line</h3>
+<p>Enter the directory containing the blog project.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;first commit&#34;</span>
+</span></span><span style="display:flex;"><span>git branch -M main
+</span></span><span style="display:flex;"><span>git remote add origin https://github.com/sunnyseed/blog.git
+</span></span><span style="display:flex;"><span>git push -u origin main
+</span></span></code></pre></div><p>After later modifications, use:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git add .
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;xxx&#34;</span>
+</span></span><span style="display:flex;"><span>git push -u origin main
+</span></span></code></pre></div><p>If you use GitHub over SSH, then use:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git remote add origin git@github.com:sunnyseed/blog.git
+</span></span></code></pre></div><p>Important: on GitHub, make sure Cloudflare is granted access to the repository.</p>
+<h2 id="iii-configure-cloudflare">III. Configure Cloudflare</h2>
+<p>Just follow reference 1, the Cloudflare Pages Hugo deployment guide. The build command I used was the following (I copied it directly, to be honest 😄):</p>
+<pre tabindex="0"><code>hugo -b $CF_PAGES_URL
+</code></pre><p><strong>Additional pitfall:</strong> the <code>-b</code> option fixes the <code>baseURL</code>, i.e. the site’s base address, to the Cloudflare Pages URL. <strong>If you already have a registered custom domain, you should simply use the default command <code>hugo</code> instead.</strong> Otherwise you may end up with incorrect URLs.</p>
+<p>After that, just confirm that the build finishes without errors. Then the site can be accessed through the Pages-assigned domain (for example, <code>myblog-dg4.pages.dev</code>). Later local updates only need to be pushed; Cloudflare will redeploy automatically.</p>
+<h2 id="iv-bind-a-domain-name">IV. Bind a Domain Name</h2>
+<ol>
+<li>
+<p>In your DNS settings, add a CNAME record (for example <code>blog</code>) pointing to the Pages-assigned hostname such as <code>myblog-dg4.pages.dev</code>. <strong>Do not include the deployment version number</strong>, or you will need to change the record after every update.</p>
+</li>
+<li>
+<p>In the Pages custom-domain settings, add the corresponding CNAME target, such as <code>blog.nero-lithos.com</code>.</p>
+</li>
+</ol>
+<p>After that, the site should be accessible through <code>blog.nero-lithos.com</code>.</p>
+<h2 id="v-image-configuration">V. Image Configuration</h2>
+<h3 id="set-the-home-page-hero-image">Set the Home-Page “Hero” Image</h3>
+<p>The home page is usually configured in <code>content/_index.md</code>. In its front matter, one may use the <code>featured_image</code> parameter to specify the hero image. Open <code>content/_index.md</code> (or create it if it does not exist) and add something like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">title</span>: <span style="color:#e6db74">&#34;Lithos&#39; Blog&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">description</span>: <span style="color:#e6db74">&#34;a CUHKSZ survival documentation&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">featured_image</span>: <span style="color:#e6db74">&#39;/images/Head.jpg&#39;</span>
+</span></span></code></pre></div><p>Replace <code>images/Head.jpg</code> with your actual image name, and make sure the file has been uploaded into <code>static/images</code>.</p>
+<h3 id="set-a-featured-image-for-an-individual-post">Set a Featured Image for an Individual Post</h3>
+<p>The featured image of each post is specified in that post’s front matter:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#75715e"># toml</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#39; # Grassroot HongKong&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">date</span> = <span style="color:#e6db74">2024-09-10T09:08:58+08:00</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">draft</span> = <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">featured_image</span> = <span style="color:#e6db74">&#39;/images/ymt.jpg&#39;</span>
+</span></span></code></pre></div><p>Additional note:</p>
+<p>I roughly measured the aspect ratio of the Ananke hero banner at about <code>1 : 0.28</code> (around <code>1905 × 534</code> at a 1980-pixel width). It does not need to be exact; Hugo will crop the excess lower part automatically.</p>
+<h3 id="ordinary-images-inside-posts">Ordinary Images Inside Posts</h3>
+<p>The usual rendering syntax is: <code>![caption](image-url)</code></p>
+<p>For now I use <code>https://postimg.cc/</code> as an image host, but if you decide, as I did, to keep a personal domain long-term, you can also host images directly on your own subdomain (for example <code>images.nero-lithos.com</code>).</p>
+<h2 id="vi-comment-functionality">VI. Comment Functionality</h2>
+<p>If you have your own server, <strong>Commento</strong> is often the more convenient solution. This post, however, demonstrates the beginner-friendly <strong>Disqus</strong> comment service.</p>
+<p>Register a new account on the Disqus site, link it to your blog domain, choose a site <strong>shortname</strong>, and remember it. Then select Universal Code Installation to deploy Disqus. Following the official instructions, we need to modify three files:</p>
+<ul>
+<li>
+<p>Add the following to <code>hugo.html</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>[services]
+</span></span><span style="display:flex;"><span>  [services.disqus]
+</span></span><span style="display:flex;"><span>    shortname = &#39;nero-lithos&#39;
+</span></span></code></pre></div></li>
+<li>
+<p>In <code>themes/anake/layouts/_default</code>, locate <code>single.html</code>, which should contain something like the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ define &#34;header&#34; }}
+</span></span><span style="display:flex;"><span>   {{/* We can override any block in the baseof file be defining it in the template */}}
+</span></span><span style="display:flex;"><span>  {{ partial &#34;page-header.html&#34; . }}
+</span></span><span style="display:flex;"><span>{{ end }}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{{ define &#34;main&#34; }}
+</span></span><span style="display:flex;"><span>  {{ $section := .Site.GetPage &#34;section&#34; .Section }}
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">article</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;flex-l flex-wrap justify-between mw8 center ph3&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">header</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mt4 w-100&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">aside</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;instapaper_ignoref b helvetica tracked ttu&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>          {{/*
+</span></span><span style="display:flex;"><span>          CurrentSection allows us to use the section title instead of inferring from the folder.
+</span></span><span style="display:flex;"><span>          https://gohugo.io/variables/page/#section-variables-and-methods
+</span></span><span style="display:flex;"><span>          */}}
+</span></span><span style="display:flex;"><span>        {{ .CurrentSection.Title }}
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">aside</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ partial &#34;social-share.html&#34; . }}
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">h1</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f1 athelas mt3 mb1&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        {{- .Title -}}
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">h1</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ with .Params.author | default .Site.Params.author }}
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;tracked&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        {{ $.Render &#34;by&#34; }} &lt;<span style="color:#f92672">strong</span>&gt;
+</span></span><span style="display:flex;"><span>        {{- if reflect.IsSlice . -}}
+</span></span><span style="display:flex;"><span>            {{ delimit . &#34;, &#34; | markdownify }}
+</span></span><span style="display:flex;"><span>        {{- else -}}
+</span></span><span style="display:flex;"><span>            {{ . | markdownify }}
+</span></span><span style="display:flex;"><span>        {{- end -}}
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">strong</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ end }}
+</span></span><span style="display:flex;"><span>      {{/* Hugo uses Go&#39;s date formatting is set by example. Here are two formats */}}
+</span></span><span style="display:flex;"><span>      {{ if not .Date.IsZero }}
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">time</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f6 mv4 dib tracked&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">printf</span> <span style="color:#960050;background-color:#1e0010">`</span><span style="color:#a6e22e">datetime</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;%s&#34;</span><span style="color:#960050;background-color:#1e0010">`</span> <span style="color:#960050;background-color:#1e0010">(.</span><span style="color:#a6e22e">Date</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">Format</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">2006-01-02T15:04:05Z07:00</span><span style="color:#960050;background-color:#1e0010">&#34;)</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">safeHTMLAttr</span> <span style="color:#960050;background-color:#1e0010">}}</span>&gt;
+</span></span><span style="display:flex;"><span>        {{- .Date | time.Format (default &#34;January 2, 2006&#34; .Site.Params.date_format) -}}
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">time</span>&gt;
+</span></span><span style="display:flex;"><span>      {{end}}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      {{/*
+</span></span><span style="display:flex;"><span>          Show &#34;reading time&#34; and &#34;word count&#34; but only if one of the following are true:
+</span></span><span style="display:flex;"><span>          1) A global config `params` value is set `show_reading_time = true`
+</span></span><span style="display:flex;"><span>          2) A section front matter value is set `show_reading_time = true`
+</span></span><span style="display:flex;"><span>          3) A page front matter value is set `show_reading_time = true`
+</span></span><span style="display:flex;"><span>        */}}
+</span></span><span style="display:flex;"><span>      {{ if (or (eq (.Param &#34;show_reading_time&#34;) true) (eq $section.Params.show_reading_time true) )}}
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f6 mv4 dib tracked&#34;</span>&gt; - {{ i18n &#34;readingTime&#34; .ReadingTime }} &lt;/<span style="color:#f92672">span</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f6 mv4 dib tracked&#34;</span>&gt; - {{ i18n &#34;wordCount&#34; .WordCount }} &lt;/<span style="color:#f92672">span</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ end }}
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">header</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;nested-copy-line-height lh-copy {{ $.Param &#34;</span><span style="color:#a6e22e">post_content_classes</span><span style="color:#960050;background-color:#1e0010">&#34;</span>  <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">default</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">serif</span><span style="color:#960050;background-color:#1e0010">&#34;}}</span> <span style="color:#a6e22e">f4</span> <span style="color:#a6e22e">nested-links</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#960050;background-color:#1e0010">$.</span><span style="color:#a6e22e">Param</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">text_color</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">default</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">mid-gray</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">cond</span> <span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">eq</span> <span style="color:#960050;background-color:#1e0010">$.</span><span style="color:#a6e22e">Site</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">Language</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">LanguageDirection</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">rtl</span><span style="color:#960050;background-color:#1e0010">&#34;)</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">pl4-l</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">pr4-l</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">w-two-thirds-l</span><span style="color:#960050;background-color:#1e0010">&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      {{- .Content -}}
+</span></span><span style="display:flex;"><span>      {{- partial &#34;tags.html&#34; . -}}
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mt6 instapaper_ignoref&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      {{ partial &#34;disqus.html&#34; . }}
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">aside</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;w-30-l mt6-l&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      {{- partial &#34;menu-contextual.html&#34; . -}}
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">aside</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  &lt;/<span style="color:#f92672">article</span>&gt;
+</span></span><span style="display:flex;"><span>{{ end }}
+</span></span></code></pre></div></li>
+<li>
+<p>In <code>themes/anake/layouts/partials</code>, locate or create <code>disqus.html</code>, which should contain the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{- $pc := .Site.Config.Privacy.Disqus -}}
+</span></span><span style="display:flex;"><span>{{- if not $pc.Disable -}}
+</span></span><span style="display:flex;"><span>{{ if .Site.Config.Services.Disqus.Shortname }}&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;disqus_thread&#34;</span>&gt;&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    window.<span style="color:#a6e22e">disqus_config</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>    {{<span style="color:#66d9ef">with</span> .<span style="color:#a6e22e">Params</span>.<span style="color:#a6e22e">disqus_identifier</span> }}<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">identifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;{{ . }}&#39;</span>;{{<span style="color:#a6e22e">end</span>}}
+</span></span><span style="display:flex;"><span>    {{<span style="color:#66d9ef">with</span> .<span style="color:#a6e22e">Params</span>.<span style="color:#a6e22e">disqus_title</span> }}<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">title</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;{{ . }}&#39;</span>;{{<span style="color:#a6e22e">end</span>}}
+</span></span><span style="display:flex;"><span>    {{<span style="color:#66d9ef">with</span> .<span style="color:#a6e22e">Params</span>.<span style="color:#a6e22e">disqus_url</span> }}<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">url</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;{{ . | html  }}&#39;</span>;{{<span style="color:#a6e22e">end</span>}}
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ([<span style="color:#e6db74">&#34;localhost&#34;</span>, <span style="color:#e6db74">&#34;127.0.0.1&#34;</span>].<span style="color:#a6e22e">indexOf</span>(window.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">hostname</span>) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>            document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#39;disqus_thread&#39;</span>).<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Disqus comments not available by default when the website is previewed locally.&#39;</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">d</span> <span style="color:#f92672">=</span> document, <span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;script&#39;</span>); <span style="color:#a6e22e">s</span>.<span style="color:#66d9ef">async</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">src</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;//&#39;</span> <span style="color:#f92672">+</span> {{ .<span style="color:#a6e22e">Site</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Services</span>.<span style="color:#a6e22e">Disqus</span>.<span style="color:#a6e22e">Shortname</span> }} <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;.disqus.com/embed.js&#39;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">setAttribute</span>(<span style="color:#e6db74">&#39;data-timestamp&#39;</span>, <span style="color:#f92672">+</span><span style="color:#66d9ef">new</span> Date());
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">body</span>).<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">s</span>);
+</span></span><span style="display:flex;"><span>    })();
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">noscript</span>&gt;Please enable JavaScript to view the &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://disqus.com/?ref_noscript&#34;</span>&gt;comments powered by Disqus.&lt;/<span style="color:#f92672">a</span>&gt;&lt;/<span style="color:#f92672">noscript</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://disqus.com&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dsq-brlink&#34;</span>&gt;comments powered by &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;logo-disqus&#34;</span>&gt;Disqus&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;{{end}}
+</span></span><span style="display:flex;"><span>{{- end -}}
+</span></span></code></pre></div><p>Then a Disqus comment section will appear under each blog post and load dynamically.</p>
+</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<ol>
+<li>
+<p><a href="https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/">Hugo deployment | Cloudflare Pages docs</a></p>
+</li>
+<li>
+<p><a href="https://blog.sunnyseeds.net/cn/posts/modify_hero_image_of_hugo_theme/">sunnyseeds’s personal blog</a></p>
+</li>
+<li>
+<p><a href="https://ayurain.com/posts/%E5%9F%BA%E4%BA%8Ehugo%E5%92%8Ccloudflare%E7%9A%84%E5%8D%9A%E5%AE%A2%E6%96%B9%E6%A1%88/">A Hugo + Cloudflare Pages blog setup | ayu’s Blog</a></p>
+</li>
+<li>
+<p><a href="https://github.com/theNewDynamic/gohugo-theme-ananke">Ananke: Hugo theme</a></p>
+</li>
+<li>
+<p><a href="https://discourse.gohugo.io/t/fatal-error-when-deploying-to-cloudflare/41368">Fatal error when deploying to Cloudflare - Hugo support thread</a></p>
+</li>
+</ol>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/technology/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">Technology</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#preface">Preface</a></li>
+        <li><a href="#i-initialize-a-hugo-blog-project">I. Initialize a Hugo Blog Project</a>
+          <ul>
+            <li><a href="#install-hugo">Install Hugo</a></li>
+            <li><a href="#create-a-hugo-site">Create a Hugo Site</a></li>
+            <li><a href="#configure-the-hugo-theme">Configure the Hugo Theme</a></li>
+            <li><a href="#pull-the-theme-repository-locally">Pull the Theme Repository Locally</a></li>
+          </ul>
+        </li>
+        <li><a href="#ii-upload-to-github">II. Upload to GitHub</a>
+          <ul>
+            <li><a href="#1-create-a-repository">1. Create a Repository</a></li>
+            <li><a href="#2create-a-new-repository-on-the-command-line">2、create a new repository on the command line</a></li>
+          </ul>
+        </li>
+        <li><a href="#iii-configure-cloudflare">III. Configure Cloudflare</a></li>
+        <li><a href="#iv-bind-a-domain-name">IV. Bind a Domain Name</a></li>
+        <li><a href="#v-image-configuration">V. Image Configuration</a>
+          <ul>
+            <li><a href="#set-the-home-page-hero-image">Set the Home-Page “Hero” Image</a></li>
+            <li><a href="#set-a-featured-image-for-an-individual-post">Set a Featured Image for an Individual Post</a></li>
+            <li><a href="#ordinary-images-inside-posts">Ordinary Images Inside Posts</a></li>
+          </ul>
+        </li>
+        <li><a href="#vi-comment-functionality">VI. Comment Functionality</a></li>
+        <li><a href="#reference">Reference</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

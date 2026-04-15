@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 10-11 Memory Hierarchy | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3060.6/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3060.6/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 10-11 Memory Hierarchy">
+  <meta property="og:description" content="CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2026-04-02T10:11:34+08:00">
+    <meta property="article:modified_time" content="2026-04-02T10:11:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 10-11 Memory Hierarchy">
+  <meta itemprop="description" content="CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.">
+  <meta itemprop="datePublished" content="2026-04-02T10:11:34+08:00">
+  <meta itemprop="dateModified" content="2026-04-02T10:11:34+08:00">
+  <meta itemprop="wordCount" content="5465">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 10-11 Memory Hierarchy">
+  <meta name="twitter:description" content="CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30606.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 10-11 Memory Hierarchy</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 10-11 Memory Hierarchy</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-04-02T10:11:34+08:00">April 2, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"></br>
+<h1 id="week-1011--memory-hierarchy">Week 10~11  Memory Hierarchy</h1>
+<blockquote>
+<p>The memory hierarchy exists because the <strong>memory wall</strong> between main memory and the CPU constrains real processor performance. The higher a level is in the hierarchy, the more frequently it is accessed; each level serves as a cache for the one below it, with CPU registers at the very top. By exploiting <strong>locality</strong>, the machine creates the illusion that memory is simultaneously large, fast, and cheap.</p>
+</blockquote>
+</br>
+<h1 id="random-access-memory-ram">Random-Access Memory (RAM)</h1>
+<p>“Random” means that <strong>the access time does not depend on the physical position of the target data inside RAM</strong>. By contrast, magnetic tape and other sequential-access media require scanning from the beginning, which is much less efficient.</p>
+<ul>
+<li>
+<p><strong>DRAM = Dynamic RAM</strong>: roughly <strong>one capacitor plus one transistor per bit</strong>. The capacitor stores the bit as “charged / uncharged,” but it leaks, so the memory must be <strong>periodically refreshed</strong>. DRAM is arranged as a 2D array with rows (RAS) and columns (CAS), sometimes described as “two halves.” Its canonical use is main memory: <u>slow, cheap, and large</u>. Main memory sits outside the CPU and is only <strong>temporary</strong> storage; files live on disk until they are needed, at which point they are cached into DRAM.</p>
+</li>
+<li>
+<p><strong>SRAM = Static RAM</strong>: roughly <strong>6 or 8 transistors plus resistive / latch structure per bit</strong>. It stores information through the bistable state of a <strong>flip-flop circuit</strong>. As long as power remains on, the value persists. Its canonical uses are CPU caches and registers: <u>fast, expensive, and small</u>.</p>
+</li>
+<li>
+<p>DRAM is constrained by capacitor technology, while SRAM is constrained by semiconductor scaling. Both are approaching serious limits, even as processors continue to improve.</p>
+</li>
+</ul>
+<blockquote>
+<p>SRAM often pays something like 100× the cost for roughly 10× lower access latency.</p>
+</blockquote>
+</br>
+<h2 id="dram">DRAM</h2>
+<p>A DRAM array behaves like a two-dimensional matrix. It first selects a row using <strong>RAS (row access strobe)</strong>, then selects a column using <strong>CAS (column access strobe)</strong>. The row is copied into the row buffer, and the desired data is then delivered from there.</p>
+<p>A <strong>d × w DRAM</strong> organization means that the total <code>d·w</code> bits are arranged into <code>d</code> <strong>supercells</strong>, each of width <code>w</code> bits. Here <code>w</code> is the data width transferred in one read or write, often <strong>1 byte</strong>.</p>
+<ul>
+<li>The address-port width is determined by how many rows and columns must be selected; the data-port width is <strong>w</strong>.</li>
+<li>On access: (1) issue RAS to select a row and copy it into the <strong>row buffer</strong>; (2) issue CAS to select a column and move the chosen supercell onto the data lines; (3) write the row back and refresh as needed.</li>
+</ul>
+<p><strong>Memory modules</strong> are the common modern organization of DRAM. For example, a 64 MB module may consist of eight 8M×8 DRAM chips, which collectively deliver a full 64-bit word.</p>
+<ul>
+<li><strong>DDR SDRAM</strong> dominates the modern market. Other DRAM families may offer similar latency but higher bandwidth.</li>
+<li><strong>Non-volatile memory</strong> such as flash is not DRAM. It retains data when power is removed, and belongs to the EEPROM family.</li>
+<li><strong>SAM</strong> is typical of long-term storage such as tape-like sequential media.</li>
+</ul>
+<p><img src="https://i.postimg.cc/XvRSzj4t/jie-ping2026-03-26-08-09-22.png" alt=""></p>
+<p><code>lw</code>: the CPU places address <code>A</code> on the memory bus; main memory reads that address, retrieves word <code>x</code>, places <code>x</code> on the bus, and the CPU reads it into a register.</p>
+<p><code>sw</code>: the CPU places address <code>A</code> on the bus; memory prepares for a write; the CPU then copies value <code>y</code> from a register onto the bus; memory stores <code>y</code> into address <code>A</code>.</p>
+</br>
+<h2 id="the-memory-wall">The Memory Wall</h2>
+<blockquote>
+<p>CPU performance has improved faster than DRAM and SSD technology, so the gap between processor speed and memory latency keeps widening. During the classic Moore’s-Law era, roughly from the 1980s to <strong>2003</strong>, this gap grew by about 50% per year. Before 2003 the widening was mainly a latency gap; afterward it increasingly became a broader performance gap.</p>
+</blockquote>
+<p>The memory wall has two main ingredients: <strong>latency</strong>, because memory is physically far away from the CPU; and <strong>bandwidth</strong>, because the memory system and bus cannot feed data fast enough.</p>
+<p>Main solution strategies:</p>
+<blockquote>
+<p>Historically, two major approaches emerged: <strong>latency hiding</strong>, such as multithreading, and <strong>latency reduction</strong>, such as caches. The latter proved cheaper and more influential on later machines.</p>
+</blockquote>
+<ul>
+<li>
+<p><strong>Explicit local memory</strong>: thread-private storage used when registers are insufficient.</p>
+</li>
+<li>
+<p><strong>Implicit memory hierarchy</strong>: small, fast upper levels hold frequently used data, while large lower levels hold the full data set, creating the illusion of memory that is “large, cheap, and also fast.”</p>
+</li>
+</ul>
+<p><img src="https://i.postimg.cc/3wV1jWYG/jie-ping2026-03-26-08-49-11.png" alt=""></p>
+<ul>
+<li>Recall that the <strong>V-extension</strong> provides vector registers, which can be used both for <strong>SIMD</strong> style <strong>data-level parallelism</strong> and for matrix-heavy tasks such as image processing.</li>
+</ul>
+<p>The relationship between registers and main memory is controlled by the compiler or programmer; the movement between cache and memory is controlled by hardware; the movement between memory and disk is managed by hardware and the OS; and movement from disk to tape-like storage is controlled at higher software / system levels.</p>
+</br>
+<h2 id="cache-definitions">Cache Definitions</h2>
+<blockquote>
+<p>The dollar sign joke is unavoidable…</p>
+</blockquote>
+<ul>
+<li>
+<p>In the broad sense, a cache is a <strong>function</strong>, not just the dedicated L1/L2/L3 structures. <strong>A cache is not equivalent to SRAM.</strong></p>
+</li>
+<li>
+<p><strong>Block / line</strong>: the transfer unit of a cache is a <strong>memory block</strong> or <strong>cache line</strong>. A line usually contains multiple words. On a miss, the cache fetches the entire block, not just one word.</p>
+</li>
+<li>
+<p><strong>Hit / miss</strong>: if the requested data is already in the cache, it is a <strong>hit</strong>; otherwise, it is a <strong>miss</strong>. Important related quantities include:</p>
+</li>
+<li>
+<p><strong>hit ratio</strong> = hits / accesses</p>
+</li>
+<li>
+<p><strong>miss ratio</strong> = 1 - hit ratio</p>
+</li>
+<li>
+<p><strong>miss penalty</strong> = the extra time paid on a miss</p>
+</li>
+<li>
+<p><strong>hit time</strong> = the access time of the cache on a hit</p>
+</li>
+</ul>
+<blockquote>
+<p><code>hit time &lt;&lt; miss penalty</code>, which is why even a miss rate of only a few percent can drastically hurt performance.</p>
+</blockquote>
+<p>Caches work because they exploit two kinds of locality:</p>
+<ol>
+<li><strong>Temporal locality</strong>: after accessing A, the machine is likely to access A again soon.</li>
+<li><strong>Spatial locality</strong>: after accessing A, its neighbors — such as A−1 or A+1 — are also likely to be accessed.</li>
+</ol>
+<h4 id="four-classic-cache-design-questions">Four classic cache-design questions:</h4>
+<p>Q1. Where can a block be placed?</p>
+<p>Q2. How is a block found?</p>
+<p>Q3. Which block should be replaced on a miss?</p>
+<p>Q4. What happens on a write?</p>
+</br> 
+</br>
+<h1 id="cache-design">Cache Design</h1>
+<h2 id="where-can-a-block-be-placed">Where can a block be placed?</h2>
+<p><strong>Associativity</strong>:</p>
+<ul>
+<li>A <strong>set</strong> is the collection of cache lines into which a given memory block is allowed to map. In the usual model, the set is chosen by <strong><code>(block number) mod (#sets)</code></strong>.</li>
+<li>A <strong>way</strong> is the number of candidate lines inside each set.</li>
+</ul>
+<p><strong>Fully associative cache</strong>: effectively <strong>one set</strong>, so any memory block may go into any line. This reduces conflict misses, but tag lookup becomes expensive and the hardware becomes slower and more costly.</p>
+<p><strong>Direct-mapped cache</strong>: <strong>one way per set, many sets</strong>. Each memory block maps to exactly one line. This is simple, fast, and cheap, but more prone to <strong>conflict misses</strong>.</p>
+</br> 
+<h2 id="how-is-a-block-found">How is a block found?</h2>
+<ul>
+<li>
+<p>Since the cache is smaller than main memory, a memory address is divided into high bits (<strong>tag</strong>) and lower bits (<strong>index</strong> / set selector). Different memory blocks may map to the same index, so the cache must store the <strong>tag</strong> to distinguish them.</p>
+</li>
+<li>
+<p>We also need a <strong>valid bit</strong>: <code>V = 1</code> means the line contains valid data, while <code>V = 0</code> means the entry is empty, being filled, or invalidated.</p>
+</li>
+</ul>
+<p>For example, an <strong>8-block direct-mapped cache</strong> with 1 word per block has <strong>8 sets</strong>, so it uses a <strong>3-bit index</strong>. Suppose address 42 maps to index <code>010</code> and tag <code>101</code>. Then access proceeds as follows:</p>
+<ol>
+<li><strong>Find the line and check hit/miss</strong>: index into set <code>010</code>; initially the valid bit is 0, so this is a <strong>compulsory miss</strong>.</li>
+<li><strong>Check the tag</strong>: the desired tag <code>101</code> is absent, so it is still a miss.</li>
+<li><strong>On a miss, fetch from main memory into that indexed line</strong>, set the tag, and mark <code>V = 1</code>.</li>
+<li>The next access to 42 becomes a hit.</li>
+<li>If we later access 58 (<code>111010</code>), it maps to the same index and causes a <strong>conflict miss</strong>, replacing the earlier block.</li>
+</ol>
+<ul>
+<li>A <strong>compulsory miss</strong> is the first-ever access; a <strong>conflict miss</strong> occurs when two blocks compete for the same cache location.</li>
+</ul>
+<h3 id="-the-compromise-set-associative-caches">⚠️ The compromise: Set-Associative Caches</h3>
+<blockquote>
+<p>In an N-way cache, each set contains N candidate cache lines for the mapped block.</p>
+</blockquote>
+<p>A block first maps to a set, and then may occupy any of the ways inside that set. Compared with the two extremes — direct-mapped and fully associative — N-way set-associative caches reduce conflicts without incurring the full cost of fully associative lookup.</p>
+<ul>
+<li>Since the total number of lines is fixed by cache capacity and line width, increasing the number of ways necessarily reduces the number of sets.</li>
+</ul>
+<h3 id="address-subdivision">Address Subdivision</h3>
+<blockquote>
+<p>A real cache line contains both <strong>data</strong> and <strong>metadata</strong>. Besides the valid bit, the metadata includes the tag and other status. So a “16 KB cache” means 16 KB of payload data, not the total silicon storage consumed.</p>
+</blockquote>
+<p>In practice, an address is split into three fields: <code>Address = Tag | Set selection | Byte offset</code>. The <strong>offset</strong> selects the specific byte inside a block; the set selector chooses the set; the tag identifies the block.</p>
+<p>Useful formulas: if cache size is <code>C</code>, line size is <code>B</code>, and associativity is <code>A</code>:</p>
+<ol>
+<li>
+<p>Number of lines = <code>C / B</code></p>
+</li>
+<li>
+<p>Number of sets = <code>(C / B) / A</code></p>
+</li>
+<li>
+<p>Payload bits per line = <code>B × 8</code></p>
+</li>
+<li>
+<p><strong>Set bits</strong> = <code>log2(#sets)</code></p>
+</li>
+<li>
+<p><strong>Offset bits</strong> = <code>log2(B)</code></p>
+</li>
+<li>
+<p><strong>Tag bits</strong> = <code>32 − set bits − offset bits</code> on a 32-bit address machine</p>
+</li>
+</ol>
+<blockquote>
+<p>Why do more ways imply fewer set bits? Because with total capacity fixed, the total number of lines is fixed. More ways per set means fewer sets.</p>
+</blockquote>
+<p><img src="https://i.postimg.cc/RFrqWwK3/jie-ping2026-03-26-12-07-09.png" alt=""></p>
+<h3 id="block-size-trade-off">Block-Size Trade-Off</h3>
+<blockquote>
+<p>Larger cache blocks should, in principle, reduce miss rate: if each miss brings in more nearby data, later accesses are more likely to hit.</p>
+</blockquote>
+<p>The two main reasons are stronger <strong>spatial locality</strong> and reduced <strong>tag overhead</strong>.</p>
+<p>⚠️ But larger blocks are not always better:</p>
+<ul>
+<li>Fewer total blocks means less ability to keep many different regions resident at once, hurting temporal locality.</li>
+<li>Overly large blocks may cause <strong>cache pollution</strong> or require too many transfer cycles on the bus.</li>
+<li>These effects may offset the theoretical reduction in miss rate.</li>
+</ul>
+<p>Two practical balancing rules of thumb:</p>
+<ol>
+<li>Small caches usually prefer moderate block sizes such as 32–64 B, while larger caches may benefit from 128–256 B blocks.</li>
+<li>Even when blocks are large, techniques such as <strong>early restart</strong> and <strong>critical-word-first</strong> reduce the time the CPU actually waits by delivering the most urgently needed word first.</li>
+</ol>
+</br> 
+<h2 id="hit-and-miss-read-and-write">Hit and Miss, Read and Write</h2>
+<p>Misses can be divided into read misses and write misses.</p>
+<h3 id="cache-read">Cache Read</h3>
+<ol>
+<li>
+<p><strong>Read hit</strong>: the CPU continues normally.</p>
+</li>
+<li>
+<p><strong>Read miss</strong>: an I-cache miss affects instruction fetch, while a D-cache miss affects data access. The simplest response is a <strong>blocking cache</strong>, which stalls the pipeline while fetching the missing block from the next level.</p>
+</li>
+</ol>
+<h3 id="cache-write">Cache Write</h3>
+<ol>
+<li>
+<p><strong>Write hit</strong>: the addressed block is already in the cache. Possible policies include:</p>
+<ul>
+<li>
+<p><strong>Write-through</strong>: update both the cache and main memory at the same time. The advantage is that memory always stays current, so dirty data is less likely to be lost if the cache fails. The disadvantage is <strong>increased memory traffic</strong>, heavy pressure on the bus and DRAM, and a stretched WB stage. For example, if the base CPI is <strong>1</strong> and 10% of instructions trigger a 100-cycle memory write, the effective CPI becomes <code>1 + 0.1 × 100 = 11</code>.</p>
+<p>A common remedy is a <strong>write buffer</strong>: place the pending write into a buffer, let the CPU continue, and let the memory controller write to main memory in the background. Conceptually, the write buffer is a <strong>FIFO queue</strong>.</p>
+<p>However, a write buffer only hides the problem temporarily: if the store frequency exceeds the DRAM write throughput, the buffer fills up and the CPU must still stall.</p>
+<p><strong>Coalescing</strong> — merging writes to the same or neighboring blocks — can reduce traffic somewhat, but write-back is still often preferred.</p>
+<p><img src="https://i.postimg.cc/Kc3fpP96/jie-ping2026-03-31-09-00-26.png" alt=""></p>
+</li>
+<li>
+<p><strong>Write-back</strong>: write only the cache copy immediately, and write to main memory later when replacement occurs.</p>
+<p>This requires a <strong>1-bit</strong> modification record called the <strong>dirty bit</strong>, which is part of the block metadata: 0 means the cache line matches memory, while 1 means the line has been modified and memory is stale. Only when a dirty line is evicted must the data be written back. This write-back can itself be buffered.</p>
+<p>⚠️ The point of write-back is that it is enough for the correct value to exist in either the cache or main memory; the two need not remain identical at all times. But if another processor / core wants to read that same data, then a <strong>cache-coherence protocol</strong> such as MESI becomes necessary.</p>
+<p>Advantages: lower WB latency, improved throughput, and <strong>lower memory traffic</strong>, which is especially friendly to multiprocessors.</p>
+<p>Disadvantages: a cache failure risks data loss, so systems often rely on <strong>ECC (Error Correcting Code)</strong>, commonly on the order of 8 bits per 64 data bits. This increases the cost of maintaining correctness.</p>
+<blockquote>
+<p>For example, a direct-mapped 16 KB RV32 cache with 64 B blocks contains 256 lines, 512 bits of actual data per line, 6 offset bits, 8 index bits, 18 tag bits, 1 valid bit, 1 dirty bit, and 64 bits of ECC. In total that is <strong>596 bits per line</strong>, so the whole cache occupies <strong>152576 bits</strong>, which is substantially larger than the nominal 16 KB of payload data.相比 16KB (131072 bits) 大了不少。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Write miss</strong> (the addressed block is <strong>not</strong> currently in the cache):</p>
+<ul>
+<li>
+<p><strong>Write-allocate (fetch on write)</strong> naturally pairs with write-back: first fetch the block from the next level, then modify it. This is suitable when the data is likely to be read or written again soon, as with local-variable or array-element updates.</p>
+</li>
+<li>
+<p><strong>No-write-allocate</strong> often pairs with write-through: simply <strong>bypass</strong> the cache on a miss. This is suitable for large sequential writes such as <code>strcpy</code>, <code>memset</code>, <code>memcpy</code>, or array initialization, where the data may not be reused immediately.</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>⚠️ Modern caches commonly use <strong>write-back + write-allocate</strong>, rather than write-through with no-write-allocate.</p>
+<h3 id="non-blocking-read-miss">Non-blocking read miss</h3>
+<blockquote>
+<p>Stall-on-Use (Non-blocking miss) <strong>vs</strong> Stall-on-Miss (Blocking miss)</p>
+</blockquote>
+<p>If we do not want every miss to lock the cache completely, we use <strong>Miss Status Holding Registers (MSHRs)</strong> to record miss transactions — effectively buffering misses. An <strong>MSHR file</strong> entry typically stores the block address, target information, and a valid bit.</p>
+<p>Advantages:</p>
+<ul>
+<li>
+<p>Two typical capability levels are <strong>hit-under-miss</strong> (continue serving hits while a miss is outstanding) and <strong>miss-under-miss</strong> (track additional misses while another miss is still pending).</p>
+</li>
+<li>
+<p><strong>Lockup-free caches</strong> support <strong>memory-level parallelism (MLP)</strong>, allowing multiple memory accesses to be waited on or processed in parallel.</p>
+</li>
+</ul>
+<h3 id="i-cache-miss">I-cache miss</h3>
+<p>Step 1: send the original PC (⚠️ usually the current PC − 4) to memory;</p>
+<p>Step 2: let main memory or the next cache level fetch the entire <strong>instruction</strong> block;</p>
+<p>Step 3: write the returned block into the I-cache, storing the <strong>data</strong>, the high-bit <strong>tag</strong>, and setting the <strong>valid bit</strong>;</p>
+<p>Step 4: restart instruction fetch.</p>
+<blockquote>
+<p><strong>Prefetching</strong> is a common optimization for reducing I-cache misses. However, predicting which code region a program will execute next is not always easy. <strong>Hardware instruction prefetch</strong> is common; explicit software-directed I-cache prefetch is much rarer.</p>
+</blockquote>
+</br> 
+<h2 id="memory-support">Memory Support</h2>
+<p>How can we increase main-memory bandwidth and reduce effective miss cost?</p>
+<p><img src="https://i.postimg.cc/v81hJ9v7/jie-ping2026-03-31-11-44-07.png" alt=""></p>
+<p>Strategy 1: an ordinary organization with uniform width, where the bus is also 32 bits wide and transfer is slow.</p>
+<p>Strategy 2: widen the data path. In theory, making the bus wider is attractive, but the engineering cost is high — <strong>pin limitations</strong>, <strong>signal-integrity challenges</strong> (interference and timing skew), and severe routing complexity.</p>
+<p>⚠️ Strategy 3: <strong>interleaved memory banking</strong>. Instead of making a single bus or memory chip extremely wide, split memory into multiple banks so consecutive addresses can be distributed among them and worked on in parallel (MLP). This is usually the best solution.</p>
+</br> 
+</br> 
+<h1 id="cache-performance">Cache Performance</h1>
+<h2 id="cpu-time-with-cache">CPU time with cache</h2>
+<p>CPU time consists of two parts: <strong>normal execution time + memory-stall time</strong>.</p>
+<ol>
+<li>
+<p><code>CPU time = (Program execution cycles + memory stall cycles) × clock cycle time</code></p>
+</li>
+<li>
+<p><code>Actual CPI = Base CPI + I-cache stall + D-cache stall</code></p>
+</li>
+</ol>
+<ul>
+<li>
+<p><strong>Program execution cycles</strong> already include <strong>cache hit time</strong>.</p>
+</li>
+<li>
+<p><strong>Memory stall cycles</strong> are mainly caused by <strong>cache misses</strong>, whose penalties are one of the main reasons CPI grows.</p>
+<p><code>Memory stall cycles = (Memory accesses / Program instructions) × Miss rate × Miss penalty</code></p>
+</li>
+</ul>
+<h3 id="example">Example</h3>
+<p>Suppose a program has I-cache miss rate = <strong>2%</strong>, D-cache miss rate = <strong>4%</strong>, miss penalty = <strong>100 cycles</strong>, base CPI (ideal cache) = <strong>2</strong>, and load/store instructions account for <strong>36%</strong> of execution. What is the actual CPI?</p>
+<ul>
+<li>IF always requires memory access, so the instruction-side penalty is <code>0.02 × 100 = 2</code>; only 36% of instructions access data memory, so the data-side penalty is <code>0.36 × 0.04 × 100 = 1.44</code>. Thus the real CPI is the base value plus memory stall: <code>2 + 2 + 1.44 = 5.44</code>, meaning the program is slowed by a factor of 2.72.</li>
+</ul>
+<blockquote>
+<p><strong>If CPI is abnormally high, the culprit is often not slow arithmetic units but memory stall.</strong></p>
+</blockquote>
+</br> 
+<h2 id="amat">AMAT</h2>
+<blockquote>
+<p><strong>AMAT = Average Memory Access Time</strong>. CPI cares about the whole program — <strong>how many cycles each instruction costs on average</strong> — while AMAT only cares about memory access — <strong>how much time each access costs on average</strong>, in <strong>cycles/access</strong>.</p>
+</blockquote>
+<ul>
+<li>
+<p>⚠️ <code>D-Cache AMAT = Hit time + Miss rate × Miss penalty</code>, so AMAT cannot be judged from miss rate alone — <strong>hit time also matters</strong>.</p>
+</li>
+<li>
+<p>⚠️ <code>Overall AMAT = %instr × I-cache AMAT + %data × D-cache AMAT</code>, where <code>%instr</code> is the fraction of accesses going to instructions. Usually <strong>%instr &gt; %data</strong>, though SIMD / vector-heavy programs may reverse that relationship.</p>
+</li>
+</ul>
+</br> 
+<h2 id="improving-cache-performance">Improving Cache Performance</h2>
+<p>Clearly, the AMAT formula tells us that cache performance can be improved by reducing <strong>hit time</strong>, reducing <strong>miss rate</strong>, or reducing <strong>miss penalty</strong>.</p>
+<h3 id="1-lower-hit-latency">1. Lower Hit Latency</h3>
+<p>To reduce hit time, we want the CPU to spend as little time as possible on each cache lookup. Typical ideas include small caches, way prediction, <strong>virtual-address caches / VIPT</strong>, low associativity, physical proximity to the CPU, and parallelizing address translation with cache lookup.</p>
+</br> 
+<h3 id="2-decrease-conflict-miss">2. Decrease Conflict Miss</h3>
+<p><strong>Cache Miss —— 4C&rsquo;s</strong></p>
+<ol>
+<li><strong>Compulsory / cold miss</strong>: the first access to a line must fetch it from lower memory.</li>
+<li><strong>Conflict / collision miss</strong>: the set size (associativity) is insufficient to hold several lines that map to the same set.</li>
+<li><strong>Capacity miss</strong>: the cache itself is too small to hold the required working set.</li>
+<li><strong>Coherency miss</strong>: in a multiprocessor setting, invalidation requests from other processors may force the line out.</li>
+</ol>
+<blockquote>
+<p>A conflict miss occurs when main-memory lines with the <strong>same set bits</strong> are accessed near one another, but there are not enough ways to keep them all resident.</p>
+</blockquote>
+<h4 id="strategy-1-bigger-associativity">Strategy 1: Bigger Associativity</h4>
+<p>If conflict misses are frequent, one should not only think about enlarging the cache, but also about increasing associativity and redesigning the mapping behavior.</p>
+<blockquote>
+<p>Higher associativity means more complex MUX design, more comparators, and longer hit latency, but it also <strong>reduces conflict misses</strong>. ⚠️ A <strong>2-way set-associative</strong> design is often a good compromise.</p>
+</blockquote>
+<ul>
+<li>
+<p><strong>Fully associative</strong>: a memory block may be placed anywhere, and access searches the whole structure in parallel — requiring <strong>one comparator per line</strong>. This is flexible but expensive and slow.</p>
+</li>
+<li>
+<p><strong>N-way set associative</strong>: map the block to a set by modulo, i.e. <strong><code>set No. = (block No.) % (#sets)</code></strong>, then search only within that set — requiring <strong>N comparators</strong>. This is a compromise between flexibility and cost.</p>
+</li>
+<li>
+<p>⚠️ If <strong>associativity increases</strong>, then <strong>the number of sets decreases</strong> (since the total number of lines is fixed), so the index-bit count falls and the tag-bit count rises.</p>
+</li>
+<li>
+<p>In general, the higher the associativity, the lower the miss rate — but the benefit quickly shows <strong>diminishing returns</strong>, while <strong>hit latency</strong> and implementation cost grow significantly.</p>
+<p>For a 64 KB D-cache with 16-word blocks, representative SPEC2000 miss rates might look like this: 1-way <strong>10.3%</strong>, 2-way <strong>8.6%</strong>, 4-way <strong>8.3%</strong>, 8-way <strong>8.1%</strong>.</p>
+</li>
+</ul>
+<h4 id="strategy-2-direct-mapped--victim-cache">Strategy 2: Direct-Mapped + Victim Cache</h4>
+<p>For a direct-mapped cache, ⚠️ all main-memory blocks whose indices differ by multiples of the number of sets collide with one another and can cause conflict misses. By contrast, a <strong>set-associative</strong> design reduces conflict misses by giving each set additional buffer slots.</p>
+<p>Patch 1: ⚠️ a <strong>victim cache</strong> is a tiny (often <strong>4–8 line</strong>) <strong>fully associative</strong> backup cache placed between a <strong>direct-mapped L1 cache</strong> and L2. It acts as a buffer for cache lines that were just evicted from L1 due to conflict misses.</p>
+<p>Patch 2: <strong>padding</strong>. For example, if a 64-line cache repeatedly sees conflicts among arrays separated by 1024 elements, one may insert dummy gaps such as <code>A[1024], Dummy0[8], B[1024], Dummy1[8], C[1024]</code> to break the collision pattern. However, a compiler may optimize <code>Dummy[]</code> away if it is never actually used.</p>
+<h4 id="comparing-2-way-set-associative-vs-direct-mapped--victim-cache">Comparing 2-Way Set Associative vs. Direct-Mapped + Victim Cache</h4>
+<ul>
+<li>
+<p>A <strong>victim cache</strong> is especially good at handling conflicts that are concentrated on a small number of addresses or a small number of sets and repeatedly evict one another.</p>
+<p>It exploits <strong>high temporal locality</strong> — the line was “just evicted, but will be used again very soon.”</p>
+</li>
+<li>
+<p>A <strong>2-way</strong> design is better when conflicts are not concentrated in a few hotspots, but are distributed across many sets, i.e. when temporal locality is weaker.</p>
+</li>
+</ul>
+<blockquote>
+<p>In general-purpose systems (desktops, servers, laptops), 2-way set associativity is more common; direct-mapped + victim cache is more specialized and often appears in embedded or cost-driven designs.</p>
+</blockquote>
+<h4 id="cache-block-replacement">Cache Block Replacement</h4>
+<p>(When a full set receives yet another conflicting line, how should the conflict miss be handled? Which resident line should be evicted?)</p>
+<ul>
+<li>
+<p>In a direct-mapped design, there is no choice: with only 1 way per set, the existing line is simply overwritten.</p>
+</li>
+<li>
+<p>In set-associative or fully associative caches, one may choose among three classic policies: Random, <strong>LRU (Least Recently Used)</strong>, or <strong>FIFO</strong>.</p>
+<ol>
+<li>Random</li>
+<li><strong>LRU</strong>: exploit <strong>temporal locality</strong> by evicting the block that has not been used for the longest time. <strong>True LRU</strong> requires stack-like tracking and is hardware-expensive; <strong>pseudo-LRU</strong> uses cheaper approximations, such as rotating pointers, but is less accurate.</li>
+<li><strong>FIFO</strong>: ignore access history and evict blocks according to arrival order.</li>
+</ol>
+</li>
+</ul>
+<p><strong>General LRU</strong>: “record the age of each cache block.”</p>
+<ul>
+<li>In a 4-block set, one can imagine a 2-bit counter per block tracking “how long since last use.” When one block is accessed, its counter resets to 0 while the others age upward. On a conflict miss, the block with the largest counter is replaced.</li>
+</ul>
+<p>Theoretical Optimum：<strong>Belady&rsquo;s Algorithm</strong></p>
+<ul>
+<li>From a pure <strong>hit-rate</strong> perspective, the ideal policy would evict the block whose next use lies farthest in the future.</li>
+<li>However: (1) this is impossible in reality because the future cannot be predicted exactly, and (2) ⚠️ it is not always optimal once <strong>memory traffic</strong> and <strong>write-back cost</strong> are taken into account, especially when dirty lines are expensive to evict.</li>
+</ul>
+<blockquote>
+<p>In practice, replacement policy must balance hit rate, clean/dirty status, memory traffic, power, and other engineering constraints.</p>
+</blockquote>
+<p>⚠️ A weakness of <strong>fully associative + LRU</strong> is that certain cyclic access patterns can defeat it. For example, under a 5-block cycle <code>0,1,2,3,4,0,1,...</code>, a 4-line <strong>DM(+VC)</strong> setup may still achieve about <strong>60% hit</strong>, while a 4-line <strong>FA+LRU</strong> cache may repeatedly evict the exact block needed next, falling to <strong>0% hit</strong>.</p>
+</br> 
+<h3 id="3-smaller-miss-penalty">3. Smaller Miss Penalty</h3>
+<h4 id="strategy-1-multilevel-caches">Strategy 1: Multilevel Caches</h4>
+<ul>
+<li>
+<p>This follows the memory-hierarchy principle: L1 sits closest to the CPU and is smallest and fastest; L2 serves as a larger, slower cache beneath it; some systems also add L3, often shared across cores; below that is main memory.</p>
+</li>
+<li>
+<p>Of course, consistency across multiple cache levels is nontrivial, especially when cores share data and write-back / dirty states are involved.</p>
+</li>
+<li>
+<p>For example, with two levels, an L1 miss may still hit in L2. Then the average memory access time becomes <code>AMAT = L1 hit time + L1 miss rate × (L2 hit time + L2 miss rate × L2 miss penalty)</code>, which captures the fact that many L1 misses are intercepted before reaching main memory.</p>
+</li>
+<li>
+<p>Typical hit rates might look like this: L1 <strong>80–95%</strong>, L2 <strong>50–80%</strong> (measured on L1 misses), L3 <strong>20–40%</strong>. Lower levels are larger, but they also face progressively harder miss cases.</p>
+</li>
+</ul>
+<h4 id="comparing-one-level-and-two-level-caches">Comparing One-Level and Two-Level Caches</h4>
+<p>Consider a 4 GHz CPU with base CPI = 1, miss rate = 2%, and memory latency = 100 ns.</p>
+<ul>
+<li>
+<p>With only L1, the miss penalty is <code>100ns / (1/4)ns = 400 cycles</code>, so the actual CPI becomes <code>1 + 2% × 400 = 9</code>.</p>
+</li>
+<li>
+<p>Now add L2 with 5 ns access latency and 20% local miss rate. If the L1-to-L2 miss flow remains 2%, then the actual CPI becomes <code>1 + 2% × (5/(1/4) + 0.2 × 400) = 3</code>.</p>
+</li>
+<li>
+<p>That is a 3× improvement in effective CPI behavior.</p>
+</li>
+</ul>
+<p>⚠️ In a two-level hierarchy, L1 and L2 serve different design goals:</p>
+<ul>
+<li>For <strong>L1</strong>, the most important requirement is a very fast hit time. It may therefore be smaller and simpler, with stronger reliance on spatial locality. Some implementations use <strong>write-through</strong> from L1 into L2.</li>
+<li>For <strong>L2</strong>, the main goal is reducing miss rate and preventing access from falling to DRAM. Its hit time matters less than L1’s, and temporal locality is often more important. Because L2 is larger, it more often uses <strong>write-back</strong> to memory.</li>
+</ul>
+<h4 id="other-techniques">Other Techniques</h4>
+<ol>
+<li>As noted in the block-size discussion, <strong>critical-word-first</strong> and <strong>early restart</strong> reduce the effective stall time by delivering the urgently needed word before the rest of the line.</li>
+<li><strong>Non-blocking caches</strong> can use MSHRs to overlap multiple outstanding misses and exploit memory-level parallelism.</li>
+<li><strong>Cache prefetching</strong> does not eliminate misses; instead, it makes them happen earlier so that their penalties can be hidden.</li>
+<li><strong>Write buffers</strong> for write-back caches allow the CPU to continue while dirty blocks are written back in the background.</li>
+<li><strong>Cache-aware code scheduling</strong> can hide miss penalties at the compiler level.</li>
+</ol>
+</br> 
+<h2 id="cache-coherence-in-multiprocessors">Cache Coherence in Multiprocessors</h2>
+<p>In a single-core machine, cache is simply an acceleration layer between CPU and memory. In a multicore machine, however, <strong>the same memory address may exist in multiple private caches at once, and those copies may differ</strong>.</p>
+<p>Write-back makes this problem more visible, but even write-through does not automatically solve it. So we need a <strong>cache coherence protocol</strong>.</p>
+<p><img src="https://i.postimg.cc/25hRPqTf/jie-ping2026-04-06-13-54-03.png" alt=""></p>
+<h3 id="snoopy-cache-coherence-scheme">Snoopy Cache Coherence Scheme</h3>
+<blockquote>
+<p><strong>All cache controllers “snoop” the coherence-related events broadcast on the shared bus.</strong></p>
+</blockquote>
+<ul>
+<li>If one processor wants to write a cache line, it must often <strong>invalidate</strong> the copies in other caches so that only one valid up-to-date copy remains.</li>
+<li>If another processor wants to read a line whose latest copy is dirty in some private cache, that cache may have to provide the data. In other words, a cache is not only a consumer; it can also become a data supplier.</li>
+<li>Examples of snoopy-coherence systems include SGI Challenge, Sun Enterprise, multiprocessor PCs, and similar machines.</li>
+</ul>
+<p><strong>A cache controller receives inputs from both sides</strong> — it must respond not only to the local processor, but also to coherence events broadcast by others on the bus.</p>
+<ul>
+<li>Requests coming from the local processor: this core wants to read, write, or handle a miss.</li>
+<li>Requests and responses coming from the bus / snooper: another core asks to read-share or write-exclusively, a block is invalidated, or a block must supply data.</li>
+</ul>
+<p>In other words, the controller may update its state, provide data, or initiate a bus transaction (for example, requesting write-exclusive access).</p>
+<blockquote>
+<p><strong>The protocol is a distributed algorithm: a collection of cooperating state machines.</strong></p>
+</blockquote>
+<ul>
+<li>There is no central brain. Each cache controller maintains its own <strong>state machine</strong>, and the controllers coordinate through bus events to preserve coherence.</li>
+</ul>
+<blockquote>
+<p><strong>The granularity of coherence is a cache block.</strong></p>
+</blockquote>
+<ul>
+<li>Coherence is managed at the level of an entire cache line / block.</li>
+</ul>
+<p>⚠️ The <strong>MESI protocol</strong> is one of the classic four-state cache-coherence protocols.</p>
+<ul>
+<li>
+<p><strong>M = Modified</strong>: the block exists only in this cache, has been modified, and main memory is stale.</p>
+</li>
+<li>
+<p><strong>E = Exclusive</strong>: the block exists only in this cache but still matches memory; a write turns it into M.</p>
+</li>
+<li>
+<p><strong>S = Shared</strong>: the block may appear in multiple caches, and all copies match memory; before writing, a core usually invalidates the other copies.</p>
+</li>
+<li>
+<p><strong>I = Invalid</strong>: the local copy is invalid and must be fetched again before use.</p>
+</li>
+<li>
+<p>For example, one may see a MESI-style state evolution such as <code>I -(read)-&gt; S -&gt; E -(write)-&gt; M -&gt; I</code>.</p>
+</li>
+</ul>
+<p>⚠️ <strong>Snoopy coherence is not very scalable</strong>, because it relies on a <strong>global bus</strong>. In very large systems, broadcasting every coherence event to every core becomes a bottleneck. So snoopy protocols are best suited to small or medium-scale shared-bus systems.</p>
+</br> 
+<h3 id="directory-based-cache-coherence">Directory-Based Cache Coherence</h3>
+<p>For larger systems, a centralized or distributed <strong>directory</strong> records <strong>which processors currently hold copies of a given cache line</strong>.</p>
+<ul>
+<li>Instead of broadcasting to everyone, the system maintains a <strong>directory</strong>.</li>
+<li>The directory knows both the state of a block and which caches currently hold copies.</li>
+</ul>
+<p>When a processor wants block X, it first consults the directory, which returns both the current state and the locations of any copies. The directory then selectively instructs the relevant nodes to invalidate or share.</p>
+<blockquote>
+<p><strong>A directory turns “broadcast to the whole company group” into “private messages to the relevant people.”</strong></p>
+</blockquote>
+<ul>
+<li>
+<p>Advantages: better <strong>scalability</strong>, lower traffic, and more architectural flexibility.</p>
+</li>
+<li>
+<p>Disadvantages: higher complexity, potentially longer latency, and extra storage overhead for the directory itself.</p>
+</li>
+</ul>
+</br> 
+<h3 id="inclusive-and-exclusive-caches">Inclusive and Exclusive Caches</h3>
+<ul>
+<li>
+<p>In an <strong>inclusive</strong> hierarchy, anything in L1 must also be present in L2. So L2 can help track L1 contents. However, when L2 evicts a block, it must also invalidate the L1 copy — a <strong>back invalidation</strong>.</p>
+<p>Inclusive hierarchies often allow larger lower-level line sizes.</p>
+</li>
+<li>
+<p>In an <strong>exclusive</strong> hierarchy, blocks are not duplicated: if a block is in L1, it is not also kept in L2. Blocks evicted from L1 are moved down into L2; an L2 hit migrates the block upward.</p>
+<p>Exclusive hierarchies often keep the same line size at each level.</p>
+</li>
+</ul>
+<p>The advantage of inclusion is easier coherence management, since L2 can help track which L1 caches contain a given block.</p>
+<p>The advantage of exclusion is better capacity utilization, since an inclusive L2 spends some space duplicating L1 contents.</p>
+<blockquote>
+<p>In practice, many modern processors are willing to sacrifice some capacity efficiency in exchange for simpler coherence management.</p>
+</blockquote>
+</br> 
+<h3 id="other-notable-facts">Other Notable Facts</h3>
+<ul>
+<li>
+<p>On advanced CPUs, especially <strong>out-of-order</strong> ones, the cost of a cache miss is no longer just “how many cycles did the machine stop.” The processor may hide part of the miss penalty if there is enough independent work to do while waiting.</p>
+</li>
+<li>
+<p>Combined with non-blocking caches, multiple misses may overlap, yielding memory-level parallelism.</p>
+</li>
+<li>
+<p>The impact of a miss depends on the program’s data flow: a <strong>critical-path miss</strong> hurts badly, while a miss off the critical path may be mostly hidden. AMAT is only an approximation — <strong>not all misses are equally expensive</strong>.</p>
+</li>
+<li>
+<p>Misses are often <strong>correlated</strong>, not independent random events. This is one reason modern prefetchers increasingly invite ML/AI-style ideas.</p>
+</li>
+<li>
+<p>Low arithmetic complexity does not automatically imply high real performance. <strong>Locality matters</strong>: the way a program accesses data can dominate the actual running time.</p>
+<p>For example, when the data set becomes large, radix sort may require fewer primitive operations than quicksort, yet still fail to run faster because of cache-miss behavior.</p>
+</li>
+<li>
+<p>Again, <strong>cache is not just the L1/L2/L3 structures inside a CPU; it is a general design idea.</strong> For example, <strong>CDNs such as Akamai are caches at the scale of the network</strong>, and GPU memory systems also employ cache-like hierarchy ideas.</p>
+</li>
+</ul>
+</br> 
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week-1011--memory-hierarchy">Week 10~11  Memory Hierarchy</a></li>
+    <li><a href="#random-access-memory-ram">Random-Access Memory (RAM)</a>
+      <ul>
+        <li><a href="#dram">DRAM</a></li>
+        <li><a href="#the-memory-wall">The Memory Wall</a></li>
+        <li><a href="#cache-definitions">Cache Definitions</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#cache-design">Cache Design</a>
+      <ul>
+        <li><a href="#where-can-a-block-be-placed">Where can a block be placed?</a></li>
+        <li><a href="#how-is-a-block-found">How is a block found?</a>
+          <ul>
+            <li><a href="#-the-compromise-set-associative-caches">⚠️ The compromise: Set-Associative Caches</a></li>
+            <li><a href="#address-subdivision">Address Subdivision</a></li>
+            <li><a href="#block-size-trade-off">Block-Size Trade-Off</a></li>
+          </ul>
+        </li>
+        <li><a href="#hit-and-miss-read-and-write">Hit and Miss, Read and Write</a>
+          <ul>
+            <li><a href="#cache-read">Cache Read</a></li>
+            <li><a href="#cache-write">Cache Write</a></li>
+            <li><a href="#non-blocking-read-miss">Non-blocking read miss</a></li>
+            <li><a href="#i-cache-miss">I-cache miss</a></li>
+          </ul>
+        </li>
+        <li><a href="#memory-support">Memory Support</a></li>
+      </ul>
+    </li>
+    <li><a href="#cache-performance">Cache Performance</a>
+      <ul>
+        <li><a href="#cpu-time-with-cache">CPU time with cache</a>
+          <ul>
+            <li><a href="#example">Example</a></li>
+          </ul>
+        </li>
+        <li><a href="#amat">AMAT</a></li>
+        <li><a href="#improving-cache-performance">Improving Cache Performance</a>
+          <ul>
+            <li><a href="#1-lower-hit-latency">1. Lower Hit Latency</a></li>
+            <li><a href="#2-decrease-conflict-miss">2. Decrease Conflict Miss</a></li>
+            <li><a href="#3-smaller-miss-penalty">3. Smaller Miss Penalty</a></li>
+          </ul>
+        </li>
+        <li><a href="#cache-coherence-in-multiprocessors">Cache Coherence in Multiprocessors</a>
+          <ul>
+            <li><a href="#snoopy-cache-coherence-scheme">Snoopy Cache Coherence Scheme</a></li>
+            <li><a href="#directory-based-cache-coherence">Directory-Based Cache Coherence</a></li>
+            <li><a href="#inclusive-and-exclusive-caches">Inclusive and Exclusive Caches</a></li>
+            <li><a href="#other-notable-facts">Other Notable Facts</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

@@ -1,0 +1,93 @@
+:root {
+  /* CSS 版调色盘：每个元素一个变量 */
+  --el-1: #ffffff;
+  --el-2: #ffffff;
+  --el-3: #efe9db;
+  --el-4: #696c6e;
+  --el-5: #383939;
+  --el-6: #262525;
+  --el-7: #ffffff;
+  --el-8: #fbffff;
+  --el-9: #fffdc6;
+  --el-10: #ffffff;
+
+  --el-11: #e4e3df;
+  --el-12: #f8f8f8;
+  --el-13: #e7edf1;
+  --el-14: #667aa3;
+  --el-15: #5b1e30;
+  --el-16: #ffe81e;
+  --el-17: #f5ff86;
+  --el-18: #ffffff;
+
+  --el-19: #f2f5f4;
+  --el-20: #e7e4d7;
+  --el-21: #d4d3ac;
+  --el-22: #dbd5d0;
+  --el-23: #a8a7c3;
+  --el-24: #dbe0e9;
+  --el-25: #adaba0;
+  --el-26: #efefea;
+  --el-27: #d0cfc6;
+  --el-28: #efefd9;
+  --el-29: #ea7b5a;
+  --el-30: #d5f0f3;
+
+  --el-31: #d8e4e7;
+  --el-32: #d0c986;
+  --el-33: #686660;
+  --el-34: #484a50;
+  --el-35: #e64f18;
+  --el-36: #ffffff;
+
+  --el-37: #f4edcd;
+  --el-38: #dcd9d2;
+  --el-39: #cdc9bf;
+  --el-40: #e8e4e1;
+  --el-41: #c5c2b0;
+  --el-42: #d6d9db;
+  --el-43: #cdcac4;
+  --el-44: #e8dcd3;
+  --el-45: #e8e5de;
+  --el-46: #f8f5e6;
+  --el-47: #fffef7;
+  --el-48: #e8eff3;
+  --el-49: #eeebe2;
+  --el-50: #d1ceb5;
+  --el-51: #dceef2;
+  --el-52: #707269;
+  --el-53: #443754;
+  --el-54: #ffffff;
+
+  --el-55: #f7e170;
+  --el-56: #ddd9c8;
+
+  --el-57: #e3e8ea;
+  --el-58: #e5e3de;
+  --el-59: #dcddd6;
+  --el-60: #ccced3;
+  --el-61: #cccbc4;
+  --el-62: #c5c4b5;
+  --el-63: #eee9d9;
+  --el-64: #c4bfb8;
+  --el-65: #c5c4c0;
+  --el-66: #c5c1ba;
+  --el-67: #ddd8d4;
+  --el-68: #d6d3c7;
+  --el-69: #d7d1c5;
+  --el-70: #f3edd0;
+  --el-71: #d7d9db;
+
+  --el-72: #d3d0cb;
+  --el-73: #80818a;
+  --el-74: #d4d5d1;
+  --el-75: #ebeff0;
+  --el-76: #97c4e7;
+  --el-77: #ebf1f0;
+  --el-78: #e9ebe3;
+  --el-79: #ffd640;
+  --el-80: #dfdbd4;
+  --el-81: #ced4da;
+  --el-82: #e5e3ec;
+  --el-83: #cebebc;
+}

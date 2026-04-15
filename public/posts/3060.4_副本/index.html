@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 6-7 Processor SW and HW | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3060.4_%E5%89%AF%E6%9C%AC/">
+    <meta property="og:url" content="http://localhost:1313/posts/3060.4_%E5%89%AF%E6%9C%AC/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 6-7 Processor SW and HW">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-03T10:37:34+08:00">
+    <meta property="article:modified_time" content="2026-03-03T10:37:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 6-7 Processor SW and HW">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行">
+  <meta itemprop="datePublished" content="2026-03-03T10:37:34+08:00">
+  <meta itemprop="dateModified" content="2026-03-03T10:37:34+08:00">
+  <meta itemprop="wordCount" content="3545">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 6-7 Processor SW and HW">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30604.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/emoji" title="">
+              🎮 EmojiGame
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 6-7 Processor SW and HW</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 6-7 Processor SW and HW</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-03-03T10:37:34+08:00">March 3, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"></br>
+<h1 id="week-6-7--processor-architecture-and-logic-design">Week 6-7  Processor Architecture and Logic Design</h1>
+<blockquote>
+<p>指令到底是怎么在处理器里跑起来的？</p>
+</blockquote>
+<p>Week 5 计算机架构：ISA (x86, ARM, RISCV&hellip;)；Week 6 处理器微架构：同一 ISA 下的不同实现 (Single-cycle、Multi-cycle、Pipelined、Out-of-Order&hellip;)</p>
+</br>
+<h2 id="处理器微构架"><strong>处理器微构架</strong></h2>
+<ul>
+<li>Data Path：运算、处理或搬运数据，负责数据流</li>
+<li>Control：指令的更新、抓取，负责指令流</li>
+</ul>
+</br>
+<h3 id="cycle">Cycle</h3>
+<ul>
+<li>CPU 并非连续运作，而是按照 “fetch, decode, execute” (从内存/缓存取指、用 ISA 解译命令、运算或访问)的循环周期性工作。最小时间单位为 cycle (不同实现时长不同)，以 GHz (频率)计算，比如 3GHz 的 CPU每秒处理 3x10<sup>9</sup> 个 cycle。</li>
+<li>取指令 、拆开指令字段并根据 ISA 解释、根据不同指令类型执行不同运算 (然后可能需要访存、写回寄存器、最后<strong>PC += 4</strong>)。(⚠️ RV32I 的 <strong>C-extension</strong> 情况下命令宽为 16b，就需要 PC += 2)</li>
+</ul>
+<p>单周期：<strong>每条指令都必须在一个周期内完成。<strong>导致周期</strong>向上对齐</strong>——所有指令和最慢的 (即 <code>lw</code>) 一样耗时。(最快的命令是 Jump，比如 <code>jal</code>)</p>
+<p>多周期：**把一条指令拆成多个阶段，每个阶段一个周期。**RISC 推动了周期缩短的革命，多周期执行明显更高效。</p>
+</br>
+<h3 id="cpu-性能公式">CPU 性能公式</h3>
+<p>⚠️ <em>CPU Time = Instruction-Count x CPI x Clock-Cycle-Time</em></p>
+<p><strong>即：命令的执行用时 = 需要执行多少指令 x 每条指令平均用多少周期 x 周期时长</strong></p>
+<ul>
+<li>Instruction count 受 ISA、compiler、具体算法的影响；</li>
+<li>CPI 受 ISA、处理器微架构的影响；</li>
+<li>Clocktime 受处理器微架构、硬件技术的影响。</li>
+</ul>
+<p>判断性能需要同时考虑三者而不是只看执行多少指令！比如使用包含 FMA 的 ISA 导致 Instruction count 减小，若是 Single-cycle，CPI 仍为 1 但 Clocktime 变大；若是 Multi-cycle 则 CPI 变大但 Clocktime 不变。</p>
+<p>总体归结为：<strong>CISC (短、长、长)  vs.  RISC (长、短、短)</strong> —— 故以 x86 为例的现代高性能 CPU 往往：<strong>ISA 像 CISC，内部翻译成 micro-ops (微操作) 执行像 RISC</strong>，兼有两者的优点。</p>
+</br>
+<h3 id="单周期多周期与流水线">单周期、多周期与流水线</h3>
+<p>Single-cycle：让指令都在 1 个 “长周期” 完成 —— 特点：CPI = 1 但周期很长。</p>
+<p>Multi-cycle：让指令分步走 —— 特点：CPI &gt; 1 但周期变短。</p>
+<p>⚠️ <strong>Pipeline</strong>：把<strong>不同指令的不同阶段重叠起来做</strong>。例如：第 1 条指令在执行的同时、第 2 条在译码、第 3 条在取指。<strong>pipeline 可以视作 <a href="https://blog.nero-lithos.com/posts/3060.1/">ILP</a> 的基础形式</strong>，</p>
+</br>
+</br>
+<h2 id="逻辑设计基础">逻辑设计基础</h2>
+<blockquote>
+<p>处理器说到底就是电路。</p>
+</blockquote>
+<p>0 伏附近的低电压表示 0，1 伏附近的高电压表示 1。1 根电线传输 1-bit，多位数据用总线 (bus) 表示。</p>
+</br>
+<h3 id="三大硬件成分">三大硬件成分</h3>
+<p><strong>组合逻辑元件 (Combinational elements)</strong>：负责对输入做 (函数) 运算并输出，<strong>无状态</strong> (即记忆)。</p>
+<p><strong>状态/时序逻辑元件 (State / Sequential elements)</strong>：负责存储状态信息 (如寄存器、存储器)。</p>
+<p><strong>时钟 (Clock signals)</strong>：调节什么时候更新记忆元件。</p>
+<p>而处理器执行一条指令，本质上就是：</p>
+<blockquote>
+<p>在一个周期内通过组合逻辑计算出 “下一状态”，然后在时钟即将进入下一周期时把它写进时序逻辑。</p>
+</blockquote>
+<h4 id="基础逻辑门">基础逻辑门</h4>
+<p><img src="https://i.postimg.cc/nh30sDLz/jie-ping2026-03-03-11-03-32.png" alt=""></p>
+<h4 id="组合电路元件">组合电路元件</h4>
+<ul>
+<li><strong>MUX</strong> (Multiplexer, 多路复用器)：<code>Y = S ? I1 : I0</code> (如果选择信号 S=1 输出 I1，否则输出 I0)，<strong>三元运算逻辑</strong>。“二选一” 或 “多选一” 问题，本质全靠 MUX (e.g.: ALU 第二输入到底选寄存器，还是立即数？PC 下一个值是 PC+4，还是 branch target？)</li>
+<li><strong>ALU</strong>：<code>Y = F(A, B)</code> 由控制信号决定做 add/sub/and/or/compare&hellip;</li>
+<li><strong>Comparator</strong>：<strong>输出 L：A &lt; B；E：A == B；G：A &gt; B</strong>。特别适合 <strong>branch</strong> 的条件判断。<img src="https://i.postimg.cc/FzfQq4nf/jie-ping2026-03-03-11-13-36.png" alt=""></li>
+</ul>
+<p>组合电路始终在 “工作”，输入一变，输出就会在<strong>延迟</strong>后改变。(一个组合电路的延迟由<strong>从任一输入到任一输出的最长逻辑路径</strong>决定，这就是 <strong>critical path</strong>)</p>
+<h4 id="时序元件">时序元件</h4>
+<ul>
+<li>寄存器 Regs：用来存储数据，依赖时钟信号上升边沿触发更新 (Clk 从 0 到 1 时)。</li>
+<li>Register with write control 多了写的权利：信号 Write = 1 正常更新；Write = 0 保持旧值不变。不是每条指令都需要写寄存器 —— ⚠️ <strong>对于 RV32I 的 Branch/Store 指令，Write 信号恒为 0</strong>。</li>
+</ul>
+<h4 id="时钟">时钟</h4>
+<p>一个周期的要求是：</p>
+<blockquote>
+<p>从某个状态元件输出开始，经过组合逻辑，必须在下一个时钟边沿之前稳定到达另一个状态元件输入。</p>
+</blockquote>
+<p>时钟不能太快，否则数据未稳定就被写入产生错误，所以时钟周期的下限取决于<strong>最长组合路径</strong>。</p>
+</br>
+<h3 id="rv32i-处理器的-mvp-模型">RV32I 处理器的 “MVP 模型”</h3>
+<p>(图示为最简可运行的单周期 RV32I 处理器子集的模型)</p>
+<p>⚠️ 圆形岔口表示多线并行，而图中从左到右<strong>三处</strong>圈出来的岔口<u>必须用 MUX</u>  —— <strong>PCSrc</strong> (要 Branch/Jump 吗？)、<strong>ALU inSrc</strong> (用立即数还是寄存器？)、<strong>MemtoReg</strong> (从内存还是 ALU 写回？)<img src="https://i.postimg.cc/vHGkNVDg/jie-ping2026-03-04-13-59-14.png" alt=""></p>
+<ul>
+<li>
+<p><strong>R-type</strong> 比如 <code>add x3, x1, x2</code>：同时并行 <code>PC += 4</code> (用左侧的 ADD) 和 PC 给 Instruction memory 传地址。后者拆开命令， <strong>ALUSrc MUX</strong> 选择寄存器输入，<strong>ALUctr</strong> 要求计算 <code>x1 + x2</code>，<u>不用 Data Mem.</u>，<strong>MemtoReg MUX</strong> 选择 <strong>ALU</strong> 输入，从 Data 接口写回寄存器 x3。</p>
+</li>
+<li>
+<p><strong>I-type</strong> 比如 <code>addi x3, x1, 42</code>： <strong>ALUSrc MUX</strong> 选择 <strong>Sign-extended Imm</strong> 输入。其余与 R-type 类似。</p>
+</li>
+<li>
+<p><strong>Load</strong> 比如 <code>lw x3, 8(x1)</code>：<strong>ALUSrc MUX</strong> 选择(<strong>Sign-extend 12 to 32</strong>) <strong>8</strong>，<strong>ALUctr</strong> 计算 <code>x1 + 8</code>，Data Mem. 读取计算结果对应的内存，<strong>MemtoReg MUX</strong> **选择 <strong>Data Mem.</strong> 输入，从 Data 接口写回寄存器 x3。</p>
+</li>
+<li>
+<p><strong>Store</strong> 比如 <code>lw x3, 8(x1)</code>：反之把 x3 值写入 <code>data memory[x1 + 8]</code>，<u>不写回数据</u>。其余与 Load 类似。</p>
+</li>
+<li>
+<p><strong>Branch</strong> 比如 <code>beq x1, x2, 88</code>：<strong>ALUSrc MUX</strong> 选择寄存器输入，<strong>ALUctr 用 Comparator</strong> 比较 x1 和 x2。同时计算 PC + 4 和 PC + 88，根据比较结果决定 <strong>PCSrc</strong> 取哪个。</p>
+</li>
+<li>
+<p><strong>Jump</strong> 在 <strong>MemtoReg</strong> 处需要多一个 <strong>WBsel</strong> (Write Back Select) 元件，后续再讨论。</p>
+</li>
+</ul>
+</br>
+<h3 id="control">Control</h3>
+<ul>
+<li>1bit MUX 选择 PCSrc</li>
+<li>1bit MUX 选择 MemtoReg (写回的是 ALU 值还是内存值)</li>
+<li>1bit MUX 选择 ALUSrc</li>
+<li>1bit Write Enable 控制是否做 Mem. read/write</li>
+<li><strong>4bit ALUctr</strong> 控制 ALU 做 add/sub/and/or&hellip; <img src="https://i.postimg.cc/GmkmFf7P/jie-ping2026-03-04-15-57-37.png" alt=""></li>
+</ul>
+<p>比如 <code>lw</code>：ALUSrc = 1 (SE Imm); MemRd = 1 (需要读内存); MemtoReg = 1 (从内存写回寄存器); RegWr = 1 (需要写回寄存器)。</p>
+<p>又比如 <code>sw</code>：ALUSrc = 1;MemWr = 1; RegWr = 0。</p>
+</br>
+</br>
+<h2 id="how-to-design-a-processor">How to Design a Processor？</h2>
+<p>我们以单周期 RV32I 最小子集为例。</p>
+<h3 id="第-1-步分析指令集需求">第 1 步：分析指令集需求</h3>
+<p>把每条指令的语义写成寄存器传送 (register transfer) 形式：</p>
+<p><img src="https://i.postimg.cc/J7NM0FnS/jie-ping2026-03-04-17-26-04.png" alt=""></p>
+<p>⚠️ 总结出 datapath 至少需要：1、(Instruction) Memory；2、Register File (32 × 32 bit)；3、PC；4、Extender (立即数扩展)；5、ALU；6、用于 PC+4 或 PC+imm 的加法器。<img src="https://i.postimg.cc/qvWr2W8d/jie-ping2026-03-05-09-09-06.png" alt=""></p>
+</br>
+<h3 id="第-2-步选择数据通路组件与时钟方法">第 2 步：选择数据通路组件与时钟方法</h3>
+<p>1、<strong>CLA-Adder</strong>：</p>
+<p><img src="https://i.postimg.cc/6pWcYQfV/jie-ping2026-03-05-09-24-29.png" alt=""></p>
+<p>2、<strong>寄存器</strong>：依赖 Clk (clock input) 信号作为 Write-Enable (1/0：有/无 “写权利”)</p>
+<p>3、<strong>寄存器文件</strong>：32 个寄存器</p>
+<ul>
+<li><strong>Datapath</strong>：<strong>2 个 32-bit 读口</strong> (Read) 总线 (busA, busB)、<strong>1 个 32-bit 写口</strong> (Write) 总线 (busW)；</li>
+<li><strong>Control</strong>：3 个 <strong>5-bit</strong> 选择寄存器编号的线 RA、RB、RW (<u>对应 ISA 的 rs1, rs2, rd</u>)。</li>
+<li>特殊的，2-wide superscalar 至少需要 4 个读口、FMA 需要 3 个读口。</li>
+</ul>
+<p>4、<strong>主存 (Memory)</strong></p>
+<ul>
+<li><strong>Datapath</strong>：1 个 32-bit 读口总线、1 个 32-bit 写口总线；</li>
+<li><strong>Control</strong>：32-bit Address、Write Enable (0/1)。</li>
+</ul>
+</br>
+<h3 id="第-3-步组装-datapath">第 3 步：组装 datapath</h3>
+<p>1、取指模块 (<strong>Instruction fetch unit</strong>) 都是相似的，<strong>“fetch”</strong>：<code>mem[PC]</code> 和 <strong>“update”</strong>：<code>MUX: PC += 4 or PC += Imm</code> (next instruction 还是 branch?)</p>
+<blockquote>
+<p>一个加法器够吗？</p>
+</blockquote>
+<p>—— 理论上某些设计中可以复用，但在<strong>单周期</strong>里不够用，往往要同时计算 PC+4 与 PC+immediate。</p>
+<blockquote>
+<p>beq 为什么不能用 &ldquo;<code>sub rs3, rs1, rs2 = 0</code>&rdquo; 而要用 comparator？</p>
+</blockquote>
+<p>—— overflow！如果一定要用减法比较，则要引入如 <strong>V (overflow) / C (carry) flags</strong> 辅助判断。</p>
+<p>2、其余的执行模块应当用 MUX 集成在一个最小复用电路中：</p>
+<p><img src="https://i.postimg.cc/vHMp9fDS/jie-ping2026-03-05-12-08-52.png" alt=""></p>
+<blockquote>
+<p>MUX 核心要义：<strong>不要想着每条指令单独造一套电路，尽量共用数据通路，再用控制信号配置它。</strong></p>
+</blockquote>
+<p>比如上图中典型地把内存类指令和 R-type 指令的 datapath 合并。</p>
+<p>3、<strong>上下文切换 (context switch) 本质上就是 “切换 state (状态)”</strong>。</p>
+<blockquote>
+<p><strong>不是把机器里所有东西都存下来，而是把 “恢复这个执行流所必需的架构状态 (architectural state)” 保存/恢复</strong> —— 包括 PC、Register Files(通用和特殊寄存器)、SP (栈指针)、RA (返回址)。</p>
+</blockquote>
+<ul>
+<li><strong>Thread switch 保存 processor registers</strong></li>
+<li><strong>Process switch 保存 PCB (包括 registers)</strong></li>
+</ul>
+<blockquote>
+<p>cache / control signals / pipeline state 等<strong>微架构状态 (Microarchitectural state)</strong> 不一定要保存</p>
+</blockquote>
+<p>4、整体电路：(增加一条 <code>jal</code> 需要的通路：跳转到目标地址并把返回地址 <code>PC+4</code> 写入 rd)<img src="https://i.postimg.cc/XYdqxX58/jie-ping2026-03-05-15-08-53.png" alt=""></p>
+<p>5、时钟周期：<u>一个寄存器可以在同个周期里被读出，经过组合逻辑运算，再在同周期末写回。</u></p>
+<blockquote>
+<p>读发生在时钟边沿后电路传播的阶段；写发生在下一个时钟边沿前 (Clk 上升期)。</p>
+</blockquote>
+<ul>
+<li>“时钟周期的下限取决于<strong>最长组合路径</strong>。” —— 即 <code>lw</code> 的传播路径经过以下计算：</li>
+</ul>
+<blockquote>
+<p>Critical Path = &ldquo;PC&rsquo;s Clk-to-Q&rdquo; + &ldquo;Instruction Memory Access Time&rdquo; + &ldquo;Register File Access Time&rdquo; + “ALU 32-bit Addition Time” + “Data Memory Access Time&quot; + &ldquo;Register File Setup Time&rdquo; + &ldquo;Clock Skew&rdquo;.</p>
+</blockquote>
+<p>(PC&rsquo;s Clk-to-Q：时钟到来后，PC 输出稳定需要一点时间。Setup time：写回寄存器前，输入必须提前稳定一段时间。Clock skew：时钟信号传递到不同部件有时差。)</p>
+<ul>
+<li>所以单周期 CPU 的频率上限，通常被最慢路径 <code>lw</code> 卡死。</li>
+</ul>
+</br>
+<h3 id="单周期处理器的明显缺陷">单周期处理器的明显缺陷</h3>
+<ul>
+<li>因为没有 ILP，资源不复用，需要多个冗余 Adder(PC 更新和 ALU 计算)；</li>
+<li>同周期里不能反复经过同一组合逻辑/状态元件；</li>
+<li>寄存器文件无需复制，但要多端口(2 read, 1 write)；</li>
+<li><code>mul</code> 和 <code>div</code> 计算是迭代性的，得在单周期里 “重复展开”，开销非常昂贵。</li>
+</ul>
+<p>所以更现实的方法是允许多周期执行，用 counter 控制重复使用同一硬件资源，代价是这些指令的 CPI 变大。</p>
+</br>
+<h3 id="第-4-步分析每条指令对应哪些控制点">第 4 步：分析每条指令对应哪些控制点</h3>
+<p>确定每条指令在不同 MUX 处如何分类选择。</p>
+<p><img src="https://i.postimg.cc/52gjQyF7/jie-ping2026-03-05-16-35-37.png" alt=""></p>
+</br>
+<h3 id="第-5-步组装控制逻辑">第 5 步：组装控制逻辑</h3>
+<p>实现从 opcode / funct 到控制信号的译码电路。</p>
+</br>
+<p>这五步就是从 ISA 到微架构的工程路线。</p>
+</br>
+<h2 id="常用术语总表">常用术语总表</h2>
+<p><img src="https://i.postimg.cc/NFfQ32Fh/jie-ping2026-03-12-18-23-44.png" alt=""></p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/emoji" target="_blank" rel="noopener noreferrer">🎮 EmojiGame</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

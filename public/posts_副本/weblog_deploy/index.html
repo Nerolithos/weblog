@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🌐 在 cloudflare 部署 Hugo 构架博客的 manual | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/weblog_deploy/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/weblog_deploy/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🌐 在 cloudflare 部署 Hugo 构架博客的 manual">
+  <meta property="og:description" content="一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:tag" content="技术">
+
+  <meta itemprop="name" content="🌐 在 cloudflare 部署 Hugo 构架博客的 manual">
+  <meta itemprop="description" content="一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。">
+  <meta itemprop="wordCount" content="2745">
+  <meta itemprop="keywords" content="技术">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🌐 在 cloudflare 部署 Hugo 构架博客的 manual">
+  <meta name="twitter:description" content="一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🌐 在 cloudflare 部署 Hugo 构架博客的 manual</h1>
+
+      
+
+      
+      
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>本文内容在<a href="blog.sunneyseeds.net">sunnyseeds 的个人博客</a>的基础上进行增补</p>
+<h2 id="前言">前言</h2>
+<p>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做了一遍，竟发现网上找到的文章，都有坑。</p>
+<p>包括 hugo、cloudflare 官网，以及 GPT 的说辞。</p>
+<p><strong>前提：你的终端 cli 得能够较为稳定的 访问 github。</strong></p>
+<p>（否则，即便照着官网文章逐字逐句操作也会任意变形&hellip;&hellip;别说我没提醒你）</p>
+<h2 id="一hugo-init-博客项目">一、hugo init 博客项目</h2>
+<h3 id="安装-hugo">安装 hugo</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>brew install hugo <span style="color:#75715e"># MacOS</span>
+</span></span></code></pre></div><h3 id="创建-hugo-站点">创建 hugo 站点</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>hugo new site &lt;your_blog_project_name&gt; 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 这将会创建一个名为 your_blog_project_name 的项目</span>
+</span></span></code></pre></div><h3 id="配置-hugo-主题">配置 hugo 主题</h3>
+<p>1、从项目的根目录中，启动 hugo 模块系统（如果您还没有这样做）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>hugo mod init github.com/&lt;your_user&gt;/&lt;your_project&gt;
+</span></span></code></pre></div><p>2、进入我们刚创建的 hugo 站点文件夹里, 打开 <strong>hugo.toml</strong> 文件(某些版本也叫 <strong>config.toml</strong>)。它位于项目名根目录下的第一层。</p>
+<p>～ 这里有一个坑，ayu&rsquo;s 例子中用的 newsroom theme 似乎有问题：github.com/onweru/newsroom</p>
+<p>按下面修改：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#39;https://blog.sunnyseeds.net/&#39;</span>  <span style="color:#75715e"># 你购买的域名</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">defaultContentLanguage</span> = <span style="color:#e6db74">&#34;zh-cn&#34;</span> <span style="color:#75715e"># 默认语言</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">defaultContentLanguageInSubdir</span> = <span style="color:#66d9ef">false</span> <span style="color:#75715e">#不在URL显示当前语言</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">languageCode</span> = <span style="color:#e6db74">&#39;zh-cn&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#34;sunnyseeds&#39; Blog&#34;</span> <span style="color:#75715e"># Blog title </span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">theme</span> = [<span style="color:#e6db74">&#34;github.com/theNewDynamic/gohugo-theme-ananke&#34;</span>] <span style="color:#75715e"># 你选择的主题</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">hasCJKLanguage</span> = <span style="color:#66d9ef">true</span> <span style="color:#75715e"># CJK 为中国, 日本, 韩国的缩写</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">canonifyurls</span> = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pagination</span>.<span style="color:#a6e22e">pagerSize</span> = <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">module</span>]
+</span></span><span style="display:flex;"><span>[[<span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">imports</span>]]
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">path</span> = <span style="color:#e6db74">&#34;github.com/theNewDynamic/gohugo-theme-ananke&#34;</span>
+</span></span></code></pre></div><p><a href="https://github.com/theNewDynamic/gohugo-theme-ananke">Ananke: Hugo 主题</a>里有一个更详细的例子，可以控制主题的方方面面，我暂时没有使用</p>
+<h3 id="拉取-主题-仓库到本地">拉取 主题 仓库到本地</h3>
+<p>在你的 Hugo 网站根目录内运行：</p>
+<pre tabindex="0"><code>git init
+
+git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke
+</code></pre><p>注意：git submodule add 用于将另一个 Git 仓库作为子模块添加到现有的 Git 仓库中。子模块的提交和更新是通过主仓库的 <strong>.gitmodules</strong> 文件来管理的。它记录了 GitHub 上复制下来的主题的项目路径。这个很可能就是下面报错的原因（使用submodule 才会有 .gitmodules 文件，嵌套 git 不好带啊）：</p>
+<p><img src="https://img.sunnyseed.me/2024/09/10/3025d116d27d1.png" alt="image.png"></p>
+<p>如果这个问题得不到解决，你可以尝试把配置文件(hugo.toml)进行如下修改(省略了主题的路径，交给 .gitmodules 寻路)：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#39;https://blog.sunnyseeds.net/&#39;</span>  <span style="color:#75715e"># 你购买的域名</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">defaultContentLanguage</span> = <span style="color:#e6db74">&#34;zh-cn&#34;</span> <span style="color:#75715e"># 默认语言</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">defaultContentLanguageInSubdir</span> = <span style="color:#66d9ef">false</span> <span style="color:#75715e">#不在URL显示当前语言</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">languageCode</span> = <span style="color:#e6db74">&#39;zh-cn&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#34;sunnyseeds&#39; Blog&#34;</span> <span style="color:#75715e"># Blog title </span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">theme</span> = <span style="color:#e6db74">&#39;anake&#39;</span> <span style="color:#75715e"># 你选择的主题</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">hasCJKLanguage</span> = <span style="color:#66d9ef">true</span> <span style="color:#75715e"># CJK 为中国, 日本, 韩国的缩写</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">canonifyurls</span> = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pagination</span>.<span style="color:#a6e22e">pagerSize</span> = <span style="color:#ae81ff">6</span>
+</span></span></code></pre></div><h4 id="创建新帖子">创建新帖子</h4>
+<pre tabindex="0"><code>hugo new content posts/hello-world.md
+</code></pre><p>hugo 的每一篇 post 前，需要有 toml 或 yaml 格式的 front matter，用于控制文章显示。</p>
+<p>修改 contents\posts\hello-world.md</p>
+<p>hugo 网站架构支持两种比较容易理解的代码(比 html 接近自然语言)
+yaml 格式：用冒号衔接变量与参数。
+toml 格式：用等号衔接变量与参数。
+<strong>两种格式的编辑都需要上下用“&mdash;”包裹。两种语言不能混合使用，否则 Cloudflare 会报错。</strong>
+可包含的内容有：
+title, date, draft, featured_picture, summary, tag 等等。</p>
+<p>注意，<strong>要删除 <code>draft = true</code> 这一行，否则不会显示</strong></p>
+<p>再注意，**一定要确保 md 文件位于 content/posts/ 目录下，而不是直接裸露在 content/ 下，这会导致显示功能异常。**不要问我怎么知道的。</p>
+<h4 id="本地预览">本地预览</h4>
+<pre tabindex="0"><code>hugo server
+</code></pre><p>按照 2、<a href="https://discourse.gohugo.io/t/fatal-error-when-deploying-to-cloudflare/41368">在部署到 Cloudflare 时发生致命错误 - HUGO 支持文档</a> 这一步之前还有手动 <code>npm ci</code> 处理过程，但我没有使用，可能新版不需要？</p>
+<h2 id="二上传-github">二、上传 github</h2>
+<h3 id="1生成-repository">1、生成 repository</h3>
+<p><img src="https://img.sunnyseed.me/2024/09/10/4569accd95619.png" alt="image.png"></p>
+<h3 id="2create-a-new-repository-on-the-command-line">2、create a new repository on the command line</h3>
+<p>进入blog 所在目录</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;first commit&#34;</span>
+</span></span><span style="display:flex;"><span>git branch -M main
+</span></span><span style="display:flex;"><span>git remote add origin https://github.com/sunnyseed/blog.git
+</span></span><span style="display:flex;"><span>git push -u origin main
+</span></span></code></pre></div><p>之后再次修改的话：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git add .
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;xxx&#34;</span>
+</span></span><span style="display:flex;"><span>git push -u origin main
+</span></span></code></pre></div><p>如果是使用 ssh 登录 github，则要使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git remote add origin git@github.com:sunnyseed/blog.git
+</span></span></code></pre></div><p>注意，GitHub上一定要批准 configure 一下 cloudflare 对于该项目目录的访问权。</p>
+<h2 id="三设置-cloudflare">三、设置 cloudflare</h2>
+<p>按照 1、<a href="https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/">Hugo 部署 | Cloudflare Pages 文档</a> 设置即可，其中构建命令（我照抄的，不知为啥😄）：</p>
+<pre tabindex="0"><code>hugo -b $CF_PAGES_URL
+</code></pre><p><strong>补充</strong>，又是坑：-b 是固定 baseurl 的意思（就是网站的 基本 URL，固定成 cf page 的地址），<strong>如果你有注册网址的话，用默认的：<code>hugo</code> 才行</strong>(也就是如果你在比如 Cloudflare 上购买了域名的话)。这么写会导致错误的，当时我还没反应过来。</p>
+<p>随后确认在 构建 时，没有报错即可，就可以使用 pages 分配的域访问了（比如 myblog-dg4.pages.dev）。本地更新后只需要，push 一下，cf 是自动更新发布的。</p>
+<h2 id="四绑定域名">四、绑定域名</h2>
+<ol>
+<li>
+<p>在 域注册-DNS 中加一个 CNAME (比如 blog )记录，将你的域名指向 pages 分配的域名比如 myblog-dg4.pages.dev，<strong>注意，不要包括版本号</strong>(否则你每更新一次就得换个记录，依旧不要问我怎么知道的)。</p>
+</li>
+<li>
+<p>在 pages 的 自定义域中，加入一个指向 CNAME （blog.ne&rsquo;ro-lithos.com） 的记录。</p>
+</li>
+</ol>
+<p>就可以访问 (blog.ne&rsquo;ro-lithos.com)使用了。</p>
+<h2 id="五图片设置">五、图片设置</h2>
+<h3 id="为首页设置-hero-图">为首页设置 “Hero” 图</h3>
+<p>首页的设置通常在 <code>content/_index.md</code> 文件中进行。在这个文件的 front matter 中，你可以使用 <code>featured_image</code> 参数来指定 Hero 图。打开 <code>content/_index.md</code> 文件（如果不存在，则创建一个），并添加以下内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">title</span>: <span style="color:#e6db74">&#34;Lithos&#39; Blog&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">description</span>: <span style="color:#e6db74">&#34;a CUHKSZ survival documentation&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">featured_image</span>: <span style="color:#e6db74">&#39;/images/Head.jpg&#39;</span>
+</span></span></code></pre></div><p>将 <code>images/Head.jpg</code> 替换为你实际图片名称。确保该图片已上传到 <code>static/images</code> 目录中。</p>
+<h3 id="为-post-设置-特写-图">为 post 设置 “特写” 图</h3>
+<p>post 的特写图，写在每一个 post 的 front matter 中:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#75715e"># toml</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#39; # Grassroot HongKong&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">date</span> = <span style="color:#e6db74">2024-09-10T09:08:58+08:00</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">draft</span> = <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">featured_image</span> = <span style="color:#e6db74">&#39;/images/ymt.jpg&#39;</span>
+</span></span></code></pre></div><p>补充：</p>
+<p>手工测量了一下，Ananke 的 hero 通栏图片的长宽比例是 1 : 0.28（这在 1980 分辨率上，尺寸约 1905 * 534）。 不用很精确，hugo 会自己 cut 下面多余部分。</p>
+<h3 id="文章中的普通图片">文章中的普通图片</h3>
+<p>渲染方式为：![#注释#](#图片的存储位置https://……#)</p>
+<p>我暂时使用的是 <a href="https://postimg.cc/">https://postimg.cc/</a> 作为存储库，但如果你有兴趣，且像我一样决定永远注册一个私人域名，你也能直接存在自己的子域名上（以我为例，可以存在 “images.nero-lithos.com&quot; 上)</p>
+<h2 id="六评论功能">六、评论功能</h2>
+<p>如果你有个人服务器，请采用 Commento 的服务，它更方便。本篇展示 Disqus 提供的评论区服务，零基础。</p>
+<p>在 Disqus 官网上注册一个新号，并关联你的博客的域名，选择一个网页<strong>shortname</strong>，并记住它。然后选择 Universal Code-Installation 来部署 Disqus，跟随官网上的信息，我们需要修改三个文件：</p>
+<ul>
+<li>
+<p>hugo.html里增加：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>[services]
+</span></span><span style="display:flex;"><span>  [services.disqus]
+</span></span><span style="display:flex;"><span>    shortname = &#39;nero-lithos&#39;
+</span></span></code></pre></div></li>
+<li>
+<p>themes/anake/layouts/_default 中找到 single.html，里面应当是以下内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ define &#34;header&#34; }}
+</span></span><span style="display:flex;"><span>   {{/* We can override any block in the baseof file be defining it in the template */}}
+</span></span><span style="display:flex;"><span>  {{ partial &#34;page-header.html&#34; . }}
+</span></span><span style="display:flex;"><span>{{ end }}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{{ define &#34;main&#34; }}
+</span></span><span style="display:flex;"><span>  {{ $section := .Site.GetPage &#34;section&#34; .Section }}
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">article</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;flex-l flex-wrap justify-between mw8 center ph3&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">header</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mt4 w-100&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">aside</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;instapaper_ignoref b helvetica tracked ttu&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>          {{/*
+</span></span><span style="display:flex;"><span>          CurrentSection allows us to use the section title instead of inferring from the folder.
+</span></span><span style="display:flex;"><span>          https://gohugo.io/variables/page/#section-variables-and-methods
+</span></span><span style="display:flex;"><span>          */}}
+</span></span><span style="display:flex;"><span>        {{ .CurrentSection.Title }}
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">aside</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ partial &#34;social-share.html&#34; . }}
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">h1</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f1 athelas mt3 mb1&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        {{- .Title -}}
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">h1</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ with .Params.author | default .Site.Params.author }}
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;tracked&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        {{ $.Render &#34;by&#34; }} &lt;<span style="color:#f92672">strong</span>&gt;
+</span></span><span style="display:flex;"><span>        {{- if reflect.IsSlice . -}}
+</span></span><span style="display:flex;"><span>            {{ delimit . &#34;, &#34; | markdownify }}
+</span></span><span style="display:flex;"><span>        {{- else -}}
+</span></span><span style="display:flex;"><span>            {{ . | markdownify }}
+</span></span><span style="display:flex;"><span>        {{- end -}}
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">strong</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ end }}
+</span></span><span style="display:flex;"><span>      {{/* Hugo uses Go&#39;s date formatting is set by example. Here are two formats */}}
+</span></span><span style="display:flex;"><span>      {{ if not .Date.IsZero }}
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">time</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f6 mv4 dib tracked&#34;</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">printf</span> <span style="color:#960050;background-color:#1e0010">`</span><span style="color:#a6e22e">datetime</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;%s&#34;</span><span style="color:#960050;background-color:#1e0010">`</span> <span style="color:#960050;background-color:#1e0010">(.</span><span style="color:#a6e22e">Date</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">Format</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">2006-01-02T15:04:05Z07:00</span><span style="color:#960050;background-color:#1e0010">&#34;)</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">safeHTMLAttr</span> <span style="color:#960050;background-color:#1e0010">}}</span>&gt;
+</span></span><span style="display:flex;"><span>        {{- .Date | time.Format (default &#34;January 2, 2006&#34; .Site.Params.date_format) -}}
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">time</span>&gt;
+</span></span><span style="display:flex;"><span>      {{end}}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      {{/*
+</span></span><span style="display:flex;"><span>          Show &#34;reading time&#34; and &#34;word count&#34; but only if one of the following are true:
+</span></span><span style="display:flex;"><span>          1) A global config `params` value is set `show_reading_time = true`
+</span></span><span style="display:flex;"><span>          2) A section front matter value is set `show_reading_time = true`
+</span></span><span style="display:flex;"><span>          3) A page front matter value is set `show_reading_time = true`
+</span></span><span style="display:flex;"><span>        */}}
+</span></span><span style="display:flex;"><span>      {{ if (or (eq (.Param &#34;show_reading_time&#34;) true) (eq $section.Params.show_reading_time true) )}}
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f6 mv4 dib tracked&#34;</span>&gt; - {{ i18n &#34;readingTime&#34; .ReadingTime }} &lt;/<span style="color:#f92672">span</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f6 mv4 dib tracked&#34;</span>&gt; - {{ i18n &#34;wordCount&#34; .WordCount }} &lt;/<span style="color:#f92672">span</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ end }}
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">header</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;nested-copy-line-height lh-copy {{ $.Param &#34;</span><span style="color:#a6e22e">post_content_classes</span><span style="color:#960050;background-color:#1e0010">&#34;</span>  <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">default</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">serif</span><span style="color:#960050;background-color:#1e0010">&#34;}}</span> <span style="color:#a6e22e">f4</span> <span style="color:#a6e22e">nested-links</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#960050;background-color:#1e0010">$.</span><span style="color:#a6e22e">Param</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">text_color</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">default</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">mid-gray</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#a6e22e">cond</span> <span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">eq</span> <span style="color:#960050;background-color:#1e0010">$.</span><span style="color:#a6e22e">Site</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">Language</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">LanguageDirection</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">rtl</span><span style="color:#960050;background-color:#1e0010">&#34;)</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">pl4-l</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">pr4-l</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#a6e22e">w-two-thirds-l</span><span style="color:#960050;background-color:#1e0010">&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      {{- .Content -}}
+</span></span><span style="display:flex;"><span>      {{- partial &#34;tags.html&#34; . -}}
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mt6 instapaper_ignoref&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      {{ partial &#34;disqus.html&#34; . }}
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">aside</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;w-30-l mt6-l&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      {{- partial &#34;menu-contextual.html&#34; . -}}
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">aside</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  &lt;/<span style="color:#f92672">article</span>&gt;
+</span></span><span style="display:flex;"><span>{{ end }}
+</span></span></code></pre></div></li>
+<li>
+<p>themes/anake/layouts/partials 中找到或创建 disqus.html，里面应当是以下内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{- $pc := .Site.Config.Privacy.Disqus -}}
+</span></span><span style="display:flex;"><span>{{- if not $pc.Disable -}}
+</span></span><span style="display:flex;"><span>{{ if .Site.Config.Services.Disqus.Shortname }}&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;disqus_thread&#34;</span>&gt;&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    window.<span style="color:#a6e22e">disqus_config</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>    {{<span style="color:#66d9ef">with</span> .<span style="color:#a6e22e">Params</span>.<span style="color:#a6e22e">disqus_identifier</span> }}<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">identifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;{{ . }}&#39;</span>;{{<span style="color:#a6e22e">end</span>}}
+</span></span><span style="display:flex;"><span>    {{<span style="color:#66d9ef">with</span> .<span style="color:#a6e22e">Params</span>.<span style="color:#a6e22e">disqus_title</span> }}<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">title</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;{{ . }}&#39;</span>;{{<span style="color:#a6e22e">end</span>}}
+</span></span><span style="display:flex;"><span>    {{<span style="color:#66d9ef">with</span> .<span style="color:#a6e22e">Params</span>.<span style="color:#a6e22e">disqus_url</span> }}<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">url</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;{{ . | html  }}&#39;</span>;{{<span style="color:#a6e22e">end</span>}}
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ([<span style="color:#e6db74">&#34;localhost&#34;</span>, <span style="color:#e6db74">&#34;127.0.0.1&#34;</span>].<span style="color:#a6e22e">indexOf</span>(window.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">hostname</span>) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>            document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#39;disqus_thread&#39;</span>).<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Disqus comments not available by default when the website is previewed locally.&#39;</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">d</span> <span style="color:#f92672">=</span> document, <span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;script&#39;</span>); <span style="color:#a6e22e">s</span>.<span style="color:#66d9ef">async</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">src</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;//&#39;</span> <span style="color:#f92672">+</span> {{ .<span style="color:#a6e22e">Site</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Services</span>.<span style="color:#a6e22e">Disqus</span>.<span style="color:#a6e22e">Shortname</span> }} <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;.disqus.com/embed.js&#39;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">setAttribute</span>(<span style="color:#e6db74">&#39;data-timestamp&#39;</span>, <span style="color:#f92672">+</span><span style="color:#66d9ef">new</span> Date());
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">body</span>).<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">s</span>);
+</span></span><span style="display:flex;"><span>    })();
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">noscript</span>&gt;Please enable JavaScript to view the &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://disqus.com/?ref_noscript&#34;</span>&gt;comments powered by Disqus.&lt;/<span style="color:#f92672">a</span>&gt;&lt;/<span style="color:#f92672">noscript</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://disqus.com&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dsq-brlink&#34;</span>&gt;comments powered by &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;logo-disqus&#34;</span>&gt;Disqus&lt;/<span style="color:#f92672">span</span>&gt;&lt;/<span style="color:#f92672">a</span>&gt;{{end}}
+</span></span><span style="display:flex;"><span>{{- end -}}
+</span></span></code></pre></div><p>然后，就会在每篇博客底下看到 Disqus 评论区(实时加载的)。</p>
+</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<p>1、<a href="https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/">Hugo 部署 | Cloudflare Pages 文档</a></p>
+<p>2、<a href="https://blog.sunnyseeds.net/cn/posts/modify_hero_image_of_hugo_theme/">sunnyseeds 的个人博客</a></p>
+<p>3、<a href="https://ayurain.com/posts/%E5%9F%BA%E4%BA%8Ehugo%E5%92%8Ccloudflare%E7%9A%84%E5%8D%9A%E5%AE%A2%E6%96%B9%E6%A1%88/">基于 hugo 和 cloudflare Page 的博客方案 | ayu&rsquo;s Blog</a></p>
+<p>4、<a href="https://github.com/theNewDynamic/gohugo-theme-ananke">Ananke: Hugo 主题</a></p>
+<p>5、<a href="https://discourse.gohugo.io/t/fatal-error-when-deploying-to-cloudflare/41368">在部署到 Cloudflare 时发生致命错误 - HUGO 支持文档</a></p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">技术</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/weblog_deploy/">🌐 在 cloudflare 部署 Hugo 构架博客的 manual</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/gab/">🛠️ GitHub Action Bot 自动化管理仓库入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/gab/">🛠️ GitHub Action Bot 自动化管理仓库入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/whisper/">📢 如何快速批量地将音频转文字？</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/whisper/">📢 如何快速批量地将音频转文字？</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/outlook/">🌐 龙大邮箱抓取尝试</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/outlook/">🌐 龙大邮箱抓取尝试</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

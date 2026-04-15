@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear) | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CSC3200 at CUHKSZ: linked lists, stacks, queues, maps, and sets.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3200.f1/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3200.f1/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)">
+  <meta property="og:description" content="CSC3200 at CUHKSZ: linked lists, stacks, queues, maps, and sets.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2025-11-21T13:29:34+08:00">
+    <meta property="article:modified_time" content="2025-11-21T13:29:34+08:00">
+    <meta property="article:tag" content="CSC3200">
+
+  <meta itemprop="name" content="💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)">
+  <meta itemprop="description" content="CSC3200 at CUHKSZ: linked lists, stacks, queues, maps, and sets.">
+  <meta itemprop="datePublished" content="2025-11-21T13:29:34+08:00">
+  <meta itemprop="dateModified" content="2025-11-21T13:29:34+08:00">
+  <meta itemprop="wordCount" content="5671">
+  <meta itemprop="keywords" content="CSC3200">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)">
+  <meta name="twitter:description" content="CSC3200 at CUHKSZ: linked lists, stacks, queues, maps, and sets.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/hm.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-11-21T13:29:34+08:00">November 21, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="c-data-structures-linear-linked-lists-stacks-queues-maps-and-sets">C++ Data Structures (Linear): Linked Lists, Stacks, Queues, Maps, and Sets</h1>
+</br>
+<p><strong>Arrays</strong>, <strong>vectors</strong>, and <strong>linked lists</strong> are among the more elementary C++ data structures and can be implemented rather directly from scratch. <strong>Trees</strong> and <strong>maps</strong>, by contrast, are more complex structures already supported in the standard library.</p>
+<p><strong>Stacks</strong> and <strong>queues</strong> are restricted-operation abstractions of linear tables (LIFO / FIFO), and can be implemented either with arrays or linked lists. A <strong>set</strong> may be implemented using several different foundational data structures.</p>
+<p>Arrays were already explained earlier, so this post first emphasizes <strong>linear data structures</strong>. In the latter part we turn to the nonlinear structures of trees, graphs, and heaps.</p>
+</br>
+</br>
+<h1 id="i-linked-lists-array-vs-linked-list-and-pointer-manipulation">I. Linked Lists: “Array vs. Linked List” and Pointer Manipulation</h1>
+</br>
+<h2 id="abstract-definition">Abstract Definition</h2>
+<p>A <strong>singly linked list</strong> consists of <strong>discrete</strong> memory blocks connected in one direction by <strong>pointers</strong>: <strong>each node stores a pointer to the next node</strong>.</p>
+<p><img src="https://i.postimg.cc/G3vPxpMw/LLdrawio.png" alt=""></p>
+<ul>
+<li><strong>Goal</strong>: store a sequence of data while supporting <strong>insertion</strong> and <strong>deletion</strong> more easily than arrays do, at the cost of traversal-based access.</li>
+<li><strong>Arrays and vectors</strong>: <strong>fast access, difficult insertion / deletion</strong>. Because they use contiguous memory, they support O(1) random access, but middle insertion or deletion requires shifting elements and dynamic resizing is less direct.</li>
+<li><strong>Linked lists</strong>: <strong>fast insertion / deletion, slow access</strong>. Each node is allocated separately and chained by <code>next</code>, so memory is non-contiguous. Insertion or deletion only changes pointers, often in O(1), but random access becomes O(n).</li>
+</ul>
+</br>
+</br>
+<h2 id="core-code-template">Core Code Template</h2>
+<p>Node and list-body structure:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span> {  <span style="color:#75715e">// node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T element;  <span style="color:#75715e">// data member: stores data of any type
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Node <span style="color:#f92672">*</span>next;  <span style="color:#75715e">// data member: pointer to another node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    Node(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> e <span style="color:#f92672">=</span> T(), Node <span style="color:#f92672">*</span>n <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>)  <span style="color:#75715e">// class constructor
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// the node stores `element` and a pointer `next` to the next node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">:</span> element(e), next(n) {}  
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// initialize the members; for example: new Node&lt;int&gt;(5, nullptr)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">List</span> {  <span style="color:#75715e">// list body
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>dummyHead;  <span style="color:#75715e">// dummy head node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    List() {  <span style="color:#75715e">// default constructor
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        dummyHead <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(T(), <span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> zeroth() { <span style="color:#66d9ef">return</span> dummyHead; }
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> first()  { <span style="color:#66d9ef">return</span> dummyHead<span style="color:#f92672">-&gt;</span>next; }  <span style="color:#75715e">// pointers access members through -&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> first() <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>; }  <span style="color:#75715e">// determine whether the list is empty
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><p><strong>Advantages of using a dummy head</strong>:</p>
+<ul>
+<li><code>dummyHead</code> is a <code>Node&lt;T&gt;</code> instance serving as the formal head of the list. Its data field is <code>T()</code> (typically an empty / zero-like value), and its pointer is initially null.</li>
+<li>It guarantees that a newly created list <strong>always has a head node</strong>, even when the actual list is empty, so later code can consistently rely on <code>dummyHead</code>.</li>
+<li>To test whether the list is empty, one only needs to check <code>dummyHead-&gt;next == nullptr</code>.</li>
+</ul>
+</br>
+<p>Review points:</p>
+<ul>
+<li><code>Node&lt;T&gt; *nPtr = new Node&lt;T&gt;(...)</code> does <strong>not</strong> mean <code>Node&lt;T&gt;</code> is a pointer class; it means we create an instance and immediately store its pointer in <code>nPtr</code>.</li>
+<li>For pointer basics: if <code>T *ptr = &amp;a</code>, then <code>*ptr</code> behaves like <code>a</code>, while <code>&amp;a</code> behaves like <code>ptr</code>.</li>
+<li><code>ptr-&gt;member</code> is equivalent to <code>(*ptr).member</code>, and <strong>pointers access member variables and methods through <code>-&gt;</code></strong>.</li>
+<li><strong>Template classes</strong> let the same code work with different data types:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// 或写 class T，等价
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>T add(T a, T b) { <span style="color:#66d9ef">return</span> a <span style="color:#f92672">+</span> b; }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> x <span style="color:#f92672">=</span> add(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);  <span style="color:#75715e">// 类型自动推导 -&gt; add&lt;int&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> y <span style="color:#f92672">=</span> add<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2.5</span>);  <span style="color:#75715e">// 显式指明模板实参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 以及在模板类外，调用模板：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Stack</span> { <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span>); };  <span style="color:#75715e">// 类内成员函数不需重申 template
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// 在类外的成员函数必须再写一次 template
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> Stack<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>push(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) { <span style="color:#75715e">/*...*/</span> }
+</span></span></code></pre></div></br>
+</br>
+<h2 id="typical-member-functions">Typical Member Functions</h2>
+<h3 id="insert-data-after-node-p">Insert <code>data</code> after node <code>p</code></h3>
+<p><img src="https://i.postimg.cc/j5pwmBh9/jie-ping2025-11-21-14-43-49.png" alt=""></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>insert(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> data, Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> p) {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// p 是老节点的内存位置（插在哪）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> newNode <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(data, p<span style="color:#f92672">-&gt;</span>next);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 此刻 新节点的 next 被初始化为“插入前 p 的 next 指针的原本值”。如果新节点插在 p、q 间，那么 newNode-&gt;next 指向 q；如果 p 后原本没有节点，就指向 nullptr
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> newNode;  <span style="color:#75715e">// 将老节点的 next 改指向这个新节点，完成插入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>The basic linked-list structure is as follows (in practice, nodes are usually passed around directly by pointer, so <code>&amp;</code> is not written everywhere):</p>
+<p><code>&lt;head&gt; DH(null, &amp;N1)→N1(e1, &amp;N2)→N2(e2, nullptr) &lt;tail&gt;</code></p>
+<p>Note:</p>
+<ol>
+<li>The “create node” and “redirect pointer” steps cannot be reversed, or the chain will break. However, they can be <strong>combined</strong> into <code>p-&gt;next = new Node&lt;T&gt;(data, p-&gt;next);</code>. This works because assignment has lower precedence, so the right-hand side is evaluated first and still sees the old <code>p-&gt;next</code>.</li>
+<li><code>dummyHead</code> itself can also be used with this insertion function.</li>
+<li>One must ensure that <code>p != nullptr</code> and that <code>p</code> truly belongs to this list.</li>
+<li>Since the implementation uses raw pointers plus <code>new</code>, do not forget to traverse and <code>delete</code> every node in the list <strong>destructor</strong>.</li>
+</ol>
+</br>
+<h3 id="find-the-node-pointer-whose-value-is-data">Find the node (pointer) whose value is <code>data</code></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>find(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> data) {
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> p <span style="color:#f92672">=</span> first();  <span style="color:#75715e">// 指向 dummyHead 后的第一个实节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (p) {  <span style="color:#75715e">// 遍历，直到 nullptr (等价于 false) 断开
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (p<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">==</span> data) <span style="color:#66d9ef">return</span> p;
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;  <span style="color:#75715e">// 改指向下一个节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>;  <span style="color:#75715e">// 没找到
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div></br>
+<h3 id="delete-the-node-with-value-data-by-first-finding-its-predecessor">Delete the node with value <code>data</code> by first finding its <strong>predecessor</strong></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>findPrevious(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> data) {  <span style="color:#75715e">// 找前一项才能得到指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> p <span style="color:#f92672">=</span> zeroth();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (p<span style="color:#f92672">-&gt;</span>next) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (p<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">==</span> data) <span style="color:#66d9ef">return</span> p;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// “当前项指向下一项的指针”访问下一项的数据，符合就传回这个“指向下一项的指针”
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        p <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;::</span>remove(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> data) {
+</span></span><span style="display:flex;"><span>    Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> p <span style="color:#f92672">=</span> findPrevious(data);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (p) {  <span style="color:#75715e">// 之前没找到 data 就不会删任何东西，因为指针为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;*</span> tmp <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;  <span style="color:#75715e">// 指向 data 再后面一项
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        p<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>next;  <span style="color:#75715e">// 前一项跳过 data 指向再后面一项
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">delete</span> tmp;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Note: strictly speaking, we are not “deleting the value itself”; we are reconnecting neighboring pointers and removing that node from the chain.</p>
+<p>One should also implement:</p>
+<ul>
+<li>destructor <code>~List()</code>: delete all nodes starting from <code>zeroth()</code></li>
+<li>copy constructor and assignment operator: perform a <strong>deep copy</strong> of each node rather than copying pointers only</li>
+</ul>
+</br>
+</br>
+<h2 id="complexity-compared-with-arrays">Complexity Compared with Arrays</h2>
+<p>Arrays:</p>
+<ul>
+<li>Access <code>a[i]</code>: O(1)</li>
+<li>Insert/delete at the head: O(n) (because everything must be shifted)</li>
+</ul>
+<p>Singly linked list:</p>
+<ul>
+<li>Sequentially access the kth element: O(k)</li>
+<li>Given a pointer <code>p</code>, insertion / deletion after <code>p</code>: O(1)</li>
+</ul>
+<p>A classic exam question is: <strong>when should one use an array, and when a linked list?</strong></p>
+<ul>
+<li>Need lots of random access → array / vector</li>
+<li>Frequent middle insertion / deletion and uncertain length → linked list</li>
+</ul>
+</br>
+</br>
+<h2 id="things-to-watch-for">Things to watch for</h2>
+<ol>
+<li>In insertion / deletion, <strong>connect before disconnecting</strong> or <strong>connect before deleting</strong>, otherwise the chain may be lost.</li>
+<li>The difference between a version <strong>with a dummy head</strong> and one without.</li>
+<li><strong>Deep copy / destructor</strong>: avoid memory leaks and shallow-copy problems.</li>
+</ol>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="ii-stack-lifo-array-version-and-linked-list-version">II. Stack: LIFO, Array Version, and Linked-List Version</h1>
+</br>
+<h2 id="abstract-definition-1">Abstract Definition</h2>
+<ul>
+<li>Interface: <code>push(x)</code>, <code>pop()</code>, <code>peek()</code>, <code>isEmpty()</code></li>
+<li>Property: last-in, first-out (LIFO). It behaves like a pile of cards: the last one placed on top is the first one removed. Operations occur at one end only (the top), and all basic operations are O(1).</li>
+</ul>
+</br>
+</br>
+<h2 id="stack-class-template">Stack Class Template</h2>
+<ul>
+<li>Header file form:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Stack</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Stack();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x);
+</span></span><span style="display:flex;"><span>    T<span style="color:#f92672">&amp;</span> pop();   <span style="color:#75715e">// 删除并返回栈顶
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    T<span style="color:#f92672">&amp;</span> peak();  <span style="color:#75715e">// 只读栈顶
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div></br>
+</br>
+<h2 id="array-implementation-sequential-stack">Array Implementation (Sequential Stack)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> MAX_STACK <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>;  <span style="color:#75715e">// 固定容量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Stack</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T items[MAX_STACK];  <span style="color:#75715e">// “数组”栈
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> top;  <span style="color:#75715e">// top == 当前占用位数 == 下次插入位置(当前栈顶以上一项)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Stack() <span style="color:#f92672">:</span> top(<span style="color:#ae81ff">0</span>) {}  <span style="color:#75715e">// 初始化：top=0，数组为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> top <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (top <span style="color:#f92672">&gt;=</span> MAX_STACK)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> StackException(<span style="color:#e6db74">&#34;stack full&#34;</span>);
+</span></span><span style="display:flex;"><span>        items[top<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> x;  <span style="color:#75715e">// 先写入，再把 top 加 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    T<span style="color:#f92672">&amp;</span> pop() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> StackException(<span style="color:#e6db74">&#34;stack empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> items[<span style="color:#f92672">--</span>top];
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 先将 top-1 ，然后返回这个值(顶项值)。下一次push 会占用 top-1，盖掉这个原本的值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> peek() {  <span style="color:#75715e">// 不能改变栈
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (isEmpty())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> StackException(<span style="color:#e6db74">&#34;stack empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> items[top <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>];  <span style="color:#75715e">// 返回顶项指
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>The array-based stack has the following structure from bottom to top:</p>
+<p><code>&lt;bottom&gt; [i_0, i_1, ..., i_n] &lt;top&gt;,   top = n+1</code></p>
+<ul>
+<li>Limitation: <strong>capacity is fixed</strong>, so overflow is possible; this can be improved by using a dynamic array such as <code>std::vector</code> (or manually resizing <code>new T[capacity]</code>).</li>
+<li>Recall: <code>++x</code> increments before use, while <code>x++</code> uses the old value before incrementing.</li>
+</ul>
+</br>
+</br>
+<h2 id="linked-list-implementation-linked-stack">Linked-List Implementation (Linked Stack)</h2>
+<p>Required members: a pointer <code>topPtr</code> to the stack top, and <code>next</code> pointers that point to older nodes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StackNode</span> {  <span style="color:#75715e">// 节点类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T item;
+</span></span><span style="display:flex;"><span>    StackNode <span style="color:#f92672">*</span>next;
+</span></span><span style="display:flex;"><span>    StackNode(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> e <span style="color:#f92672">=</span> T(), StackNode<span style="color:#f92672">*</span> n <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">:</span> item(e), next(n) {}
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Stack</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    StackNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>topPtr;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Stack() <span style="color:#f92672">:</span> topPtr(<span style="color:#66d9ef">nullptr</span>) {}  <span style="color:#75715e">// 初始化：topPtr指向空，链表为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> topPtr <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">auto</span> <span style="color:#f92672">*</span>newPtr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StackNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(x, topPtr);  <span style="color:#75715e">// 自动推导指针类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        topPtr <span style="color:#f92672">=</span> newPtr;  <span style="color:#75715e">// 下一个节点会指向现在的节点：后进先出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> peek() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty()) <span style="color:#66d9ef">throw</span> StackException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> topPtr<span style="color:#f92672">-&gt;</span>item;
+</span></span><span style="display:flex;"><span>    } 
+</span></span><span style="display:flex;"><span>    T<span style="color:#f92672">&amp;</span> pop() {
+</span></span><span style="display:flex;"><span>        T<span style="color:#f92672">&amp;</span> stackTop <span style="color:#f92672">=</span> T();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>isEmpty()) {
+</span></span><span style="display:flex;"><span>	        stackTop <span style="color:#f92672">=</span> topPtr<span style="color:#f92672">-&gt;</span>item;
+</span></span><span style="display:flex;"><span>	        StackNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>tmp <span style="color:#f92672">=</span> topPtr;
+</span></span><span style="display:flex;"><span>	        topPtr <span style="color:#f92672">=</span> topPtr<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>	        <span style="color:#66d9ef">delete</span> tmp;  <span style="color:#75715e">// 将顶项的指针移出了链表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    }
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> stackTop;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><ul>
+<li>
+<p>A linked stack is like a reversed linked list: the <code>next</code> pointer points toward older nodes. From bottom to top, the structure looks as follows (<code>N</code> denotes a <code>StackNode</code>):</p>
+<p><code>&lt;bottom&gt; N1(nullptr, i1)←N2(&amp;N1, i2)←N3(&amp;N2, i3)←N4(&amp;N3, i4)←...</code></p>
+</li>
+</ul>
+<p><img src="https://i.postimg.cc/dQGRj0Ww/jie-ping2025-11-21-13-44-51.png" alt=""></p>
+</br>
+</br>
+<h2 id="things-to-watch-for-1">Things to watch for</h2>
+<p>Typical uses of stacks:</p>
+<ul>
+<li><strong>Parenthesis / HTML-tag matching</strong>, and <strong>expression evaluation</strong> (operator stacks and operand stacks).</li>
+<li><strong>Backtracking</strong> algorithms (Sudoku, permutations, state rollback in path search).
+In short, stacks are natural for undo-like and rollback-like problems.</li>
+</ul>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="iii-queue-fifo-circular-array-and-linked-list-version">III. Queue: FIFO, Circular Array, and Linked-List Version</h1>
+</br>
+<h2 id="abstract-definition-2">Abstract Definition</h2>
+<ul>
+<li>Interface: <code>enqueue(x)</code> insert at the back, <code>dequeue()</code> remove from the front, <code>getFront()</code> inspect the front, <code>isEmpty()</code> test emptiness.</li>
+<li>Property: first-in, first-out (FIFO). Like a pipe, what enters first also leaves first. It is common in waiting lines, task scheduling, and buffers. Unlike a stack, it uses both ends; like a stack, its basic operations are O(1).</li>
+</ul>
+</br>
+</br>
+<h2 id="linked-list-implementation-with-front--back-pointers">Linked-List Implementation (with <code>front</code> / <code>back</code> pointers)</h2>
+<p>Required members: pointers to the front and back nodes for insertion and removal, with <code>next</code> pointing toward newer nodes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QueueNode</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T item;
+</span></span><span style="display:flex;"><span>    QueueNode <span style="color:#f92672">*</span>next;
+</span></span><span style="display:flex;"><span>    QueueNode(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> e <span style="color:#f92672">=</span> T(), QueueNode<span style="color:#f92672">*</span> n <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">:</span> item(e), next(n) {}
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Queue</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    QueueNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>frontPtr;  <span style="color:#75715e">// 双向检索
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    QueueNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>backPtr;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Queue() <span style="color:#f92672">:</span> frontPtr(<span style="color:#66d9ef">nullptr</span>), backPtr(<span style="color:#66d9ef">nullptr</span>) {}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> frontPtr <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">enqueue</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> newPtr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QueueNode<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(x, <span style="color:#66d9ef">nullptr</span>);  <span style="color:#75715e">// 指向新节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (isEmpty()) frontPtr <span style="color:#f92672">=</span> newPtr;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> backPtr<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> newPtr;  <span style="color:#75715e">// 原本队尾的 next 指向新节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        backPtr <span style="color:#f92672">=</span> newPtr;  <span style="color:#75715e">// 队尾变成这个新节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dequeue</span>() {
+</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">if</span> (isEmpty()) <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> old <span style="color:#f92672">=</span> frontPtr;              <span style="color:#75715e">// 旧队头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    frontPtr <span style="color:#f92672">=</span> frontPtr<span style="color:#f92672">-&gt;</span>next;         <span style="color:#75715e">// 前移指针，将旧队头移出队列范围
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>frontPtr) backPtr <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;  <span style="color:#75715e">// 若队列被删空，把尾指针也置空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	    <span style="color:#66d9ef">delete</span> old;                        <span style="color:#75715e">// 释放旧队头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">getFront</span>(T<span style="color:#f92672">&amp;</span> x) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty()) <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">=</span> frontPtr<span style="color:#f92672">-&gt;</span>item;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><ul>
+<li>
+<p>All basic operations are O(1), much like a stack.</p>
+</li>
+<li>
+<p>Unlike a linked stack, a linked queue is a forward linked list: the <code>next</code> pointer points toward newer nodes (toward the tail). From head to tail the structure looks like this (<code>N</code> denotes a <code>QueueNode</code>):</p>
+<p><code>&lt;head&gt; N1(&amp;N2, i1)→N2(&amp;N3, i2)→N3(&amp;N4, i3)→N4(nullptr, i4) &lt;tail&gt;</code></p>
+</li>
+</ul>
+<p><img src="https://i.postimg.cc/zDTwFfd5/jie-ping2025-11-21-13-46-05.png" alt=""></p>
+</br>
+</br>
+<h2 id="circular-array-implementation-sequential-queue">Circular-Array Implementation (Sequential Queue)</h2>
+<p>The idea is to connect the two ends of a finite array into a ring. Then, even though capacity is fixed, deletion at the front no longer requires shifting all elements; once an index runs out of range, it simply wraps back to <code>0</code> (the start of the array). The <strong>front position is therefore not fixed</strong>.</p>
+<p><img src="https://i.postimg.cc/xd4r551N/jie-ping2025-11-21-13-53-10.png" alt=""></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> MAX_QUEUE <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Queue</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    T items[MAX_QUEUE];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> front;  <span style="color:#75715e">// 队头下标，注意不一定是 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> back;   <span style="color:#75715e">// 队尾下标
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> count;  <span style="color:#75715e">// 当前元素数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    Queue() <span style="color:#f92672">:</span> front(<span style="color:#ae81ff">0</span>), back(MAX_QUEUE<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), count(<span style="color:#ae81ff">0</span>) {}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isEmpty</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> count <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">enqueue</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (count <span style="color:#f92672">==</span> MAX_QUEUE) <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;full&#34;</span>);
+</span></span><span style="display:flex;"><span>        back <span style="color:#f92672">=</span> (back <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> MAX_QUEUE;  <span style="color:#75715e">// *核心逻辑*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// back 一旦超出 MAX_QUEUE 就从 0 开始回填，保证索引不溢出 (上一行的 throw Exception 确保这种“回填”绝对不会覆盖掉 front，因为超出 MAX_QUEUE 了)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        items[back] <span style="color:#f92672">=</span> x;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">++</span>count;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dequeue</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        front <span style="color:#f92672">=</span> (front <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> MAX_QUEUE;  <span style="color:#75715e">// 同理，防止索引向负数溢出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">--</span>count;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    T<span style="color:#f92672">&amp;</span> getFront() <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isEmpty())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> QueueException(<span style="color:#e6db74">&#34;empty&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> items[front];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Note: in an array of length 1000, valid indices run from 0 to 999. After <code>dequeue</code>, the former first element is simply outside the queue range, not physically moved away. To prevent overflow when <code>enqueue</code> reaches 1000, modular arithmetic with <code>MAX_QUEUE</code> creates a <strong>circular array</strong>, so <code>1000 ≡ 0</code>, <code>1001 ≡ 1</code>, and so on. This avoids shifting all elements forward after each <code>dequeue</code>, which is why <code>back</code> may very well appear before <code>front</code>.</p>
+</br>
+</br>
+<h2 id="things-to-watch-for-2">Things to watch for</h2>
+<ol>
+<li><strong>Circular-array index update formula</strong>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>   back <span style="color:#f92672">=</span> (back <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> MAX_QUEUE; <span style="color:#f92672">++</span>count;    <span style="color:#75715e">//  enqueue 扩容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   front <span style="color:#f92672">=</span> (front <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> MAX_QUEUE; <span style="color:#f92672">--</span>count;  <span style="color:#75715e">// dequeue 减容
+</span></span></span></code></pre></div><ol start="2">
+<li>
+<p>Comparing linked-list queues and array queues:</p>
+<p>Linked lists do not require fixed capacity.</p>
+<p>Array implementations must distinguish “full” from “empty,” but usually have smaller constant factors.</p>
+</li>
+<li>
+<p>Queues are commonly used in operating-system task queues, network-packet buffers, print queues, and similar settings.</p>
+</li>
+</ol>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="iv-maps-keyvalue-pairs-hash-functions-and-buckets">IV. Maps: Key–Value Pairs, Hash Functions, and Buckets</h1>
+</br>
+<h2 id="abstract-definition-3">Abstract Definition</h2>
+<ul>
+<li>A map (dictionary-like structure) maintains a set of <code>(key, value)</code> pairs. It resembles a mathematical mapping relation between two sets, though it <strong>does not have to be bijective</strong> (i.e. it need not be a perfect one-to-one correspondence).</li>
+<li>Typical operations: <code>operator[]</code> (can both insert and search), <code>put(key, value)</code> (insert or update), <code>get(key)</code> (find the value by key), <code>containsKey(key)</code>, <code>remove(key)</code>, <code>size()</code>, and <code>isEmpty()</code>.</li>
+</ul>
+<p>The standard C++ library already provides two implementations:</p>
+<ul>
+<li><code>std::map&lt;K,V&gt;</code>: based on a balanced BST (red-black tree), ordered, O(log n).</li>
+<li><code>std::unordered_map&lt;K,V&gt;</code>: based on a hash table, unordered, average O(1).</li>
+</ul>
+</br>
+</br>
+<h2 id="vector-dynamic-array-implementation-linear-search--binary-search">Vector (Dynamic Array) Implementation: Linear Search / Binary Search</h2>
+<p>A simple way to implement a <code>string → string</code> mapping dictionary:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">KeyValuePair</span> {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string key;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string value;  <span style="color:#75715e">// 键值对 {key, value}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StringMap</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    StringMap() {}
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">~</span>StringMap() {}
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 构造/析构都没自定义逻辑，vector 类会自己管理元素生命周期
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>string get(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> key) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> findKey(key);  <span style="color:#75715e">// 见 private 域，获取索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> (index <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">:</span> bindings[index].value;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 找不到则返回空字符串
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">put</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> key, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> findKey(key);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (index <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {  <span style="color:#75715e">//  如果当前不存在这个 key
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            KeyValuePair kv{key, value};
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 这是一个在第一行声明的键值对实例，被打包塞进 bindings
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            bindings.push_back(kv);  <span style="color:#75715e">// vector 类的成员方法（插入）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            bindings[index].value <span style="color:#f92672">=</span> value;  <span style="color:#75715e">// 存在就覆盖原本的值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>KeyValuePair<span style="color:#f92672">&gt;</span> bindings;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 用动态数组 bindings 存储键值对 {key, value}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findKey</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> k) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> (<span style="color:#66d9ef">int</span>)bindings.size(); <span style="color:#f92672">++</span>i)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (bindings[i].key <span style="color:#f92672">==</span> k) <span style="color:#66d9ef">return</span> i;  <span style="color:#75715e">// 遍历返回对应索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// 找不到，返回异常状态码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><ul>
+<li>
+<p><code>std::vector</code> is essentially a dynamic array: use <code>.size()</code> for the current size, <code>.push_back(e)</code> to append an element, and <code>.value</code> / <code>.key</code> to access the stored value or key.</p>
+</li>
+<li>
+<p>Structure of the <code>bindings</code> dynamic array:</p>
+<p><code>std::vector [{key1, value1}, {key2, value2}, ... , {key-value pair}]</code></p>
+</li>
+<li>
+<p>This implementation is <strong>not surjective</strong> in the mathematical sense, because <code>key</code> values may not repeat, so one key cannot map to multiple values. If <code>put()</code> is called with an existing key, it overwrites the old value.</p>
+</li>
+<li>
+<p>This implementation <strong>can still be injective</strong> only in the loose everyday sense that different keys may share the same value (<strong>values may repeat</strong>).</p>
+</li>
+<li>
+<p>Search and insertion are both O(n), so this is very inefficient and used only for demonstration.</p>
+</li>
+<li>
+<p>Recall: the code above uses the <strong>ternary operator</strong> for case-based handling.</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> (index <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">:</span> bindings[index].value;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 核心结构：&lt;cond ? expr1 : expr2&gt;，逻辑：cond 真就传回 expr1；假就传回 expr2
+</span></span></span></code></pre></div></br>
+</br>
+<h2 id="hash-table-unordered_map-implementation">Hash-Table (<code>unordered_map</code>) Implementation</h2>
+<p>A hash table is the standard-library method that implements a map through a <strong>hash function</strong>.</p>
+<p>Key idea:</p>
+<ol>
+<li>The core is the <strong>hash function <code>hashCode(key)</code></strong>: map a key to a nonnegative integer; then take modulo to obtain the bucket index, i.e. <code>index = hashCode(key) % nBuckets;</code>. If the hash function is poor, the table degenerates.</li>
+<li><strong>Buckets</strong>: an array whose slots each represent a bucket, typically along with a pointer to the first node in that bucket.</li>
+<li><strong>Linked list / chain</strong>: each node stores <code>{key, value, next}</code>; nodes in the same bucket are connected via <code>next</code>.</li>
+<li>Each bucket stores a <strong>linked list</strong> (or vector-like chain) to resolve <strong>collisions</strong> through separate chaining.</li>
+</ol>
+<p>Three components of a hash table:</p>
+<ol>
+<li>A hash function <code>hashCode(key)</code>: map the key into an integer that is <strong>as collision-free as possible</strong>.</li>
+<li>A bucket array: a fixed-length array of size <code>B</code>, where each slot is a “bucket.”</li>
+<li><strong>Collision handling</strong>: what to do when two different keys are mapped to the same bucket. <code>unordered_map</code> uses <strong>separate chaining</strong>, so each bucket stores a small linked structure.</li>
+</ol>
+</br>
+<p>Private fields of a hash table:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StringMap</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Cell</span> {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>string key;
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>string value;  <span style="color:#75715e">// 键值对
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Cell <span style="color:#f92672">*</span>link;  <span style="color:#75715e">// 链指针，指向下个键值对节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    };
+</span></span><span style="display:flex;"><span>    Cell <span style="color:#f92672">**</span>buckets;  <span style="color:#75715e">// 指向桶数组
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> nBuckets;    <span style="color:#75715e">// 桶个数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> count;       <span style="color:#75715e">// 已存 key 数量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Cell<span style="color:#f92672">*</span> <span style="color:#a6e22e">findCell</span>(<span style="color:#66d9ef">int</span> bucket, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> key);
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>The hash-table structure is roughly as follows:</p>
+<pre tabindex="0"><code>桶数组 → (键, 值,  next指针)
+[0]   →  (&#34;AR&#34;, &#34;5&#34;, ptr) → (&#34;AK&#34;, ... ) → null
+[1]   →  (&#34;AL&#34;, ... ) → null
+[2]   →  null
+...
+[nBuckets]   →  (&#34;NV&#34;, ... ) → ...
+</code></pre></br>
+</br>
+<h2 id="instantiating-stdunordered_map">Instantiating <code>std::unordered_map</code></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unordered_map&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>unordered_map<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> m;  <span style="color:#75715e">// 实例化“字符串→整数”哈希表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m.reserve(<span style="color:#ae81ff">1024</span>);              <span style="color:#75715e">// 预留 1024 个键值对，减少 rehash 频率
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m.max_load_factor(<span style="color:#ae81ff">0.7f</span>);      <span style="color:#75715e">// 限制装载因子，限制桶内链表长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    m.emplace(<span style="color:#e6db74">&#34;alice&#34;</span>, <span style="color:#ae81ff">1</span>);   <span style="color:#75715e">// 等价于 insert({k, v})，不会覆盖存在的键值对
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    m[<span style="color:#e6db74">&#34;bob&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;  <span style="color:#75715e">// 这是操作符：operator[](k) = v，会覆盖存在的键值对
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">auto</span> it <span style="color:#f92672">=</span> m.find(<span style="color:#e6db74">&#34;alice&#34;</span>); it <span style="color:#f92672">!=</span> m.end())
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> it<span style="color:#f92672">-&gt;</span>first <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; -&gt; &#34;</span> <span style="color:#f92672">&lt;&lt;</span> it<span style="color:#f92672">-&gt;</span>second <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>size_t bc <span style="color:#f92672">=</span> m.bucket_count();
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>size_t b  <span style="color:#f92672">=</span> m.bucket(<span style="color:#e6db74">&#34;alice&#34;</span>);  <span style="color:#75715e">// &#34;alice&#34; 键被哈希函数放到了哪个桶？
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;bucket_count=&#34;</span> <span style="color:#f92672">&lt;&lt;</span> bc
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;, bucket(alice)=&#34;</span> <span style="color:#f92672">&lt;&lt;</span> b
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;, bucket_size=&#34;</span> <span style="color:#f92672">&lt;&lt;</span> m.bucket_size(b) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Hash-table key-value structure: <code>unordered_map&lt;first, second&gt;</code></p>
+<p>Bucket size and rehashing:</p>
+<ul>
+<li><code>.size()</code> gives the total number of key-value pairs across all buckets; <code>.bucket_size(i)</code> gives the number inside bucket <code>i</code>; <code>.bucket_count()</code> gives the total number of buckets; <code>.reserve(e)</code> reserves room for about <code>e</code> entries.</li>
+<li>The load factor is $\frac{.size()}{.bucket_count()}$, meaning <strong>the average number of key-value pairs per bucket</strong>. <code>.max_load_factor()</code> sets its upper bound; once the table grows too dense, a <strong>rehash</strong> is triggered, expanding the bucket array and redistributing all keys.
+<strong>Whether inserting or searching, one first uses the hash function to determine which bucket the object should belong to.</strong>
+Inserting items:</li>
+<li>Without overwriting: <code>emplace(k, v)</code> or <code>insert({k, v})</code></li>
+<li>With overwriting: use <code>operator[](k) = v</code>, for example <code>map[k] = v</code></li>
+<li>To search for an item: <code>.find(k)</code> searches by key in average O(1). If found, it returns an iterator to that element; otherwise it equals <code>.end()</code>.</li>
+</ul>
+</br>
+</br>
+<h2 id="comparing-map-implementations">Comparing Map Implementations</h2>
+<ol>
+<li><strong>Balanced BST (<code>std::map</code>)</strong>: (we discuss concrete operations later)
+<ul>
+<li>Ordered (can be traversed in increasing key order)</li>
+<li>Operation complexity: O(log n)</li>
+</ul>
+</li>
+<li><strong>Hash table (<code>std::unordered_map</code>)</strong>:
+<ul>
+<li>Unordered; iteration order is unstable</li>
+<li>Average O(1), worst-case O(n) (when the load factor grows too high and many collisions appear)</li>
+<li>The key issues are hash-function quality and load-factor control</li>
+</ul>
+</li>
+<li>A teaching-oriented implementation using <strong>vector + linear / binary search</strong>:
+<ul>
+<li>Ordinary performance (O(n))</li>
+</ul>
+</li>
+</ol>
+</br>
+</br>
+<h2 id="things-to-watch-for-3">Things to watch for</h2>
+<ol>
+<li>
+<p><strong>Understand the structure of a hash table</strong>:</p>
+<p>The hash function maps a key to an integer bucket index → assign a bucket → place the item into the chain / structure inside that bucket.</p>
+<p>Why are collisions unavoidable? Because imperfect hash functions and a finite number of buckets force different keys to map to the same bucket.</p>
+</li>
+<li>
+<p><strong>Load factor and rehash</strong>:</p>
+<p>Why does performance degrade when the load factor grows? Because bucket chains become longer, causing lookup and insertion to deteriorate.</p>
+<p>The cost of rehashing and its amortized complexity</p>
+</li>
+</ol>
+</br>
+<hr>
+</br>
+</br>
+<h1 id="v-sets-set-operations-and-implementations">V. Sets: Set Operations and Implementations</h1>
+</br>
+<h2 id="abstract-definition-4">Abstract Definition</h2>
+<p>A set is an unordered, non-repeating enumerative data structure. If the same data is inserted into an array <code>A</code> and a set <code>S</code>, the difference reveals the total number of duplicates.</p>
+<p><code>A.size() - S.size()</code></p>
+<p>Set interfaces:</p>
+<ul>
+<li><code>add(x)</code> / <code>insert(x)</code>: add an element; <code>remove(x)</code>: delete an element; <code>contains(x)</code>: test membership;</li>
+<li>and mathematical operations such as ∪ (union), ∩ (intersection), and − (difference).</li>
+</ul>
+</br>
+</br>
+<h2 id="comparing-four-implementation-strategies">Comparing Four Implementation Strategies</h2>
+<p>You mainly need to master the “linked-set” implementation.</p>
+</br>
+<h3 id="1-pointer--linked-list-implementation">1. Pointer / Linked-List Implementation</h3>
+<ul>
+<li>This is similar to a linked list: one may use a dummy head, let each node represent one element, find the predecessor first, and then remove the following node by changing its <code>next</code> pointer. The difference is that <strong>before insertion one must call <code>contains()</code> to avoid duplicates.</strong></li>
+<li>Time complexity: search, insertion, and deletion are average O(1).
+The following shows a head-insertion implementation of <code>contains()</code> + <code>insert()</code>:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// 对于 Node {T val; Node* next;}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">contains</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">auto</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> dummyHead<span style="color:#f92672">-&gt;</span>next; p; p<span style="color:#f92672">=</span>p<span style="color:#f92672">-&gt;</span>next) {  <span style="color:#75715e">// head 代表占位空节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	        <span style="color:#66d9ef">if</span>(p<span style="color:#f92672">-&gt;</span>val<span style="color:#f92672">==</span>x) <span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>	    }
+</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">return</span> false;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> x) {<span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>contains(x)) dummyHead<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(x, dummyHead<span style="color:#f92672">-&gt;</span>next);}  <span style="color:#75715e">// 先查重
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 先将 head-&gt;next 赋给 new Node，然后把 new Node 的指针赋给 head-&gt;next
+</span></span></span></code></pre></div><p>The structure of such a “linked set” from the head looks like this:</p>
+<p><code>DH(null, &amp;N1) → &lt;insertion position&gt; → N1(v1, &amp;N2) → N2(v2, nullptr)</code></p>
+<p><strong>Advantages</strong>: simple foundational implementation; good enough for <strong>very small</strong> sets (tens of elements); useful for duplicate checking.</p>
+<p><strong>Disadvantages</strong>: high time complexity, slow lookup, pointer overhead, and poor cache friendliness.</p>
+</br>
+<h3 id="2-bst-implementation-stdset-in-the-standard-library">2. BST Implementation (<code>std::set</code> in the standard library):</h3>
+<ul>
+<li>In C++, BST-based sets are generally implemented as <strong>red-black trees</strong>.</li>
+<li>The key operations <code>insert</code> / <code>erase</code> / <code>find</code> are O(log n) on average and in the worst case.</li>
+<li>Supports <strong>ordered traversal</strong> (inorder traversal). We explain the concrete implementation later in the tree section.</li>
+</ul>
+</br>
+<h3 id="3-hash-based-implementation-stdunordered_set">3. Hash-Based Implementation (<code>std::unordered_set</code>):</h3>
+<p>A <strong>hash set</strong> is the standard-library method of implementing a set with a <strong>hash function</strong>.</p>
+<ul>
+<li>A hash function maps keys to buckets; collisions inside a bucket are handled with chains or equivalent bucket structures. Average insertion / deletion / lookup is O(1), with worst-case O(n) if the load factor grows too high and hashing degenerates.</li>
+<li>No ordering is guaranteed; performance depends on a good hash function and rehashing to control the load factor.
+Below is an example of instantiating a hash set to <strong>store points</strong>:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unordered_set&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Point</span> { <span style="color:#66d9ef">int</span> x,y; };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">PointHash</span> {  <span style="color:#75715e">// 哈希函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    size_t <span style="color:#a6e22e">operator</span>()(<span style="color:#66d9ef">const</span> Point<span style="color:#f92672">&amp;</span> p) <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">noexcept</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 把 x,y 混合成一个 64 位数，也就是把 Point 映射成 size_t
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> std<span style="color:#f92672">::</span>hash<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span><span style="color:#f92672">&gt;</span>()(( (<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span>)p.x<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">32</span> ) <span style="color:#f92672">^</span> (<span style="color:#66d9ef">unsigned</span>)p.y);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">PointEq</span> {  <span style="color:#75715e">// 相等比较函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">operator</span>()(<span style="color:#66d9ef">const</span> Point<span style="color:#f92672">&amp;</span> a, <span style="color:#66d9ef">const</span> Point<span style="color:#f92672">&amp;</span> b) <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">noexcept</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> a.x<span style="color:#f92672">==</span>b.x <span style="color:#f92672">&amp;&amp;</span> a.y<span style="color:#f92672">==</span>b.y;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>unordered_set<span style="color:#f92672">&lt;</span>Point, PointHash, PointEq<span style="color:#f92672">&gt;</span> us;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// unordered_set 要求进入其中的类型传入”元素、哈希函数、比较相等函数“
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>us.reserve(<span style="color:#ae81ff">1024</span>);  <span style="color:#75715e">// 预留 1024 个点位，减少 rehash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>us.insert(Point{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>});
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> has <span style="color:#f92672">=</span> us.find(Point{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>}) <span style="color:#f92672">!=</span> us.end();  
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 判断找到的指针不等于空，返回 true
+</span></span></span></code></pre></div><p>A hash set needs three components:</p>
+<ol>
+<li>A custom stored element type</li>
+<li>A good hash function</li>
+<li>A way to test whether two elements are equal</li>
+</ol>
+<p><strong>Advantages</strong>: in most scenarios, this gives the <strong>fastest membership query</strong>; it is ideal when ordering does not matter.</p>
+<p><strong>Disadvantages</strong>: unordered; sensitive to hash-function quality; rehashing invalidates iterators; memory fragmentation may occur.</p>
+<p><strong>When to choose it</strong>: mainly when the dataset is large and the primary task is fast <strong>membership testing</strong>, not ordering.</p>
+</br>
+<h3 id="4-bit-vector-sets-stdbitset-and-set-operations">4. Bit-Vector Sets (<code>std::bitset</code>) and Set Operations:</h3>
+<ul>
+<li>When the element universe is <strong>finite and indexable</strong> (for example ASCII characters or small-range integers), one can use <strong>1 bit per element</strong> to indicate membership: 1 means present, 0 means absent. The full row of bits is called a <strong>characteristic vector</strong> or <strong>bit vector</strong>. Then set operations reduce to <strong>integer bitwise operations</strong> — union: <code>A | B</code>, intersection: <code>A &amp; B</code>, difference: <code>A &amp; ~B</code>. This is extremely fast for small integers and character sets. Note that <strong>bitwise reading proceeds from right to left</strong>.</li>
+</ul>
+<p><img src="https://i.postimg.cc/vmLhHHpV/jie-ping2025-11-21-14-08-12.png" alt=""></p>
+<ul>
+<li>
+<p>Single-element operations are O(1); bulk union / intersection / difference take <strong>O(n / word_size)</strong>.</p>
+<p>Below is an example of instantiating a bit-vector set for set operations, using <code>std::bitset&lt;N&gt;</code> over <code>[0, N-1]</code>:</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bitset&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span>bitset<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1000</span><span style="color:#f92672">&gt;</span> A, B;  <span style="color:#75715e">// std::bitset 不可以在之后运算时扩容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>A.set(<span style="color:#ae81ff">3</span>); A.set(<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> has3 <span style="color:#f92672">=</span> A.test(<span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>A.reset(<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> C <span style="color:#f92672">=</span> A <span style="color:#f92672">&amp;</span> B;        <span style="color:#75715e">// 交集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> D <span style="color:#f92672">=</span> A <span style="color:#f92672">|</span> B;        <span style="color:#75715e">// 并集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> E <span style="color:#f92672">=</span> A <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>B;       <span style="color:#75715e">// 差集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> F <span style="color:#f92672">=</span> A <span style="color:#f92672">^</span> B         <span style="color:#75715e">// 异或
+</span></span></span></code></pre></div><p>Bit operations:</p>
+<ul>
+<li>Set to 1: <code>.set(index)</code> changes bit <code>index</code> to 1, thereby <strong>including</strong> that element; without arguments it sets the whole set to 1.</li>
+<li>Set to 0: <code>.reset(index)</code> changes bit <code>index</code> to 0, thereby <strong>excluding</strong> that element; without arguments it resets the whole set to 0.</li>
+<li>Index operator <code>operator[](index)</code>: <code>bitSet[index] = bin</code> assigns the <code>index</code>th bit directly.</li>
+<li>Counting 1s: <code>.count()</code> computes how many elements the set contains.</li>
+</ul>
+</br>
+<p>Below is an example of implementing a bit-vector set from scratch:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> BITS_PER_BYTE <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> BITS_PER_LONG <span style="color:#f92672">=</span> BITS_PER_BYTE <span style="color:#f92672">*</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">long</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> requiredWords <span style="color:#f92672">=</span> (RANGE_SIZE <span style="color:#f92672">+</span> BITS_PER_LONG <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> BITS_PER_LONG;  <span style="color:#75715e">// ceil(R/W) = (R+W-1)/W 是向上取整的标准形式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// requiredWords：大小为 RANGE_SIZE 的集合需要多少长整数来储存其特征向量？
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">CharacteristicVector</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> words[requiredWords];
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 定义”无符号长整数型“数组 words 及其容量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">createMask</span>(<span style="color:#66d9ef">int</span> k) {  
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//  第 k 位掩码：只有第 k 位是 1。与它进行 AND 操作会只剩下第 k “向量维度”
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>(<span style="color:#ae81ff">1</span>) <span style="color:#f92672">&lt;&lt;</span> k <span style="color:#f92672">%</span> BITS_PER_LONG;
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 强制转化 1 为长整型，然后左移 ”k 在所属 long 中的位数“，创造掩码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">testBit</span>(CharacteristicVector <span style="color:#f92672">&amp;</span> cv, <span style="color:#66d9ef">int</span> k) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> k <span style="color:#f92672">&gt;=</span> RANGE_SIZE) {
+</span></span><span style="display:flex;"><span>       error(<span style="color:#e6db74">&#34;testBit: Bit index is out of range&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> cv.words[k <span style="color:#f92672">/</span> BITS_PER_LONG] <span style="color:#f92672">&amp;</span> createMask(k);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 如果整个数组的第 k bit 为 1 就返回真
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setBit</span>(CharacteristicVector <span style="color:#f92672">&amp;</span> cv, <span style="color:#66d9ef">int</span> k) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> k <span style="color:#f92672">&gt;=</span> RANGE_SIZE) {
+</span></span><span style="display:flex;"><span>      error(<span style="color:#e6db74">&#34;setBit: Bit index is out of range&#34;</span>);
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   cv.words[k <span style="color:#f92672">/</span> BITS_PER_LONG] <span style="color:#f92672">|=</span> createMask(k);
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 将第 k bit 所在的那个 long 替换成它 OR 第 k 位掩码，也就是把它变 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearBit</span>(CharacteristicVector <span style="color:#f92672">&amp;</span> cv, <span style="color:#66d9ef">int</span> k) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> k <span style="color:#f92672">&gt;=</span> RANGE_SIZE) {
+</span></span><span style="display:flex;"><span>      error(<span style="color:#e6db74">&#34;setBit: Bit index is out of range&#34;</span>);
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   cv.words[k <span style="color:#f92672">/</span> BITS_PER_LONG] <span style="color:#f92672">&amp;=</span> <span style="color:#f92672">~</span>createMask(k);
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 将第 k bit 所在的那个 long 替换成它 AND 第 k 位掩码的否定，也就是把它变 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><ul>
+<li>The width of <code>unsigned long</code> is 32 or 64 bits depending on the machine. Recall that <code>long(...)</code> is just a cast to type <code>long</code>; it does not meaningfully apply to character strings.</li>
+<li>Recall the common integer formulas for ceiling and floor:</li>
+<li>The core concept here is the <strong>mask</strong>: a value used with AND to suppress irrelevant bits.</li>
+</ul>
+<p><img src="https://i.postimg.cc/nLFxLMCN/jie-ping2025-11-21-14-19-30.png" alt=""></p>
+<ul>
+<li>
+<p>In bitwise calculation, <strong>numbers are read from right to left</strong> in significance: for example, <code>long(3)</code> is <code>000...011</code>, and <code>long(3) &lt;&lt; 2</code> becomes <code>000...01100</code>; similarly, “set bit 5” means <code>long(1) &lt;&lt; 5</code>.</p>
+</li>
+<li>
+<p><code>k / BITS_PER_LONG</code> tells you <strong>which <code>long</code> contains bit <code>k</code></strong>, while <code>k % BITS_PER_LONG</code> tells you <strong>which bit position inside that <code>long</code></strong>.</p>
+</li>
+<li>
+<p>All the <code>long</code> elements in <code>words[]</code> together represent the <strong>characteristic vector of one set</strong>, and each of them contains <code>BITS_PER_LONG</code> bits of binary information.</p>
+</li>
+</ul>
+<p><strong>Advantages</strong>: <strong>extremely fast and extremely memory-efficient</strong> (1 bit per element); batch operations are efficient; well suited for <strong>character sets, dense small-integer sets</strong>, and graph-algorithm “visited” markers.</p>
+<p><strong>Disadvantages</strong>: the universe size must be <strong>known and not too large</strong>; <code>std::bitset&lt;N&gt;</code> requires <code>N</code> to be a <strong>compile-time constant</strong>; dynamic ranges require <code>vector&lt;uint64_t&gt;</code> or <code>boost::dynamic_bitset</code>.</p>
+<p><strong>When to choose it</strong>: when elements are <strong>small-range integers</strong> (for example within <code>0..10^6</code>) and many set operations are needed, or when extremely fast membership testing and batch union / intersection are required.</p>
+</br>
+</br>
+<h2 id="things-to-watch-for-4">Things to watch for</h2>
+<ol>
+<li>
+<p><strong>Understand the time complexity and ordering behavior of different implementations</strong>:</p>
+<p><code>set</code> vs <code>unordered_set</code> vs bit vectors.</p>
+</li>
+<li>
+<p>Be able to map <strong>mathematical set operations</strong> into actual code:</p>
+<p>implement union / intersection / difference through bitwise operations.</p>
+</li>
+<li>
+<p>Know why <code>bitset</code> is highly efficient for character sets and small-integer sets.</p>
+</li>
+</ol>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3200/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3200</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#c-data-structures-linear-linked-lists-stacks-queues-maps-and-sets">C++ Data Structures (Linear): Linked Lists, Stacks, Queues, Maps, and Sets</a></li>
+    <li><a href="#i-linked-lists-array-vs-linked-list-and-pointer-manipulation">I. Linked Lists: “Array vs. Linked List” and Pointer Manipulation</a>
+      <ul>
+        <li><a href="#abstract-definition">Abstract Definition</a></li>
+        <li><a href="#core-code-template">Core Code Template</a></li>
+        <li><a href="#typical-member-functions">Typical Member Functions</a>
+          <ul>
+            <li><a href="#insert-data-after-node-p">Insert <code>data</code> after node <code>p</code></a></li>
+            <li><a href="#find-the-node-pointer-whose-value-is-data">Find the node (pointer) whose value is <code>data</code></a></li>
+            <li><a href="#delete-the-node-with-value-data-by-first-finding-its-predecessor">Delete the node with value <code>data</code> by first finding its <strong>predecessor</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#complexity-compared-with-arrays">Complexity Compared with Arrays</a></li>
+        <li><a href="#things-to-watch-for">Things to watch for</a></li>
+      </ul>
+    </li>
+    <li><a href="#ii-stack-lifo-array-version-and-linked-list-version">II. Stack: LIFO, Array Version, and Linked-List Version</a>
+      <ul>
+        <li><a href="#abstract-definition-1">Abstract Definition</a></li>
+        <li><a href="#stack-class-template">Stack Class Template</a></li>
+        <li><a href="#array-implementation-sequential-stack">Array Implementation (Sequential Stack)</a></li>
+        <li><a href="#linked-list-implementation-linked-stack">Linked-List Implementation (Linked Stack)</a></li>
+        <li><a href="#things-to-watch-for-1">Things to watch for</a></li>
+      </ul>
+    </li>
+    <li><a href="#iii-queue-fifo-circular-array-and-linked-list-version">III. Queue: FIFO, Circular Array, and Linked-List Version</a>
+      <ul>
+        <li><a href="#abstract-definition-2">Abstract Definition</a></li>
+        <li><a href="#linked-list-implementation-with-front--back-pointers">Linked-List Implementation (with <code>front</code> / <code>back</code> pointers)</a></li>
+        <li><a href="#circular-array-implementation-sequential-queue">Circular-Array Implementation (Sequential Queue)</a></li>
+        <li><a href="#things-to-watch-for-2">Things to watch for</a></li>
+      </ul>
+    </li>
+    <li><a href="#iv-maps-keyvalue-pairs-hash-functions-and-buckets">IV. Maps: Key–Value Pairs, Hash Functions, and Buckets</a>
+      <ul>
+        <li><a href="#abstract-definition-3">Abstract Definition</a></li>
+        <li><a href="#vector-dynamic-array-implementation-linear-search--binary-search">Vector (Dynamic Array) Implementation: Linear Search / Binary Search</a></li>
+        <li><a href="#hash-table-unordered_map-implementation">Hash-Table (<code>unordered_map</code>) Implementation</a></li>
+        <li><a href="#instantiating-stdunordered_map">Instantiating <code>std::unordered_map</code></a></li>
+        <li><a href="#comparing-map-implementations">Comparing Map Implementations</a></li>
+        <li><a href="#things-to-watch-for-3">Things to watch for</a></li>
+      </ul>
+    </li>
+    <li><a href="#v-sets-set-operations-and-implementations">V. Sets: Set Operations and Implementations</a>
+      <ul>
+        <li><a href="#abstract-definition-4">Abstract Definition</a></li>
+        <li><a href="#comparing-four-implementation-strategies">Comparing Four Implementation Strategies</a>
+          <ul>
+            <li><a href="#1-pointer--linked-list-implementation">1. Pointer / Linked-List Implementation</a></li>
+            <li><a href="#2-bst-implementation-stdset-in-the-standard-library">2. BST Implementation (<code>std::set</code> in the standard library):</a></li>
+            <li><a href="#3-hash-based-implementation-stdunordered_set">3. Hash-Based Implementation (<code>std::unordered_set</code>):</a></li>
+            <li><a href="#4-bit-vector-sets-stdbitset-and-set-operations">4. Bit-Vector Sets (<code>std::bitset</code>) and Set Operations:</a></li>
+          </ul>
+        </li>
+        <li><a href="#things-to-watch-for-4">Things to watch for</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.f1/">💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.2/">💻 CSC3200 LEC3-5 Intermediate C&#43;&#43;</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.1/">💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

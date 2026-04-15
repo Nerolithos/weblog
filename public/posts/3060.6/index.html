@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 10-11 Memory Hierarchy | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/3060.6/">
+    <meta property="og:url" content="http://localhost:1313/posts/3060.6/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 10-11 Memory Hierarchy">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-02T10:11:34+08:00">
+    <meta property="article:modified_time" content="2026-04-02T10:11:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 10-11 Memory Hierarchy">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理">
+  <meta itemprop="datePublished" content="2026-04-02T10:11:34+08:00">
+  <meta itemprop="dateModified" content="2026-04-02T10:11:34+08:00">
+  <meta itemprop="wordCount" content="9994">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 10-11 Memory Hierarchy">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30606.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 10-11 Memory Hierarchy</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 10-11 Memory Hierarchy</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-04-02T10:11:34+08:00">April 2, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"></br>
+<h1 id="week-1011--memory-hierarchy">Week 10~11  Memory Hierarchy</h1>
+<blockquote>
+<p>记忆阶层出现的原因是主存和 CPU 的 <strong>memory wall (内存墙)</strong> 卡死了 CPU 算力。在记忆阶层中越高活动越频，每一级是下一级的缓存，CPU 寄存器处于最高级。利用 <strong>locality (局部性)</strong> 营造一种 “内存既大又快还便宜” 的假象。</p>
+</blockquote>
+</br>
+<h1 id="随机存储寄存器-ram">随机存储寄存器 RAM</h1>
+<p>“随机”：<strong>强调存取数据所花的时间与目标数据所在 RAM 中物理位置无关</strong>。而磁盘磁带使用 SAM，必须从头读到尾才能找到特定数据 (顺序存取)，效率极低。</p>
+<ul>
+<li>
+<p><strong>DRAM = Dynamic RAM (动态随机存储器)</strong>：<strong>1 capacitor + 1 transistor per bit</strong>。使用<strong>电容</strong>的 “满/空” 表示二进制 bit，电容会漏电，所以必须<strong>周期性刷新 (refresh)</strong>。以 2D 阵列形式储存，地址划分为行 (RAS) 和列 (CAS)，称为 &ldquo;<strong>2-halves</strong>&quot;。代表应用是主存，<u>慢、便宜、规模大</u>。主存是 CPU 外，<strong>临时</strong>的存储模块。电脑的文件未使用时都在磁盘里，只有使用时会缓存到主存。</p>
+</li>
+<li>
+<p><strong>SRAM = Static RAM (静态随机储存器)</strong>：<strong>6 or 8 transistors + 2 resistor per bit</strong>。使用 <strong>flip-flop circuit</strong>  的电阻<strong>双稳态</strong>表示二进制 bit。如果不断电数据会永远存在。代表应用是 CPU 缓存和寄存器，<u>快、昂贵、规模小</u>。</p>
+</li>
+<li>
+<p>DRAM 受电容技术限制，SRAM 受半导体技术限制，两者都已逼近其发展极限。而处理器还在发展。</p>
+</li>
+</ul>
+<blockquote>
+<p>SRAM 以 100 倍的成本换 10 倍更快的访存。</p>
+</blockquote>
+</br>
+<h2 id="dram">DRAM</h2>
+<p>DRAM 像二维矩阵一样，通过 <strong>RAS（row access strobe）</strong> 先选一行，再通过 <strong>CAS（column access strobe）</strong> 选一列，数据先到 row buffer，再送出去。</p>
+<p><strong>d x w DRAM</strong> 是一种传统 DRAM 结构组织方式，表示总数为 d·w 的位 (bits) 被组织为 d 个<strong>超单元 (supercells)</strong>，每个超单元的大小为 w bits。w 即一次能够读取或写入的位数 (数据宽度)，常为 <strong>1B</strong>。</p>
+<ul>
+<li>这种主存的地址口宽度由 <strong>BIN (√w -1)</strong> (即最大地址) 的宽度决定；数据口宽度为 <strong>w</strong>。</li>
+<li>访存时，1、先输入 RAS 选行，并将对应整行复制到 <strong>row buffer</strong>；2、再用 CAS 选列，从 row buffer 复制出对应超单元进入数据线到 CPU 主控；3、最后所有数据写回行，刷新。</li>
+</ul>
+<p><strong>Memory Modules</strong> 是当代 DRAM 常用结构，比如 64 MB 记忆体含有 8 个 8Mx8 DRAMs，用同个行列的超单元拼出完整的 64 位信息。</p>
+<ul>
+<li><strong>DDR SDRAM</strong> (双倍数据速率同步动态随机存取存储器) 统治当代市场，其它非常规 DRAM 延迟相同，带宽可能更高。</li>
+<li><strong>NV Memory</strong> (闪存) 不属于 DRAM，在<strong>断电后不失去记忆</strong>，属于 EEPROM (电消除只读记忆体)，常见于 USB。</li>
+<li><strong>SAM</strong> 用于磁盘的长期存储。</li>
+</ul>
+<p><img src="https://i.postimg.cc/XvRSzj4t/jie-ping2026-03-26-08-09-22.png" alt=""></p>
+<p><code>lw</code>：CPU 主控把地址 A 放到 memory bus；主存读这个地址，找到对应字 x；主存把 x 放到总线上；CPU 主控从总线把 x 读进寄存器。</p>
+<p><code>sw</code>：CPU 主控把地址 A 放总线上；主存准备接收数据；CPU 再把要写的数据 y 从寄存器复制到总线上；主存把 y 写进地址 A。</p>
+</br>
+<h2 id="内存墙">内存墙</h2>
+<blockquote>
+<p>CPU 效率的提升快于 DRAM 和 SSD 技术发展，之间的延迟也在变宽。在摩尔定律生效的年代 (80s~<strong>2003</strong>)，这个鸿沟以 50% 每年的速率拓宽。<strong>2003 年前是延迟差变大，之后则变为性能差变大。</strong></p>
+</blockquote>
+<p>内存墙两大因素：1、“Latency” 内存在物理上很远，时间鸿沟逐年变大；2、“Bandwidth” 内存/总线带宽不足。</p>
+<p>解决思路：</p>
+<blockquote>
+<p>最早的解决方案：<strong>Latency hiding 比如多线程</strong> (IBM 360/91) or <strong>Latency Reduction 比如 cache</strong> (IBM 360/85)，后者更便宜，更影响后代机器。</p>
+</blockquote>
+<ul>
+<li>
+<p>Explicit (“显存”)：<strong>Local Memory</strong>：线程独享的内存资源，应对寄存器不足。</p>
+</li>
+<li>
+<p>Implicit (“隐存”)：<strong>Cache and Memory Hierarchy</strong>：高层放少量常用数据，底层放大量程序数据——“<strong>Large, Cheap, but also Fast</strong>” 的假象。</p>
+</li>
+</ul>
+<p><img src="https://i.postimg.cc/3wV1jWYG/jie-ping2026-03-26-08-49-11.png" alt=""></p>
+<ul>
+<li>回顾：<strong>V-Extention</strong> 使用的向量寄存器 (V Regs) 可以用于 1. <strong>SIMD</strong> (单指令多数据批量操作) 实现 <strong>DLP</strong> (数据级并行)；2. 矩阵计算，比如图像处理。</li>
+</ul>
+<p>寄存器与主存的关系由编译器/程序员控制；缓存到主存由硬件控制；主存到磁盘由硬件和 OS 控制；磁盘到磁带由硬件和程序员控制。</p>
+</br>
+<h2 id="cache-definations">Cache Definations</h2>
+<blockquote>
+<p>&ldquo;$&rdquo; 谐音梗…</p>
+</blockquote>
+<ul>
+<li>
+<p>广义上，缓存作为一种 “功能” 不仅是 L1, L2, L3 三级专用 Cache，<strong>Cache 不等价于 SRAM</strong>。</p>
+</li>
+<li>
+<p><strong>block / line</strong>：缓存的传输单位叫<strong>内存块</strong>或<strong>缓存行</strong>。一个 line 里通常有多个 word。cache miss 时，不是只搬一个 word，而是把整个 block 从下一级搬上来。</p>
+</li>
+<li>
+<p><strong>hit / miss</strong>：如果要访问的数据已经在 cache 里就是 <strong>hit</strong> 否则就 <strong>miss</strong>。相关量：</p>
+</li>
+<li>
+<p><strong>hit ratio</strong> = hits / accesses</p>
+</li>
+<li>
+<p><strong>miss ratio</strong> = 1 - hit ratio</p>
+</li>
+<li>
+<p><strong>miss penalty</strong> = miss 额外花的时间</p>
+</li>
+<li>
+<p><strong>hit time</strong> = 命中时访问 cache 的时间</p>
+</li>
+</ul>
+<blockquote>
+<p>Hit time &laquo; Miss penalty —— 这也是为什么即使 miss rate 只有几个百分点，也会严重拖慢性能。</p>
+</blockquote>
+<p>回顾：缓存有效的原因——用两个局部性猜 CPU 要用什么：</p>
+<ol>
+<li>Temporal Locality：访问 A 后的一段时间很可能再次访问 A</li>
+<li>Spatial Locality：访问 A 后，其邻居，如 A-1、A+1 都很可能被访问</li>
+</ol>
+<h4 id="缓存设计的四大问题">缓存设计的四大问题：</h4>
+<p>Q1. Where can a block be placed?</p>
+<p>Q2. How is a block found?</p>
+<p>Q3. Which block should be replaced on a miss?</p>
+<p>Q4. What happens on a write?</p>
+</br> 
+</br>
+<h1 id="cache-design">Cache Design</h1>
+<h2 id="where-can-a-block-be-placed">Where can a block be placed?</h2>
+<p><strong>Associativity</strong>：</p>
+<ul>
+<li><strong>set</strong> 记录了某个主存块被允许放进去的那一组 Cache line。⚠️ 通过 <strong><code>(block No.) mod #set</code></strong> 决定每条主存块能被映射到哪个 set 中。</li>
+<li><strong>way</strong> 代表每个 set 有多少 line(s)，即每个主存块映射到 Cache 有多少候选放法。</li>
+</ul>
+<p><strong>Fully associative (全相联) cache</strong>：<strong>1-set</strong>。任意内存块可以映射到 cache 的任意 line。优点：Hit 率高，冲突少；缺点：查找贵 (tag 大)，硬件复杂、慢、贵。</p>
+<p><strong>Direct-mapped (直接映射) cache</strong>：<strong>1-way/set，N-sets</strong>。每个内存块<strong>只能映射到唯一的 line</strong> (<strong>1-to-1 Hashmap</strong>)。优点：结构简单，查找快，成本低；缺点：容易发生 <strong>conflict miss</strong>。</p>
+</br> 
+<h2 id="how-is-a-block-found">How is a block found?</h2>
+<ul>
+<li>
+<p>Cache 一定比主存小，我们把主存地址拆除高位 (Tag) 和低位 (Index)，Index 位数与缓存行个数的二进制位宽相等。⚠️ 哈希冲突时不同主存块要可以辨别，所以缓存中要存 Tag。</p>
+</li>
+<li>
+<p>此外，还要预留一位 <strong>Valid bit</strong>，V=1 表示这行里有合法数据；V=0 表示这行目前是空的 / 正在从主存写入 / 无效 (<strong>cache flush</strong>)。</p>
+</li>
+</ul>
+<p>比如一个 <strong>8-block Direct-mapped Cache</strong> (1 word/block)，就有 <strong>8 sets</strong>，使用 <strong>3</strong> 位 Index。E.g. 地址为 42 的主存块的 Index = 010，Tag = 101。如果我们要访问它：</p>
+<ol>
+<li><strong>确认行，判断 hit/miss</strong>：访问第 010 行缓存，初始缓存为空所以 V=0，<strong>⚠️ compulsory miss (强制缺失)</strong>；</li>
+<li><strong>找 Tag，判断 hit/miss</strong>：找 Tag = 101 的块，找不到，miss；</li>
+<li><strong>如果 miss 从主存抄到当前 Index，设置 Tag 和 V</strong>：在 [010, 101] 写入 Mem[101010]，修改V=1；</li>
+<li>下次再访问 42 就是 hit。</li>
+<li>⚠️ 特殊的，如果访问 58 (111010)，因为 1 word/block 所以会发生 <strong>⚠️ conflict miss</strong>，用 Mem[111010] 覆盖 Mem[101010]。</li>
+</ol>
+<ul>
+<li>compulsory miss 代表第一次访问为空；conflict miss 代表两条内存被映射到同个缓存行，需要把前一条顶掉重写。</li>
+</ul>
+<h3 id="-折中方案set-associative-caches">⚠️ 折中方案：Set Associative Caches</h3>
+<blockquote>
+<p>N-way 表示每个 set 有 N 条备选 Cachelines，也表示每行缓存能容纳 N 个主存块。</p>
+</blockquote>
+<p>块先映射到某个 set，再在该 set 的若干 ways 中任选一格。相比 1-way 和 1-set 两种极端情况，N-way set associative cache 比前者冲突少，比后者便宜，所以更常见。</p>
+<ul>
+<li>因为缓存行数量是缓存大小和行宽决定的，与 associativity 无关，⚠️ 所以 <code>#way</code> 和 <code>#set</code> 之积是守恒的，所以 &ldquo;N-ways&rdquo; 中 <strong>N 越大，sets 数就越小</strong>。</li>
+</ul>
+<h3 id="地址拆分-adress-subdivision">地址拆分 Adress Subdivision</h3>
+<blockquote>
+<p>真正的缓存行含有 Data 和 Metadata (元数据) 两部分，Metadata 中除了 Valid bit 还有 Address 等等。⚠️ 16 KB 缓存不止占用 16 KB，只是实际数据有 16 KB！</p>
+</blockquote>
+<p>实际使用中，RV32I 将主存地址拆成三部分：<code>Address = Tag | Set selection | Byte offset</code>。⚠️ 其中 <strong>offset 部分的意义是从块中选取具体的 Byte</strong>。set(index), tag, offset 分别决定组、块、字节。</p>
+<p>⚠️ 计算公式 —— 设 cache size 为 C，line size 为 B，associativity 为 A (A-ways)：</p>
+<ol>
+<li>
+<p>行数 = C / B</p>
+</li>
+<li>
+<p>组数 = (C / B) / A ——⚠️ 比如 direct-mapped 行数和组数相等</p>
+</li>
+<li>
+<p>⚠️ <strong>每行实际数据 bits = B × 8</strong></p>
+</li>
+<li>
+<p><strong>set bits (index) = log<sub>2</sub>(#sets)</strong> ——⚠️ 比如 <strong>fully-associative</strong> 是 1-set 就<strong>没有 set bits</strong>；<strong>direct-mapped</strong> 的 <strong>set bits 最多</strong>。</p>
+</li>
+<li>
+<p><strong>offset bits = log<sub>2</sub>B</strong>，比如 64B line 的 offset 为 6b</p>
+</li>
+<li>
+<p><strong>tag bits</strong> = 32 - set bits - offset bits ——⚠️ 从 tag 的额外开销：<strong>direct-mapped 最省，fully associative 最贵</strong>。</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>为什么 associativity 越高，set bits 越少</strong>？因为在 cache 容量不变时：总 line 数固定，一个 set 里 way 越多，set 的个数就越少。</p>
+</blockquote>
+<p><img src="https://i.postimg.cc/RFrqWwK3/jie-ping2026-03-26-12-07-09.png" alt=""></p>
+<h3 id="block-size-trade-off">Block size trade-off</h3>
+<blockquote>
+<p>cache block (line) 更大理应有更小的 miss rate：如果每次 miss 时搬更多数据进 cache，通常会让后续访问更容易 hit。</p>
+</blockquote>
+<p>原因：1. 更大程度上运用 <strong>spatial locality</strong>；2. <strong>降低 tag cost</strong> (Cache 不变时 block 数量变少)</p>
+<p>⚠️ block 越大不必越好：</p>
+<ul>
+<li>block 少也意味着同时存储不同区块的能力下降，互相挤占空间导致 <strong>time locality</strong> 下降；</li>
+<li>过大的空间局部性导致 <strong>cache pollution</strong>，或者导致 bus 上传输消耗多个周期 (<strong>Transfer overhead</strong>)；</li>
+<li>以上 miss rate 弱点可能反而抵消优点。</li>
+</ul>
+<p>两条 block 的折中/平衡技巧建议：</p>
+<ol>
+<li>50K 以下的小缓存不适合大型 block，32～64 最好；50K 以上的大缓存喜欢大型 block，可以用 128~256 的 block。“<strong>小 Cache 需要平衡，大 Cache 喜欢大 block</strong>”。</li>
+<li>虽然大 block 传输慢，但 <strong>Early restart</strong> 和 <strong>Critical-word-first</strong> 等技巧可以减少“CPU 真正等待的时间”。(先传/用最紧迫的 miss 部分，其它在后台继续传)</li>
+</ol>
+</br> 
+<h2 id="hit-and-miss-read-and-write">Hit and Miss, Read and Write</h2>
+<p>miss 分为 read / write。</p>
+<h3 id="cache-read">Cache read</h3>
+<ol>
+<li>
+<p><strong>Read hit</strong> (要读的在 cache 里)：CPU 继续执行</p>
+</li>
+<li>
+<p><strong>Read miss</strong> (不在 cache 里) 分为两种：I-cache miss 要重新取指，D-cache miss 影响数据读写。基本方案：<strong>blocking cache</strong> (Stall pipeline 然后从下一层取 block)</p>
+</li>
+</ol>
+<h3 id="cache-write">Cache write</h3>
+<ol>
+<li>
+<p><strong>Write hit</strong> (⚠️ 要写的<strong>地址对应的 block</strong> 在 cache 中) 方案：</p>
+<ul>
+<li>
+<p><strong>Write-through</strong> (直写)：同时写回缓存和主存。优点：主存永远比较新，不怕 cache 出问题后丢更新；缺点：<strong>memory traffic 增大</strong>，总线和 DRAM 压力大，WB 阶段被拉长 (如果基础 CPI 为 <strong>1</strong>,10% 的指令是 <strong>100</strong> 延迟的写主存，实际 CPI 就变成 1 + 0.1×100 = <strong>11</strong>)。</p>
+<p>解决方案：**write buffer **—— 把待写内容放进缓冲区，CPU 继续执行，后台 Memory Controller 写主存。WB 本质就是 <strong>FIFO queue</strong>，通常只需 <strong>4</strong> 位。</p>
+<p>WB 不过是缓冲问题而非解决问题：<strong>Store frequency &gt; 1 / DRAM write cycle</strong> (CPU 产生写请求的速度可能比 DRAM 吞吐还快，导致 WB 越积越多，一旦 WB 饱和，CPU 还是得 stall)</p>
+<p><strong>coalescing</strong> (将指向相邻或相同 block 的写请求合并处理) 可以一定程度上缓解 Memory Traffic-Jam。但是还是 Write-back 更受欢迎。</p>
+<p><img src="https://i.postimg.cc/Kc3fpP96/jie-ping2026-03-31-09-00-26.png" alt=""></p>
+</li>
+<li>
+<p><strong>Write-back</strong> (回写)：只写缓存，当替换发生时再写回。</p>
+<p>需要 <strong>1-bit</strong> 的修改记录 (<strong>dirty bit</strong>)，属于 block metadata 部分：0 表示这行和主存一致，1 表示这行已经被改但主存里还是旧值。当脏行被替换，才需要写回主存。“脏行写回” 也可以用 **write buffer **—— 把待写内容放进缓冲区，Cache 先替换 block。</p>
+<p>⚠️ 回写的目的是主存和缓存总有一处有所需值就行，两者可以不一致。如果另一个处理器/核同时要读同个数据，就需要 <strong>cache coherence (一致性协议)</strong>，比如 MESI。</p>
+<p>优点：WB 阶段的延迟低、Throughput 提升 (流水线友好)、<strong>Low Memory Traffic</strong> (多处理器友好)；</p>
+<p>缺点：Cache 故障有丢失数据的风险，需要 <strong>ECC</strong> (Error Correcting Code)，常为 8bits / 64 <strong>data</strong> bits。导致回写成本较大：</p>
+<blockquote>
+<p>一个 direct-mapped 16KB (block 宽 64B) 的 RV32 缓存有：256 lines，512b 实际数据，log<sub>2</sub>64 = 6b offset，log<sub>2</sub>256 = 8b index，32 - 6 - 8 = 18b tag，1b validity，1b Dirty，512 / 64 x 8 = 64b ECC。统共 512+18+1+1+64 = <strong>596 b/line</strong>，整个 Cache 占 <strong>152576 bits</strong>，相比 16KB (131072 bits) 大了不少。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Write miss</strong> (要写的<strong>地址对应的 block</strong> 不在 cache 中) 方案：</p>
+<ul>
+<li>
+<p><strong>Write-allocate (fetch-on-write)</strong> 天然对应 Write-back：先从下一层把 block 读进来，再写。适用于局部变量更新, 数组元素更新——现在写完<strong>之后很可能马上再读/再写它</strong>。初始开销大，但复用好；</p>
+</li>
+<li>
+<p><strong>No-write-allocate</strong> 对应 Write-through：默认 <strong>bypass</strong> (不把 miss block 拉进 cache)。适用于 strcpy(), memset(), memcpy(), initialization of arrays——<strong>顺序大批量写</strong>但写完不太会马上再读。初始开销小，但复用性差。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>⚠️ 现代 cache 的常用组合是 <strong>write-back + write-allocate</strong> 而不是 write-through + no-write / write-allocate。</p>
+<h3 id="non-blocking-read-miss">Non-blocking read miss</h3>
+<blockquote>
+<p>Stall-on-Use (Non-blocking miss) <strong>vs</strong> Stall-on-Miss (Blocking miss)</p>
+</blockquote>
+<p>如果不想 miss 不把 cache 完全锁死，需要 Miss Status Holding Register (<strong>MSHR</strong>) 登记 miss 的事务，<strong>相当于给 miss 加上缓冲</strong>。<strong>MSHR file</strong> 的每一项有：Block Address、Target Information、V (valid)</p>
+<p>优点：</p>
+<ul>
+<li>
+<p>两个典型能力层级: Hit-under-miss (miss 时继续处理 hit) 和 Miss-under-miss (miss 时跟踪别的 miss)；</p>
+</li>
+<li>
+<p>“<strong>Lockup-free caches</strong>” 支持 <strong>MLP</strong> (Memory Level Parallelism)，同时并行地等待 / 处理多个内存访问。</p>
+</li>
+</ul>
+<h3 id="i-cache-miss">I-cache miss</h3>
+<p>第一步：把原始 PC (⚠️ 当前的 PC − 4) 发给 memory；</p>
+<p>第二步：让主存 / 下一级 cache 去读整个 ⚠️ <strong>Instruction</strong> block；</p>
+<p>第三步：把取回来的 block 写进 I-cache，<strong>Data</strong> 填入取回来的指令 block，<strong>Tag</strong> 填入地址高位，<strong>Valid bit</strong>改为有效；</p>
+<p>第四步：重新开始取指。</p>
+<blockquote>
+<p>预先取指 (prefetching) 是减少 I-chache miss 常用的优化 (optimization) 手段。但是程序未来会执行哪段代码并不总是容易预测。<strong>硬件 instruction prefetch</strong> 很常见，软件显式 I-cache prefetch 相对少见。</p>
+</blockquote>
+</br> 
+<h2 id="memory-support">Memory Support</h2>
+<p>如何增大主存带宽以减小 miss-rate？</p>
+<p><img src="https://i.postimg.cc/v81hJ9v7/jie-ping2026-03-31-11-44-07.png" alt=""></p>
+<p>方案一：普通组织 (全局宽度一致)，BUS 也为 32b，传输缓慢。</p>
+<p>方案二：加宽数据通路。理论上把 bus 变宽很好，但工程代价大——Pin limitation (集成电路不能无限制增加引脚)、Signal integrity challenge (干扰/时序偏差)、Design nightmare (死亡走线导致设计和制造方过劳死)。</p>
+<p>⚠️ 方案三：交叉储存，不把总线和单个 memory 做得特别宽，把内存拆成多个 bank，连续地址可以分散到不同 bank 上，并行工作 (MLP)。这是最优解。</p>
+</br> 
+</br> 
+<h1 id="cache-performance">Cache Performance</h1>
+<h2 id="cpu-time-with-cache">CPU time with cache</h2>
+<p>CPU time 由两部分组成：正常执行时间 + memory stall 时间：</p>
+<ol>
+<li>
+<p><code>CPU time = (Program execution cycles + memory stall cycles) × clock cycle time</code></p>
+</li>
+<li>
+<p><code>Actual CPI = Base CPI + I-cache stall + D-cache stall</code></p>
+</li>
+</ol>
+<ul>
+<li>
+<p><strong>Program execution cycles</strong> 包括 <strong>cache hit time</strong>；</p>
+</li>
+<li>
+<p><strong>Memory stall cycles</strong> 主要由 <strong>cache miss</strong> 导致，其 penalty 是导致 CPI 变大的主要因素。</p>
+<p><code>Memory stall cycles = (Memory accesses / Program instructions) × Miss rate × Miss penalty</code></p>
+</li>
+</ul>
+<h3 id="例题">例题</h3>
+<p>已知一段程序：I-cache miss rate = <strong>2%</strong>, D-cache <strong>4%</strong>；Miss penalty = <strong>100 cycles</strong>；Base CPI (ideal cache) = <strong>2</strong>；Load &amp; stores 占比 <strong>36%</strong>，其实际 CPI 为？</p>
+<ul>
+<li>IF 每次都需要访存，所以指令延迟 <code>0.02 x 100 = 2</code>；只有 36% 指令用 DMEM，所以数据延迟 <code>0.36 x 0.04 x 100 = 1.44</code>。实际 CPI 为 理论值加上 memory stall：<code>2 + 2 + 1.44 = 5.44</code>，被拖慢了 2.72 倍。</li>
+</ul>
+<blockquote>
+<p><strong>如果 CPI 异常高，很多时候不是算术单元慢，而是 memory stall。</strong></p>
+</blockquote>
+</br> 
+<h2 id="amat">AMAT</h2>
+<blockquote>
+<p><strong>AMAT = Average Memory Access Time</strong> (平均内存访问时间)。CPI 关心整个程序：<strong>每条指令平均花多少周期</strong>，AMAT 只关心访存：<strong>每次访存平均花多少时间</strong>，单位为 <strong>cycles/access</strong>。</p>
+</blockquote>
+<ul>
+<li>
+<p>⚠️ <code>D-Cache AMAT = Hit time + Miss rate × Miss penalty</code> —— 所以 AMAT 不能只看 miss rate，<strong>hit time 也会影响平均访问时间</strong>)</p>
+</li>
+<li>
+<p>⚠️ <code>Overall AMAT = %instr × I-cache AMAT + %data × D-Cache AMAT</code> (%inst 代表访问指令占总访存的比例) —— 一般 <strong>%instr &gt; %data</strong>，但使用 <strong>V</strong>-Extention (SIMD/Vector) 处理 L&amp;S 的程序可能 <strong>%instr &lt; %data</strong>。</p>
+</li>
+</ul>
+</br> 
+<h2 id="提升缓存性能">提升缓存性能</h2>
+<p>显然，根据 AMAT 的构成，我们可以通过：降低 Hit time、降低 miss rate 或者降低 miss penalty 来提升缓存性能。</p>
+<h3 id="1-lower-hit-latency">1. Lower Hit Latency</h3>
+<p>CPU 去 cache 里查数据时，尽量少花时间。例如：小规模 cache、预测 way、<strong>虚拟地址缓存 / VIPT</strong>、低 associativity、布局离 CPU 近、地址翻译和 cache lookup 并行。</p>
+</br> 
+<h3 id="2-decrease-conflict-miss">2. Decrease Conflict Miss</h3>
+<p><strong>Cache Miss —— 4C&rsquo;s</strong></p>
+<ol>
+<li>Compulsory/cold miss：第一次访问某个行，必须要从主存搬到缓存。</li>
+<li>Conflict/collision miss：set 大小 (associativity) 不足以支撑多个行映射到同组。</li>
+<li>Capacity miss：缓存本身的行数大小不足以支撑需要存储的内存行数。</li>
+<li>Coherency miss：在多处理器中为了保持缓存数据一致性，由其他处理器发出的 invalidation requests 导致。</li>
+</ol>
+<blockquote>
+<p>Conflict miss 就是 ⚠️ <strong>相同 set bits</strong> 的主存行相邻被访问，但 ways 数不足安排进内存，只能挤掉前序记录。</p>
+</blockquote>
+<h4 id="方案一bigger-associativity">方案一：Bigger Associativity</h4>
+<p>出现大量 conflict miss 不仅仅需要考虑扩大缓存，更要考虑增大 Associativity 并重设计算法。</p>
+<blockquote>
+<p>高 Associativity 会导致复杂的 MUX 设计、更多比较器和更长的 hit latency，但也<strong>越能减少 conflict miss</strong>。⚠️ <strong>2-way set associative</strong> 比较平衡。而 <strong>4-way 也很常用，是 &ldquo;Associativity sweet-spot&rdquo;</strong>。</p>
+</blockquote>
+<ul>
+<li>
+<p>Fully associative：主存块随意放、访问时全表并行搜索——需要 <strong>1 comparator / line</strong>，灵活但是昂贵且慢。</p>
+</li>
+<li>
+<p>N-way set associative：⚠️通过 modulo 映射到 set： <strong><code>set No. = (block No.) % (#sets)</code></strong> (放哪里由 block 序号决定)、只需在 set 中找——需要 <strong>N comparators</strong>，是灵活性和成本的折中。</p>
+</li>
+<li>
+<p>⚠️ <strong>associativity ↑ == #sets ↓</strong> (缓存总行数守恒)，index bits 随之 ↓，tag bits ↑。</p>
+</li>
+<li>
+<p>一般来说，associativity 越高，miss rate 越低,但收益会 <strong>diminishing returns (递减)</strong>—— <strong>hit latency</strong> 和成本大幅增长。</p>
+<p>一个 64KB D-cache，16-word blocks，SPEC2000 的 miss 率：1-way: <strong>10.3%</strong>、2-way: <strong>8.6%</strong>、4-way: <strong>8.3%</strong>、8-way: <strong>8.1%</strong>。</p>
+</li>
+</ul>
+<h4 id="方案二dm--victim-cache">方案二：DM + Victim Cache</h4>
+<p>对于 direct-mapped cache，⚠️ 所有 block 编号<u>相差为组数的倍数</u>的主存行都会 conflict miss；而 <strong>set-associative 通过 “给每个 set 多几个缓冲位” 来减少 conflict miss</strong>。</p>
+<p>补丁1：⚠️ <strong>Victim cache</strong> 是一个很小的 (一般 <strong>4~8</strong> 行) <strong>fully-associative</strong> 备用 cache，加在 <strong>direct-mapped 的 L1 cache</strong> 到 L2 之间，作为缓冲区保存 “刚被 L1 conflict miss 挤出去的 cache lines”。</p>
+<p>补丁 2：<strong>&ldquo;padding&rdquo;</strong>  —— 比如 64 行的缓存访问相差 1024 的连续数组可以插入 Dummy：<code>A[1024], Dummy0[8], B[1024], Dummy1[8], C[1024]</code>，防止连续 conflict。但编译器可能发现<code>Dummy[]</code> 根本没被真正使用于是自动优化掉导致失效。</p>
+<h4 id="对比两种方案2-way-sa-vs-dmvc">对比两种方案：2-way SA vs. DM+VC</h4>
+<ul>
+<li>
+<p><strong>Victim cache</strong> 特别擅长处理 “集中在少数几个地址/少数几个 set 上的、反复来回挤占” 的冲突。</p>
+<p>利用<strong>高 temporal locality (时间局部性)</strong>—— “刚被淘汰，很快又要用”。</p>
+</li>
+<li>
+<p><strong>2-way</strong> 冲突不是集中在少数几个热点地址，而是分散在全局的不同 set 上，可以适应低时间局部性。</p>
+</li>
+</ul>
+<blockquote>
+<p>在通用系统 (桌面、服务器、笔记本) 里，2-way SA 更常见；DM+VC 更偏专用/嵌入式 (embedded)/成本导向等特定场景。</p>
+</blockquote>
+<h4 id="cache-block-replacement">Cache Block Replacement</h4>
+<p>(当一个满的 set 又来挤进来一条该如何处理 conflict miss，把谁踢出去？)</p>
+<ul>
+<li>
+<p>DM 或 DM+VC 没得选，毕竟只有 1-way/set，就把原本那条顶掉重写。</p>
+</li>
+<li>
+<p>Set / Fully associative 就可以分为三种策略：Random、<strong>LRU (Least Recently Used)</strong> 或 <strong>FIFO</strong>。</p>
+<ol>
+<li>Random</li>
+<li>LRU：利用 <strong>temporal locality</strong> 替换 “最久没被用过” 的块。<strong>True-LRU</strong> 需要维护一个栈，但栈操作/硬件开销都很大；<strong>Pseudo-LRU</strong> 则比如用一个指针轮流指向各块，当访问到指针指向的块，就改指向下一块，替换时就换当前指向的块。便宜很多，但不准。</li>
+<li>FIFO：不管访问情况，只看进入缓存的顺序，依次过期。</li>
+</ol>
+<p><strong>General LRU</strong>：“记录每个缓存块的年龄”</p>
+</li>
+<li>
+<p>一个 4-block/set 的例子：每个块用一个 log<sub>2</sub>(4)=2 bit counter，记录 “多久没被访问” 的计数。某块被访问时把它的 counter 置 0，同 set 其他块的 counter 自增。Conflict miss 时就替换 counter 最大的块 (对于 4 块来说，最大值是 3)。</p>
+</li>
+</ul>
+<p>Theoretical Optimum：<strong>Belady&rsquo;s Algorithm</strong></p>
+<ul>
+<li>把未来最久之后才会再被访问的块换掉，从 <strong>hit rate</strong> 角度看是最优的。</li>
+<li>但是：1、不能实现因为无法精准预测未来；2、⚠️ 从 <strong>memory traffic / write-back 代价</strong>角度不一定最优 (dirty 概率高，要写回主存，BUS 压力变大)</li>
+</ul>
+<blockquote>
+<p>现实中，替换谁这个问题要兼顾：hit rate、clean/dirty、memory traffic、功耗 ……</p>
+</blockquote>
+<p>⚠️ <strong>FA LRU</strong> 的劣势：比如一个五个块的循环调用 (0, 1, 2, 3, 4, 0, 1 &hellip;)，如果用 4 行的 <strong>DM(+VC)</strong>，会有 <strong>60% hit</strong>；如果用 4 行的 <strong>FA+LRU</strong>，每次都恰好顶掉下个要用的块 (4 替换 0，0 替换 1,1 替换 2 &hellip;)，变成 <strong>0% hit</strong>。</p>
+</br> 
+<h3 id="3-smaller-miss-penalty">3. Smaller Miss Penalty</h3>
+<h4 id="方案一多级缓存-multilevel-caches">方案一：多级缓存 (multilevel caches)</h4>
+<ul>
+<li>
+<p>符合 <strong>Memory Hierarchy</strong>：L1 直接接在 CPU 下，最小最快；L2 作为 L1 的缓存，处理其 conflict miss，相比 L1 稍慢稍大一些；部分高性能系统还有 L3 缓存，由同核多处理器共享；再往下就是主存。</p>
+</li>
+<li>
+<p>需要保持多层缓存信息一致，多核共享、WB、dirty 写回时会触发复杂的 coherency miss。</p>
+</li>
+<li>
+<p>比如两层缓存，如果 L1 miss 但 L2 hit，L1 miss 由 L2 hit 缓冲：⚠️ <code>AMAT = L1 hit time + L1 miss rate × (L2 hit time + L2 miss rate × L2 miss penalty)</code> —— <strong>把一大部分原本 “要去主存” 的 L1 miss，截留在 L2 解决掉</strong>。</p>
+</li>
+<li>
+<p><strong>典型命中率</strong>：L1 hit rate: <strong>80–95%</strong>，L2: <strong>50–80%</strong> (注意是对 L1 miss 而言)，L3: <strong>20–40%</strong>。越往下：遇到的访问越来越“难”，所以下一级虽然更大，但面对的是更刁钻的 miss。</p>
+</li>
+</ul>
+<h4 id="比较一级和两级缓存">比较一级和两级缓存</h4>
+<p>4Ghz 的 CPU，基础 CPI=1，miss rate 为 2%，访存延迟 100ns。</p>
+<ul>
+<li>
+<p>对于 L1 一级缓存，Penalty 为 100ns/(1/4)ns = 400 cycles，实际 CPI 为 <code>1 + 2% x 400 = 9</code>；</p>
+</li>
+<li>
+<p>现在增加一层 L2，访问延迟 5ns，miss rate 20%，L1 到 L2 的 miss rate 保持 2%。实际 CPI 就是 <code>1 + 2% x (5/(1/4) + 0.2 x 400) = 3</code>；</p>
+</li>
+<li>
+<p>CPI 提升了 3 倍。</p>
+</li>
+</ul>
+<p>⚠️ 在两级缓存中，L1 和 L2 的设计目的不同：</p>
+<ul>
+<li>L1 <strong>最重要是 hit 必须快</strong>，结构可以简单，容量和 Associativity 可以小一些；<strong>Spatial locality 很重要</strong>，把相邻数据一起带进来；L1 Write Hit 时，某些实现会选择 <strong>write-through</strong> 到 L2。</li>
+<li><strong>L2 最重要是降低 miss rate</strong>，尽量不要掉到主存；<strong>L2 的 hit time 没 L1 敏感</strong>；<strong>Temporal locality 更重要</strong>；L2 更大，若每次写都同步主存会导致巨大带宽压力，所以更常见 <strong>write-back</strong> 到主存。</li>
+</ul>
+<h4 id="其他方案">其他方案</h4>
+<ol>
+<li>在上个部分的 &ldquo;Block size trade-off&rdquo; 中提过 <strong>Critical word first</strong> (miss 时，先把 CPU <strong>最急需的那个 word</strong> 取回来，不等整行) 和 <strong>Early restart</strong> (只要关键字到了，CPU 就可以先继续执行，剩下的 line 后台慢慢补完)。</li>
+<li>在上个部分提到过 &ldquo;<strong>Non-blocking read miss</strong>&quot;，用 MSHR 实现 MLP 和 miss overlap。</li>
+<li><strong>Cache prefetching</strong>：不消灭 miss，而是让 miss <strong>提前发生</strong>，&ldquo;miss penalty hiding&rdquo;。</li>
+<li><strong>Write buffer for copy-back(WB) cache</strong>：之前已经提到过，CPU 继续执行，后台慢慢写回。</li>
+<li><strong>Cache-aware code scheduling</strong>：compiler level &ldquo;miss penalty hiding&rdquo;</li>
+</ol>
+</br> 
+<h2 id="多处理器的缓存同步">多处理器的缓存同步</h2>
+<p>单核里，cache 只是 CPU 和 memory 之间的加速层。但多核里会出现<strong>同一个内存地址，可能同时在多个处理器私有的 cache 里有不同版本</strong>。</p>
+<p>Write-back 会让问题更明显；write-through 也不能自动解决，所以必须有 <strong>cache coherence protocol</strong>。</p>
+<p><img src="https://i.postimg.cc/25hRPqTf/jie-ping2026-04-06-13-54-03.png" alt=""></p>
+<h3 id="snoopy-cache-coherence-scheme">Snoopy Cache Coherence Scheme</h3>
+<blockquote>
+<p><strong>所有处理器的 cache controller 都在 “偷听 (snoop)” global BUS 上广播的 coherence 相关的事件。</strong></p>
+</blockquote>
+<ul>
+<li>如果一个处理器想写某个 line，它需要 <strong>invalidate</strong> 其他 cache 里的副本，保证只有最新版是 Valid 的。</li>
+<li>如果别的处理器要读某个 line，而当前某 cache 拥有 dirty copy 那它需要提供并分享这个资源。(cache 不只是 “消费者”，有时也会变成 “数据提供者”。)</li>
+<li>Snoop scheme 的例子：SGI Challenge, SUN Enterprise, multiprocessor PCs, etc.</li>
+</ul>
+<p><strong>Cache controller 的输入来自两边</strong> —— 不只响应本地处理器，还要响应<strong>别人通过总线广播出来的动作。</strong></p>
+<ul>
+<li>来自本地 processor 的请求：本核要 R/W 或发生 miss</li>
+<li>来自总线 / snooper 的请求与响应：别的核发出的读共享 / 写独占请求、某个块被 invalidate、某个块需要提供数据</li>
+</ul>
+<p>也就是 controller 可能会：更新状态、提供数据、发起 bus transaction (比如写独占)</p>
+<blockquote>
+<p><strong>Protocol is a distributed algorithm: cooperating state machines</strong></p>
+</blockquote>
+<ul>
+<li>系统并非一个中央大脑指挥。每个 cache controller 都有一套自己的 <strong>state machine</strong>，通过总线广播互相配合维持一致性</li>
+</ul>
+<blockquote>
+<p><strong>Granularity of coherence is a cache block</strong></p>
+</blockquote>
+<ul>
+<li>一致性按整个 cache line / block 来管理。</li>
+</ul>
+<p>⚠️ <strong>MESI Protocol</strong> 是最经典的缓存一致性四元状态机之一。</p>
+<ul>
+<li>
+<p><strong>M = Modified</strong>，表示该快只在本 cache 有，已修改过 (dirty)，主存旧。</p>
+</li>
+<li>
+<p><strong>E = Exclusive</strong>，表示该块只在本 cache 有，但没被写过所以和主存一致；写后转为 M。</p>
+</li>
+<li>
+<p><strong>S = Shared</strong>，该块可能在多个 cache 中都有副本，当前和主存一致；如果某核要写，通常得先 invalidate 别的副本。</p>
+</li>
+<li>
+<p><strong>I = Invalid</strong>，本 cache 里的这份副本被 invalidate，需要重新获取。</p>
+</li>
+<li>
+<p>比如 <code>I -(读)&gt; S -&gt; E -(写)&gt; M -&gt; I</code>。</p>
+</li>
+</ul>
+<p>⚠️ Snoopy cache protocol is not scalable** 因为它依赖 <strong>global bus</strong>。在大系统中，上百上千个核的 coherence 事件都全体广播，总线带宽和 Snoop 成本会成为瓶颈。所以 snoopy 更适合：小到中等规模的共享总线系统。</p>
+</br> 
+<h3 id="directory-based-cache-coherency">Directory Based Cache Coherency</h3>
+<p>对更大的系统，用 centralized 或 distributed <strong>directory</strong> 记录 “哪些处理器持有某个 cache line 的副本”</p>
+<ul>
+<li>不再靠 “全员广播”，而是维护一个 <strong>目录 (directory)</strong>；</li>
+<li>目录知道每个块当前处于什么状态以及哪些节点/cache 拥有它的副本。</li>
+</ul>
+<p>当某个处理器要访问块 X 时，先访问 directory 返回这个块现在在哪些节点里有副本和状态是什么；然后 directory 定向地通知相关节点做 invalidation / sharing。</p>
+<blockquote>
+<p><strong>Directory 把 “公司群通知” 变成 “相关人员私聊”。</strong></p>
+</blockquote>
+<ul>
+<li>
+<p>优点：Scalability、Reduced traffic、Flexibility (适应不同系统 / 主存框架)。</p>
+</li>
+<li>
+<p>缺点：Complexity、Potential longer latency、Directory overhead (更多内存开销)</p>
+</li>
+</ul>
+</br> 
+<h3 id="inclusiveexclusive-caches">Inclusive/Exclusive Caches</h3>
+<ul>
+<li>
+<p>Inclusive 备份副本：L1 里有，L2 也有 (L1 是 L2 的 “子集”)；被 L1 evicted 的，L2 可以继续保留；但是 <strong>L2 evict 一个块时，要反过来通知 L1，把那份也失效 —— back invalidation</strong>。</p>
+<p>Inclusive 一般可以约下层缓存 line-size 越大。</p>
+</li>
+<li>
+<p>Exclusive 分层分工：L1 有的，L2 <strong>不</strong>重复存；被 L1 evicted 的，才往 L2 放；L1 miss 但 L2 hit 时将 L2 的那一行 <strong>migrate</strong> 到 L1；都 miss 时只写到 L1。</p>
+<p>Exclusive 一般每层缓存 line-size 一样大。</p>
+</li>
+</ul>
+<p>Inclusive 的优势：更方便做多核一致性，L2 可以帮助检查和管理哪些 L1 里有这个块。所以更适合多核系统中做 cache coherence / invalidation 管理。</p>
+<p>Exclusive 的优势：容量利用率更高，Inclusive Cache 的 <strong>L2 有 25% 的空间在 “重复存 L1 的东西”</strong>。</p>
+<blockquote>
+<p>工程上，很多现代处理器更愿意牺牲一点容量效率，换取 coherence / 管理上的便利。</p>
+</blockquote>
+</br> 
+<h3 id="other-notible-facts">Other Notible Facts</h3>
+<ul>
+<li>
+<p>在高级 CPU 上，cache miss 的代价不再像“停多少拍”那么简单,尤其 <strong>Out-of-Order</strong> 处理器，会想办法把 miss penalty 藏起来。Cache miss 的实际惩罚取决于后面有没有足够多的独立工作可以填充进去，否则就要填 NOP 导致 CPI 下降。</p>
+</li>
+<li>
+<p>配合 non-blocking cache，可以让多个 miss 重叠 (MLP)。</p>
+</li>
+<li>
+<p>Cache miss 的影响取决于 program data flow：<strong>关键路径 miss</strong> 被后面一长串指令依赖所以影响很大；<strong>非关键路径 miss</strong> CPU 可以先做很多别的工作，影响就小很多。AMAT 只是近似，<strong>不是所有 miss 都一样贵。</strong></p>
+</li>
+<li>
+<p>Miss 往往不是 “独立随机事件”，而是 <strong>correlated</strong>。Brainstorm：用 <strong>ML / AI</strong> 去发现这些相关性，用于训练现代化 prefetcher 取代过去的线性 prefetch。</p>
+</li>
+<li>
+<p>算法的算术复杂度低不等于运行就一定快，<strong>locality matters</strong>，程序访问数据的局部性，往往比单纯操作次数更能决定真实性能。</p>
+<p>比如当数据规模大时，Radix sort 需要的操作数比 quicksort 少，但前者受到 cache misses 影响，运行时间并没有更快。</p>
+</li>
+<li>
+<p>再次强调，**cache 不是只存在于 CPU 的 L1/L2/L3 里，cache 是一种解决问题的思想。**比如 <strong>Akamai / CDN 是网络世界的 cache</strong>，通过 distributed stations 解决网络堵车。再比如 GPU register access 加速也可引入类似的缓存层次。</p>
+</li>
+</ul>
+</br> 
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week-1011--memory-hierarchy">Week 10~11  Memory Hierarchy</a></li>
+    <li><a href="#随机存储寄存器-ram">随机存储寄存器 RAM</a>
+      <ul>
+        <li><a href="#dram">DRAM</a></li>
+        <li><a href="#内存墙">内存墙</a></li>
+        <li><a href="#cache-definations">Cache Definations</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#cache-design">Cache Design</a>
+      <ul>
+        <li><a href="#where-can-a-block-be-placed">Where can a block be placed?</a></li>
+        <li><a href="#how-is-a-block-found">How is a block found?</a>
+          <ul>
+            <li><a href="#-折中方案set-associative-caches">⚠️ 折中方案：Set Associative Caches</a></li>
+            <li><a href="#地址拆分-adress-subdivision">地址拆分 Adress Subdivision</a></li>
+            <li><a href="#block-size-trade-off">Block size trade-off</a></li>
+          </ul>
+        </li>
+        <li><a href="#hit-and-miss-read-and-write">Hit and Miss, Read and Write</a>
+          <ul>
+            <li><a href="#cache-read">Cache read</a></li>
+            <li><a href="#cache-write">Cache write</a></li>
+            <li><a href="#non-blocking-read-miss">Non-blocking read miss</a></li>
+            <li><a href="#i-cache-miss">I-cache miss</a></li>
+          </ul>
+        </li>
+        <li><a href="#memory-support">Memory Support</a></li>
+      </ul>
+    </li>
+    <li><a href="#cache-performance">Cache Performance</a>
+      <ul>
+        <li><a href="#cpu-time-with-cache">CPU time with cache</a>
+          <ul>
+            <li><a href="#例题">例题</a></li>
+          </ul>
+        </li>
+        <li><a href="#amat">AMAT</a></li>
+        <li><a href="#提升缓存性能">提升缓存性能</a>
+          <ul>
+            <li><a href="#1-lower-hit-latency">1. Lower Hit Latency</a></li>
+            <li><a href="#2-decrease-conflict-miss">2. Decrease Conflict Miss</a></li>
+            <li><a href="#3-smaller-miss-penalty">3. Smaller Miss Penalty</a></li>
+          </ul>
+        </li>
+        <li><a href="#多处理器的缓存同步">多处理器的缓存同步</a>
+          <ul>
+            <li><a href="#snoopy-cache-coherence-scheme">Snoopy Cache Coherence Scheme</a></li>
+            <li><a href="#directory-based-cache-coherency">Directory Based Cache Coherency</a></li>
+            <li><a href="#inclusiveexclusive-caches">Inclusive/Exclusive Caches</a></li>
+            <li><a href="#other-notible-facts">Other Notible Facts</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.6/">💻 CSC3060 Week 10-11 Memory Hierarchy</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

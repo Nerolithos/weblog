@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts_ENs on Lithos&#39; Blog</title>
+    <link>http://localhost:1313/posts_en/</link>
+    <description>Recent content in Posts_ENs on Lithos&#39; Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 11 Apr 2026 20:08:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts_en/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🧪 Interactive Periodic Table</title>
+      <link>http://localhost:1313/posts_en/chemistry/</link>
+      <pubDate>Sat, 11 Apr 2026 20:08:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/chemistry/</guid>
+      <description>Interactive periodic table of elements, showing element color hue, melting and boiling point, ionization energy, electronegativity, radius, Bohr&amp;rsquo;s config, and many more.</description>
+    </item>
+    <item>
+      <title>🐈 ArkPets suspense puzzle game (final version)</title>
+      <link>http://localhost:1313/posts_en/pet/</link>
+      <pubDate>Sat, 11 Apr 2026 07:00:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/pet/</guid>
+      <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
+    </item>
+    <item>
+      <title>🎨 DDA3003 Visual Analytics of Global Energy Transition Patterns (Prototype)</title>
+      <link>http://localhost:1313/posts_en/dda3003/</link>
+      <pubDate>Wed, 08 Apr 2026 10:16:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/dda3003/</guid>
+      <description>DDA3003 Group4 Project Prototype, show global and country-wise renewable energy share on D3 globe, and cluster analysis.</description>
+    </item>
+    <item>
+      <title>🎓 CUHKSZ course AI</title>
+      <link>http://localhost:1313/posts_en/courseai/</link>
+      <pubDate>Tue, 07 Apr 2026 19:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/courseai/</guid>
+      <description>Based on the CUHKSZ couse information from Kayuan and many more open-sourse platforms, combined withthe free Qwen LLM model, I present to you CUHKSZ&amp;rsquo;s own ———— LGU courseai-2.0。</description>
+    </item>
+    <item>
+      <title>💯 CSC3060 Quiz Q&amp;A</title>
+      <link>http://localhost:1313/posts_en/3060q/</link>
+      <pubDate>Tue, 07 Apr 2026 13:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060q/</guid>
+      <description>Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.</description>
+    </item>
+    <item>
+      <title>🛠️ Getting Started with GitHub Action Bot for Repository Automation</title>
+      <link>http://localhost:1313/posts_en/gab/</link>
+      <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/gab/</guid>
+      <description>Using my &amp;lsquo;On This Day in History&amp;rsquo; project as an example, this post explains how a CS amateur/enthusiast university student can begin using GitHub Actions Bot to automate a remote repository, along with the common pitfalls.</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>
+      <link>http://localhost:1313/posts_en/3060.6/</link>
+      <pubDate>Thu, 02 Apr 2026 10:11:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.6/</guid>
+      <description>CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.</description>
+    </item>
+    <item>
+      <title>🎨 DDA3003 Midterm revision</title>
+      <link>http://localhost:1313/posts_en/3003.2/</link>
+      <pubDate>Thu, 26 Mar 2026 17:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3003.2/</guid>
+      <description>CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</title>
+      <link>http://localhost:1313/posts_en/3060.5/</link>
+      <pubDate>Tue, 17 Mar 2026 10:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.5/</guid>
+      <description>CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.</description>
+    </item>
+    <item>
+      <title>🎮 Super &#39;Emojio&#39;</title>
+      <link>http://localhost:1313/posts_en/emoji/</link>
+      <pubDate>Mon, 16 Mar 2026 14:57:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/emoji/</guid>
+      <description>Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Project: Code Scheduling</title>
+      <link>http://localhost:1313/posts_en/3060p3/</link>
+      <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060p3/</guid>
+      <description>CUHKSZ CSC3060 Project 3: instruction scheduling, DAG dependency graphs, and related topics.</description>
+    </item>
+    <item>
+      <title>🕰️ Today in History</title>
+      <link>http://localhost:1313/posts_en/history-today/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/history-today/</guid>
+      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-15)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2021&lt;/strong&gt; — A mass shooting occurred at a Fedex Ground facility in Indianapolis, Indiana, killing nine and injuring seven.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2019&lt;/strong&gt; — The cathedral of Notre-Dame de Paris in France is seriously damaged by a large fire.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2014&lt;/strong&gt; — In the worst massacre of the South Sudanese Civil War, more than 400 civilians are gunned down after seeking refuge in houses of worship as well as hospitals.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2013&lt;/strong&gt; — Two bombs explode near the finish line at the Boston Marathon in Boston, Massachusetts, killing three people and injuring over 500 others.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2013&lt;/strong&gt; — A wave of bombings across Iraq kills at least 75 people.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
+      <link>http://localhost:1313/posts_en/3060.4/</link>
+      <pubDate>Tue, 03 Mar 2026 10:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.4/</guid>
+      <description>CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 5 Continuation of Machine Level Programming</title>
+      <link>http://localhost:1313/posts_en/3060.3/</link>
+      <pubDate>Tue, 03 Feb 2026 20:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.3/</guid>
+      <description>CUHKSZ CSC3060 Week 5: continuing machine-level code, with calling conventions and registers.</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
+      <link>http://localhost:1313/posts_en/3060.2/</link>
+      <pubDate>Sat, 24 Jan 2026 10:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.2/</guid>
+      <description>CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).</description>
+    </item>
+    <item>
+      <title>🎨 DDA3003 Introduction to D3</title>
+      <link>http://localhost:1313/posts_en/3003.1/</link>
+      <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3003.1/</guid>
+      <description>An introduction to D3.js in CUHKSZ elective DDA3003 Visualization — an HTML-based visualization tool.</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 1-2 Introduction to Computer System</title>
+      <link>http://localhost:1313/posts_en/3060.1/</link>
+      <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.1/</guid>
+      <description>CSC3060 Week 1–2 at CUHKSZ: an introduction to the hardware and software foundations of computer systems.</description>
+    </item>
+    <item>
+      <title>💯 CSC3200 Final Revision C&#43;&#43; final revision handout</title>
+      <link>http://localhost:1313/posts_en/3200.f3/</link>
+      <pubDate>Thu, 11 Dec 2025 07:07:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3200.f3/</guid>
+      <description>CSC3200 is a new CUHKSZ course, so we use a CSC3002 paper as a revision reference.</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Nonlinear)</title>
+      <link>http://localhost:1313/posts_en/3200.f2/</link>
+      <pubDate>Thu, 27 Nov 2025 13:33:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3200.f2/</guid>
+      <description>CSC3200 at CUHKSZ: final review of trees, heaps, and graphs.</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)</title>
+      <link>http://localhost:1313/posts_en/3200.f1/</link>
+      <pubDate>Fri, 21 Nov 2025 13:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3200.f1/</guid>
+      <description>CSC3200 at CUHKSZ: linked lists, stacks, queues, maps, and sets.</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC17-19 function mapping</title>
+      <link>http://localhost:1313/posts_en/3001.8/</link>
+      <pubDate>Mon, 17 Nov 2025 12:19:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3001.8/</guid>
+      <description>CUHKSZ CSC3001: function mappings and division rules, and how they illuminate permutations, stars-and-bars, and Catalan numbers.</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</title>
+      <link>http://localhost:1313/posts_en/3001.7/</link>
+      <pubDate>Thu, 13 Nov 2025 09:24:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3001.7/</guid>
+      <description>CUHKSZ CSC3001: identities of binomial coefficients, extensions of inclusion–exclusion, and the pigeonhole principle.</description>
+    </item>
+    <item>
+      <title>⚛️ PHY1001 LEC10-15 Rotational Kinematics</title>
+      <link>http://localhost:1313/posts_en/phy2/</link>
+      <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/phy2/</guid>
+      <description>Important takeaways from PHY1001 at CUHKSZ on rotational motion about an axis.</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC14-16 Graph</title>
+      <link>http://localhost:1313/posts_en/3001.6/</link>
+      <pubDate>Tue, 28 Oct 2025 17:30:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3001.6/</guid>
+      <description>CUHKSZ CSC3001 图论</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC11-13 GCD and Mod</title>
+      <link>http://localhost:1313/posts_en/3001.5/</link>
+      <pubDate>Tue, 14 Oct 2025 12:30:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3001.5/</guid>
+      <description>CUHKSZ CSC3001: greatest common divisors and modular arithmetic.</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC8-10 Recursion</title>
+      <link>http://localhost:1313/posts_en/3001.4/</link>
+      <pubDate>Sat, 11 Oct 2025 12:16:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3001.4/</guid>
+      <description>From proof techniques to recursive thinking in CUHKSZ CSC3001, together with methods for solving recurrence relations</description>
+    </item>
+    <item>
+      <title>⚛️ PHY1001 LEC1-5 Basic Kinematics and Newtonian Mechanics</title>
+      <link>http://localhost:1313/posts_en/phy1/</link>
+      <pubDate>Tue, 16 Sep 2025 11:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/phy1/</guid>
+      <description>Important takeaways from PHY1001 at CUHKSZ on basic kinematics and Newtonian mechanics.</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 LEC3-5 Intermediate C&#43;&#43;</title>
+      <link>http://localhost:1313/posts_en/3200.2/</link>
+      <pubDate>Mon, 15 Sep 2025 18:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3200.2/</guid>
+      <description>The second-year CUHKSZ course CSC3200 on arrays, pointers, and stream operations in C/C++.</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC6-7 Mathematical Induction</title>
+      <link>http://localhost:1313/posts_en/3001.3/</link>
+      <pubDate>Thu, 11 Sep 2025 11:31:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3001.3/</guid>
+      <description>More proof techniques in CUHKSZ CSC3001</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC3-5 Set Theory, FOL, and Basic Proof Methods</title>
+      <link>http://localhost:1313/posts_en/3001.2/</link>
+      <pubDate>Tue, 02 Sep 2025 13:31:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3001.2/</guid>
+      <description>An extension of propositional logic in CUHKSZ CSC3001: predicate logic</description>
+    </item>
+    <item>
+      <title>💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;</title>
+      <link>http://localhost:1313/posts_en/3200.1/</link>
+      <pubDate>Mon, 01 Sep 2025 18:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3200.1/</guid>
+      <description>An introduction to basic C++ syntax and OOP in the second-year CUHKSZ course CSC3200.</description>
+    </item>
+    <item>
+      <title>🧮 CSC3001 LEC1-2 Introduction to Discrete Mathematics</title>
+      <link>http://localhost:1313/posts_en/3001.1/</link>
+      <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3001.1/</guid>
+      <description>An introductory guide to CSC3001, a second-year course at CUHKSZ</description>
+    </item>
+    <item>
+      <title>🌐 How to personalize Streamlit URL?</title>
+      <link>http://localhost:1313/posts_en/streamliturl/</link>
+      <pubDate>Sun, 31 Aug 2025 10:50:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/streamliturl/</guid>
+      <description>An attempt to point a Streamlit app to a custom domain without using a public VPS.</description>
+    </item>
+    <item>
+      <title>🌐 Automation of Ssg Post Release</title>
+      <link>http://localhost:1313/posts_en/autorelease/</link>
+      <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/autorelease/</guid>
+      <description>How can blog publishing in an SSG setup (Hugo + Cloudflare) be semi-automated?</description>
+    </item>
+    <item>
+      <title>🧠 Brainstorming</title>
+      <link>http://localhost:1313/posts_en/brainstorm/</link>
+      <pubDate>Thu, 10 Apr 2025 17:15:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/brainstorm/</guid>
+      <description>From a stray thought in MAT2041 to the way interdisciplinary flashes of insight can lead to breakthroughs&amp;hellip;</description>
+    </item>
+    <item>
+      <title>🐉🧱 CUHKSZ Survival Handbook</title>
+      <link>http://localhost:1313/posts_en/lgu/</link>
+      <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/lgu/</guid>
+      <description>A survival handbook written by and for CUHKSZ students; still under active construction.</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 Final Review</title>
+      <link>http://localhost:1313/posts_en/1003.6/</link>
+      <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.6/</guid>
+      <description>A summary of useful Java syntax and common pitfalls.</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 Assignment 2: Two-Dimensional Arrays</title>
+      <link>http://localhost:1313/posts_en/assignment2/</link>
+      <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/assignment2/</guid>
+      <description>Worked examples for the second CSC1003-Java assignment.</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 LEC13-15 Recursion</title>
+      <link>http://localhost:1313/posts_en/1003.5/</link>
+      <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.5/</guid>
+      <description>An introduction to recursion, the stack and heap, and stack overflow.</description>
+    </item>
+    <item>
+      <title>📢 How can you batch-transcribe audio into text efficiently?</title>
+      <link>http://localhost:1313/posts_en/whisper/</link>
+      <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/whisper/</guid>
+      <description>How to transcribe local audio files from the CLI without using an LLM.</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 LEC10-12 Midterm Revision</title>
+      <link>http://localhost:1313/posts_en/1003.4/</link>
+      <pubDate>Sat, 19 Oct 2024 23:56:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.4/</guid>
+      <description>Midterm review and mock questions.</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 Assignment 1 OJ Practice</title>
+      <link>http://localhost:1313/posts_en/assignment1/</link>
+      <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/assignment1/</guid>
+      <description>The first OJ programming practice for the first-year CUHKSZ course CSC1003.</description>
+    </item>
+    <item>
+      <title>☕️ Coffee and OOP</title>
+      <link>http://localhost:1313/posts_en/oop/</link>
+      <pubDate>Thu, 12 Sep 2024 11:28:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/oop/</guid>
+      <description>&lt;p&gt;OOP (Object-Oriented Programming) is the programming paradigm built around objects. Let us use Java OOP—rather than coffee—as an example. It includes the following core ideas:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Class&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Object ≈ Instance&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Encapsulation&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Inheritance&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Polymorphism&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Abstraction&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;classes-instances-objects-and-fields&#34;&gt;Classes, instances, objects, and fields&lt;/h2&gt;&#xA;&lt;p&gt;A &lt;strong&gt;class&lt;/strong&gt; is an &lt;strong&gt;abstract&lt;/strong&gt; concept, whereas an &lt;strong&gt;instance&lt;/strong&gt; is a &lt;strong&gt;concrete&lt;/strong&gt; entity. If coffee is treated as a class, then espresso, frappe, Americano, latte, and cappuccino are instances of that class. A class is the template from which objects are created, and an &lt;strong&gt;instance can also be called an object&lt;/strong&gt;. Objects are created according to the class template, but they may differ in their &lt;strong&gt;fields&lt;/strong&gt; (also called member variables).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 TBL1 Networking and the History of Computing</title>
+      <link>http://localhost:1313/posts_en/1003.2/</link>
+      <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.2/</guid>
+      <description>Foundational material on networks and the Internet that the lecture largely skipped — LGU does not really offer a dedicated introductory networking course, so many students lack this background.</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 LEC1~3 Functions, Data Types, and Computation</title>
+      <link>http://localhost:1313/posts_en/1003.1/</link>
+      <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.1/</guid>
+      <description>An introductory note to CSC1003 (Java) for first-year students at CUHKSZ.</description>
+    </item>
+    <item>
+      <title> 🌐 IP Addresses and Subnet Masks</title>
+      <link>http://localhost:1313/posts_en/web/</link>
+      <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/web/</guid>
+      <description>&lt;p&gt;On 2024-08-22, several students raised a few networking questions during CUHKSZ&amp;rsquo;s course-selection training livestream (see the screenshot below). At that point the semester had not yet started, and &lt;code&gt;10.20.219.31&lt;/code&gt; is obviously a private IP address, so it cannot be accessed directly from the public Internet. In other words, it can only be reached when the client is already inside the &lt;code&gt;10.0.0.0&lt;/code&gt; network, namely CUHKSZ&amp;rsquo;s subnet.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://i.postimg.cc/FsKQ3wzM/%E6%88%AA%E5%B1%8F2026_01_11_18_05_02.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;Globally, the following private IP address prefixes are commonly used in local area networks (LANs). These prefixes are defined by &lt;a href=&#34;https://tools.ietf.org/html/rfc1918&#34;&gt;RFC 1918&lt;/a&gt;:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>🌐 Attempting to Fetch CUHKSZ Mailbox Data</title>
+      <link>http://localhost:1313/posts_en/outlook/</link>
+      <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/outlook/</guid>
+      <description>A shareable but unresolved attempt to automate LGU mailbox access.</description>
+    </item>
+    <item>
+      <title>🌐 Manual for Deploying a Hugo Blog on Cloudflare</title>
+      <link>http://localhost:1313/posts_en/weblog_deploy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts_en/weblog_deploy/</guid>
+      <description>People often say that building a blog with GitHub and Cloudflare is cheap and easy. In practice, however, the process can be surprisingly full of pitfalls.</description>
+    </item>
+  </channel>
+</rss>

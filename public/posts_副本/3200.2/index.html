@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3200 LEC3-5 C&#43;&#43;进阶 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ 大二课程 CSC3200 关于 C/C&#43;&#43; 中数组、指针和流操作">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3200.2/">
+    <meta property="og:url" content="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3200.2/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3200 LEC3-5 C&#43;&#43;进阶">
+  <meta property="og:description" content="CUHKSZ 大二课程 CSC3200 关于 C/C&#43;&#43; 中数组、指针和流操作">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_副本">
+    <meta property="article:published_time" content="2025-09-15T18:29:34+08:00">
+    <meta property="article:modified_time" content="2025-09-15T18:29:34+08:00">
+    <meta property="article:tag" content="CSC3200">
+
+  <meta itemprop="name" content="💻 CSC3200 LEC3-5 C&#43;&#43;进阶">
+  <meta itemprop="description" content="CUHKSZ 大二课程 CSC3200 关于 C/C&#43;&#43; 中数组、指针和流操作">
+  <meta itemprop="datePublished" content="2025-09-15T18:29:34+08:00">
+  <meta itemprop="dateModified" content="2025-09-15T18:29:34+08:00">
+  <meta itemprop="wordCount" content="2469">
+  <meta itemprop="keywords" content="CSC3200">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3200 LEC3-5 C&#43;&#43;进阶">
+  <meta name="twitter:description" content="CUHKSZ 大二课程 CSC3200 关于 C/C&#43;&#43; 中数组、指针和流操作">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		function applyTheme(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				applyTheme(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			applyTheme(isDark ? 'light' : 'dark');
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var mode = event.newValue === 'dark' ? 'dark' : 'light';
+			applyTheme(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/32002.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_副本s
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-09-15T18:29:34+08:00">September 15, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="csc3200-lec-3-4-数组指针流">CSC3200 LEC 3-4 数组、指针、流</h1>
+<br>
+<h2 id="数组和指针">数组和指针</h2>
+<p>数组和指针是两个完全不同的数据类型，但是两者有紧密关系，且语法有相互兼容性。</p>
+<br>
+<h3 id="c-风格的字符数组">C 风格的字符数组</h3>
+<ul>
+<li>保留方法：<code>a.c_str()</code> 会将字符串 a 转为 const char*。其作用相当于 <code>&amp;a[0]</code>。</li>
+<li>字符串长度用 string 成员方法 <code>.size()</code> 或 <code>.length()</code> ，作为数组的指针长度用 <code>strlen()</code>。</li>
+<li>作为指针，无论是否为 const，都可以进行<strong>偏移操作</strong>：<code>s.c_str()[n] ≡ s.c_str()+n</code>；都可以进行<strong>偏移量计算</strong>：<code>s.c_str()[5]-s.c_str[0] == 5</code></li>
+<li>这是指针与数组语法的相互兼容的经典例子。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>string s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello&#34;</span>;
+</span></span><span style="display:flex;"><span>s.length();  <span style="color:#75715e">// 5
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> boolalpha <span style="color:#f92672">&lt;&lt;</span> (strlen(s.c_str()) <span style="color:#f92672">==</span> (s.c_str[<span style="color:#ae81ff">4</span>]<span style="color:#f92672">-</span>s.c_str[<span style="color:#ae81ff">0</span>])) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;  <span style="color:#75715e">// True
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;&lt;</span> toupper(s.c_str()[<span style="color:#ae81ff">0</span>]);  <span style="color:#75715e">// &#39;H&#39;(toupper 只能处理字符)
+</span></span></span></code></pre></div><ul>
+<li>**注意！**对于 string x， <code>&amp;x</code> 的类型为 <code>string*</code>，而 <code>x.c_str()</code> 的结果为 <code>const char*</code>，两者无法直接相互赋值！以下是与 <code>x.c_str()</code> 类型相同的操作：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> arr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>[<span style="color:#ae81ff">100</span>];  <span style="color:#75715e">// 堆上分配，手动释放: delete[] arr;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> arr[<span style="color:#ae81ff">100</span>];  <span style="color:#75715e">// 栈上分配，自动释放
+</span></span></span></code></pre></div><br>
+<h3 id="strlen-的定义">strlen 的定义</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">strlen1</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> s){ <span style="color:#66d9ef">int</span> n<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; <span style="color:#66d9ef">while</span>(s[n] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;\0&#39;</span>) n<span style="color:#f92672">++</span>; <span style="color:#66d9ef">return</span> n; }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">strlen2</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> s){ <span style="color:#66d9ef">int</span> n<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; <span style="color:#66d9ef">while</span>(<span style="color:#f92672">*</span>s<span style="color:#f92672">++</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;\0&#39;</span>) n<span style="color:#f92672">++</span>; <span style="color:#66d9ef">return</span> n; }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">strlen3</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> s){ <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> p<span style="color:#f92672">=</span>s; <span style="color:#66d9ef">while</span>(<span style="color:#f92672">*</span>p<span style="color:#f92672">!=</span><span style="color:#e6db74">&#39;\0&#39;</span>) <span style="color:#f92672">++</span>p; <span style="color:#66d9ef">return</span> p <span style="color:#f92672">-</span> s; } 
+</span></span></code></pre></div><p>1、n 作为字符指针数组的索引和计数器，自增直到<code>\0</code>。</p>
+<p>2、n 只作为计数器，<code>*(s++)</code> 让指针自增直到指向<code>\0</code>。</p>
+<p>3、不用计数器，直接计算首尾字符的指针偏移量。</p>
+<ul>
+<li>指针自增 <code>*p++</code> 的含义等于 <code>*(p++)</code> ，是 “返回指针指向值，然后自增指针”：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>string a <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> a.c_str();   <span style="color:#75715e">// 或者 char* p = &amp;a[0];
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">while</span> (<span style="color:#f92672">*</span>p) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">*</span>p <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> p <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>以上代码等同于下面的代码：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (<span style="color:#f92672">*</span>p) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">*</span>p<span style="color:#f92672">++</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;   <span style="color:#75715e">// 输出当前字符，指针同时移动
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><br>
+<h3 id="指针作为数组">指针&quot;作为&quot;数组</h3>
+<ul>
+<li>对于字符串声明指针，它会指向第一个字符作为 <code>ptr[0]</code>。</li>
+<li>指针可以作为数组调用，所以在例子中：<code>*(ptr) ≡ ptr[0] ≡ 'h'</code>。</li>
+<li>第一部分已经提到过，<code>s.c_str() ≡ &amp;s[0] </code>(都属于 const char* 类型)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>string s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> ptr <span style="color:#f92672">=</span> s.c_str();  <span style="color:#75715e">// *(ptr+2) == &#39;l&#39;
+</span></span></span></code></pre></div><br>
+<h3 id="数组作为指针">数组&quot;作为&quot;指针</h3>
+<ul>
+<li>数组名在表达式环境会隐式转成指针，可以当做指针使用。比如 <code>cstr[]</code> <strong>衰减</strong>成指向首元素的指针<code>&amp;cstr[0]</code>，类型为 char*。</li>
+<li>前者作为一次性分配不需要经过 Destructor，后者需要。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StringA</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> cstr[<span style="color:#ae81ff">256</span>];   <span style="color:#75715e">// 固定数组，赋予对象一块固定大小的栈空间，不需要额外分配
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> ptr <span style="color:#f92672">=</span> cstr;  <span style="color:#75715e">// 合法
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StringB</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> ptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>[<span style="color:#ae81ff">256</span>];  <span style="color:#75715e">// 动态分配堆上的空间，需要手动地动态分配/释放内存
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><br>
+<h3 id="数组不等价于指针">数组不等价于指针</h3>
+<ul>
+<li>但<strong>数组 ≠ 指针</strong>。数组名是<strong>不可修改的 lvalue</strong>，你可以把数组衰减后<strong>赋给指针</strong>(1)，却<strong>不能把指针赋 给数组</strong>(2)。</li>
+<li>注意 arr 变成了指向首元素的指针，但 <strong>&amp;arr 的类型是“指向整个数组的指针”</strong>。</li>
+<li>如果 <code>double arr[5]; double* dp = arr;</code>，恒等式：<code>arr[i] ≡ *(arr+i) ≡ *(dp+i) ≡ dp[i]</code>。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> arr[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">40</span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> ptr <span style="color:#f92672">=</span> arr;        <span style="color:#75715e">// 合法，数组名衰减为 int*    (1)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span>  x <span style="color:#f92672">=</span> arr[<span style="color:#ae81ff">2</span>];       <span style="color:#75715e">// 合法，等价于 *(arr + 2)或*(ptr + 2)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">sizeof</span>(arr);           <span style="color:#75715e">// 16（4 个 int 的总字节数）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">sizeof</span>(ptr);           <span style="color:#75715e">// 8（在 64 位机上指针通常 8 字节）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>arr <span style="color:#f92672">=</span> ptr;             <span style="color:#75715e">// ❌ 不合法：数组不是可赋值对象    (2)
+</span></span></span></code></pre></div><ul>
+<li>小注：lvalue 是可以放在赋值符号 <code>=</code> 左侧的值或表达式，比如：解引用 <code>*ptr</code>、变量<code>int x </code>等等。而不能写左边的就是 rvalue，一般是临时值或不能赋值的对象，比如：取地址 <code>&amp;val</code>、算术式 <code>x+y-1</code> 等等。</li>
+</ul>
+<br>
+<br>
+<h2 id="c-标准库拷贝函数-strncpy">C 标准库拷贝函数 <code>strncpy</code></h2>
+<br>
+<h3 id="在实现-string-类定义中的使用">在实现 String 类定义中的使用</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">strncpy</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> destination, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> source, std<span style="color:#f92672">::</span>size_t num);
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>strncpy(<span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>c_str <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>strlen, other.c_str, copylength);
+</span></span></code></pre></div><ul>
+<li>从 source 拷贝最多 num 个字符到 destination。如果 source 长度小于 num，会用 \0 填充剩余位置。</li>
+<li><strong>如果 source 长度 ≥ num，只会拷贝前 num 个字符，不会在末尾自动加 \0。</strong></li>
+<li>例子中将另一个字符数组连接至当前数组后 (这里的 <code>this-&gt;</code> 都可以省略)。</li>
+</ul>
+<p>完整例子比如 cpp 的 String 类需要定义 operation+= (连接两个字符串 ”str1“+”str2“)：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> string<span style="color:#f92672">::</span>strcat(string <span style="color:#66d9ef">const</span><span style="color:#f92672">&amp;</span> other) {  <span style="color:#75715e">// &#34;cat&#34; whether the append operation will exceed MAXLEN 256
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> total <span style="color:#f92672">=</span> strlen <span style="color:#f92672">+</span> other.strlen;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (total <span style="color:#f92672">&gt;=</span> MAXLEN) total <span style="color:#f92672">=</span> MAXLEN <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// exceeding 255, remaining char WILL be discarded
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> copylen <span style="color:#f92672">=</span> total <span style="color:#f92672">-</span> strlen;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (copylen <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>		std<span style="color:#f92672">::</span>strncpy(<span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>c_str <span style="color:#f92672">+</span> strlen, other.c_str, copylen);
+</span></span><span style="display:flex;"><span>		strlen <span style="color:#f92672">=</span> total;
+</span></span><span style="display:flex;"><span>		c_str[strlen] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;\0&#39;</span>;  <span style="color:#75715e">// in case of exceeding
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ...... //
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>string<span style="color:#f92672">&amp;</span> string<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">+=</span>(string <span style="color:#66d9ef">const</span><span style="color:#f92672">&amp;</span> other) { strcat(other); <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>; }
+</span></span></code></pre></div><ul>
+<li>代码段将当前实例 string 末尾接上 另一个实例 other，去掉超出内存部分，并确保末尾是 &lsquo;\0&rsquo;，这样这个代码就可以被递归调用：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>str<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> string(str1) <span style="color:#f92672">+</span> string(str2) <span style="color:#f92672">+</span> string(str3) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;
+</span></span></code></pre></div><br>
+<h3 id="用指针自增实现-strncpy">用指针自增实现 <code>strncpy</code></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">str_cpy</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> dst, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> src) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">*</span>dst<span style="color:#f92672">++</span> <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>src<span style="color:#f92672">++</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> ptr1[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Hello&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> ptr2[<span style="color:#ae81ff">100</span>];   <span style="color:#75715e">// buffered(要有足够缓冲栈)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    str_cpy(ptr2, ptr1);
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> ptr2 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;  <span style="color:#75715e">// 输出 Hello
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>注意 while 中写的不是<code>==</code> ! 条件中不是判别式而是在赋值，其结果为当前被赋予给 dst[] 的字符，而非空字符/字符串都为真，直到遇到 <code>\0</code> (也就是 0，也就是 False)才会结束循环。</li>
+</ul>
+<br>
+<br>
+<h2 id="iostream-与-cstdio"><code>&lt;iostream&gt;</code> 与 <code>&lt;cstdio&gt;</code></h2>
+<br>
+<h3 id="输出时保留小数">输出时保留小数</h3>
+<ul>
+<li>CPP style: setprecision()</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iomanip&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> d <span style="color:#f92672">=</span> <span style="color:#ae81ff">3.141592653589793</span>;
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;default + setprecision(2): &#34;</span> <span style="color:#f92672">&lt;&lt;</span> setprecision(<span style="color:#ae81ff">2</span>) <span style="color:#f92672">&lt;&lt;</span> d <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>; <span style="color:#75715e">// 3.1（有效数字2位）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> fixed <span style="color:#f92672">&lt;&lt;</span> setprecision(<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;fixed + setprecision(2):   &#34;</span> <span style="color:#f92672">&lt;&lt;</span> d <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;  <span style="color:#75715e">// 3.14
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> scientific <span style="color:#f92672">&lt;&lt;</span> setprecision(<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;scientific + prec(2):     &#34;</span> <span style="color:#f92672">&lt;&lt;</span> d <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39;\n&#39;</span>;  <span style="color:#75715e">// 3.14e+00
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> defaultfloat; <span style="color:#75715e">// 恢复默认
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><ul>
+<li>C style: printf()</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstdio&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">double</span> db <span style="color:#f92672">=</span> <span style="color:#ae81ff">3.14159265358979323846</span>;
+</span></span><span style="display:flex;"><span>printf(<span style="color:#e6db74">&#34;This is a double: %.2f</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, db);  <span style="color:#75715e">// 相当于 fixed
+</span></span></span></code></pre></div><p>(%d 整数，%c 字符，%s 字符串)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> fixed <span style="color:#f92672">&lt;&lt;</span> setfill(<span style="color:#e6db74">&#39;0&#39;</span>) <span style="color:#f92672">&lt;&lt;</span> setw(<span style="color:#ae81ff">10</span>) <span style="color:#f92672">&lt;&lt;</span> setprecision(<span style="color:#ae81ff">4</span>) <span style="color:#f92672">&lt;&lt;</span> left <span style="color:#f92672">&lt;&lt;</span> PI <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span></code></pre></div><br>
+<br>
+<h2 id="filestream">FileStream</h2>
+<p>用于向文件输出或者从文件提取信息</p>
+<ul>
+<li>ifstream：默认 <code>std::ios::in</code> (只读模式)</li>
+<li>outstream：默认 <code>std::ios::out | std::ios::trunc</code> (清空写入模式)</li>
+<li>.open(cchar_file, mode)：打开文件(和方式)</li>
+<li>.get(), .put()：读和写
+<code>&lt;fstream&gt;</code> 不能学 Python 直接写“cin &raquo; s &raquo; outFile.txt&quot;!!</li>
+</ul>
+<p>流复制文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    ifstream fin;
+</span></span><span style="display:flex;"><span>    ofstream fout;
+</span></span><span style="display:flex;"><span>    fin.open(<span style="color:#e6db74">&#34;infile.txt&#34;</span>); <span style="color:#75715e">// ”infile.txt&#34;.c_str()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    fout.open(<span style="color:#e6db74">&#34;outfile.txt&#34;</span>, std<span style="color:#f92672">::</span>ios<span style="color:#f92672">::</span>out <span style="color:#f92672">|</span> std<span style="color:#f92672">::</span>ios<span style="color:#f92672">::</span>app); <span style="color:#75715e">// 追加写入模式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> ch;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (fin.get(ch)) {   <span style="color:#75715e">// 每次读取一个字符，失败时（EOF）退出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        fout.put(ch);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    fin.close();
+</span></span><span style="display:flex;"><span>    fout.flush();
+</span></span><span style="display:flex;"><span>    fout.close();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><br>
+<br>
+<h2 id="stringstream">StringStream</h2>
+<ul>
+<li>.str：将字符串流中的数据作为字符串取出</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sstream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    cin <span style="color:#f92672">&gt;&gt;</span> i;
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;My favorite number is: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> endl;  <span style="color:#75715e">// Method1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    string s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;My favorite number is: &#34;</span> <span style="color:#f92672">+</span> to_string(i);  <span style="color:#75715e">// Method2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> s <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    stringstream ss;  <span style="color:#75715e">// sstream Method
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    ss <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;My favorite number is: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> i;
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> ss.str(); 
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> s <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span></code></pre></div><br>
+<br>
+<h2 id="内存分配">内存分配</h2>
+<ul>
+<li>所有通过新增对象语法新建的数据 (比如 <code>int* a = cstr</code>) 都是储存在栈上的局部变量，在函数返回时自动销毁。通常比如 main 方法结束后销毁。</li>
+<li>所有通过 <code>new</code> 声明的新数据 (比如 <code>int* a = new int[]</code>) 都是储存在堆上的动态分配的变量，需要在结束生命周期时手动用 <code>delete / delete[]</code> 销毁，防止内存泄漏。简而言之，代码里出现多少次 “new&quot;，就应该对应出现多少次 ”delete“。比如：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">indexArr</span>(<span style="color:#66d9ef">int</span> n) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> arr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[n];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> n; i<span style="color:#f92672">++</span>) arr[i] <span style="color:#f92672">=</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> arr;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> digits <span style="color:#f92672">=</span> indexArr(<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">delete</span>[] digits;  <span style="color:#75715e">// 必须释放
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><br>
+<br>
+<h2 id="const-和-static">const 和 static</h2>
+<ul>
+<li><code>const</code> 的三种用法：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> PI <span style="color:#f92672">=</span> <span style="color:#ae81ff">3.14159</span>;  <span style="color:#75715e">// 无论如何无法修改该变量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> s);  <span style="color:#75715e">// 函数不能修改该变量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">size</span>() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// 函数不能修改对象(对象的成员变量)
+</span></span></span></code></pre></div><ul>
+<li><code>static</code>是属于类的公用变量，由所有对象共享：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyClass</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> count;  <span style="color:#75715e">// 声明一个静态变量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    MyClass() { count<span style="color:#f92672">++</span>; }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> MyClass<span style="color:#f92672">::</span>count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// 必须在类外定义并初始化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    MyClass a;
+</span></span><span style="display:flex;"><span>    MyClass b;
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> MyClass<span style="color:#f92672">::</span>count <span style="color:#f92672">&lt;&lt;</span> endl; <span style="color:#75715e">// 输出 2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3200/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3200</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_%E5%89%AF%E6%9C%AC/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

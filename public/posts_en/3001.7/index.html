@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ CSC3001: identities of binomial coefficients, extensions of inclusion–exclusion, and the pigeonhole principle.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3001.7/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3001.7/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem">
+  <meta property="og:description" content="CUHKSZ CSC3001: identities of binomial coefficients, extensions of inclusion–exclusion, and the pigeonhole principle.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2025-11-13T09:24:24+08:00">
+    <meta property="article:modified_time" content="2025-11-13T09:24:24+08:00">
+    <meta property="article:tag" content="CSC3001">
+
+  <meta itemprop="name" content="🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem">
+  <meta itemprop="description" content="CUHKSZ CSC3001: identities of binomial coefficients, extensions of inclusion–exclusion, and the pigeonhole principle.">
+  <meta itemprop="datePublished" content="2025-11-13T09:24:24+08:00">
+  <meta itemprop="dateModified" content="2025-11-13T09:24:24+08:00">
+  <meta itemprop="wordCount" content="1177">
+  <meta itemprop="keywords" content="CSC3001">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem">
+  <meta name="twitter:description" content="CUHKSZ CSC3001: identities of binomial coefficients, extensions of inclusion–exclusion, and the pigeonhole principle.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30017.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2025-11-13T09:24:24+08:00">November 13, 2025</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>(Covers Lecture 12)</p>
+<h1 id="ln12">LN12</h1>
+<br>
+<h1 id="binomial-identities">Binomial Identities</h1>
+<br>
+<ul>
+<li>Let $\displaystyle{n\choose k}$ denote the number of ways to choose k elements from n distinct elements.</li>
+<li>Algebraic definition:
+$\displaystyle{n\choose k}=rac{n!}{k!(n-k)!}$,
+with the conventions ${n\choose 0}={n\choose n}=1$.</li>
+<li>Combinatorial interpretation (extremely important): each ${n\choose k}$ counts a class of problems of the form <strong>“choose k positions out of n positions.”</strong></li>
+<li>Common proof strategies:
+<ol>
+<li>direct algebraic proof: show LHS = RHS;</li>
+<li>use the connection between binomial coefficients and the binomial theorem; for instance,
+$\sum_{i=0}^n{n\choose i}^2={2n\choose n}$
+can be proved by comparing the coefficient of x<sup>n</sup> on both sides of
+(x+1)<sup>n</sup>(x+1)<sup>n</sup> = (x+1)<sup>2n</sup>;</li>
+<li>argue combinatorially by interpreting the expression as a counting problem, such as drawing balls from a bag.</li>
+</ol>
+</li>
+</ul>
+<br>
+<h2 id="the-binomial-theorem">The Binomial Theorem</h2>
+<p>$$(1+x)^n=\sum_{k=0}^{n}{n\choose k}x^k.$$</p>
+<p><strong>Combinatorial proof</strong>: view $(1+x)^n$ as a product of n factors of the form (1+x). From each factor, choose either “1” or “x”. The coefficient of x^k is exactly the number of ways to choose k factors that contribute x, namely ${n\choose k}$.</p>
+<h3 id="immediate-corollaries"><strong>Immediate Corollaries</strong></h3>
+<ol>
+<li>Set x=1:
+$\displaystyle \sum_{k=0}^n{n\choose k}=2^n$.
+Combinatorial interpretation: every element is either chosen or not chosen, so this counts all subsets.</li>
+<li>Set x=-1:
+$\displaystyle \sum_{k\ 	ext{even}}{n\choose k}=\sum_{k\ 	ext{odd}}{n\choose k}=2^{n-1}$.
+Combinatorial interpretation: pair each subset with its complement; subsets of even size and odd size are equally numerous.</li>
+<li>${n\choose k}={n\choose n-k}$.</li>
+</ol>
+<br>
+<h2 id="pascals-recurrence">Pascal’s Recurrence</h2>
+<p>$${n+1\choose k}={n\choose k-1}+{n\choose k}.$$</p>
+<p><strong>Combinatorial proof</strong>: among the n+1 elements, fix one distinguished element x. If x is not chosen, then we choose all k elements from the remaining n elements. If x is chosen, then we need only choose k-1 more elements from the remaining n.<br>
+(Or, of course, one may also verify the identity directly by algebra.)</p>
+<br>
+<h2 id="the-hockey-stick-identity">The Hockey-Stick Identity</h2>
+<p>$$\sum_{i=r}^{n}{i\choose r}={n+1\choose r+1}.$$</p>
+<p><strong>Combinatorial proof</strong>: choose r+1 elements from {1, …, n+1}, and classify the selection by its largest element λ, where λ ∈ [r+1, n+1]. Once λ is fixed, the remaining r elements can be chosen freely from 1 to λ-1, contributing ${λ-1\choose r}$. Summing over λ proves the identity.</p>
+  <br>
+<h2 id="vandermondes-identity">Vandermonde’s Identity</h2>
+<p>$$\sum_{i=0}^{k}{r\choose i}{s\choose k-i}={r+s\choose k}.$$</p>
+<p><strong>Combinatorial proof</strong>: split r+s elements into two groups of sizes r and s, then choose k elements in total. Classify by choosing i from the first group and k-i from the second.</p>
+  <br>
+<h2 id="the-absorption-identities">The “Absorption” Identities</h2>
+<p>$$(k+1){n\choose k+1}=(n-k){n\choose k},\qquad k{n\choose k}=n{n-1\choose k-1}.$$</p>
+<p><strong>Combinatorial proof</strong> (for the second identity): first choose a captain from n people and then choose the remaining k-1 team members; alternatively, first choose a k-person team and then choose the captain from within the team.</p>
+  <br>
+<h2 id="weighted-sums-via-differentiation-or-combinatorics">Weighted Sums (via Differentiation or Combinatorics)</h2>
+<p>$$\sum_{k=0}^n k{n\choose k}=n2^{,n-1},\quad \sum_{k=0}^n k(k-1){n\choose k}=n(n-1)2^{,n-2}.$$</p>
+<ul>
+<li><strong>Algebraic method</strong>: differentiate (1+x)^n and then set x=1; for the second formula, differentiate twice.</li>
+<li><strong>Combinatorial method</strong>: the left-hand side counts selections together with one marked element (or two ordered marked elements).</li>
+</ul>
+<br>
+<br>
+<h1 id="inclusion-exclusion">Inclusion-Exclusion</h1>
+<br>
+<h2 id="two-sets-and-three-sets">Two Sets and Three Sets</h2>
+<p>The inclusion-exclusion principle computes a union using intersections:
+$|A\cup B|=|A|+|B|-|A\cap B|;$
+$|A\cup B\cup C| =|A|+|B|+|C| -|A\cap B|-|A\cap C|-|B\cap C| +|A\cap B\cap C|.$</p>
+<p><img src="https://i.postimg.cc/FK0n9SLZ/jie-ping2025-11-13-09-32-32.png" alt=""></p>
+<p>Example: count how many integers up to 1000 are divisible by x or y:
+$⌊{1000\over x}⌋+⌊{1000\over y}⌋-⌊{1000\over lcm(x, y)}⌋$</p>
+<br>
+<h2 id="general-form">General Form</h2>
+<p>$$\Big|igcup_{i=1}^n A_i\Big| =\sum_{t=1}^n(-1)^{t-1}!!\sum_{1\le i_1&lt;\cdots&lt;i_t\le n} \left|A_{i_1}\cap\cdots\cap A_{i_t}
+ight|.$$</p>
+<p>Intuitively, if an element belongs to exactly m of the sets, then it is counted
+$\sum_{t=1}^{m}(-1)^{t-1}{m\choose t}=1$
+times in total.</p>
+<br>
+<h3 id="examples">Examples</h3>
+<ol>
+<li>
+<p>Derangements D<sub>n</sub>: n people each contribute one gift, and we ask for the number of ways to redistribute the gifts so that nobody gets their own gift.<br>
+Let M<sub>i</sub> denote the event that person i gets their own gift:
+$D_n = |igcap_{i=1}^nar M_i|=|Ω|-|igcup_{i=1}^n M_i| =n!+\sum_{i=1}^n (-1)^i{n \choose i}(n-i)!=n!\sum_{i=0}^nrac{(-1)^i}{i!};$
+hence the probability is
+$P=rac{D_n}{n!}=\sum_{i=0}^nrac{(-1)^i}{i!}(n	o \infty)	o e^{-1}.$</p>
+</li>
+<li>
+<p>Euler’s φ(n) function: the number of positive integers less than n that are relatively prime to n.<br>
+Suppose
+$n=\prod p_i^{c_i}$.
+Let D<sub>i</sub> be the set of integers in [1, n] divisible by p<sub>i</sub>. Then
+$arphi(n) = |igcap_{i=1}^nar D_i|=n-|igcup_{i=1}^n D_i|;$
+and therefore
+$arphi(n)=n\prod(1-rac1{p_i}).$</p>
+</li>
+<li>
+<p>Nonnegative integer solutions (<strong>stars and bars</strong> + inclusion-exclusion constraints):<br>
+How many solutions are there to
+a+b+c=11
+subject to
+P: 0≤a≤3, Q: 0≤b≤4, R: 0≤c≤6?
+We compute
+|P∩Q∩R| = |Ω| - |P<sub>c</sub>∪Q<sub>c</sub>∪R<sub>c</sub>|.</p>
+<ul>
+<li>First count the unrestricted universe:
+|Ω| = ${11+2\choose 2}$,
+via stars and bars: 11 balls and 2 bars occupy 13 positions.</li>
+<li>Then compute the inclusion-exclusion terms:
+|P<sub>c</sub>| = ${13-4 \choose 2}$;
+|P<sub>c</sub>∩Q<sub>c</sub>| = ${13-4-5 \choose 2}$;
+|P<sub>c</sub>∩Q<sub>c</sub>∩R<sub>c</sub>| = 0;
+and so on.</li>
+<li>Finally,
+|P∩Q∩R| = 78-36-28-15+6+1+0-0 = 6.</li>
+</ul>
+</li>
+</ol>
+<br>
+<br>
+<h1 id="pigeonhole-theorem">Pigeonhole Theorem</h1>
+<br>
+<h2 id="definition-and-general-strategy">Definition and General Strategy</h2>
+<ul>
+<li>Basic form: if n pigeons are placed into h holes and n &gt; h, then some hole contains at least 2 pigeons.</li>
+<li>Generalized form: some hole contains at least ⌈n / h⌉ pigeons.</li>
+<li>Functional form: a map from a larger set to a smaller set cannot be injective.</li>
+</ul>
+<p><img src="https://i.postimg.cc/bv1Fznt9/jie-ping2025-11-13-09-31-46.png" alt=""></p>
+<p>Problem-solving strategy:</p>
+<ul>
+<li>What are the “holes”? Usually they are categories such as sums, remainders, odd parts, intervals, unordered pairs, color pairs, and so on.</li>
+<li>Map each object into one of these holes.</li>
+<li>As soon as the number of objects exceeds the number of holes, we obtain <strong>at least one</strong> repeated category.</li>
+</ul>
+<br>
+<h2 id="applications">Applications</h2>
+<ol>
+<li>Pairwise sum problem: prove that among any 5 elements chosen from {1, …, 8}, there must be a pair whose sum is 9.<br>
+The holes are the four pairs
+{1,8}, {2,7}, {3,6}, {4,5}.<br>
+Selecting 5 numbers while there are only 4 such categories means one category must be hit twice, so one chosen pair sums to 9.</li>
+</ol>
+<br>
+<ol start="2">
+<li>Handshake problem: prove that among n people shaking hands arbitrarily, there must be two people who shake hands with the same number of people.<br>
+Model the situation as a graph. The holes are the possible degrees: in a graph on n people, the degree of each person lies in {0, …, n-1}.<br>
+(1) If someone has degree 0, then nobody can have degree n-1. So the n people must choose degrees from {0, …, n-2}, which gives only n-1 holes. Hence two people share a degree.<br>
+(2) If nobody has degree 0, then all degrees lie in {1, …, n-1}, again only n-1 holes. Hence two people share a degree.<br>
+<strong>Takeaway</strong>: reduce the number of holes by a case split.</li>
+</ol>
+<br>
+<ol start="3">
+<li>Birthday paradox: the probability that n people have no repeated birthdays:
+$P(n) = rac{number\ of\ selections\ with\ no\ repetition}{number\ of\ all\ random\ selections} = rac{365\cdot 364\cdots(365-n+1)}{365^n}$,
+and P(23) &lt; 0.5.</li>
+</ol>
+<br>
+<ol start="4">
+<li>Problems involving sums/differences/divisibility: among any n+1 numbers chosen from {1, …, 2n}, there is always one number dividing another.<br>
+Write each number uniquely as $2^t\cdot q$, where q is odd. Among 1 through 2n there are exactly n odd numbers {1, 3, …, 2n-1}. Use the odd part q as the pigeonhole category. Then n+1 numbers are mapped into only n odd parts, so two of them must share the same odd part; one is therefore an even multiple of the other.<br>
+<strong>Takeaway</strong>: one can also approach this using Euler’s function, though quantitative estimates may lead toward the Riemann zeta function.</li>
+</ol>
+<br>
+<ol start="5">
+<li><strong>Subset sums cannot all be distinct</strong>: in a set of 90 decimal integers, each with 25 digits, there must exist two subsets with the same sum.<br>
+The number of subsets is 2<sup>90</sup> (pigeons), which exceeds the number of possible subset sums, 9x10<sup>26</sup> (holes), so two subset sums must coincide.</li>
+</ol>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3001/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3001</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ln12">LN12</a></li>
+    <li><a href="#binomial-identities">Binomial Identities</a>
+      <ul>
+        <li><a href="#the-binomial-theorem">The Binomial Theorem</a>
+          <ul>
+            <li><a href="#immediate-corollaries"><strong>Immediate Corollaries</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#pascals-recurrence">Pascal’s Recurrence</a></li>
+        <li><a href="#the-hockey-stick-identity">The Hockey-Stick Identity</a></li>
+        <li><a href="#vandermondes-identity">Vandermonde’s Identity</a></li>
+        <li><a href="#the-absorption-identities">The “Absorption” Identities</a></li>
+        <li><a href="#weighted-sums-via-differentiation-or-combinatorics">Weighted Sums (via Differentiation or Combinatorics)</a></li>
+      </ul>
+    </li>
+    <li><a href="#inclusion-exclusion">Inclusion-Exclusion</a>
+      <ul>
+        <li><a href="#two-sets-and-three-sets">Two Sets and Three Sets</a></li>
+        <li><a href="#general-form">General Form</a>
+          <ul>
+            <li><a href="#examples">Examples</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#pigeonhole-theorem">Pigeonhole Theorem</a>
+      <ul>
+        <li><a href="#definition-and-general-strategy">Definition and General Strategy</a></li>
+        <li><a href="#applications">Applications</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.7/">🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.6/">🧮 CSC3001 LEC14-16 Graph</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3001.6/">🧮 CSC3001 LEC14-16 Graph</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3001.5/">🧮 CSC3001 LEC11-13 GCD and Mod</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.5/">🧮 CSC3001 LEC11-13 GCD and Mod</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3001.4/">🧮 CSC3001 LEC8-10 Recursion</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.4/">🧮 CSC3001 LEC8-10 递归</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3001.3/">🧮 CSC3001 LEC6-7 Mathematical Induction</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.3/">🧮 CSC3001 LEC6-7 数学归纳法</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3001.2/">🧮 CSC3001 LEC3-5 Set Theory, FOL, and Basic Proof Methods</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.2/">🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3001.1/">🧮 CSC3001 LEC1-2 Introduction to Discrete Mathematics</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3001.1/">🧮 CSC3001 LEC1-2 离散数学入门</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

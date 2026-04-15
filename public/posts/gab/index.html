@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>🛠️ GitHub Action Bot 自动化管理仓库入门 | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/gab/">
+    <meta property="og:url" content="http://localhost:1313/posts/gab/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="🛠️ GitHub Action Bot 自动化管理仓库入门">
+  <meta property="og:description" content="从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-07T11:30:34+08:00">
+    <meta property="article:modified_time" content="2026-04-07T11:30:34+08:00">
+    <meta property="article:tag" content="技术">
+
+  <meta itemprop="name" content="🛠️ GitHub Action Bot 自动化管理仓库入门">
+  <meta itemprop="description" content="从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。">
+  <meta itemprop="datePublished" content="2026-04-07T11:30:34+08:00">
+  <meta itemprop="dateModified" content="2026-04-07T11:30:34+08:00">
+  <meta itemprop="wordCount" content="2687">
+  <meta itemprop="keywords" content="技术">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="🛠️ GitHub Action Bot 自动化管理仓库入门">
+  <meta name="twitter:description" content="从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+    <div id="reading-progress">
+      <div id="reading-progress-bar"></div>
+    </div>
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/gab.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">🛠️ GitHub Action Bot 自动化管理仓库入门</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">🛠️ GitHub Action Bot 自动化管理仓库入门</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-04-07T11:30:34+08:00">April 7, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><a href="https://blog.nero-lithos.com/posts/history-today/">“历史上的今天”</a> ，就是一套最简单的自动化脚本，不需要每天手动做任何事：</p>
+<ul>
+<li>Python 脚本每天去公共 API 拉数据；</li>
+<li>Hugo Anake 在构建时把这些数据渲染进页面；</li>
+<li>GitHub Actions Bot 按定时任务跑脚本 + 触发 Cloudflare 重建整站；</li>
+</ul>
+<p>⚠️ 注意：</p>
+<ol>
+<li>不要把密钥暴露到前端。</li>
+<li>用 .gitignore 和工作流设计避免把自动生成的文件塞爆 Git 历史。</li>
+<li>如果你使用 API (比如大模型服务)，最好在 Cloudflare 中为你的域增加一条安全规则，类型为托管质询</li>
+</ol>
+</br>
+<h1 id="项目架构">项目架构</h1>
+<ol>
+<li>
+<p>目标：博客上有一个“历史上的今天”页面，每天自动显示当天的历史事件。整个流程全自动：电脑关机，服务器也照样每天更新。</p>
+</li>
+<li>
+<p>技术栈</p>
+</li>
+</ol>
+<ul>
+<li>静态网站 (部署：GitHub 仓库 → Cloudflare Pages 自动构建)；</li>
+<li>数据：Wikipedia On This Day 官方 JSON API (不用爬 HTML)；</li>
+<li>后台：GitHub Actions 定时任务。</li>
+</ul>
+<ol start="3">
+<li>关键组件</li>
+</ol>
+<ul>
+<li>数据抓取 Python 脚本遍历全年日期，从 Wikipedia API 拿历史事件,生成 JSON 文件。</li>
+<li>Hugo 集成 (HTML Shortcode)：构建时 <code>readFile</code> + <code>transform.Unmarshal</code> 读取 JSON；用 <code>now.Format &quot;01-02&quot;</code>（UTC）作为 key 选出当天事件；渲染详情页列表 + 首页摘要；页面入口用 md 模板 (front matter 定义标题、封面图等)；正文调用 <code>history_today</code>。</li>
+<li>自动化：工作流 (yml)、<code>on.schedule</code> 每天多个时间点触发；拉代码 + 拉主题子模块；</li>
+</ul>
+</br>
+</br>
+<h1 id="坑--困难">坑 &amp; 困难</h1>
+<h2 id="数据源">数据源</h2>
+<p>现象：如果你想抓的是 onthisday.com 的 HTML，靠 CSS Selector 找 DOM。网站一改版，DOM 结构变了，脚本还在跑，但抓到的全是空数组，悄悄写到了 JSON 里，前端就啥也没有。</p>
+<p>方案：如果换成 Wikipedia On This Day JSON API，就可以明确返回结构，字段稳定，不依赖页面结构，不容易被微调 HTML 搞炸。</p>
+<h4 id="takeaways">Takeaways</h4>
+<ul>
+<li>
+<p>能用 API 就不爬 HTML；</p>
+</li>
+<li>
+<p>要检测 ”抓不到数据“，此时应当<strong>抛错并停止</strong>，而不要默默输出全是 <code>[]</code> (空) 的 JSON。</p>
+</li>
+</ul>
+</br>
+<h2 id="时间和时区">时间和时区</h2>
+<p>现象：Hugo 的 <code>now</code> 和 GitHub Actions 的 schedule 都默认用 <strong>UTC</strong> 时区。在北京时间凌晨跑任务时，<code>now</code> 可能还是昨天的 UTC 日期。导致看似合理的代码跑出来页面实际上每天在更新显示的是 “昨天的历史”。</p>
+<p>方案：调整 cron 时间，避开本地日期刚翻日但 UTC 还没翻日的混淆时间段。例如每天 UTC + 1/2 点跑 (对应北京时间 8/9/10 点)，此时 UTC 和北京都已经是 “新的一天”。</p>
+<h4 id="takeaways-1">Takeaways</h4>
+<ul>
+<li>想按本地时区 (比如 <code>Asia/Shanghai</code>) 来算“今天”，要么调整 cron 时间，或者在脚本中显式按本地时区计算 dates；</li>
+<li>尽量多写几次任务作为缓冲，防止 Bot 时不时的网络/繁忙失败。你可能会观察到 Action Bot 经常不在你要求的整点运行，会有不定的延迟。总之定时任务最好<strong>日内多次触发</strong>，而不是指望一次成功：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">schedule</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">cron</span>: <span style="color:#e6db74">&#34;0 0,1,2 * * *&#34;</span>
+</span></span></code></pre></div><ul>
+<li>对于 Git Action，在 UTC + 0 跑自动脚本依旧是 ”昨天“。</li>
+</ul>
+</br>
+<h2 id="构建链路">构建链路</h2>
+<p>现象：Localhost 能构建，CI 上却报错 ”主题 partial 找不到“ (因为主题是 Git submodule，CI 没拉子模块)，这是 Hugo 的经典问题 —— Hugo 的某些旧字段 (如 <code>.Site.DisqusShortname</code>) 被弃用，新版本报错。</p>
+<p>方案：</p>
+<ul>
+<li>在 Actions 里 checkout 时开启子模块：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v4</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fetch-depth</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">submodules</span>: <span style="color:#ae81ff">recursive</span>
+</span></span></code></pre></div></li>
+<li>更新模板用法，以适配新版本 Hugo：例如把 <code>.Site.DisqusShortname</code> 改为 <code>.Site.Config.Services.Disqus.Shortname</code>。</li>
+</ul>
+<h4 id="takeaways-2">Takeaways</h4>
+<ul>
+<li>“本地能跑、CI 挂了”时，先检查：主题 / 子模块有没有被拉；Hugo 版本有没有升级导致 API 改名；<code>HUGO_ENV</code>、环境变量等。</li>
+</ul>
+</br>
+<h2 id="git-历史污染">Git 历史污染</h2>
+<blockquote>
+<p>Action Bot 也属于仓库贡献者，也会与你的本地产生冲突，不管人和机器人，都别反复 <code>add</code> 不必要内容。</p>
+</blockquote>
+<p>现象：如果工作流里直接 <code>git add ... public</code> 所有自动生成的文件，结果就是 <code>hugo</code> 每次构建都会生成或微调 public 下大量 HTML，特别是 <code>public/posts/</code> (所有的博客)。导致<strong>每天都生成一大堆无关的 diff</strong> (HTML 时间戳、序号等)，Git 历史被不必要更新污染，导致本地和远端的 Conflict。</p>
+<p>方案：</p>
+<ul>
+<li><strong>不再提交任何构建产物</strong>，改工作流为：依旧可以先跑 <code>hugo --config hugo.toml</code> 做构建检查，但不 <code>git add</code>；然后使用以下空提交，只为触发 Cloudflare 重跑构建，但不会修改任何文件：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git commit --allow-empty -m <span style="color:#e6db74">&#34;chore: daily history-today rebuild trigger&#34;</span>
+</span></span><span style="display:flex;"><span>git push
+</span></span></code></pre></div><ul>
+<li>并配合 <code>.gitignore</code>，防止本地或别的脚本不小心把这些生成物加进 Git：
+<pre tabindex="0"><code class="language-gitignore" data-lang="gitignore">/public/
+/.history-today-build-stamp
+</code></pre></li>
+</ul>
+<h4 id="takeaways-3">Takeaways</h4>
+<ul>
+<li><strong>仓库只保存“源代码”和“真实源数据”，不保存“构建结果”</strong>。</li>
+<li>静态网站构建目录（如 public、<code>dist/</code>）几乎总应该被 gitignore。</li>
+</ul>
+</br>
+</br>
+<h1 id="github-actions-bot-可复用模板">GitHub Actions Bot 可复用模板</h1>
+<blockquote>
+<p>针对 “大学初级程序员” 的分步教程：你可以用在RSS 抓取、自动翻译、定期备份等任意自动化任务上。</p>
+</blockquote>
+<h3 id="step-1脚本">Step 1：脚本</h3>
+<ul>
+<li>语言随意：Python / Node / Go / Shell 都行，这里以 Python 举例。</li>
+<li>输入：从环境变量或配置读取参数 (例如 API key、日期范围)；输出：生成数据文件，或者修改某些源文件；可以在本地命令行直接运行并观察效果。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 脚本骨架伪代码</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> datetime <span style="color:#f92672">import</span> datetime
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 从环境变量读取密钥（如果需要）</span>
+</span></span><span style="display:flex;"><span>    api_key <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;MY_API_KEY&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> api_key:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">RuntimeError</span>(<span style="color:#e6db74">&#34;Missing MY_API_KEY&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    today <span style="color:#f92672">=</span> datetime<span style="color:#f92672">.</span>utcnow()<span style="color:#f92672">.</span>date()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ... 调第三方 API ...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ... 生成 JSON 或 Markdown 文件 ...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div><p><strong>注意不要大大方方的在脚本里硬编码密钥，全部走环境变量 (后端)。</strong></p>
+</br>
+<h3 id="step-2本地把脚本和站点集成好">Step 2：本地把脚本和站点集成好</h3>
+<p>以我们的项目为例：把脚本生成的数据放到 <code>static/xxx.json</code>；Hugo 用 shortcode 或 partial 在构建时读入这个 JSON；</p>
+<p>本地执行并检查：</p>
+<ul>
+<li>确认脚本是<strong>幂等的</strong>：多跑几次结果一样 (或只会覆盖旧数据)。</li>
+<li>确认站点构建不依赖 CI 才能通过。</li>
+</ul>
+</br>
+<h3 id="step-3设计-github-actions-workflow">Step 3：设计 GitHub Actions Workflow</h3>
+<p>一个典型的 workflow 结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Daily Bot</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">schedule</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">cron</span>: <span style="color:#e6db74">&#34;0 0,1,2 * * *&#34;</span>   <span style="color:#75715e"># 每天 UTC 0/1/2 点跑</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">workflow_dispatch</span>: {}       <span style="color:#75715e"># 允许手动点按钮触发</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">permissions</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">contents</span>: <span style="color:#ae81ff">write            </span> <span style="color:#75715e"># 允许 Bot 推送代码或空提交</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">jobs</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">run-bot</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">steps</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout repo</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v4</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">fetch-depth</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">submodules</span>: <span style="color:#ae81ff">recursive </span> <span style="color:#75715e"># 如果你用了主题子模块等</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Setup Python</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/setup-python@v5</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">python-version</span>: <span style="color:#e6db74">&#34;3.12&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install deps</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">pip install -r requirements.txt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Run bot script</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">env</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">MY_API_KEY</span>: <span style="color:#ae81ff">${{ secrets.MY_API_KEY }}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">python content/posts/fetch_history_today.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name: Optional</span>: <span style="color:#ae81ff">sanity build</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: <span style="color:#ae81ff">hugo --config hugo.toml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Trigger deploy (empty commit)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git config user.name &#34;github-actions[bot]&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git config user.email &#34;github-actions[bot]@users.noreply.github.com&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git commit --allow-empty -m &#34;chore: daily bot trigger&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git push</span>          
+</span></span></code></pre></div><p>这样定时任务会让 GitHub Actions Bot 帮你跑脚本：Bot 通过一个空提交触发后续平台 (如 Cloudflare Pages) 构建部署；不会往仓库里塞大量构建产物。</p>
+</br>
+</br>
+<h1 id="密钥写前端吗主播你好大方">“密钥写前端吗？主播你好大方”</h1>
+<p>对初级程序员来说，非常习惯性就把密钥写到前端代码或公开仓库里，记住：</p>
+<blockquote>
+<p>凡是任何人都能通过浏览器看到的东西，就不是秘密 ——</p>
+</blockquote>
+<ul>
+<li>GitHub public 仓库的源码，这么做 Github 会写邮件找你投诉的，额……亲身经历。</li>
+<li>F12 能看到的东西：Hugo 模板 / Markdown / JS / CSS；静态 JSON / 静态 HTML；</li>
+<li>浏览器的 <code>localStorage</code>、Cookie (除非是 HTTP-only 且只供后端使用)。</li>
+</ul>
+<p><strong>正确的做法：</strong></p>
+<ol>
+<li><strong>密钥只存在于服务器的环境变量里</strong>，例如 GitHub Actions 的 <code>secrets.MY_API_KEY</code>。</li>
+<li>在 workflow 里，把 secret 映射到运行环境：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">env</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">MY_API_KEY</span>: <span style="color:#ae81ff">${{ secrets.MY_API_KEY }}</span>
+</span></span></code></pre></div></li>
+<li>在你的脚本里只用 <code>os.environ[&quot;MY_API_KEY&quot;]</code> 来读取，不要写到任何输出文件中。</li>
+<li>脚本生成的内容，如果要暴露给前端，必须是<strong>已经脱敏过的结果</strong>：如请求 API 返回的数据本体，而不是 API 的返回 Token / Refresh Token / 私有 ID 等。</li>
+</ol>
+<p>(当然你也可以用 Cloudflare 的 Workers&amp;Pages 新增一条 &ldquo;Variables and Secrets&rdquo; 来保存密钥)</p>
+<p>⚠️ 最后，在 Cloudflare 中为你的域增加一条 WAF 安全规则，以我的域名为例：</p>
+<pre tabindex="0"><code class="language-pseudocode" data-lang="pseudocode">当 (http.host eq &#34;nero-lithos.com&#34; or ends_with(http.host, &#34;.nero-lithos.com&#34;))
+然后 “托管质询“ (&#34;Managed Challenge&#34;)
+</code></pre><p>这个服务对于特定域是免费的，不要在仪表主页配置全局 WAF，否则要收钱。</p>
+</br>
+</br>
+<h1 id="建议">建议</h1>
+<ol>
+<li><strong>先在本地把流程跑通，再搬到 CI</strong>，不要一上来就写 Actions</li>
+<li><strong>每次改动只增加一点复杂度</strong></li>
+<li><strong>Git Bot 是一个 Contributor，所以它生成的东西也会产生版本冲突</strong></li>
+<li><strong>永远不要把密钥写进代码和配置文件</strong></li>
+</ol>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">技术</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#项目架构">项目架构</a></li>
+    <li><a href="#坑--困难">坑 &amp; 困难</a>
+      <ul>
+        <li><a href="#数据源">数据源</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+        <li><a href="#时间和时区">时间和时区</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+        <li><a href="#构建链路">构建链路</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+        <li><a href="#git-历史污染">Git 历史污染</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#github-actions-bot-可复用模板">GitHub Actions Bot 可复用模板</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#step-1脚本">Step 1：脚本</a></li>
+            <li><a href="#step-2本地把脚本和站点集成好">Step 2：本地把脚本和站点集成好</a></li>
+            <li><a href="#step-3设计-github-actions-workflow">Step 3：设计 GitHub Actions Workflow</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#密钥写前端吗主播你好大方">“密钥写前端吗？主播你好大方”</a></li>
+    <li><a href="#建议">建议</a></li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/gab/">🛠️ Getting Started with GitHub Action Bot for Repository Automation</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/whisper/">📢 How can you batch-transcribe audio into text efficiently?</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/whisper/">📢 如何快速批量地将音频转文字？</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/outlook/">🌐 Attempting to Fetch CUHKSZ Mailbox Data</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/outlook/">🌐 龙大邮箱抓取尝试</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/weblog_deploy/">🌐 在 cloudflare 部署 Hugo 构架博客的 manual</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>

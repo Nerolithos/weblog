@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>💻 CSC3060 Week 6-7 Processor SW and HW | Lithos&#39; Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.">
+    <meta name="generator" content="Hugo 0.134.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+
+
+
+  
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+  
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    
+
+    
+      
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts_en/3060.4/">
+    <meta property="og:url" content="http://localhost:1313/posts_en/3060.4/">
+  <meta property="og:site_name" content="Lithos&#39; Blog">
+  <meta property="og:title" content="💻 CSC3060 Week 6-7 Processor SW and HW">
+  <meta property="og:description" content="CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts_en">
+    <meta property="article:published_time" content="2026-03-03T10:37:34+08:00">
+    <meta property="article:modified_time" content="2026-03-03T10:37:34+08:00">
+    <meta property="article:tag" content="CSC3060">
+
+  <meta itemprop="name" content="💻 CSC3060 Week 6-7 Processor SW and HW">
+  <meta itemprop="description" content="CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.">
+  <meta itemprop="datePublished" content="2026-03-03T10:37:34+08:00">
+  <meta itemprop="dateModified" content="2026-03-03T10:37:34+08:00">
+  <meta itemprop="wordCount" content="2078">
+  <meta itemprop="keywords" content="CSC3060">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="💻 CSC3060 Week 6-7 Processor SW and HW">
+  <meta name="twitter:description" content="CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.">
+
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+
+<style>
+	 
+	#reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 6px;
+		background: rgba(0, 160, 200, 0.08);
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	#reading-progress-bar {
+		width: 100%;
+		height: 100%;
+		background: #00a0c8;
+		box-shadow: 0 0 6px rgba(0, 160, 200, 0.8);
+		transform-origin: left center;
+		transform: scaleX(0);
+		transition: transform 0.08s linear;
+	}
+
+	 
+	.home-post-card {
+		position: relative;
+		background: rgba(255, 255, 255, 0.96);
+		border-radius: 8px;
+		padding: 0.75rem 1.5rem;  
+		cursor: pointer;
+		transition: transform 0.15s ease-out,
+								box-shadow 0.15s ease-out,
+								background 0.15s ease-out;
+	}
+
+	.home-post-card:hover {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+		background: #ffffff;
+		z-index: 2;
+	}
+
+	.home-post-preview {
+		max-height: 4.5em;  
+		overflow: hidden;
+		position: relative;
+		transition: max-height 0.2s ease-out;
+	}
+
+	.home-post-card:hover .home-post-preview {
+		max-height: 12em;  
+	}
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var container = document.getElementById('reading-progress');
+		var bar = document.getElementById('reading-progress-bar');
+		if (!container || !bar) {
+			return;
+		}
+
+		var ticking = false;
+
+		function updateProgress() {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+			var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			var ratio = 0;
+			if (docHeight > 0) {
+				ratio = scrollTop / docHeight;
+			}
+			if (ratio < 0) ratio = 0;
+			if (ratio > 1) ratio = 1;
+
+			bar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
+			ticking = false;
+		}
+
+		function requestTick() {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		}
+
+		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener('resize', requestTick);
+
+		
+		updateProgress();
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
+		if (!cards || !cards.length) {
+			return;
+		}
+
+		cards.forEach(function (card) {
+			var url = card.getAttribute('data-post-url');
+			if (!url) return;
+
+			card.addEventListener('click', function (event) {
+				
+				if (event.target && event.target.closest('a')) {
+					return;
+				}
+				window.location.href = url;
+			});
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === "function") {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ]
+          });
+        } else {
+          console.warn("KaTeX 渲染器未定义！");
+        }
+      });
+    </script>
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+    
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/30604.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+      
+        Lithos&#39; Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
+              💻 GitHub
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
+              🎨 Pixiv
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
+              🐈 ArkPet
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search_en/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">💻 CSC3060 Week 6-7 Processor SW and HW</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    
+
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        Posts_ENs
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">💻 CSC3060 Week 6-7 Processor SW and HW</h1>
+
+      
+
+      
+      
+        
+          <time class="f6 mv4 dib tracked" datetime="2026-03-03T10:37:34+08:00">March 3, 2026</time>
+        
+      
+
+      
+    </header>
+
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"></br>
+<h1 id="week-6-7--processor-architecture-and-logic-design">Week 6-7  Processor Architecture and Logic Design</h1>
+<blockquote>
+<p>How do instructions actually run inside a processor?</p>
+</blockquote>
+<p>Week 5 covered computer architecture: ISA (<code>x86</code>, <code>ARM</code>, <code>RISC-V</code>, &hellip;).<br>
+Week 6 turns to processor microarchitecture: different implementations under the same ISA (<code>single-cycle</code>, <code>multi-cycle</code>, <code>pipelined</code>, <code>out-of-order</code>, &hellip;).</p>
+</br>
+<h2 id="processor-microarchitecture"><strong>Processor Microarchitecture</strong></h2>
+<ul>
+<li><strong>Data Path</strong>: computes on data, processes it, or moves it around; it is responsible for the data flow.</li>
+<li><strong>Control</strong>: updates and fetches instructions; it is responsible for the instruction flow.</li>
+</ul>
+</br>
+<h3 id="cycle">Cycle</h3>
+<ul>
+<li>A CPU does not operate continuously. Instead, it works periodically through the cycle of “fetch, decode, execute” — fetch the instruction from memory/cache, interpret it according to the ISA, then compute or access memory. The smallest time unit is a <strong>cycle</strong>. Its actual duration depends on the implementation, and its frequency is measured in GHz. For example, a 3 GHz CPU processes 3×10<sup>9</sup> cycles per second.</li>
+<li>The CPU fetches an instruction, splits it into fields and interprets them under the ISA, executes the corresponding operation depending on the instruction type, may then access memory, write the result back to a register, and finally <strong>increments the PC by 4</strong>. (⚠️ Under the RV32I <strong>C-extension</strong>, where instructions may be 16 bits wide, the update becomes <code>PC += 2</code>.)</li>
+</ul>
+<p><strong>Single-cycle</strong>: <strong>every instruction must finish within one cycle.</strong><br>
+This means the cycle length must be <strong>rounded up to the slowest instruction</strong> — all instructions take as long as the slowest one, namely <code>lw</code>. (The fastest instructions are jumps such as <code>jal</code>.)</p>
+<p><strong>Multi-cycle</strong>: <strong>split one instruction into multiple stages, one stage per cycle.</strong><br>
+RISC helped drive the revolution toward shorter cycles, so multi-cycle execution is much more efficient in practice.</p>
+</br>
+<h3 id="cpu-performance-formula">CPU Performance Formula</h3>
+<p>⚠️ <em>CPU Time = Instruction Count × CPI × Clock Cycle Time</em></p>
+<p><strong>That is: total execution time = how many instructions must run × the average number of cycles per instruction × the duration of each cycle.</strong></p>
+<ul>
+<li><strong>Instruction count</strong> depends on the ISA, the compiler, and the specific algorithm.</li>
+<li><strong>CPI</strong> depends on the ISA and the processor microarchitecture.</li>
+<li><strong>Clock-cycle time</strong> depends on the processor microarchitecture and the hardware technology.</li>
+</ul>
+<p>So performance must be judged by considering all three together, not merely by counting instructions. For example, if we use an ISA with FMA, the instruction count may decrease. Under a single-cycle implementation, CPI remains 1 but the clock cycle becomes longer; under a multi-cycle implementation, CPI increases while the clock time may remain unchanged.</p>
+<p>Overall, the contrast can be summarized as: <strong>CISC (short, long, long) vs. RISC (long, short, short)</strong>. Hence modern high-performance CPUs such as <code>x86</code> machines often look like this: <strong>the ISA behaves like CISC, but internally instructions are translated into micro-ops and executed in a RISC-like manner</strong>, combining advantages of both.</p>
+</br>
+<h3 id="single-cycle-multi-cycle-and-pipeline">Single-cycle, Multi-cycle, and Pipeline</h3>
+<p><strong>Single-cycle</strong>: finish each instruction in one <strong>long cycle</strong> — CPI = 1, but the cycle itself is long.</p>
+<p><strong>Multi-cycle</strong>: let instructions proceed step by step — CPI &gt; 1, but each cycle is shorter.</p>
+<p>⚠️ <strong>Pipeline</strong>: <strong>overlap different stages of different instructions</strong>. For example, while the first instruction is executing, the second may be decoding and the third may already be fetching. A pipeline can be seen as the most basic form of <a href="https://blog.nero-lithos.com/posts/3060.1/">ILP</a>.</p>
+</br>
+</br>
+<h2 id="foundations-of-logic-design">Foundations of Logic Design</h2>
+<blockquote>
+<p>In the end, a processor is just circuitry.</p>
+</blockquote>
+<p>A low voltage near 0 V represents 0, and a high voltage near 1 V represents 1. One wire carries 1 bit; multi-bit data is represented by a bus.</p>
+</br>
+<h3 id="the-three-core-hardware-ingredients">The Three Core Hardware Ingredients</h3>
+<p><strong>Combinational elements</strong>: perform functional operations on the inputs and produce outputs. They are <strong>stateless</strong> — they do not remember.</p>
+<p><strong>State / sequential elements</strong>: store state information, such as registers and memories.</p>
+<p><strong>Clock signals</strong>: determine when the state elements update.</p>
+<p>So the essence of “executing one instruction” is:</p>
+<blockquote>
+<p>Within one cycle, combinational logic computes the “next state,” and when the clock edge arrives, that next state is written into the sequential elements.</p>
+</blockquote>
+<h4 id="basic-logic-gates">Basic Logic Gates</h4>
+<p><img src="https://i.postimg.cc/nh30sDLz/jie-ping2026-03-03-11-03-32.png" alt=""></p>
+<h4 id="combinational-circuit-elements">Combinational Circuit Elements</h4>
+<ul>
+<li><strong>MUX</strong> (Multiplexer): <code>Y = S ? I1 : I0</code><br>
+If the select signal <code>S = 1</code>, output <code>I1</code>; otherwise output <code>I0</code>. It is essentially <strong>ternary decision logic</strong>. Any “choose one of two” or “choose one of many” problem fundamentally relies on a MUX.<br>
+Examples: Should the second ALU input come from a register or an immediate? Should the next PC value be <code>PC + 4</code> or the branch target?</li>
+<li><strong>ALU</strong>: <code>Y = F(A, B)</code><br>
+The control signals decide whether it performs <code>add</code>, <code>sub</code>, <code>and</code>, <code>or</code>, <code>compare</code>, and so on.</li>
+<li><strong>Comparator</strong>: outputs <code>L</code> if <code>A &lt; B</code>, <code>E</code> if <code>A == B</code>, and <code>G</code> if <code>A &gt; B</code>. It is especially suitable for branch conditions.<br>
+<img src="https://i.postimg.cc/FzfQq4nf/jie-ping2026-03-03-11-13-36.png" alt=""></li>
+</ul>
+<p>A combinational circuit is always “working”: once the input changes, the output changes after some <strong>delay</strong>. The delay of a combinational circuit is determined by the <strong>longest logic path from any input to any output</strong>, which is exactly the <strong>critical path</strong>.</p>
+<h4 id="sequential-elements">Sequential Elements</h4>
+<ul>
+<li><strong>Registers</strong>: store data, and update on the rising edge of the clock signal.</li>
+<li><strong>Register with write control</strong>: adds write permission. If <code>Write = 1</code>, the register updates normally; if <code>Write = 0</code>, it keeps the old value. Not every instruction writes to a register — ⚠️ under RV32I, <strong>Branch</strong> and <strong>Store</strong> instructions always have <code>Write = 0</code>.</li>
+</ul>
+<h4 id="clock">Clock</h4>
+<p>A valid cycle must satisfy:</p>
+<blockquote>
+<p>Starting from the output of one state element, the signal must pass through the combinational logic and arrive stably at the input of the next state element before the next clock edge.</p>
+</blockquote>
+<p>The clock cannot be too fast. Otherwise the data may be written before it becomes stable, causing errors. Hence the lower bound on the clock period is determined by the <strong>longest combinational path</strong>.</p>
+</br>
+<h3 id="the-mvp-model-of-an-rv32i-processor">The “MVP Model” of an RV32I Processor</h3>
+<p>(The figure below is the smallest runnable subset of a single-cycle RV32I processor.)</p>
+<p>⚠️ The circular branch points indicate multiple parallel wires. The <strong>three</strong> circled branch points from left to right <u>must be implemented with MUXes</u>:</p>
+<ul>
+<li>
+<p><strong>PCSrc</strong>: do we take a branch/jump?</p>
+</li>
+<li>
+<p><strong>ALU inSrc</strong>: use an immediate or a register?</p>
+</li>
+<li>
+<p><strong>MemtoReg</strong>: write back from memory or from the ALU?<br>
+<img src="https://i.postimg.cc/vHGkNVDg/jie-ping2026-03-04-13-59-14.png" alt=""></p>
+</li>
+<li>
+<p><strong>R-type</strong>, e.g. <code>add x3, x1, x2</code>:<br>
+<code>PC += 4</code> is computed in parallel by the left adder while the PC also supplies an address to instruction memory. The instruction is decoded, the <strong>ALUSrc MUX</strong> selects register input, <strong>ALUctr</strong> requests <code>x1 + x2</code>, <u>Data Memory is not used</u>, and the <strong>MemtoReg MUX</strong> selects the <strong>ALU</strong> result, which is written back into register <code>x3</code>.</p>
+</li>
+<li>
+<p><strong>I-type</strong>, e.g. <code>addi x3, x1, 42</code>:<br>
+the <strong>ALUSrc MUX</strong> selects the <strong>sign-extended immediate</strong>. Everything else is similar to the R-type case.</p>
+</li>
+<li>
+<p><strong>Load</strong>, e.g. <code>lw x3, 8(x1)</code>:<br>
+the <strong>ALUSrc MUX</strong> selects the sign-extended <strong>8</strong>, <strong>ALUctr</strong> computes <code>x1 + 8</code>, Data Memory reads from that address, the <strong>MemtoReg MUX</strong> selects <strong>Data Memory</strong>, and the data is written back into register <code>x3</code>.</p>
+</li>
+<li>
+<p><strong>Store</strong>, e.g. <code>sw x3, 8(x1)</code>:<br>
+in the opposite direction, the value in <code>x3</code> is written into <code>data memory[x1 + 8]</code>, and <u>nothing is written back to the register file</u>. Otherwise it resembles the load path.</p>
+</li>
+<li>
+<p><strong>Branch</strong>, e.g. <code>beq x1, x2, 88</code>:<br>
+the <strong>ALUSrc MUX</strong> selects register input, and <strong>ALUctr uses the Comparator</strong> to compare <code>x1</code> and <code>x2</code>. Meanwhile the machine computes both <code>PC + 4</code> and <code>PC + 88</code>, and <strong>PCSrc</strong> chooses between them based on the comparison result.</p>
+</li>
+<li>
+<p><strong>Jump</strong>: at the <strong>MemtoReg</strong> side we need one extra <strong>WBsel</strong> (Write Back Select) element. We will discuss this later.</p>
+</li>
+</ul>
+</br>
+<h3 id="control">Control</h3>
+<ul>
+<li>A <strong>1-bit MUX</strong> chooses <code>PCSrc</code></li>
+<li>A <strong>1-bit MUX</strong> chooses <code>MemtoReg</code> (is the written-back value from the ALU or from memory?)</li>
+<li>A <strong>1-bit MUX</strong> chooses <code>ALUSrc</code></li>
+<li>A <strong>1-bit Write Enable</strong> controls memory read/write</li>
+<li>A <strong>4-bit ALUctr</strong> controls whether the ALU performs <code>add</code>, <code>sub</code>, <code>and</code>, <code>or</code>, &hellip;<br>
+<img src="https://i.postimg.cc/GmkmFf7P/jie-ping2026-03-04-15-57-37.png" alt=""></li>
+</ul>
+<p>For example, for <code>lw</code>:</p>
+<ul>
+<li><code>ALUSrc = 1</code> (select sign-extended immediate)</li>
+<li><code>MemRd = 1</code> (need to read memory)</li>
+<li><code>MemtoReg = 1</code> (write back from memory)</li>
+<li><code>RegWr = 1</code> (need to write a register)</li>
+</ul>
+<p>For <code>sw</code>:</p>
+<ul>
+<li><code>ALUSrc = 1</code></li>
+<li><code>MemWr = 1</code></li>
+<li><code>RegWr = 0</code></li>
+</ul>
+</br>
+</br>
+<h2 id="how-to-design-a-processor">How to Design a Processor?</h2>
+<p>We use the smallest single-cycle RV32I subset as the example.</p>
+<h3 id="step-1-analyze-the-instruction-set-requirements">Step 1: Analyze the Instruction-Set Requirements</h3>
+<p>Write each instruction’s semantics in <strong>register-transfer</strong> form:</p>
+<p><img src="https://i.postimg.cc/J7NM0FnS/jie-ping2026-03-04-17-26-04.png" alt=""></p>
+<p>⚠️ From this we conclude that the datapath must contain at least:</p>
+<ol>
+<li>(Instruction) Memory</li>
+<li>Register File (<code>32 × 32 bit</code>)</li>
+<li>PC</li>
+<li>Extender (for immediate extension)</li>
+<li>ALU</li>
+<li>An adder for <code>PC+4</code> or <code>PC+imm</code><br>
+<img src="https://i.postimg.cc/qvWr2W8d/jie-ping2026-03-05-09-09-06.png" alt=""></li>
+</ol>
+</br>
+<h3 id="step-2-choose-datapath-components-and-a-clocking-strategy">Step 2: Choose Datapath Components and a Clocking Strategy</h3>
+<ol>
+<li><strong>CLA Adder</strong>:</li>
+</ol>
+<p><img src="https://i.postimg.cc/6pWcYQfV/jie-ping2026-03-05-09-24-29.png" alt=""></p>
+<ol start="2">
+<li>
+<p><strong>Register</strong>:<br>
+uses the <code>Clk</code> signal as its timing source, together with write permission (<code>1/0</code>: allowed / not allowed to write)</p>
+</li>
+<li>
+<p><strong>Register File</strong>: 32 registers</p>
+</li>
+</ol>
+<ul>
+<li><strong>Datapath</strong>: two <code>32-bit</code> read ports (<code>busA</code>, <code>busB</code>) and one <code>32-bit</code> write port (<code>busW</code>)</li>
+<li><strong>Control</strong>: three <strong>5-bit</strong> register-select lines <code>RA</code>, <code>RB</code>, <code>RW</code><br>
+(<u>corresponding to ISA fields <code>rs1</code>, <code>rs2</code>, and <code>rd</code></u>)</li>
+<li>A 2-wide superscalar design would need at least 4 read ports; an FMA instruction would need 3 read ports.</li>
+</ul>
+<ol start="4">
+<li><strong>Main Memory</strong></li>
+</ol>
+<ul>
+<li><strong>Datapath</strong>: one <code>32-bit</code> read port bus and one <code>32-bit</code> write port bus</li>
+<li><strong>Control</strong>: <code>32-bit</code> address plus <code>Write Enable</code></li>
+</ul>
+</br>
+<h3 id="step-3-assemble-the-datapath">Step 3: Assemble the Datapath</h3>
+<ol>
+<li>The <strong>Instruction Fetch Unit</strong> is always similar:
+<ul>
+<li><strong>fetch</strong>: <code>mem[PC]</code></li>
+<li><strong>update</strong>: <code>MUX: PC += 4 or PC += Imm</code><br>
+(next instruction or branch target?)</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>Is one adder enough?</p>
+</blockquote>
+<p>— In theory some designs may reuse an adder, but in a <strong>single-cycle</strong> implementation one adder is generally not enough, because we often need <code>PC + 4</code> and <code>PC + immediate</code> at the same time.</p>
+<blockquote>
+<p>Why can’t <code>beq</code> simply use something like <code>sub rs3, rs1, rs2 = 0</code> instead of a comparator?</p>
+</blockquote>
+<p>— <strong>Overflow</strong>. If subtraction is used for comparison, we must introduce additional flags such as <strong>V (overflow)</strong> or <strong>C (carry)</strong> to disambiguate the result.</p>
+<ol start="2">
+<li>The remaining execution modules should be integrated into a minimal multiplexed circuit using MUXes:</li>
+</ol>
+<p><img src="https://i.postimg.cc/vHMp9fDS/jie-ping2026-03-05-12-08-52.png" alt=""></p>
+<blockquote>
+<p>The core principle of MUXes: <strong>do not imagine building a separate circuit for every instruction. Reuse the datapath as much as possible, and configure it through control signals.</strong></p>
+</blockquote>
+<p>For example, the figure above typically merges the datapaths of memory instructions and R-type instructions.</p>
+<ol start="3">
+<li><strong>Context switching is essentially “switching state.”</strong></li>
+</ol>
+<blockquote>
+<p><strong>We do not save every single thing inside the machine. We save and restore only the architectural state necessary to resume this execution stream</strong> — including the PC, Register Files (general-purpose and special registers), <code>SP</code> (stack pointer), and <code>RA</code> (return address).</p>
+</blockquote>
+<ul>
+<li><strong>Thread switch</strong> saves processor registers</li>
+<li><strong>Process switch</strong> saves the PCB (including registers)</li>
+</ul>
+<blockquote>
+<p>Microarchitectural state such as cache contents, control signals, or pipeline state does <strong>not necessarily</strong> need to be saved.</p>
+</blockquote>
+<ol start="4">
+<li>
+<p>The whole circuit:<br>
+(adding the path needed by <code>jal</code>: jump to the target address and write the return address <code>PC + 4</code> into <code>rd</code>)<br>
+<img src="https://i.postimg.cc/XYdqxX58/jie-ping2026-03-05-15-08-53.png" alt=""></p>
+</li>
+<li>
+<p>Clock period:<br>
+<u>A register can be read during the same cycle, pass through combinational logic, and then be written back at the end of that same cycle.</u></p>
+</li>
+</ol>
+<blockquote>
+<p>The read happens during signal propagation after the clock edge; the write happens before the next clock edge.</p>
+</blockquote>
+<ul>
+<li>“The lower bound on the clock period is determined by the <strong>longest combinational path</strong>.”<br>
+For a single-cycle CPU, the slowest path is typically the one for <code>lw</code>, whose propagation delay includes:</li>
+</ul>
+<blockquote>
+<p>Critical Path = &ldquo;PC&rsquo;s Clk-to-Q&rdquo; + &ldquo;Instruction Memory Access Time&rdquo; + &ldquo;Register File Access Time&rdquo; + “ALU 32-bit Addition Time” + “Data Memory Access Time&quot; + &ldquo;Register File Setup Time&rdquo; + &ldquo;Clock Skew&rdquo;.</p>
+</blockquote>
+<p>(<code>PC's Clk-to-Q</code>: after the clock arrives, the PC output takes some time to stabilize.<br>
+<code>Setup time</code>: before writing into the register file, the input must remain stable for a short period.<br>
+<code>Clock skew</code>: the clock signal arrives at different components at slightly different times.)</p>
+<ul>
+<li>Hence the frequency limit of a single-cycle CPU is usually determined by the slowest path, namely <code>lw</code>.</li>
+</ul>
+</br>
+<h3 id="obvious-weaknesses-of-the-single-cycle-processor">Obvious Weaknesses of the Single-Cycle Processor</h3>
+<ul>
+<li>Since there is no ILP and no resource reuse, multiple redundant adders are required (<code>PC</code> update and <code>ALU</code> arithmetic need separate hardware).</li>
+<li>The same combinational or state element cannot be traversed multiple times within one cycle.</li>
+<li>The register file does not need to be duplicated, but it does need multiple ports (<code>2 read, 1 write</code>).</li>
+<li><code>mul</code> and <code>div</code> are iterative computations; to force them into a single cycle, their internal repetition would have to be fully unrolled, which is extremely expensive.</li>
+</ul>
+<p>Therefore, the more realistic solution is to allow <strong>multi-cycle execution</strong>, where a counter controls repeated reuse of the same hardware resources. The trade-off is that the CPI of those instructions increases.</p>
+</br>
+<h3 id="step-4-analyze-which-control-points-each-instruction-uses">Step 4: Analyze Which Control Points Each Instruction Uses</h3>
+<p>Determine how each instruction should select among the different MUX options.</p>
+<p><img src="https://i.postimg.cc/52gjQyF7/jie-ping2026-03-05-16-35-37.png" alt=""></p>
+</br>
+<h3 id="step-5-assemble-the-control-logic">Step 5: Assemble the Control Logic</h3>
+<p>Implement the decoding circuit that maps <code>opcode / funct</code> fields into control signals.</p>
+</br>
+<p>These five steps form the engineering path from <strong>ISA</strong> to <strong>microarchitecture</strong>.</p>
+</br>
+<h2 id="glossary-of-common-terms">Glossary of Common Terms</h2>
+<p><img src="https://i.postimg.cc/NFfQ32Fh/jie-ping2026-03-12-18-23-44.png" alt=""></p>
+<ul class="pa0">
+  
+   <li class="list di">
+     <a href="http://localhost:1313/tags/csc3060/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC3060</a>
+   </li>
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+        
+          <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nero-lithos" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+  
+  <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
+    <div class="post-toc-header">
+      <button type="button" class="post-toc-toggle" aria-label="最小化目录"></button>
+      <span class="post-toc-header-title">menu</span>
+    </div>
+    <p class="f5 b mb2">目录</p>
+    <div class="post-toc-inner">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week-6-7--processor-architecture-and-logic-design">Week 6-7  Processor Architecture and Logic Design</a>
+      <ul>
+        <li><a href="#processor-microarchitecture"><strong>Processor Microarchitecture</strong></a>
+          <ul>
+            <li><a href="#cycle">Cycle</a></li>
+            <li><a href="#cpu-performance-formula">CPU Performance Formula</a></li>
+            <li><a href="#single-cycle-multi-cycle-and-pipeline">Single-cycle, Multi-cycle, and Pipeline</a></li>
+          </ul>
+        </li>
+        <li><a href="#foundations-of-logic-design">Foundations of Logic Design</a>
+          <ul>
+            <li><a href="#the-three-core-hardware-ingredients">The Three Core Hardware Ingredients</a></li>
+            <li><a href="#the-mvp-model-of-an-rv32i-processor">The “MVP Model” of an RV32I Processor</a></li>
+            <li><a href="#control">Control</a></li>
+          </ul>
+        </li>
+        <li><a href="#how-to-design-a-processor">How to Design a Processor?</a>
+          <ul>
+            <li><a href="#step-1-analyze-the-instruction-set-requirements">Step 1: Analyze the Instruction-Set Requirements</a></li>
+            <li><a href="#step-2-choose-datapath-components-and-a-clocking-strategy">Step 2: Choose Datapath Components and a Clocking Strategy</a></li>
+            <li><a href="#step-3-assemble-the-datapath">Step 3: Assemble the Datapath</a></li>
+            <li><a href="#obvious-weaknesses-of-the-single-cycle-processor">Obvious Weaknesses of the Single-Cycle Processor</a></li>
+            <li><a href="#step-4-analyze-which-control-points-each-instruction-uses">Step 4: Analyze Which Control Points Each Instruction Uses</a></li>
+            <li><a href="#step-5-assemble-the-control-logic">Step 5: Assemble the Control Logic</a></li>
+          </ul>
+        </li>
+        <li><a href="#glossary-of-common-terms">Glossary of Common Terms</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </nav>
+  <button type="button" class="post-toc-mini" aria-label="展开目录">menu</button>
+  
+
+
+
+
+
+  <div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3"></p>
+    <ul class="pa0 list">
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3060.1/">💻 CSC3060 Week 1-2 Introduction to Computer System</a>
+        </li>
+      
+    </ul>
+  </div>
+
+</aside>
+
+  </article>
+
+    </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="深浅模式切换">
+      <span class="liquid-dock-icon">☾</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="lang" aria-label="中英切换（暂未实现）">
+      <span class="liquid-dock-icon liquid-dock-icon-text">中/EN</span>
+    </button>
+  </div>
+</div>
+
+    
+    <footer class="custom-footer">
+  <p>&copy; Lithos&#39; Blog 2026</p>
+
+  
+    <ul class="footer-links">
+      
+        <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+      
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
+      
+    </ul>
+  
+</footer>
+
+  </body>
+</html>
