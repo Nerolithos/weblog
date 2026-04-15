@@ -349,6 +349,58 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
 				}
 				closeDock();
 			});
@@ -387,6 +439,7 @@
 
     
 
+
   
   <header>
     <div class="pb3-m pb6-l bg-black">
@@ -404,37 +457,37 @@
         <ul class="pl0 mr3">
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
               💻 GitHub
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
               🎨 Pixiv
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
               📊 EnergyVis
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
               ⚗️ ChemVis
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
               🤖 LGU CourseAI
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
               🐈 ArkPet
             </a>
           </li>
@@ -442,7 +495,9 @@
         </ul>
       
       
-      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
           name="q"
@@ -450,6 +505,7 @@
           class="pa1 br2 bn"
           style="font-size: 0.85rem; min-width: 140px;"
         />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
       </form>
       
       
@@ -463,8 +519,14 @@
 
       <div class="tc-l pv3 ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-          Posts
+          
+            Posts
+          
         </h1>
+        
+          
+        
+        
         
         
       </div>
@@ -632,18 +694,18 @@
             </p>
             <div class="lh-copy mid-gray">
               <div class="history-today">
-      <h2>历史上的今天 (04-14)</h2>
+      <h2>历史上的今天 (04-15)</h2>
       <ul class="history-today-list">
         
-          <li style="margin-bottom: 1em;"><strong>2024</strong> — Flooding in the Persian Gulf starts, killing 19 in Oman.</li>
+          <li style="margin-bottom: 1em;"><strong>2021</strong> — A mass shooting occurred at a Fedex Ground facility in Indianapolis, Indiana, killing nine and injuring seven.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2023</strong> — The Jupiter Icy Moons Explorer (JUICE) is launched by the European Space Agency.</li>
+          <li style="margin-bottom: 1em;"><strong>2019</strong> — The cathedral of Notre-Dame de Paris in France is seriously damaged by a large fire.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2022</strong> — 2022 Russian invasion of Ukraine: The Russian warship Moskva sinks.</li>
+          <li style="margin-bottom: 1em;"><strong>2014</strong> — In the worst massacre of the South Sudanese Civil War, more than 400 civilians are gunned down after seeking refuge in houses of worship as well as hospitals.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2016</strong> — The foreshock of a major earthquake occurs in Kumamoto, Japan.</li>
+          <li style="margin-bottom: 1em;"><strong>2013</strong> — Two bombs explode near the finish line at the Boston Marathon in Boston, Massachusetts, killing three people and injuring over 500 others.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2014</strong> — Two bombs detonate at a bus station in Nyanya, Nigeria, killing at least 88 people and injuring hundreds. Boko Haram claims responsibility.</li>
+          <li style="margin-bottom: 1em;"><strong>2013</strong> — A wave of bombings across Iraq kills at least 75 people.</li>
         
       </ul>
       <p style="margin-top: 2em; font-size: 0.9rem; color: #666;">

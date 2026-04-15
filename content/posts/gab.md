@@ -43,7 +43,7 @@ featured_image: "/images/gab.jpg"
 3. 关键组件
 
 - 数据抓取 Python 脚本遍历全年日期，从 Wikipedia API 拿历史事件,生成 JSON 文件。
-- Hugo 集成 (HTML Shortcode)：构建时 `readFile` + `transform.Unmarshal` 读取 JSON；用 `now.Format "01-02"`（UTC）作为 key 选出当天事件；渲染详情页列表 + 首页摘要；页面入口用 md 模板 (front matter 定义标题、封面图等)；正文调用 `{{< history_today >}}`。
+- Hugo 集成 (HTML Shortcode)：构建时 `readFile` + `transform.Unmarshal` 读取 JSON；用 `now.Format "01-02"`（UTC）作为 key 选出当天事件；渲染详情页列表 + 首页摘要；页面入口用 md 模板 (front matter 定义标题、封面图等)；正文调用 `history_today`。
 - 自动化：工作流 (yml)、`on.schedule` 每天多个时间点触发；拉代码 + 拉主题子模块；
 
 </br>

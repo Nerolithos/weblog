@@ -353,6 +353,58 @@
 					toggleTheme();
 				} else if (action === 'lang') {
 					
+					
+					
+					var currentPath = window.location.pathname || '/';
+
+					function getToggledLangPath(path) {
+						
+						if (path.length > 1 && path.charAt(path.length - 1) === '/') {
+							path = path.slice(0, -1);
+						}
+
+						
+						if (path === '') {
+							return '/posts_en/';
+						}
+						if (path === '/') {
+							return '/posts_en/';
+						}
+						if (path === '/posts_en') {
+							return '/';
+						}
+
+						
+						var segments = path.split('/');
+						var changed = false;
+						for (var i = 0; i < segments.length; i++) {
+							if (segments[i] === 'posts_en') {
+								segments[i] = 'posts';
+								changed = true;
+								break;
+							}
+							if (segments[i] === 'posts') {
+								segments[i] = 'posts_en';
+								changed = true;
+								break;
+							}
+						}
+						if (!changed) {
+							return null;
+						}
+						var newPath = segments.join('/');
+						if (newPath.charAt(0) !== '/') {
+							newPath = '/' + newPath;
+						}
+						return newPath;
+					}
+
+					var toggledPath = getToggledLangPath(currentPath);
+					if (toggledPath) {
+						var search = window.location.search || '';
+						var hash = window.location.hash || '';
+						window.location.href = toggledPath + search + hash;
+					}
 				}
 				closeDock();
 			});
@@ -409,37 +461,37 @@
         <ul class="pl0 mr3">
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
               💻 GitHub
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="http://localhost:1313/pixiv/" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
               🎨 Pixiv
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/DDA/" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
               📊 EnergyVis
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/chem/" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
               ⚗️ ChemVis
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/courseai/" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
               🤖 LGU CourseAI
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
               🐈 ArkPet
             </a>
           </li>
@@ -447,7 +499,9 @@
         </ul>
       
       
-      <form class="dn db-ns ml3" role="search" method="get" action="http://localhost:1313/search/">
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
         <input
           type="search"
           name="q"
@@ -455,6 +509,7 @@
           class="pa1 br2 bn"
           style="font-size: 0.85rem; min-width: 140px;"
         />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
       </form>
       
       
@@ -1394,11 +1449,23 @@
     <ul class="pa0 list">
       
         <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.f1/">💻 CSC3200 Final Revision: C&#43;&#43; Data Structures (Linear)</a>
+        </li>
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3200.2/">💻 CSC3200 LEC3-5 C&#43;&#43;进阶</a>
         </li>
       
         <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.2/">💻 CSC3200 LEC3-5 Intermediate C&#43;&#43;</a>
+        </li>
+      
+        <li class="mb2">
           <a href="http://localhost:1313/posts/3200.1/">💻 CSC3200 LEC1-2 C&#43;&#43;入门</a>
+        </li>
+      
+        <li class="mb2">
+          <a href="http://localhost:1313/posts_en/3200.1/">💻 CSC3200 LEC1-2 Introduction to C&#43;&#43;</a>
         </li>
       
     </ul>

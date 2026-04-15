@@ -3,7 +3,7 @@
   Uses Hugo's native .TableOfContents and related content.
 */}}
 
-{{ if eq .Section "posts" }}
+{{ if or (eq .Section "posts") (in .RelPermalink "/posts_en/") }}
   {{ with .TableOfContents }}
   <nav class="post-toc bg-near-white pa3 br2 nested-list-reset nested-copy-line-height nested-links mb4">
     <div class="post-toc-header">

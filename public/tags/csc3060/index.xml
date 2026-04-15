@@ -16,11 +16,25 @@
       <description>Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.</description>
     </item>
     <item>
+      <title>💯 CSC3060 Quiz Q&amp;A</title>
+      <link>http://localhost:1313/posts_en/3060q/</link>
+      <pubDate>Tue, 07 Apr 2026 13:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060q/</guid>
+      <description>Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.</description>
+    </item>
+    <item>
       <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>
       <link>http://localhost:1313/posts/3060.6/</link>
       <pubDate>Thu, 02 Apr 2026 10:11:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3060.6/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>
+      <link>http://localhost:1313/posts_en/3060.6/</link>
+      <pubDate>Thu, 02 Apr 2026 10:11:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.6/</guid>
+      <description>CSC3060 Week 10–11 at CUHKSZ: an extension of Week 1 on memory hierarchy, partitioning, and cache principles.</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</title>
@@ -30,11 +44,25 @@
       <description>CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险</description>
     </item>
     <item>
+      <title>💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</title>
+      <link>http://localhost:1313/posts_en/3060.5/</link>
+      <pubDate>Tue, 17 Mar 2026 10:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.5/</guid>
+      <description>CSC3060 Week 8–9 at CUHKSZ: ideal pipeline implementation, advantages, and potential hazards.</description>
+    </item>
+    <item>
       <title>💻 CSC3060 Project: Code Scheduling</title>
       <link>http://localhost:1313/posts/3060p3/</link>
       <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3060p3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Project: Code Scheduling</title>
+      <link>http://localhost:1313/posts_en/3060p3/</link>
+      <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060p3/</guid>
+      <description>CUHKSZ CSC3060 Project 3: instruction scheduling, DAG dependency graphs, and related topics.</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
@@ -44,11 +72,25 @@
       <description>CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行</description>
     </item>
     <item>
+      <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
+      <link>http://localhost:1313/posts_en/3060.4/</link>
+      <pubDate>Tue, 03 Mar 2026 10:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.4/</guid>
+      <description>CUHKSZ CSC3060 Week 6: processor hardware/software architecture and how instructions are actually executed.</description>
+    </item>
+    <item>
       <title>💻 CSC3060 Week 5 Continuation of Machine Level Programming</title>
       <link>http://localhost:1313/posts/3060.3/</link>
       <pubDate>Tue, 03 Feb 2026 20:37:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3060.3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 5 Continuation of Machine Level Programming</title>
+      <link>http://localhost:1313/posts_en/3060.3/</link>
+      <pubDate>Tue, 03 Feb 2026 20:37:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.3/</guid>
+      <description>CUHKSZ CSC3060 Week 5: continuing machine-level code, with calling conventions and registers.</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
@@ -58,11 +100,25 @@
       <description>CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)</description>
     </item>
     <item>
+      <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
+      <link>http://localhost:1313/posts_en/3060.2/</link>
+      <pubDate>Sat, 24 Jan 2026 10:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.2/</guid>
+      <description>CSC3060 Week 3–4 at CUHKSZ: machine-level arithmetic and machine-level code (ISA and assembly).</description>
+    </item>
+    <item>
       <title>💻 CSC3060 Week 1-2 Introduction to Computer System</title>
       <link>http://localhost:1313/posts/3060.1/</link>
       <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3060.1/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
+    </item>
+    <item>
+      <title>💻 CSC3060 Week 1-2 Introduction to Computer System</title>
+      <link>http://localhost:1313/posts_en/3060.1/</link>
+      <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3060.1/</guid>
+      <description>CSC3060 Week 1–2 at CUHKSZ: an introduction to the hardware and software foundations of computer systems.</description>
     </item>
   </channel>
 </rss>

@@ -22,5 +22,12 @@
       <guid>http://localhost:1313/posts/autorelease/</guid>
       <description>SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？</description>
     </item>
+    <item>
+      <title>🌐 Automation of Ssg Post Release</title>
+      <link>http://localhost:1313/posts_en/autorelease/</link>
+      <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/autorelease/</guid>
+      <description>How can blog publishing in an SSG setup (Hugo + Cloudflare) be semi-automated?</description>
+    </item>
   </channel>
 </rss>

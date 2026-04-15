@@ -1,21 +1,38 @@
 {{ $featured_image := partial "func/GetFeaturedImage.html" . }}
+{{ $isEnPostsList := and (not .IsHome) (in .RelPermalink "/posts_en/") }}
 {{ if $featured_image }}
-  {{/* 首页和文章页：有封面图时的头图区域 */}}
+  {{/* 首页和文章页：有封面图时的头图区域；英语 posts_EN 列表沿用首页样式 */}}
   <header class="cover bg-top" style="background-image: url('{{ $featured_image }}');">
     <div class="{{ .Site.Params.cover_dimming_class | default "bg-black-60" }}">
       {{ partial "site-navigation.html" .}}
       <div class="tc-l pv4 pv6-l ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
-          {{ .Title | default .Site.Title }}
+          {{ if $isEnPostsList }}
+            {{ .Site.Home.Title }}
+          {{ else }}
+            {{ .Title | default .Site.Title }}
+          {{ end }}
         </h1>
-        {{ with .Params.description }}
-          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3 mb3">
-            {{ . }}
-          </h2>
+        {{ if $isEnPostsList }}
+          {{ with .Site.Home.Params.description }}
+            <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3 mb3">
+              {{ . }}
+            </h2>
+          {{ end }}
+        {{ else }}
+          {{ with .Params.description }}
+            <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3 mb3">
+              {{ . }}
+            </h2>
+          {{ end }}
         {{ end }}
-        {{ if .IsHome }}
+        {{ $searchPath := "search/" }}
+        {{ if $isEnPostsList }}
+          {{ $searchPath = "search_en/" }}
+        {{ end }}
+        {{ if or .IsHome $isEnPostsList }}
         <div class="mt4 home-hero-search">
-          <form class="mw7 center flex items-center justify-center" role="search" method="get" action="{{ "search/" | relURL }}">
+          <form class="mw7 center flex items-center justify-center" role="search" method="get" action="{{ $searchPath | relURL }}">
             <input
               type="search"
               name="q"
@@ -39,16 +56,32 @@
       {{ partial "site-navigation.html" . }}
       <div class="tc-l pv3 ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-          {{ .Title | default .Site.Title }}
+          {{ if $isEnPostsList }}
+            {{ .Site.Home.Title }}
+          {{ else }}
+            {{ .Title | default .Site.Title }}
+          {{ end }}
         </h1>
-        {{ with .Params.description }}
-          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
-            {{ . }}
-          </h2>
+        {{ if $isEnPostsList }}
+          {{ with .Site.Home.Params.description }}
+            <h2 class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              {{ . }}
+            </h2>
+          {{ end }}
+        {{ else }}
+          {{ with .Params.description }}
+            <h2 class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              {{ . }}
+            </h2>
+          {{ end }}
         {{ end }}
-        {{ if .IsHome }}
+        {{ $searchPath2 := "search/" }}
+        {{ if $isEnPostsList }}
+          {{ $searchPath2 = "search_en/" }}
+        {{ end }}
+        {{ if or .IsHome $isEnPostsList }}
         <div class="mt4 home-hero-search">
-          <form class="mw7 center flex items-center justify-center" role="search" method="get" action="{{ "search/" | relURL }}">
+          <form class="mw7 center flex items-center justify-center" role="search" method="get" action="{{ $searchPath2 | relURL }}">
             <input
               type="search"
               name="q"

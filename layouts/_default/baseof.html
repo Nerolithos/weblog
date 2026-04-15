@@ -90,7 +90,7 @@
     <main class="pb7" role="main">
       {{ block "main" . }}{{ end }}
     </main>
-    {{ if or .IsHome (eq .Section "posts") }}
+    {{ if or .IsHome (or (eq .Section "posts") (in .RelPermalink "/posts_en/")) }}
       {{ partial "liquid-dock.html" . }}
     {{ end }}
     {{ block "footer" . }}{{ partialCached "site-footer.html" . }}{{ end }}

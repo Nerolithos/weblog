@@ -1,15 +1,29 @@
-{{- /* Build a simple search index of all posts */ -}}
-{{- $pages := where .Site.RegularPages "Section" "posts" -}}
-{{- $index := slice -}}
-{{- range $pages -}}
-  {{- $item := dict
-    "title" .Title
-    "permalink" .Permalink
-    "summary" (.Summary | plainify)
-    "content" (.Plain | plainify)
-    "date" (.Date.Format "2006-01-02")
-    "tags" .Params.tags
-  -}}
-  {{- $index = $index | append $item -}}
+{{- /*
+   Search index for site-wide search (Chinese + English posts).
+
+   This template is used for the home JSON output (index.json).
+   It walks all regular pages (no section filter) so that:
+   - Chinese search can see every page
+   - English search can client-side filter `/posts_en/` entries.
+*/ -}}
+[
+{{- $first := true -}}
+{{- range .Site.RegularPages -}}
+  {{- if not $first }},{{ end -}}
+  {{- $first = false -}}
+  {{- $summary := .Summary -}}
+  {{- if not $summary -}}
+    {{- $summary = .Plain | truncate 200 -}}
+  {{- end -}}
+  {
+    "title": {{ .Title | jsonify }},
+    "summary": {{ $summary | jsonify }},
+    "content": {{ .Plain | jsonify }},
+    "permalink": {{ .Permalink | jsonify }},
+    "date": {{ .Date.Format "2006-01-02" | jsonify }},
+    "tags": {{ (or .Params.tags (slice)) | jsonify }},
+    "categories": {{ (or .Params.categories (slice)) | jsonify }},
+    "section": {{ .Section | jsonify }}
+  }
 {{- end -}}
-{{- $index | jsonify -}}
+]

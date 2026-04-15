@@ -9,11 +9,25 @@
     <lastBuildDate>Thu, 06 Nov 2025 14:29:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/phy1001/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>⚛️ PHY1001 LEC10-15 Rotational Kinematics</title>
+      <link>http://localhost:1313/posts_en/phy2/</link>
+      <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/phy2/</guid>
+      <description>Important takeaways from PHY1001 at CUHKSZ on rotational motion about an axis.</description>
+    </item>
+    <item>
       <title>⚛️ PHY1001 LEC10-15 旋转运动学</title>
       <link>http://localhost:1313/posts/phy2/</link>
       <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/phy2/</guid>
       <description>CUHKSZ 大一/大二课程 PHY1001 绕轴运动 important takeaway</description>
+    </item>
+    <item>
+      <title>⚛️ PHY1001 LEC1-5 Basic Kinematics and Newtonian Mechanics</title>
+      <link>http://localhost:1313/posts_en/phy1/</link>
+      <pubDate>Tue, 16 Sep 2025 11:29:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/phy1/</guid>
+      <description>Important takeaways from PHY1001 at CUHKSZ on basic kinematics and Newtonian mechanics.</description>
     </item>
     <item>
       <title>⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学</title>

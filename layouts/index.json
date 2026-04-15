@@ -1,0 +1,24 @@
+{{- /* Search index for site-wide search (Chinese + English posts).
+      Output: JSON array of pages with title, summary, full plain content, tags, etc.
+   */ -}}
+[
+{{- $first := true -}}
+{{- range .Site.RegularPages -}}
+  {{- if not $first }},{{ end -}}
+  {{- $first = false -}}
+  {{- $summary := .Summary -}}
+  {{- if not $summary -}}
+    {{- $summary = .Plain | truncate 200 -}}
+  {{- end -}}
+  {
+    "title": {{ .Title | jsonify }},
+    "summary": {{ $summary | jsonify }},
+    "content": {{ .Plain | jsonify }},
+    "permalink": {{ .Permalink | jsonify }},
+    "date": {{ .Date.Format "2006-01-02" | jsonify }},
+    "tags": {{ (or .Params.tags (slice)) | jsonify }},
+    "categories": {{ (or .Params.categories (slice)) | jsonify }},
+    "section": {{ .Section | jsonify }}
+  }
+{{- end -}}
+]

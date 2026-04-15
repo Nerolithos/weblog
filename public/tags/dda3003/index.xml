@@ -16,11 +16,25 @@
       <description>CUHKSZ 选修课程 DDA3003 Visualization。期中复习 InfoVis, Tufte&amp;rsquo;s Design Principles, Gestalt Laws of encoding data, Visual perception, Color scheme, D3, HTML, CSS as well as Multivariate data cleaning, common tables and plots.</description>
     </item>
     <item>
+      <title>🎨 DDA3003 Midterm revision</title>
+      <link>http://localhost:1313/posts_en/3003.2/</link>
+      <pubDate>Thu, 26 Mar 2026 17:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3003.2/</guid>
+      <description>CUHKSZ elective course DDA3003 Visualization. Midterm review of InfoVis, Tufte’s design principles, Gestalt laws for visual encoding, visual perception, color schemes, D3, HTML, CSS, and multivariate data cleaning, common tables and plots.</description>
+    </item>
+    <item>
       <title>🎨 DDA3003 Introduction to D3</title>
       <link>http://localhost:1313/posts/3003.1/</link>
       <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3003.1/</guid>
       <description>CUHKSZ 选修课程 DDA3003 Visualization，介绍 D3.js ——— 一种 HTML 可视化工具</description>
+    </item>
+    <item>
+      <title>🎨 DDA3003 Introduction to D3</title>
+      <link>http://localhost:1313/posts_en/3003.1/</link>
+      <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/3003.1/</guid>
+      <description>An introduction to D3.js in CUHKSZ elective DDA3003 Visualization — an HTML-based visualization tool.</description>
     </item>
   </channel>
 </rss>

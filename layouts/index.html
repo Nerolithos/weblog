@@ -1,7 +1,8 @@
 {{ define "main" }}
 
 <div class="pa4">
-  {{ $all := .Site.RegularPages }}
+  {{/* 首页：只统计并展示中文 posts/ 下的文章 */}}
+  {{ $all := where .Site.RegularPages "Section" "posts" }}
   {{ $count := len $all }}
   <h1 class="f2">📚 Recent Blogs (Currently {{ $count }} blogs)</h1>
 

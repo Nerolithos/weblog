@@ -9,6 +9,13 @@
     <lastBuildDate>Fri, 29 Nov 2024 14:15:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/csc1003/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>💻 CSC1003 Final Review</title>
+      <link>http://localhost:1313/posts_en/1003.6/</link>
+      <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.6/</guid>
+      <description>A summary of useful Java syntax and common pitfalls.</description>
+    </item>
+    <item>
       <title>💻 CSC1003 期末总结</title>
       <link>http://localhost:1313/posts/1003.6/</link>
       <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
@@ -16,11 +23,25 @@
       <description>总结 Java 中好用的语句和易错的用法</description>
     </item>
     <item>
+      <title>💻 CSC1003 Assignment 2: Two-Dimensional Arrays</title>
+      <link>http://localhost:1313/posts_en/assignment2/</link>
+      <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/assignment2/</guid>
+      <description>Worked examples for the second CSC1003-Java assignment.</description>
+    </item>
+    <item>
       <title>💻 CSC1003 Assignment2 二维数组</title>
       <link>http://localhost:1313/posts/assignment2/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/assignment2/</guid>
       <description>CSC1003-JAVA 的第二份作业例题讲解。</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 LEC13-15 Recursion</title>
+      <link>http://localhost:1313/posts_en/1003.5/</link>
+      <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.5/</guid>
+      <description>An introduction to recursion, the stack and heap, and stack overflow.</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC13-15 递归</title>
@@ -37,6 +58,20 @@
       <description>期中考试复习与模拟题</description>
     </item>
     <item>
+      <title>💻 CSC1003 LEC10-12 Midterm Revision</title>
+      <link>http://localhost:1313/posts_en/1003.4/</link>
+      <pubDate>Sat, 19 Oct 2024 23:56:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.4/</guid>
+      <description>Midterm review and mock questions.</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 Assignment 1 OJ Practice</title>
+      <link>http://localhost:1313/posts_en/assignment1/</link>
+      <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/assignment1/</guid>
+      <description>The first OJ programming practice for the first-year CUHKSZ course CSC1003.</description>
+    </item>
+    <item>
       <title>💻 CSC1003 Assignment1 OJPractice</title>
       <link>http://localhost:1313/posts/assignment1/</link>
       <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
@@ -44,11 +79,25 @@
       <description>CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践</description>
     </item>
     <item>
+      <title>💻 CSC1003 TBL1 Networking and the History of Computing</title>
+      <link>http://localhost:1313/posts_en/1003.2/</link>
+      <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.2/</guid>
+      <description>Foundational material on networks and the Internet that the lecture largely skipped — LGU does not really offer a dedicated introductory networking course, so many students lack this background.</description>
+    </item>
+    <item>
       <title>💻 CSC1003 TBL1 网络与计算机史</title>
       <link>http://localhost:1313/posts/1003.2/</link>
       <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/1003.2/</guid>
       <description>讲座直接略过的互联网基础 —— LGU 完全没有网络相关的基础课，导致大家的相关知识储备薄弱。</description>
+    </item>
+    <item>
+      <title>💻 CSC1003 LEC1~3 Functions, Data Types, and Computation</title>
+      <link>http://localhost:1313/posts_en/1003.1/</link>
+      <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/1003.1/</guid>
+      <description>An introductory note to CSC1003 (Java) for first-year students at CUHKSZ.</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC1~3 函数、数据类型与计算</title>

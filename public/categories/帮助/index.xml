@@ -16,11 +16,32 @@
       <description>交互式元素周期表，展示单质颜色、熔沸点、第一电离能、电负性、原子半径、波义耳电子排布、化合价、冷知识等等。</description>
     </item>
     <item>
+      <title>🧪 Interactive Periodic Table</title>
+      <link>http://localhost:1313/posts_en/chemistry/</link>
+      <pubDate>Sat, 11 Apr 2026 20:08:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/chemistry/</guid>
+      <description>Interactive periodic table of elements, showing element color hue, melting and boiling point, ionization energy, electronegativity, radius, Bohr&amp;rsquo;s config, and many more.</description>
+    </item>
+    <item>
+      <title>🎓 CUHKSZ course AI</title>
+      <link>http://localhost:1313/posts_en/courseai/</link>
+      <pubDate>Tue, 07 Apr 2026 19:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/courseai/</guid>
+      <description>Based on the CUHKSZ couse information from Kayuan and many more open-sourse platforms, combined withthe free Qwen LLM model, I present to you CUHKSZ&amp;rsquo;s own ———— LGU courseai-2.0。</description>
+    </item>
+    <item>
       <title>🎓 LGU 选课 AI 助手</title>
       <link>http://localhost:1313/posts/courseai/</link>
       <pubDate>Tue, 07 Apr 2026 19:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/courseai/</guid>
       <description>基于卡园和开源平台扒下来的课程信息与免费的 Qwen LLM 构建的 LGU 选课辅助 AI ———— LGU courseai-2.0。</description>
+    </item>
+    <item>
+      <title>🛠️ Getting Started with GitHub Action Bot for Repository Automation</title>
+      <link>http://localhost:1313/posts_en/gab/</link>
+      <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/gab/</guid>
+      <description>Using my &amp;lsquo;On This Day in History&amp;rsquo; project as an example, this post explains how a CS amateur/enthusiast university student can begin using GitHub Actions Bot to automate a remote repository, along with the common pitfalls.</description>
     </item>
     <item>
       <title>🛠️ GitHub Action Bot 自动化管理仓库入门</title>
@@ -37,11 +58,25 @@
       <description>龙大人自己的生存指南，绝赞创作中</description>
     </item>
     <item>
+      <title>📢 How can you batch-transcribe audio into text efficiently?</title>
+      <link>http://localhost:1313/posts_en/whisper/</link>
+      <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/whisper/</guid>
+      <description>How to transcribe local audio files from the CLI without using an LLM.</description>
+    </item>
+    <item>
       <title>📢 如何快速批量地将音频转文字？</title>
       <link>http://localhost:1313/posts/whisper/</link>
       <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/whisper/</guid>
       <description>如何简单的不用 LLM，在 CLI 将本地音频文件转文字。</description>
+    </item>
+    <item>
+      <title>🌐 Attempting to Fetch CUHKSZ Mailbox Data</title>
+      <link>http://localhost:1313/posts_en/outlook/</link>
+      <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts_en/outlook/</guid>
+      <description>A shareable but unresolved attempt to automate LGU mailbox access.</description>
     </item>
     <item>
       <title>🌐 龙大邮箱抓取尝试</title>
