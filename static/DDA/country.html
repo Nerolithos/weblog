@@ -8,6 +8,7 @@
   <style>
     body {
       margin: 0;
+      padding-top: 0 !important;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #ffffff;
       color: #222222;
@@ -22,7 +23,7 @@
       padding: 0 1rem 3rem;
     }
     .country-top-bar {
-      margin: 0.75rem 0 0.75rem;
+      margin: 0 0 0.6rem;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -34,7 +35,7 @@
       display: flex;
       gap: 1.5rem;
       align-items: flex-start;
-      margin-top: 1.5rem;
+      margin-top: 0.75rem;
     }
     .country-left,
     .country-right {
@@ -246,6 +247,43 @@
     .country-cluster-detail strong {
       font-weight: 600;
     }
+    .cluster-country-trigger {
+      margin-top: 0.35rem;
+      padding: 0.2rem 0.55rem;
+      border: 1px solid #d1d5db;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #111827;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: help;
+      line-height: 1.25;
+    }
+    .cluster-country-trigger:hover {
+      background: #f9fafb;
+    }
+    .cluster-country-tooltip {
+      position: fixed;
+      z-index: 1200;
+      max-width: 360px;
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      background: rgba(17, 24, 39, 0.96);
+      color: #ffffff;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 120ms ease, transform 120ms ease;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .cluster-country-tooltip.cluster-country-tooltip--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
     .pie-title {
       margin: 0 0 0.5rem;
       font-size: 0.95rem;
@@ -265,6 +303,21 @@
     .pie-svg {
       width: 260px;
       height: 260px;
+    }
+    .change-point-section {
+      margin-top: 0.85rem;
+    }
+    .change-point-title {
+      margin: 0 0 0.35rem;
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .change-point-text {
+      margin: 0;
+      font-size: 0.86rem;
+      color: #4b5563;
+      line-height: 1.45;
     }
     .pie-legend {
       font-size: 0.8rem;
@@ -507,10 +560,12 @@
             <p id="country-cluster-detail" class="country-cluster-detail"></p>
 
             <h3 class="pie-title">Average energy mix of this cluster</h3>
-            <p class="pie-subtitle">Shares are normalized to 1 across all products in the cluster.</p>
             <div class="pie-wrapper">
               <svg id="cluster-pie" class="pie-svg"></svg>
-              <div id="pie-legend" class="pie-legend"></div>
+            </div>
+            <div class="change-point-section">
+              <h3 class="change-point-title">Change point analysis</h3>
+              <p id="country-change-point" class="change-point-text">Loading change point analysis...</p>
             </div>
           </div>
 
@@ -865,10 +920,195 @@
     const titleEl = document.getElementById("country-title");
     const summaryEl = document.getElementById("country-cluster-summary");
     const detailEl = document.getElementById("country-cluster-detail");
+    const changePointEl = document.getElementById("country-change-point");
     const modeClusterBtn = document.getElementById("country-mode-cluster");
     const modeProfileBtn = document.getElementById("country-mode-profile");
     const panelCluster = document.getElementById("country-panel-cluster");
     const panelProfile = document.getElementById("country-panel-profile");
+
+    const changePointByIso3 = new Map();
+    const changePointByName = new Map();
+    let changePointLoaded = false;
+
+    let clusterCountryTooltipEl = document.getElementById("cluster-country-tooltip");
+    if (!clusterCountryTooltipEl) {
+      clusterCountryTooltipEl = document.createElement("div");
+      clusterCountryTooltipEl.id = "cluster-country-tooltip";
+      clusterCountryTooltipEl.className = "cluster-country-tooltip";
+      document.body.appendChild(clusterCountryTooltipEl);
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? "" : str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function showClusterCountryTooltip(event, names) {
+      if (!clusterCountryTooltipEl || !Array.isArray(names) || !names.length) return;
+      clusterCountryTooltipEl.innerHTML = names.map(name => escapeHtml(name)).join("<br/>");
+      moveClusterCountryTooltip(event);
+      clusterCountryTooltipEl.classList.add("cluster-country-tooltip--visible");
+    }
+
+    function moveClusterCountryTooltip(event) {
+      if (!clusterCountryTooltipEl || !event) return;
+      const offset = 14;
+      const pad = 8;
+      const vw = window.innerWidth || document.documentElement.clientWidth || 0;
+      const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+
+      let left = event.clientX + offset;
+      let top = event.clientY + offset;
+
+      const tipW = clusterCountryTooltipEl.offsetWidth || 280;
+      const tipH = clusterCountryTooltipEl.offsetHeight || 120;
+
+      if (left + tipW + pad > vw) {
+        left = Math.max(pad, event.clientX - tipW - offset);
+      }
+      if (top + tipH + pad > vh) {
+        top = Math.max(pad, event.clientY - tipH - offset);
+      }
+
+      clusterCountryTooltipEl.style.left = `${left}px`;
+      clusterCountryTooltipEl.style.top = `${top}px`;
+    }
+
+    function hideClusterCountryTooltip() {
+      if (!clusterCountryTooltipEl) return;
+      clusterCountryTooltipEl.classList.remove("cluster-country-tooltip--visible");
+    }
+
+    function normalizeChangePointText(raw) {
+      const text = String(raw == null ? "" : raw).trim();
+      if (!text) return "";
+      const lower = text.toLowerCase();
+      if (
+        lower === "na" ||
+        lower === "n/a" ||
+        lower === "nan" ||
+        lower === "none" ||
+        lower === "no" ||
+        lower === "null" ||
+        lower === "-"
+      ) {
+        return "";
+      }
+      return text;
+    }
+
+    function parseChangePointRows(rowsByIndex) {
+      changePointByIso3.clear();
+      changePointByName.clear();
+      const indexRows = Array.isArray(rowsByIndex) ? rowsByIndex : [];
+      if (!indexRows.length) return;
+
+      // 固定列结构（用户确认）：
+      // 第2列=国家名, 第3列=ISO3, 第4列=转折年份, 第5列=转折分析文本
+      function putChangePointRecord(rawIso3, rawCountryName, rawYear, rawAnalysis) {
+        const yearText = String(rawYear == null ? "" : rawYear).trim();
+        const analysisText = String(rawAnalysis == null ? "" : rawAnalysis).trim();
+        const composedText = analysisText || (yearText ? `转折年份: ${yearText}` : "");
+
+        const countryName = String(rawCountryName == null ? "" : rawCountryName).trim();
+        if (!countryName) return;
+        const countryKey = makeCountryKey(countryName);
+        if (!countryKey || countryKey === "country" || countryKey === "countries") return;
+
+        const changePoint = normalizeChangePointText(composedText);
+        if (!changePoint) return;
+
+        const isoFromRow = normalizeIso3(rawIso3 || "");
+        const isoFromName = countryName ? getIsoByCountryName(countryName) : "";
+        const iso3 = isoFromRow || isoFromName;
+
+        if (iso3) {
+          changePointByIso3.set(iso3, changePoint);
+          const mappedName = countryByIso3[iso3];
+          if (mappedName) {
+            changePointByName.set(makeCountryKey(mappedName), changePoint);
+          }
+        }
+
+        changePointByName.set(countryKey, changePoint);
+        const noArticle = countryName.replace(/\(the\)/ig, "").trim();
+        if (noArticle && noArticle !== countryName) {
+          const noArticleKey = makeCountryKey(noArticle);
+          if (noArticleKey) {
+            changePointByName.set(noArticleKey, changePoint);
+          }
+        }
+      }
+      // 按固定列位置读取
+      indexRows.forEach((row, rowIndex) => {
+        if (!Array.isArray(row)) return;
+        if (rowIndex === 0) return; // header row
+
+        const countryName = String(row[1] == null ? "" : row[1]).trim();
+        const rawIso3 = String(row[2] == null ? "" : row[2]).trim();
+        const yearValue = row[3];
+        const analysisText = row[4];
+        putChangePointRecord(rawIso3, countryName, yearValue, analysisText);
+      });
+    }
+
+    function renderChangePointAnalysis() {
+      if (!changePointEl) return;
+      if (!changePointLoaded) {
+        changePointEl.textContent = "正在加载转折点分析...";
+        return;
+      }
+
+      let value = "";
+      if (selectedIso3 && changePointByIso3.has(selectedIso3)) {
+        value = changePointByIso3.get(selectedIso3);
+      }
+      if (!value && selectedCountryName) {
+        value = changePointByName.get(makeCountryKey(selectedCountryName)) || "";
+      }
+      if (!value && selectedDisplayName) {
+        value = changePointByName.get(makeCountryKey(selectedDisplayName)) || "";
+      }
+
+      if (!value) {
+        changePointEl.textContent = "No apparent change point.";
+        return;
+      }
+
+      const years = String(value).match(/\b(19|20)\d{2}\b/g) || [];
+      if (years.length > 1) {
+        changePointEl.textContent = `Change point(s): ${value}`;
+      } else {
+        changePointEl.textContent = `Major change point: ${value}`;
+      }
+    }
+
+    function initChangePointAnalysis() {
+      fetch("change_point_new.xlsx")
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.arrayBuffer();
+        })
+        .then(buffer => {
+          const workbook = XLSX.read(buffer, { type: "array" });
+          const firstSheetName = workbook.SheetNames && workbook.SheetNames[0];
+          if (!firstSheetName) return;
+          const sheet = workbook.Sheets[firstSheetName];
+          const rowsByIndex = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+          parseChangePointRows(rowsByIndex);
+        })
+        .catch(err => {
+          console.error("Failed to load change_point_new.xlsx", err);
+        })
+        .finally(() => {
+          changePointLoaded = true;
+          renderChangePointAnalysis();
+        });
+    }
 
     titleEl.textContent = `${selectedCountryName} (${selectedIso3 || "N/A"})`;
 
@@ -930,9 +1170,10 @@
       if (!cluster) {
         summaryEl.textContent = "This country is not part of any predefined cluster in this view.";
         detailEl.textContent = "You navigated here from the main globe, but cluster metadata is only defined for a subset of countries in the dataset.";
+        hideClusterCountryTooltip();
         // Hide pie chart
         pieSvg.style("display", "none");
-        pieLegendEl.textContent = "No cluster information is available for this country.";
+        renderChangePointAnalysis();
         return;
       }
 
@@ -960,7 +1201,22 @@
         peerNames = cluster.countries.map(c => c.name);
       }
 
-      detailEl.innerHTML = `<strong>Key characteristics:</strong> ${cluster.description}<br/><strong>Countries in this cluster (${peerNames.length}):</strong> ${peerNames.join(", ")}.`;
+      detailEl.innerHTML = `<strong>Key characteristics:</strong> ${cluster.description}<br/><button type="button" class="cluster-country-trigger">Countries in this cluster (${peerNames.length})</button>`;
+      const countryTrigger = detailEl.querySelector(".cluster-country-trigger");
+      if (countryTrigger) {
+        countryTrigger.addEventListener("mouseenter", (event) => {
+          showClusterCountryTooltip(event, peerNames);
+        });
+        countryTrigger.addEventListener("mousemove", (event) => {
+          moveClusterCountryTooltip(event);
+        });
+        countryTrigger.addEventListener("mouseleave", () => {
+          hideClusterCountryTooltip();
+        });
+        countryTrigger.addEventListener("blur", () => {
+          hideClusterCountryTooltip();
+        });
+      }
 
       // Update pie chart for this cluster using mix parsed from true_clustering.csv
       let data = [];
@@ -986,7 +1242,6 @@
 
       if (!data.length) {
         pieSvg.style("display", "none");
-        pieLegendEl.textContent = "No cluster information is available for this country.";
         return;
       }
 
@@ -1004,10 +1259,16 @@
         .innerRadius(pieRadius * 0.45)
         .outerRadius(pieRadius);
 
-      pieGroup.selectAll("path").remove();
+      const labelArc = d3.arc()
+        .innerRadius(pieRadius * 0.55)
+        .outerRadius(pieRadius * 0.86);
+
+      pieGroup.selectAll("*").remove();
+
+      const pieSlices = pie(data);
 
       pieGroup.selectAll("path")
-        .data(pie(data))
+        .data(pieSlices)
         .enter()
         .append("path")
         .attr("d", arc)
@@ -1015,20 +1276,116 @@
         .attr("stroke", "#ffffff")
         .attr("stroke-width", 1.2);
 
-      pieLegendEl.innerHTML = "";
-      data.forEach(d => {
-        const percent = (d.value * 100).toFixed(1);
-        const row = document.createElement("div");
-        row.className = "pie-legend-item";
-        const swatch = document.createElement("span");
-        swatch.className = "pie-legend-swatch";
-        swatch.style.backgroundColor = color(d.name);
-        const text = document.createElement("span");
-        text.textContent = `${d.name}: ${percent}%`;
-        row.appendChild(swatch);
-        row.appendChild(text);
-        pieLegendEl.appendChild(row);
-      });
+      const ringInner = pieRadius * 0.45;
+      const ringOuter = pieRadius;
+      const ringMidRadius = (ringInner + ringOuter) / 2;
+
+      function estimateTextWidth(text, fontSize) {
+        return String(text || "").length * fontSize * 0.56;
+      }
+
+      function wrapTextByWidth(text, maxCharsPerLine, maxLines) {
+        const words = String(text || "").split(/\s+/).filter(Boolean);
+        if (!words.length) return [""];
+
+        const lines = [];
+        let current = "";
+
+        words.forEach(word => {
+          const candidate = current ? `${current} ${word}` : word;
+          if (candidate.length <= maxCharsPerLine) {
+            current = candidate;
+            return;
+          }
+
+          if (current) {
+            lines.push(current);
+            current = "";
+          }
+
+          if (word.length <= maxCharsPerLine) {
+            current = word;
+            return;
+          }
+
+          let idx = 0;
+          while (idx < word.length) {
+            const chunk = word.slice(idx, idx + maxCharsPerLine);
+            lines.push(chunk);
+            idx += maxCharsPerLine;
+          }
+        });
+
+        if (current) lines.push(current);
+
+        if (lines.length > maxLines) {
+          const kept = lines.slice(0, maxLines);
+          const last = kept[maxLines - 1];
+          kept[maxLines - 1] = last.length > 1 ? `${last.slice(0, Math.max(1, last.length - 1))}…` : "…";
+          return kept;
+        }
+
+        return lines;
+      }
+
+      pieGroup.selectAll("text")
+        .data(pieSlices)
+        .enter()
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("fill", "#ffffff")
+        .attr("font-weight", 600)
+        .attr("pointer-events", "none")
+        .each(function(d) {
+          const label = `${d.data.name} ${(d.data.value * 100).toFixed(1)}%`;
+          const angle = Math.max(0.02, d.endAngle - d.startAngle);
+          const maxLabelWidth = Math.max(30, angle * ringMidRadius * 0.9);
+          const maxLabelHeight = (ringOuter - ringInner) * 0.9;
+          const midAngle = (d.startAngle + d.endAngle) / 2;
+
+          let fontSize = 10;
+          let lines = [label];
+          while (fontSize >= 7) {
+            const charsPerLine = Math.max(5, Math.floor(maxLabelWidth / (fontSize * 0.56)));
+            lines = wrapTextByWidth(label, charsPerLine, 3);
+
+            const lineHeight = fontSize * 1.05;
+            const widest = d3.max(lines, ln => estimateTextWidth(ln, fontSize)) || 0;
+            const totalH = lines.length * lineHeight;
+
+            if (widest <= maxLabelWidth && totalH <= maxLabelHeight) break;
+            fontSize -= 0.5;
+          }
+
+          const lineHeight = fontSize * 1.05;
+          const startY = -((lines.length - 1) * lineHeight) / 2;
+          const widest = d3.max(lines, ln => estimateTextWidth(ln, fontSize)) || 0;
+          const halfWidth = widest / 2;
+
+          const baseX = Math.cos(midAngle - Math.PI / 2) * ringMidRadius;
+          const baseY = Math.sin(midAngle - Math.PI / 2) * ringMidRadius;
+          const outerPad = 8;
+          const maxHalfByCircle = Math.max(16, Math.sqrt(Math.max(0, ringOuter * ringOuter - baseY * baseY)) - outerPad);
+
+          let clampedX = baseX;
+          if (halfWidth > 0 && maxHalfByCircle > halfWidth) {
+            clampedX = Math.max(-maxHalfByCircle + halfWidth, Math.min(maxHalfByCircle - halfWidth, baseX));
+          }
+
+          const textSel = d3.select(this)
+            .attr("transform", `translate(${clampedX}, ${baseY})`)
+            .attr("font-size", `${fontSize}px`);
+
+          lines.forEach((line, i) => {
+            textSel.append("tspan")
+              .attr("x", 0)
+              .attr("y", startY + i * lineHeight)
+              .text(line);
+          });
+        });
+
+      renderChangePointAnalysis();
     }
 
     // ==========================
@@ -1313,8 +1670,6 @@
       .attr("viewBox", `0 0 ${pieWidth} ${pieHeight}`)
       .append("g")
       .attr("transform", `translate(${pieWidth / 2}, ${pieHeight / 2})`);
-
-    const pieLegendEl = document.getElementById("pie-legend");
 
     // ==========================
     // Left globe highlighting same-cluster countries
@@ -2304,6 +2659,7 @@
 
     // Initialize annual energy bar chart
     initEnergyChart();
+    initChangePointAnalysis();
 
     // ==========================
     // Load renewables-share CSVs for color mode "share"
