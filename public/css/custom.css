@@ -451,17 +451,22 @@ body:not(.dark-mode) .site-nav-fixed a:hover {
   height: 52px;
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.55);
-  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.9), rgba(148,163,184,0.25)));
-  background-color: rgba(15, 23, 42, 0.55);
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.58), rgba(71,85,105,0.22));
+  background-color: rgba(10, 16, 30, 0.74);
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
-  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.55);
+  box-shadow: 0 16px 38px rgba(2, 6, 23, 0.62);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0;
   color: #e5e7eb;
+}
+
+.liquid-dock-item {
+  position: relative;
+  overflow: visible;
 }
 
 .liquid-dock-main {
@@ -513,6 +518,48 @@ body:not(.dark-mode) .site-nav-fixed a:hover {
 
 .liquid-dock-icon-text {
   font-size: 0.7rem;
+}
+
+.liquid-dock-tooltip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  border-radius: 8px;
+  padding: 0.32rem 0.56rem;
+  font-size: 0.74rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
+  z-index: 9999;
+}
+
+.liquid-dock-tooltip::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translateY(-50%) rotate(45deg);
+  background: #ffffff;
+  border-left: 1px solid rgba(0, 0, 0, 0.28);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.28);
+}
+
+.liquid-dock-item:hover .liquid-dock-tooltip,
+.liquid-dock-item:focus-visible .liquid-dock-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(2px);
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s;
 }
 
 .liquid-dock-main:hover,
