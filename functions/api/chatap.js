@@ -17,9 +17,9 @@ export async function onRequest(context) {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
-  const apiKey = env.OPENROUTER_API_KEY;
+  const apiKey = env.CHATAP;
   if (!apiKey) {
-    return new Response("Missing OPENROUTER_API_KEY in environment", { status: 500 });
+    return new Response("Missing CHATAP in environment", { status: 500 });
   }
 
   let payload;
@@ -51,10 +51,30 @@ export async function onRequest(context) {
     }),
   });
 
+  if (!upstreamResp.ok) {
+    const upstreamText = await upstreamResp.text().catch(() => "");
+    return new Response(
+      JSON.stringify({
+        error: "Upstream OpenRouter error",
+        keySource: "CHATAP",
+        upstreamStatus: upstreamResp.status,
+        upstreamBody: upstreamText,
+      }),
+      {
+        status: upstreamResp.status,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "no-store",
+        },
+      }
+    );
+  }
+
   // 直接透传 SSE 流
   const respHeaders = new Headers();
   respHeaders.set("Content-Type", upstreamResp.headers.get("Content-Type") || "text/event-stream");
   respHeaders.set("Cache-Control", "no-store");
+  respHeaders.set("X-ChatAP-Key-Source", "CHATAP");
   // 同域 Pages 默认不需要 CORS，但为了本地 wrangler 开发方便加上
   const origin = request.headers.get("Origin");
   if (origin) {
