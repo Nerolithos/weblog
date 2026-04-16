@@ -203,21 +203,21 @@
     }
     .country-mode-toggle {
       display: inline-flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
       margin-bottom: 0.25rem;
-      padding: 0.18rem;
+      padding: 0.24rem;
       border-radius: 999px;
       background: #f3f4f6;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      font-size: 0.8rem;
+      font-size: 1.2rem;
     }
     .country-mode-toggle button {
       border: none;
       background: transparent;
-      padding: 0.2rem 0.9rem;
+      padding: 0.3rem 1.25rem;
       border-radius: 999px;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 1.2rem;
       color: #4b5563;
       white-space: nowrap;
     }
@@ -515,19 +515,20 @@
           </div>
 
           <div id="country-panel-profile" class="country-profile-wrapper">
+
             <div class="country-energy-card">
-              <h3 class="country-energy-title">Annual Share of Each Electricity Source: </h3>
+              <h3 class="country-energy-title" style="font-size: 1.45rem;">Annual Share of Each Electricity Source: </h3>
+              <p class="country-energy-subtitle" style="margin-bottom: 0.5rem; font-weight: 600; color: #111827;">
+                Tip: <span style="color: #ff2a13; font-weight: 700;">click the horizontal bar</span> to see each energy source in a global map view.
+              </p>
               <p class="country-energy-subtitle">Bar chart shows renewable vs non-renewable electricity share of total production.</p>
               <svg id="country-energy-bar" class="country-energy-bar"></svg>
               <div id="country-energy-tooltip" class="country-energy-tooltip"></div>
               <div id="country-energy-empty" class="country-energy-empty">Annual energy data is not available for this country.</div>
-              <p class="country-energy-subtitle" style="margin-top: 0.35rem; font-weight: 600; color: #111827;">
-                Tip: <span style="color: #ff2a13; font-weight: 700;">click the horizontal bar</span> to see each energy source in a global map view.
-              </p>
             </div>
 
             <div class="country-share-card">
-              <h3 class="country-share-title">Renewables share over time</h3>
+              <h3 class="country-share-title" style="font-size: 1.35rem;">Renewables share over time</h3>
               <p class="country-share-subtitle">Same metric as the main map: renewables share of total electricity production.</p>
               <svg id="country-share-line" class="country-share-line"></svg>
               <div id="country-share-tooltip" class="country-share-tooltip"></div>
@@ -549,6 +550,15 @@
         .toLowerCase()
         .replace(/&/g, "and")
         .replace(/[^a-z]/g, "");
+    }
+
+    function normalizeIso3(value) {
+      const cleaned = String(value || "")
+        .toUpperCase()
+        .replace(/[^A-Z]/g, "");
+      const base = cleaned.length >= 3 ? cleaned.slice(0, 3) : cleaned;
+      if (base === "OSA") return "XKX";
+      return base;
     }
 
     // ==========================
@@ -605,7 +615,7 @@
     function registerIsoMapping(name, iso3) {
       if (!name || !iso3) return;
       const cleanName = String(name).trim();
-      const cleanIso = String(iso3).trim().toUpperCase();
+      const cleanIso = normalizeIso3(iso3);
       if (!cleanName || !cleanIso) return;
 
       countryByIso3[cleanIso] = cleanName;
@@ -616,6 +626,26 @@
       if (key) {
         isoByCountryName.set(key, cleanIso);
       }
+    }
+
+    function getIsoByCountryName(name) {
+      if (!name) return "";
+      const cleanName = String(name).trim();
+      if (!cleanName) return "";
+      const key = makeCountryKey(cleanName);
+      const iso3 =
+        isoByCountryName.get(cleanName) ||
+        isoByCountryName.get(cleanName.toLowerCase()) ||
+        isoByCountryName.get(key) ||
+        "";
+      return normalizeIso3(iso3);
+    }
+
+    function resolveFeatureIso3(props, fallbackId) {
+      const primary = normalizeIso3((props && (props.iso_a3 || props.ISO_A3)) || fallbackId || "");
+      if (primary) return primary;
+      const name = (props && (props.name || props.ADMIN)) || "";
+      return getIsoByCountryName(name);
     }
 
     // Manual aliases for countries whose names differ between
@@ -697,6 +727,21 @@
       ["Grenada", "GRD"],
       ["Kyrgyz Republic", "KGZ"],
       ["Kyrgyzstan", "KGZ"],
+      ["Malta", "MLT"],
+      ["Slovak Republic", "SVK"],
+      ["Slovakia", "SVK"],
+      ["Kosovo", "XKX"],
+      ["Hong Kong", "HKG"],
+      ["Hong Kong S.A.R.", "HKG"],
+      ["Hong Kong SAR", "HKG"],
+      ["Macao", "MAC"],
+      ["Macau", "MAC"],
+      ["Macau S.A.R", "MAC"],
+      ["Taiwan", "TWN"],
+      ["Taiwan Province of China", "TWN"],
+      ["Sao Tome and Principe", "STP"],
+      ["Sao Tome & Principe", "STP"],
+      ["São Tomé and Príncipe", "STP"],
       ["Cabo Verde", "CPV"],
       ["Cape Verde", "CPV"],
       ["Korea (the Democratic People's Republic of)", "PRK"],
@@ -721,8 +766,9 @@
       return params.get(key);
     }
 
-    const selectedIso3Raw = (getQueryParam("code") || "").toUpperCase();
-    const selectedIso3 = selectedIso3Raw || "";
+    const selectedIso3Raw = getQueryParam("code") || "";
+    const selectedNameRaw = getQueryParam("name") || "";
+    const selectedIso3 = normalizeIso3(selectedIso3Raw) || getIsoByCountryName(selectedNameRaw) || "";
     const baseSelectedCountryName = countryByIso3[selectedIso3] || selectedIso3 || "Unknown country";
     const selectedCountryName = getDisplayCountryName(selectedIso3, baseSelectedCountryName);
     let selectedDisplayName = selectedCountryName;
@@ -791,6 +837,17 @@
     let shareLineX = null;
     let shareLineY = null;
     let shareLineYearDot = null;
+    let shareEnergyLineSelection = null;
+    let hoveredEnergyMetric = null;
+
+    const ENERGY_SOURCE_BASE_COLORS = {
+      "Bioenergy": "#22c55e",
+      "Hydro": "#0ea5e9",
+      "Other Renewables": "#a855f7",
+      "Solar": "#f97316",
+      "Wind": "#e11d48",
+      "Non-renewables": "#f472b6"
+    };
 
     // Annual energy bar chart now uses new_renewable_share.csv
     const energyCsvUrl = "new_renewable_share.csv";
@@ -988,7 +1045,7 @@
       const byYear = new Map(); // Map<year, { year, energies }>
 
       rows.forEach(row => {
-        const iso3 = (row["ISO 3 code"] || "").trim().toUpperCase();
+        const iso3 = normalizeIso3(row["ISO 3 code"]);
         const year = +row["Year"];
         const source = (row["Energy_source"] || "").trim();
         const shareRaw = row["Share"];
@@ -1103,6 +1160,17 @@
           .attr("height", barHeight)
           .attr("fill", fillColor);
 
+        rect
+          .on("mouseenter", () => {
+            hoveredEnergyMetric = seg.name;
+            updateCountryEnergyLinesHighlight();
+          })
+          .on("mouseleave", () => {
+            hoveredEnergyMetric = null;
+            updateCountryEnergyLinesHighlight();
+            if (energyTooltipEl) energyTooltipEl.style.opacity = "0";
+          });
+
         if (energyTooltipEl && energyCardEl && percent > 0 && segWidth > 0) {
           rect
             .on("mousemove", (event) => {
@@ -1163,6 +1231,9 @@
             if (energyEmptyEl) energyEmptyEl.style.display = "block";
             return;
           }
+
+          // 让右下折线图在能源数据加载后补绘制各能源类型折线
+          initCountryShareLineChart();
 
           energyYearsForSelected = records.map(r => r.year).sort((a, b) => a - b);
           if (!energyYearsForSelected.length) return;
@@ -1323,21 +1394,34 @@
 
     function getEnergySourceColor(source, value) {
       if (value == null || isNaN(value)) return "#f3f4f6";
-      const baseColors = {
-        "Bioenergy": "#22c55e",
-        "Hydro": "#0ea5e9",
-        "Other Renewables": "#a855f7",
-        "Solar": "#f97316",
-        "Wind": "#e11d48",
-        "Non-renewables": "#f472b6"
-      };
-      const base = baseColors[source] || "#22c55e";
+      const base = ENERGY_SOURCE_BASE_COLORS[source] || "#22c55e";
       const isNonRenew = source === "Non-renewables";
       const maxVal = isNonRenew ? 85 : (energySourceMaxShareBySource.get(source) || 40);
       const tRaw = maxVal > 0 ? value / maxVal : 0;
       // 收紧浅色区间，让中高值区域更显色
       const t = Math.pow(Math.max(0, Math.min(1, tRaw)), 0.75);
       return d3.interpolateRgb("#f9fafb", base)(t * 0.95 + 0.05);
+    }
+
+    function getActiveEnergyMetricHighlight() {
+      if (hoveredEnergyMetric) return hoveredEnergyMetric;
+      if (currentEnergyMetric && currentEnergyMetric !== "total") return currentEnergyMetric;
+      return null;
+    }
+
+    function updateCountryEnergyLinesHighlight() {
+      if (!shareEnergyLineSelection) return;
+      const active = getActiveEnergyMetricHighlight();
+
+      shareEnergyLineSelection
+        .attr("stroke-opacity", d => {
+          if (!active) return 0.4;
+          return d.source === active ? 0.95 : 0.18;
+        })
+        .attr("stroke-width", d => {
+          if (!active) return 1.9;
+          return d.source === active ? 3.1 : 1.4;
+        });
     }
 
     function getNonRenewablesValueForYear(year, iso3) {
@@ -1381,7 +1465,7 @@
       countryPathsSelection
         .attr("class", d => {
           const props = d.properties || {};
-          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const iso3 = resolveFeatureIso3(props, d.id);
           let countryClusterId = null;
           let cls = "globe-country";
           if (useClusterColors) {
@@ -1400,7 +1484,7 @@
         })
         .attr("fill", d => {
           const props = d.properties || {};
-          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const iso3 = resolveFeatureIso3(props, d.id);
           let countryClusterId = null;
           if (useClusterColors) {
             if (currentClusterYear != null) {
@@ -1468,7 +1552,7 @@
           mapCountryPathsSelection
             .attr("class", d => {
               const props = d.properties || {};
-              const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+              const iso3 = resolveFeatureIso3(props, d.id);
               let countryClusterId = null;
               let cls = "globe-country";
               if (useClusterColors) {
@@ -1487,7 +1571,7 @@
             })
             .attr("fill", d => {
               const props = d.properties || {};
-              const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+              const iso3 = resolveFeatureIso3(props, d.id);
               let countryClusterId = null;
               if (useClusterColors) {
                 if (currentClusterYear != null) {
@@ -1567,7 +1651,7 @@
       worldFeatures.forEach(f => {
         const props = f.properties || {};
         const name = props.name || props.ADMIN;
-        const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+        const iso3 = resolveFeatureIso3(props, f.id);
         if (!name || !iso3) return;
         registerIsoMapping(name, iso3);
       });
@@ -1579,7 +1663,7 @@
         let displayName = selectedCountryName;
         const featureForSelected = worldFeatures.find(f => {
           const props = f.properties || {};
-          const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+          const iso3 = resolveFeatureIso3(props, f.id);
           return iso3 === selectedIso3;
         });
         if (featureForSelected) {
@@ -1607,7 +1691,7 @@
         .on("mousemove", (event, d) => {
           const props = d.properties || {};
           const name = props.name || props.ADMIN || "Unknown country";
-          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const iso3 = resolveFeatureIso3(props, d.id);
           showCountryTooltip(event, name, iso3);
         })
         .on("mouseout", () => {
@@ -1615,9 +1699,10 @@
         })
         .on("click", (event, d) => {
           const props = d.properties || {};
-          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const name = props.name || props.ADMIN || "";
+          const iso3 = resolveFeatureIso3(props, d.id);
           if (!iso3) return;
-          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          const target = `country.html?code=${encodeURIComponent(iso3)}&name=${encodeURIComponent(name)}`;
           window.location.href = target;
         });
 
@@ -1631,7 +1716,7 @@
         .on("mousemove", (event, d) => {
           const props = d.properties || {};
           const name = props.name || props.ADMIN || "Unknown country";
-          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const iso3 = resolveFeatureIso3(props, d.id);
           showCountryTooltip(event, name, iso3);
         })
         .on("mouseout", () => {
@@ -1639,9 +1724,10 @@
         })
         .on("click", (event, d) => {
           const props = d.properties || {};
-          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const name = props.name || props.ADMIN || "";
+          const iso3 = resolveFeatureIso3(props, d.id);
           if (!iso3) return;
-          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          const target = `country.html?code=${encodeURIComponent(iso3)}&name=${encodeURIComponent(name)}`;
           window.location.href = target;
         });
 
@@ -1865,6 +1951,8 @@
         renderCountryLegendGradient();
         updateCountryHighlighting();
       }
+
+      updateCountryEnergyLinesHighlight();
     }
 
     function buildCountryTileGrid(world) {
@@ -1890,7 +1978,7 @@
       world.features.forEach(f => {
         const props = f.properties || {};
         const name = props.name || props.ADMIN;
-        const iso3 = props.iso_a3 || props.ISO_A3 || f.id;
+        const iso3 = resolveFeatureIso3(props, f.id);
         if (!name || !iso3) return;
         const k = nameKey(name);
         if (!nameToCode.has(k)) {
@@ -2232,7 +2320,7 @@
 
         // 先加载旧 CSV，得到基础的 1965–2023 数据
         rows.forEach(row => {
-          const code = row.Code && row.Code.trim();
+          const code = normalizeIso3(row.Code && row.Code.trim());
           const entity = row.Entity && row.Entity.trim();
           const year = +row.Year;
           const valueRaw = row["Renewables (% equivalent primary energy)"];
@@ -2267,7 +2355,7 @@
         if (Array.isArray(newRows)) {
           newRows.forEach(row => {
             const area = (row["Area"] || "").trim();
-            const code = (row["ISO 3 code"] || "").trim();
+            const code = normalizeIso3(row["ISO 3 code"]);
             const year = +row["Year"];
             const source = (row["Energy_source"] || "").trim();
             const shareRaw = row["Share"];
@@ -2317,7 +2405,7 @@
         // 第三份 CSV：电力可再生占比，仅用于 1985–1999 年覆盖旧数据
         if (Array.isArray(elecRows)) {
           elecRows.forEach(row => {
-            const code = row.Code && row.Code.trim();
+            const code = normalizeIso3(row.Code && row.Code.trim());
             const year = +row.Year;
             const valueRaw = row.Renewables;
 
@@ -2386,7 +2474,9 @@
       if (!shareLineSvg || !shareLineSvg.node()) return;
       if (!shareColorReady || !shareDataByYearAndIso3 || !shareDataByYearAndIso3.size) return;
 
-      const years = Array.from(shareDataByYearAndIso3.keys()).sort((a, b) => a - b);
+      const years = Array.from(shareDataByYearAndIso3.keys())
+        .filter(y => y >= 2000 && y <= 2024)
+        .sort((a, b) => a - b);
       if (!years.length) return;
 
       const series = years.map(year => {
@@ -2413,7 +2503,8 @@
         .style("display", "block")
         .selectAll("*").remove();
 
-      const margin = { top: 16, right: 18, bottom: 22, left: 40 };
+      // Keep a wider plotting area now that x-axis focuses on 2000-2024.
+      const margin = { top: 16, right: 8, bottom: 22, left: 34 };
       const innerWidth = width - margin.left - margin.right;
       const innerHeight = height - margin.top - margin.bottom;
 
@@ -2424,7 +2515,18 @@
         .domain(d3.extent(series, d => d.year))
         .range([0, innerWidth]);
 
-      const rawMaxVal = d3.max(valid, d => d.value) || 0;
+      const energyRecords = energyDataByCountry.get(selectedIso3) || [];
+      const energyMaxVal = d3.max(energyRecords, rec => {
+        const bio = rec.energies.Bioenergy || 0;
+        const hydro = rec.energies.Hydro || 0;
+        const other = rec.energies["Other Renewables"] || 0;
+        const solar = rec.energies.Solar || 0;
+        const wind = rec.energies.Wind || 0;
+        const nonRenew = Math.max(0, 100 - (bio + hydro + other + solar + wind));
+        return Math.max(bio, hydro, other, solar, wind, nonRenew);
+      }) || 0;
+
+      const rawMaxVal = Math.max(d3.max(valid, d => d.value) || 0, energyMaxVal);
       const maxVal = rawMaxVal > 0 ? rawMaxVal : 1;
       // y 轴显示刻度取一位小数（向上取到 0.1 精度），保证标签整洁
       const maxTick = Math.ceil(maxVal * 10) / 10;
@@ -2439,7 +2541,7 @@
       shareLineY = y;
 
       const xAxis = d3.axisBottom(x)
-        .ticks(Math.min(6, years.length))
+        .ticks(Math.min(7, years.length))
         .tickFormat(d3.format("d"));
 
       const yAxis = d3.axisLeft(y)
@@ -2482,8 +2584,73 @@
         .attr("x2", d => d.x2)
         .attr("y2", d => d.y2)
         .attr("stroke", d => d.color)
-        .attr("stroke-width", 2)
+        .attr("stroke-opacity", 1)
+        .attr("stroke-width", 2.4)
+        .attr("pointer-events", "none")
         .attr("stroke-linecap", "round");
+
+      // 叠加显示各能源类型占比折线（数据来自 new_renewable_share.csv）
+      const energyByYear = new Map(energyRecords.map(r => [r.year, r]));
+      const perEnergySources = [
+        "Bioenergy",
+        "Hydro",
+        "Other Renewables",
+        "Solar",
+        "Wind",
+        "Non-renewables"
+      ];
+
+      const sourceLineData = perEnergySources.map(source => {
+        const points = years.map(year => {
+          const rec = energyByYear.get(year);
+          if (!rec) {
+            return { year, value: null };
+          }
+
+          if (source === "Non-renewables") {
+            const renewTotal =
+              (rec.energies.Bioenergy || 0) +
+              (rec.energies.Hydro || 0) +
+              (rec.energies["Other Renewables"] || 0) +
+              (rec.energies.Solar || 0) +
+              (rec.energies.Wind || 0);
+            return { year, value: Math.max(0, 100 - renewTotal) };
+          }
+
+          const v = rec.energies[source];
+          return { year, value: v != null && !isNaN(v) ? v : null };
+        });
+
+        return {
+          source,
+          color: ENERGY_SOURCE_BASE_COLORS[source] || "#94a3b8",
+          points
+        };
+      });
+
+      const sourceLineGenerator = d3.line()
+        .defined(d => d.value != null && !isNaN(d.value))
+        .x(d => x(d.year))
+        .y(d => y(d.value));
+
+      shareEnergyLineSelection = g.selectAll(".country-share-energy-line")
+        .data(sourceLineData)
+        .enter()
+        .append("path")
+        .attr("class", "country-share-energy-line")
+        .attr("fill", "none")
+        .attr("stroke", d => d.color)
+        .attr("stroke-opacity", 0.4)
+        .attr("stroke-width", 1.9)
+        .attr("stroke-linecap", "round")
+        .attr("stroke-linejoin", "round")
+        .attr("data-source", d => d.source)
+        .attr("d", d => sourceLineGenerator(d.points));
+
+      // Keep the total renewables-share line always clearly visible on top.
+      g.selectAll(".country-share-line-seg").raise();
+
+      updateCountryEnergyLinesHighlight();
 
       // moving dot following mouse hover
       const focusDot = g.append("circle")
@@ -2545,9 +2712,34 @@
         const yPos = absoluteY - cardRect.top;
 
         const name = selectedDisplayName || selectedCountryName || selectedIso3;
+        const energyRec = energyByYear.get(d.year);
+        const bio = energyRec ? (energyRec.energies.Bioenergy || 0) : null;
+        const hydro = energyRec ? (energyRec.energies.Hydro || 0) : null;
+        const otherRenew = energyRec ? (energyRec.energies["Other Renewables"] || 0) : null;
+        const solar = energyRec ? (energyRec.energies.Solar || 0) : null;
+        const wind = energyRec ? (energyRec.energies.Wind || 0) : null;
+        const nonRenew = energyRec
+          ? Math.max(0, 100 - (bio + hydro + otherRenew + solar + wind))
+          : null;
+
+        const fmt = v => (v == null || isNaN(v) ? "NAN" : `${v.toFixed(2)}%`);
+        const selectedMetric = currentEnergyMetric && currentEnergyMetric !== "total" ? currentEnergyMetric : null;
+        const lineHtml = (label, value, source) => {
+          const highlight = selectedMetric && selectedMetric === source;
+          if (highlight) {
+            return `<span style="color:#dc2626;font-weight:700;">${label}: ${fmt(value)}</span>`;
+          }
+          return `${label}: ${fmt(value)}`;
+        };
+
         shareLineTooltipEl.style.left = `${xPos}px`;
         shareLineTooltipEl.style.top = `${yPos}px`;
-        shareLineTooltipEl.innerHTML = `${d.year} · ${name}<br/>Renewables share: ${d.value.toFixed(2)}%`;
+        shareLineTooltipEl.innerHTML = `${d.year} · ${name}<br/>`
+          + `Renewables share: ${fmt(d.value)}<br/>`
+          + `${lineHtml("Bioenergy", bio, "Bioenergy")} · ${lineHtml("Hydro", hydro, "Hydro")}<br/>`
+          + `${lineHtml("Other Renewables", otherRenew, "Other Renewables")}<br/>`
+          + `${lineHtml("Solar", solar, "Solar")} · ${lineHtml("Wind", wind, "Wind")}<br/>`
+          + `${lineHtml("Non-renewables", nonRenew, "Non-renewables")}`;
         shareLineTooltipEl.style.opacity = "1";
       }
 
