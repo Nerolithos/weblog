@@ -246,5 +246,12 @@
       <guid>http://localhost:1313/posts/1003.1/</guid>
       <description>CUHKSZ 大一课程 CSC1003（Java） 的入门</description>
     </item>
+    <item>
+      <title>🛠️ Important tools: CLI, shell and git commands</title>
+      <link>http://localhost:1313/posts/cligit/</link>
+      <pubDate>Tue, 10 Sep 2024 08:45:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/cligit/</guid>
+      <description>计算机初学者必学的 CLI 基本用法和工作流管理，以及如何处理网络不佳、提交过大、版本控制等常见 git 问题。</description>
+    </item>
   </channel>
 </rss>

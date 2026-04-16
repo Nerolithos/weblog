@@ -90,7 +90,7 @@
       <link>http://localhost:1313/posts/history-today/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/history-today/</guid>
-      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-15)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2021&lt;/strong&gt; — A mass shooting occurred at a Fedex Ground facility in Indianapolis, Indiana, killing nine and injuring seven.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2019&lt;/strong&gt; — The cathedral of Notre-Dame de Paris in France is seriously damaged by a large fire.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2014&lt;/strong&gt; — In the worst massacre of the South Sudanese Civil War, more than 400 civilians are gunned down after seeking refuge in houses of worship as well as hospitals.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2013&lt;/strong&gt; — Two bombs explode near the finish line at the Boston Marathon in Boston, Massachusetts, killing three people and injuring over 500 others.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2013&lt;/strong&gt; — A wave of bombings across Iraq kills at least 75 people.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
+      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-16)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2024&lt;/strong&gt; — The historic Børsen in Copenhagen, Denmark, is severely damaged by a fire.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2018&lt;/strong&gt; — The New York Times and the New Yorker win the Pulitzer Prize for Public Service for breaking news of the Harvey Weinstein sexual abuse scandal.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2016&lt;/strong&gt; — Ecuador&amp;#39;s worst earthquake in nearly 40 years kills 676 and injures more than 230,000.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2014&lt;/strong&gt; — The South Korean ferry MV Sewol capsizes and sinks near Jindo Island, killing 304 passengers and crew and leading to widespread criticism of the South Korean government, media, and shipping authorities.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2013&lt;/strong&gt; — A 7.8-magnitude earthquake strikes Sistan and Balochistan province, Iran, killing at least 35 people and injuring 117 others.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
@@ -338,9 +338,16 @@
       <description>未解决的 LGU 邮箱自动化尝试思路分享。</description>
     </item>
     <item>
+      <title>🛠️ Important tools: CLI, shell and git commands</title>
+      <link>http://localhost:1313/posts/cligit/</link>
+      <pubDate>Tue, 10 Sep 2024 08:45:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/cligit/</guid>
+      <description>计算机初学者必学的 CLI 基本用法和工作流管理，以及如何处理网络不佳、提交过大、版本控制等常见 git 问题。</description>
+    </item>
+    <item>
       <title>🌐 在 cloudflare 部署 Hugo 构架博客的 manual</title>
       <link>http://localhost:1313/posts/weblog_deploy/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 15 Aug 2024 23:34:08 +0800</pubDate>
       <guid>http://localhost:1313/posts/weblog_deploy/</guid>
       <description>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。</description>
     </item>

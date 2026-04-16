@@ -6,7 +6,7 @@ summary:   "一次在没有外网 VPS 的前提下试图将 Streamlit app 指向
 categories:
   - SDS
 tags: [帮助]
-featured_image: "/images/st.jpg"
+featured_image: "/images/cf.jpg"
 ---
 
 
@@ -15,7 +15,7 @@ featured_image: "/images/st.jpg"
 
 前情提要：我用 streamlit 制作了一个 AI 辅助 CUHKSZ 答疑（龙大生存指南）工具的 APP，希望将 Streamlit 分配的域名指向我自己的私有域名（比如你现在在看这篇文章时浏览器里写着的的那个域名）。
 
-
+</br>
 
 
 ## TAKE 1：直接暴力增加 CNAME 记录
@@ -23,14 +23,12 @@ featured_image: "/images/st.jpg"
 
 - 我的域名要求展示“你的域名”的证书；而 Streamlit 只给 \*.streamlit.app 颁证。无效(出现 400/403/404  一类的循环/响应报错)
 
-
+</br>
 
 ## TAKE 2：反向代理？
 
 1、我在 Cloudflare 仪表盘创建了一个新的 workers 应用。
 ![](https://i.postimg.cc/tRvm1SXj/25083102.png)
-
-
 
 
 
@@ -94,15 +92,20 @@ if (loc) {
 
 
 
-
-
 7、试图访问，发现卡死。问题不在于单个 Location 或 HTML 内容，而在于**服务端会话**：认证成功与否由 share.streamlit.io 域下的 Cookie 决定；我的域**拿不到**，上游永远不承认，因此永远无法通过 Streamlit 认证，也永远无法开始渲染，所以一直是白屏。**结论：这个问题在 Streamlit 环境下且没有外网 VPS 时绝对无解。**
-
-
 
 
 
 8、所以说，**Streamlit Cloud 不支持白标自定义域**。继续用 Workers/Nginx 只会在 share.streamlit.io 的认证链中循环。要么接受官方域名；要么把迁移到**支持自定义域**的托管（Railway/Render/Fly/VPS 等）。
 
+</br>
+
+## TAKE 3：整站迁移 …
 
 
+
+1. 额……我最后决定，把整个 AI 的功能迁移到 Hugo 框架下，直接部署到 Cloudflare 的 dev 网页，然后走 Pages 记录的 CNAME 发布到[我的域名](https://blog.nero-lithos.com/courseai/)，也不用改太多东西，因为 Hugo 比较轻量级。
+
+
+
+2. 这件事也算是解决了……用一种最费力且原始的方法。

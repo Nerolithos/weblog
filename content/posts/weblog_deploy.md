@@ -1,9 +1,10 @@
 ---
 title: '🌐 在 cloudflare 部署 Hugo 构架博客的 manual'
-date: 2024-08-015T23:34:08+08:00
+date: 2024-08-15T23:34:08+08:00
 summary: '一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。'
 tags: 
   - 技术
+featured_image: "/images/cf.jpg"
 ---
 
 本文内容在[sunnyseeds 的个人博客](blog.sunneyseeds.net)的基础上进行增补
