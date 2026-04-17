@@ -55,7 +55,7 @@
   <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理">
   <meta itemprop="datePublished" content="2026-04-02T10:11:34+08:00">
   <meta itemprop="dateModified" content="2026-04-02T10:11:34+08:00">
-  <meta itemprop="wordCount" content="9994">
+  <meta itemprop="wordCount" content="10647">
   <meta itemprop="keywords" content="CSC3060">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="💻 CSC3060 Week 10-11 Memory Hierarchy">
@@ -633,6 +633,9 @@
 </ul>
 <p><strong>Fully associative (全相联) cache</strong>：<strong>1-set</strong>。任意内存块可以映射到 cache 的任意 line。优点：Hit 率高，冲突少；缺点：查找贵 (tag 大)，硬件复杂、慢、贵。</p>
 <p><strong>Direct-mapped (直接映射) cache</strong>：<strong>1-way/set，N-sets</strong>。每个内存块<strong>只能映射到唯一的 line</strong> (<strong>1-to-1 Hashmap</strong>)。优点：结构简单，查找快，成本低；缺点：容易发生 <strong>conflict miss</strong>。</p>
+<blockquote>
+<p>⚠️ DM 不一定都比 FA 快，尤其是在搜索 (set selection) 时。FA 的 miss rate 与 <strong>replacement policy</strong> 有关，并不一定是 miss rate 最低的。</p>
+</blockquote>
 </br> 
 <h2 id="how-is-a-block-found">How is a block found?</h2>
 <ul>
@@ -666,28 +669,20 @@
 <blockquote>
 <p>真正的缓存行含有 Data 和 Metadata (元数据) 两部分，Metadata 中除了 Valid bit 还有 Address 等等。⚠️ 16 KB 缓存不止占用 16 KB，只是实际数据有 16 KB！</p>
 </blockquote>
-<p>实际使用中，RV32I 将主存地址拆成三部分：<code>Address = Tag | Set selection | Byte offset</code>。⚠️ 其中 <strong>offset 部分的意义是从块中选取具体的 Byte</strong>。set(index), tag, offset 分别决定组、块、字节。</p>
+<p>实际使用中，RV32I 将主存地址拆成三部分：<code>Address = Tag | Set selection | Byte offset</code>。⚠️ 其中 <strong>offset 部分的意义是从块中选取具体的 Byte</strong>。set(index), tag, offset 分别决定组、块 (行)、字节。</p>
 <p>⚠️ 计算公式 —— 设 cache size 为 C，line size 为 B，associativity 为 A (A-ways)：</p>
 <ol>
-<li>
-<p>行数 = C / B</p>
-</li>
-<li>
-<p>组数 = (C / B) / A ——⚠️ 比如 direct-mapped 行数和组数相等</p>
-</li>
-<li>
-<p>⚠️ <strong>每行实际数据 bits = B × 8</strong></p>
-</li>
-<li>
-<p><strong>set bits (index) = log<sub>2</sub>(#sets)</strong> ——⚠️ 比如 <strong>fully-associative</strong> 是 1-set 就<strong>没有 set bits</strong>；<strong>direct-mapped</strong> 的 <strong>set bits 最多</strong>。</p>
-</li>
-<li>
-<p><strong>offset bits = log<sub>2</sub>B</strong>，比如 64B line 的 offset 为 6b</p>
-</li>
-<li>
-<p><strong>tag bits</strong> = 32 - set bits - offset bits ——⚠️ 从 tag 的额外开销：<strong>direct-mapped 最省，fully associative 最贵</strong>。</p>
-</li>
+<li>行数 = C / B</li>
+<li>组数 = (C / B) / A ——⚠️ 比如 direct-mapped 行数和组数相等</li>
+<li>⚠️ <strong>每行实际数据 Cache data bits = B × 8</strong></li>
+<li><strong>Set selection bits (index) = log<sub>2</sub>(#sets)</strong> ——⚠️ 比如 <strong>fully-associative</strong> 是 1-set 就<strong>没有 set bits</strong>；<strong>direct-mapped</strong> 的 <strong>set bits 最多</strong>。</li>
+<li><strong>Offset bits = log<sub>2</sub>B</strong>，比如 64B line 的 offset 为 6b</li>
+<li><strong>Tag bits</strong> = 32 - set bits - offset bits ——⚠️ 从 tag 的额外开销：<strong>direct-mapped 最省，fully associative 最贵</strong>。</li>
 </ol>
+<ul>
+<li>Block size 越大，加上 DM (small associativity)，Tag bits 的需要位置越小；</li>
+<li>Line size (Block size) 越大，越好的利用了 spacial locality。</li>
+</ul>
 <blockquote>
 <p><strong>为什么 associativity 越高，set bits 越少</strong>？因为在 cache 容量不变时：总 line 数固定，一个 set 里 way 越多，set 的个数就越少。</p>
 </blockquote>
@@ -713,13 +708,12 @@
 <p>miss 分为 read / write。</p>
 <h3 id="cache-read">Cache read</h3>
 <ol>
-<li>
-<p><strong>Read hit</strong> (要读的在 cache 里)：CPU 继续执行</p>
-</li>
-<li>
-<p><strong>Read miss</strong> (不在 cache 里) 分为两种：I-cache miss 要重新取指，D-cache miss 影响数据读写。基本方案：<strong>blocking cache</strong> (Stall pipeline 然后从下一层取 block)</p>
-</li>
+<li><strong>Read hit</strong> (要读的在 cache 里)：CPU 继续执行</li>
+<li><strong>Read miss</strong> (不在 cache 里) 分为两种：I-cache miss 要重新取指，D-cache miss 影响数据读写。基本方案：<strong>blocking cache</strong> (Stall pipeline 然后从下一层取 block)</li>
 </ol>
+<ul>
+<li>注意 I-cache 永远是 clean 的，当然不需要 copy back</li>
+</ul>
 <h3 id="cache-write">Cache write</h3>
 <ol>
 <li>
@@ -748,10 +742,10 @@
 <p><strong>Write miss</strong> (要写的<strong>地址对应的 block</strong> 不在 cache 中) 方案：</p>
 <ul>
 <li>
-<p><strong>Write-allocate (fetch-on-write)</strong> 天然对应 Write-back：先从下一层把 block 读进来，再写。适用于局部变量更新, 数组元素更新——现在写完<strong>之后很可能马上再读/再写它</strong>。初始开销大，但复用好；</p>
+<p><strong>Write-allocate (fetch-on-write)</strong> 天然对应 Write-back：先从下一层把 block 读进来，再写。适用于局部变量更新, <strong>数组元素更新</strong>——现在写完<strong>之后很可能马上再读/再写它</strong>。初始开销大，但复用好；</p>
 </li>
 <li>
-<p><strong>No-write-allocate</strong> 对应 Write-through：默认 <strong>bypass</strong> (不把 miss block 拉进 cache)。适用于 strcpy(), memset(), memcpy(), initialization of arrays——<strong>顺序大批量写</strong>但写完不太会马上再读。初始开销小，但复用性差。</p>
+<p><strong>No-write-allocate</strong> 对应 Write-through：默认 <strong>bypass</strong> (不把 miss block 拉进 cache)。适用于 strcpy(), <strong>memset()</strong>, <strong>memcpy()</strong>, initialization of arrays, 写 <strong>database</strong>——<strong>顺序大批量写</strong>但写完不太会马上再读。初始开销小，但复用性差。</p>
 </li>
 </ul>
 </li>
@@ -761,7 +755,7 @@
 <blockquote>
 <p>Stall-on-Use (Non-blocking miss) <strong>vs</strong> Stall-on-Miss (Blocking miss)</p>
 </blockquote>
-<p>如果不想 miss 不把 cache 完全锁死，需要 Miss Status Holding Register (<strong>MSHR</strong>) 登记 miss 的事务，<strong>相当于给 miss 加上缓冲</strong>。<strong>MSHR file</strong> 的每一项有：Block Address、Target Information、V (valid)</p>
+<p>如果不想 miss 不把 cache 完全锁死，需要 Miss Status Holding Register (<strong>MSHR</strong>) 登记 miss 的事务，每一层 cache 一个，<strong>相当于给 miss 加上缓冲</strong>。<strong>MSHR file</strong> 的每一项有：Block Address、Target Information、V (valid)。</p>
 <p>优点：</p>
 <ul>
 <li>
@@ -786,6 +780,9 @@
 <p>方案一：普通组织 (全局宽度一致)，BUS 也为 32b，传输缓慢。</p>
 <p>方案二：加宽数据通路。理论上把 bus 变宽很好，但工程代价大——Pin limitation (集成电路不能无限制增加引脚)、Signal integrity challenge (干扰/时序偏差)、Design nightmare (死亡走线导致设计和制造方过劳死)。</p>
 <p>⚠️ 方案三：交叉储存，不把总线和单个 memory 做得特别宽，把内存拆成多个 bank，连续地址可以分散到不同 bank 上，并行工作 (MLP)。这是最优解。</p>
+<blockquote>
+<p>更大的 cache line (block)，prefetching，non-blocking，Write-through 这些功能都产生更大 Traffic，可能需要更大的 BUS 和主存带宽。</p>
+</blockquote>
 </br> 
 </br> 
 <h1 id="cache-performance">Cache Performance</h1>
@@ -838,15 +835,16 @@
 <h3 id="2-decrease-conflict-miss">2. Decrease Conflict Miss</h3>
 <p><strong>Cache Miss —— 4C&rsquo;s</strong></p>
 <ol>
-<li>Compulsory/cold miss：第一次访问某个行，必须要从主存搬到缓存。</li>
+<li>Compulsory/cold miss：第一次访问某个行，必须要从主存搬到缓存。解决方案：Hardware prefetching 或者 Larger cache line size。</li>
 <li>Conflict/collision miss：set 大小 (associativity) 不足以支撑多个行映射到同组。</li>
-<li>Capacity miss：缓存本身的行数大小不足以支撑需要存储的内存行数。</li>
-<li>Coherency miss：在多处理器中为了保持缓存数据一致性，由其他处理器发出的 invalidation requests 导致。</li>
+<li>Capacity miss：缓存本身的行数大小不足以支撑需要存储的内存行数。解决方案：增大缓存大小，或者 prefetching。</li>
+<li>Coherency miss：在多处理器中为了保持缓存数据一致性，由其他处理器发出的 invalidation requests 导致。⚠️ <strong>Coherency miss 是最难 remove 的</strong>，调整 cache 本身大小安排也没用。解决方案：对于 private caches，用 Snoopy 或 Directory；如果全是 shared caches，就不存在 Coherency 问题。</li>
 </ol>
 <blockquote>
 <p>Conflict miss 就是 ⚠️ <strong>相同 set bits</strong> 的主存行相邻被访问，但 ways 数不足安排进内存，只能挤掉前序记录。</p>
 </blockquote>
-<h4 id="方案一bigger-associativity">方案一：Bigger Associativity</h4>
+<h4 id="方案一increase-cache-size">方案一：Increase Cache Size</h4>
+<h4 id="方案二bigger-associativity">方案二：Bigger Associativity</h4>
 <p>出现大量 conflict miss 不仅仅需要考虑扩大缓存，更要考虑增大 Associativity 并重设计算法。</p>
 <blockquote>
 <p>高 Associativity 会导致复杂的 MUX 设计、更多比较器和更长的 hit latency，但也<strong>越能减少 conflict miss</strong>。⚠️ <strong>2-way set associative</strong> 比较平衡。而 <strong>4-way 也很常用，是 &ldquo;Associativity sweet-spot&rdquo;</strong>。</p>
@@ -866,7 +864,7 @@
 <p>一个 64KB D-cache，16-word blocks，SPEC2000 的 miss 率：1-way: <strong>10.3%</strong>、2-way: <strong>8.6%</strong>、4-way: <strong>8.3%</strong>、8-way: <strong>8.1%</strong>。</p>
 </li>
 </ul>
-<h4 id="方案二dm--victim-cache">方案二：DM + Victim Cache</h4>
+<h4 id="方案三dm--victim-cache">方案三：DM + Victim Cache</h4>
 <p>对于 direct-mapped cache，⚠️ 所有 block 编号<u>相差为组数的倍数</u>的主存行都会 conflict miss；而 <strong>set-associative 通过 “给每个 set 多几个缓冲位” 来减少 conflict miss</strong>。</p>
 <p>补丁1：⚠️ <strong>Victim cache</strong> 是一个很小的 (一般 <strong>4~8</strong> 行) <strong>fully-associative</strong> 备用 cache，加在 <strong>direct-mapped 的 L1 cache</strong> 到 L2 之间，作为缓冲区保存 “刚被 L1 conflict miss 挤出去的 cache lines”。</p>
 <p>补丁 2：<strong>&ldquo;padding&rdquo;</strong>  —— 比如 64 行的缓存访问相差 1024 的连续数组可以插入 Dummy：<code>A[1024], Dummy0[8], B[1024], Dummy1[8], C[1024]</code>，防止连续 conflict。但编译器可能发现<code>Dummy[]</code> 根本没被真正使用于是自动优化掉导致失效。</p>
@@ -883,24 +881,22 @@
 <blockquote>
 <p>在通用系统 (桌面、服务器、笔记本) 里，2-way SA 更常见；DM+VC 更偏专用/嵌入式 (embedded)/成本导向等特定场景。</p>
 </blockquote>
-<h4 id="cache-block-replacement">Cache Block Replacement</h4>
+</br> 
+<h3 id="-cache-block-replacement">⚠️ Cache Block Replacement</h3>
 <p>(当一个满的 set 又来挤进来一条该如何处理 conflict miss，把谁踢出去？)</p>
 <ul>
-<li>
-<p>DM 或 DM+VC 没得选，毕竟只有 1-way/set，就把原本那条顶掉重写。</p>
-</li>
-<li>
-<p>Set / Fully associative 就可以分为三种策略：Random、<strong>LRU (Least Recently Used)</strong> 或 <strong>FIFO</strong>。</p>
+<li>DM 或 DM+VC 没得选，毕竟只有 1-way/set，就把原本那条顶掉重写。所以 DM 的 replacement 是最简单的。</li>
+<li>Set / Fully associative 就可以分为三种策略：Random、<strong>LRU (Least Recently Used)</strong> 或 <strong>FIFO</strong>。
 <ol>
 <li>Random</li>
-<li>LRU：利用 <strong>temporal locality</strong> 替换 “最久没被用过” 的块。<strong>True-LRU</strong> 需要维护一个栈，但栈操作/硬件开销都很大；<strong>Pseudo-LRU</strong> 则比如用一个指针轮流指向各块，当访问到指针指向的块，就改指向下一块，替换时就换当前指向的块。便宜很多，但不准。</li>
+<li>LRU：利用 <strong>temporal locality</strong> 替换 “最久没被用过” 的块。<strong>True-LRU</strong> 需要维护一个栈，但栈操作/硬件开销都很大；<strong>Approximate-LRU</strong> 适用于 <strong>2-way SA</strong>，用一个指针轮流指向各块，当访问到指针指向的块，就改指向下一块，替换时就换当前指向的块。便宜很多，但不准。</li>
 <li>FIFO：不管访问情况，只看进入缓存的顺序，依次过期。</li>
 </ol>
+</li>
+</ul>
 <p><strong>General LRU</strong>：“记录每个缓存块的年龄”</p>
-</li>
-<li>
-<p>一个 4-block/set 的例子：每个块用一个 log<sub>2</sub>(4)=2 bit counter，记录 “多久没被访问” 的计数。某块被访问时把它的 counter 置 0，同 set 其他块的 counter 自增。Conflict miss 时就替换 counter 最大的块 (对于 4 块来说，最大值是 3)。</p>
-</li>
+<ul>
+<li>一个 <strong>4-way SA</strong> 的例子：每个块用一个 log<sub>2</sub>(4)=2 bit counter，记录 “多久没被访问” 的计数。某块被访问时把它的 counter 置 0，同 set 其他块的 counter 自增。Conflict miss 时就替换 counter 最大的块 (对于 4 块来说，最大值是 3)。</li>
 </ul>
 <p>Theoretical Optimum：<strong>Belady&rsquo;s Algorithm</strong></p>
 <ul>
@@ -908,9 +904,9 @@
 <li>但是：1、不能实现因为无法精准预测未来；2、⚠️ 从 <strong>memory traffic / write-back 代价</strong>角度不一定最优 (dirty 概率高，要写回主存，BUS 压力变大)</li>
 </ul>
 <blockquote>
-<p>现实中，替换谁这个问题要兼顾：hit rate、clean/dirty、memory traffic、功耗 ……</p>
+<p>现实中，替换谁这个问题要兼顾：hit rate、clean/dirty、memory traffic、功耗 …… 所有策略都试图逼近理论上限：Belady。</p>
 </blockquote>
-<p>⚠️ <strong>FA LRU</strong> 的劣势：比如一个五个块的循环调用 (0, 1, 2, 3, 4, 0, 1 &hellip;)，如果用 4 行的 <strong>DM(+VC)</strong>，会有 <strong>60% hit</strong>；如果用 4 行的 <strong>FA+LRU</strong>，每次都恰好顶掉下个要用的块 (4 替换 0，0 替换 1,1 替换 2 &hellip;)，变成 <strong>0% hit</strong>。</p>
+<p>⚠️ <strong>FA LRU</strong> 的劣势：比如一个五个块的循环调用 (0, 1, 2, 3, 4, 0, 1 &hellip;)，如果用 4 行的 <strong>DM+Random</strong>，会有 <strong>60% hit</strong>；如果用 4 行的 <strong>FA+LRU</strong>，每次都恰好顶掉下个要用的块 (4 替换 0，0 替换 1,1 替换 2 &hellip;)，变成 <strong>0% hit</strong>。</p>
 </br> 
 <h3 id="3-smaller-miss-penalty">3. Smaller Miss Penalty</h3>
 <h4 id="方案一多级缓存-multilevel-caches">方案一：多级缓存 (multilevel caches)</h4>
@@ -946,6 +942,9 @@
 <li>L1 <strong>最重要是 hit 必须快</strong>，结构可以简单，容量和 Associativity 可以小一些；<strong>Spatial locality 很重要</strong>，把相邻数据一起带进来；L1 Write Hit 时，某些实现会选择 <strong>write-through</strong> 到 L2。</li>
 <li><strong>L2 最重要是降低 miss rate</strong>，尽量不要掉到主存；<strong>L2 的 hit time 没 L1 敏感</strong>；<strong>Temporal locality 更重要</strong>；L2 更大，若每次写都同步主存会导致巨大带宽压力，所以更常见 <strong>write-back</strong> 到主存。</li>
 </ul>
+<blockquote>
+<p>相比一二级缓存，L2 更大，更慢，且没有分离 I/D (Unified)。一般只有 L3 是 shared (多处理器共享)。</p>
+</blockquote>
 <h4 id="其他方案">其他方案</h4>
 <ol>
 <li>在上个部分的 &ldquo;Block size trade-off&rdquo; 中提过 <strong>Critical word first</strong> (miss 时，先把 CPU <strong>最急需的那个 word</strong> 取回来，不等整行) 和 <strong>Early restart</strong> (只要关键字到了，CPU 就可以先继续执行，剩下的 line 后台慢慢补完)。</li>
@@ -1004,7 +1003,10 @@
 <p>比如 <code>I -(读)&gt; S -&gt; E -(写)&gt; M -&gt; I</code>。</p>
 </li>
 </ul>
-<p>⚠️ Snoopy cache protocol is not scalable** 因为它依赖 <strong>global bus</strong>。在大系统中，上百上千个核的 coherence 事件都全体广播，总线带宽和 Snoop 成本会成为瓶颈。所以 snoopy 更适合：小到中等规模的共享总线系统。</p>
+<p>⚠️ <strong>Snoopy cache protocol is not scalable</strong> 因为它依赖 <strong>global bus</strong>。在大系统中，上百上千个核的 coherence 事件都全体广播，BUS 带宽和 Snoop 成本会成为瓶颈。所以 snoopy 更适合：小到中等规模的共享总线系统。</p>
+<blockquote>
+<p>Snoopy 方案可能产生很大的 snooping-BUS-traffic。</p>
+</blockquote>
 </br> 
 <h3 id="directory-based-cache-coherency">Directory Based Cache Coherency</h3>
 <p>对更大的系统，用 centralized 或 distributed <strong>directory</strong> 记录 “哪些处理器持有某个 cache line 的副本”</p>
@@ -1026,6 +1028,7 @@
 </ul>
 </br> 
 <h3 id="inclusiveexclusive-caches">Inclusive/Exclusive Caches</h3>
+<p>用来处理 Coherency miss 的另一方法。</p>
 <ul>
 <li>
 <p>Inclusive 备份副本：L1 里有，L2 也有 (L1 是 L2 的 “子集”)；被 L1 evicted 的，L2 可以继续保留；但是 <strong>L2 evict 一个块时，要反过来通知 L1，把那份也失效 —— back invalidation</strong>。</p>
@@ -1039,16 +1042,23 @@
 <p>Inclusive 的优势：更方便做多核一致性，L2 可以帮助检查和管理哪些 L1 里有这个块。所以更适合多核系统中做 cache coherence / invalidation 管理。</p>
 <p>Exclusive 的优势：容量利用率更高，Inclusive Cache 的 <strong>L2 有 25% 的空间在 “重复存 L1 的东西”</strong>。</p>
 <blockquote>
-<p>工程上，很多现代处理器更愿意牺牲一点容量效率，换取 coherence / 管理上的便利。</p>
+<p>工程上，很多现代处理器更愿意牺牲一点容量效率，换取 coherence / 管理上的便利——更倾向 <strong>L1/L2 Inclusive</strong>。<strong>L1/L2-I, L2/L3-E</strong> 比较常见。</p>
+<p>我们这节课的 Project4 实现的是 <strong>NINE (non-inclusive, non-exclusive) cache</strong>。</p>
 </blockquote>
 </br> 
 <h3 id="other-notible-facts">Other Notible Facts</h3>
 <ul>
 <li>
+<p>现代处理器中，4-way-SA, WB, Write Allocate 是最常见的，即使是对于适合 DM+VC 的 L1(D)。</p>
+</li>
+<li>
 <p>在高级 CPU 上，cache miss 的代价不再像“停多少拍”那么简单,尤其 <strong>Out-of-Order</strong> 处理器，会想办法把 miss penalty 藏起来。Cache miss 的实际惩罚取决于后面有没有足够多的独立工作可以填充进去，否则就要填 NOP 导致 CPI 下降。</p>
 </li>
 <li>
 <p>配合 non-blocking cache，可以让多个 miss 重叠 (MLP)。</p>
+</li>
+<li>
+<p>软件缓存用哈希表之类的数据结构查找，而硬件缓存支持 associative search；前者可以用复杂的 replacement policy，而后者必须用简单迅速的 policy。</p>
 </li>
 <li>
 <p>Cache miss 的影响取决于 program data flow：<strong>关键路径 miss</strong> 被后面一长串指令依赖所以影响很大；<strong>非关键路径 miss</strong> CPU 可以先做很多别的工作，影响就小很多。AMAT 只是近似，<strong>不是所有 miss 都一样贵。</strong></p>
@@ -1156,6 +1166,7 @@
           <ul>
             <li><a href="#1-lower-hit-latency">1. Lower Hit Latency</a></li>
             <li><a href="#2-decrease-conflict-miss">2. Decrease Conflict Miss</a></li>
+            <li><a href="#-cache-block-replacement">⚠️ Cache Block Replacement</a></li>
             <li><a href="#3-smaller-miss-penalty">3. Smaller Miss Penalty</a></li>
           </ul>
         </li>

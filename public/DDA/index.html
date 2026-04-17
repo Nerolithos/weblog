@@ -198,12 +198,6 @@
       overflow: hidden;
       margin-bottom: 0.15rem;
     }
-        #f6d32d 33%,  /* 10%  yellow */
-        #c5e1a5 66%,  /* 20%  light green */
-        #006837 100%  /* 30%+ pure green */
-      );
-      margin-bottom: 0.25rem;
-    }
     .dda-legend-labels {
       position: relative;
       display: block;
@@ -619,6 +613,40 @@
       ["TWN", "Taiwan, China RoC"]
     ]);
 
+    const ISO3_CANONICAL_OVERRIDES = new Map([
+      ["OSA", "XKX"]
+    ]);
+
+    function normalizeIso3(value) {
+      const cleaned = String(value || "")
+        .toUpperCase()
+        .replace(/[^A-Z]/g, "");
+      const base = cleaned.length >= 3 ? cleaned.slice(0, 3) : cleaned;
+      if (!base) return "";
+      return ISO3_CANONICAL_OVERRIDES.get(base) || base;
+    }
+
+    function makeNameKey(str) {
+      return String(str || "")
+        .toLowerCase()
+        .replace(/&/g, "and")
+        .replace(/[^a-z]/g, "");
+    }
+
+    let featureNameToIso3 = new Map();
+
+    function resolveFeatureIso3(feature) {
+      const props = (feature && feature.properties) || {};
+      const direct = normalizeIso3(props.iso_a3 || props.ISO_A3 || feature.id || "");
+      const name = props.name || props.ADMIN || "";
+      const byName = featureNameToIso3.get(makeNameKey(name)) || "";
+
+      // Prefer direct ISO only when it exists in parsed data; otherwise fallback by name.
+      if (direct && countryNameByCode.has(direct)) return direct;
+      if (byName) return byName;
+      return direct;
+    }
+
     function getDisplayCountryName(iso3, fallbackName) {
       const code = (iso3 || "").toUpperCase();
       if (DISPLAY_NAME_OVERRIDES.has(code)) {
@@ -968,7 +996,7 @@
       if (countryPaths) {
         countryPaths
           .attr("fill", d => {
-            const iso3 = d.properties && (d.properties.iso_a3 || d.properties.ISO_A3 || d.id);
+            const iso3 = resolveFeatureIso3(d);
             const record = getCountryValue(year, iso3);
             if (!record || record.value == null || isNaN(record.value)) {
               return "#e0e0e0"; // 无数据
@@ -980,7 +1008,7 @@
       if (mapCountryPaths) {
         mapCountryPaths
           .attr("fill", d => {
-            const iso3 = d.properties && (d.properties.iso_a3 || d.properties.ISO_A3 || d.id);
+            const iso3 = resolveFeatureIso3(d);
             const record = getCountryValue(year, iso3);
             if (!record || record.value == null || isNaN(record.value)) {
               return "#e0e0e0"; // 无数据
@@ -1011,7 +1039,7 @@
     function showTooltip(event, feature) {
       if (!feature) return;
       const props = feature.properties || {};
-      const iso3 = props.iso_a3 || props.ISO_A3 || feature.id || "?";
+      const iso3 = resolveFeatureIso3(feature) || "?";
       const rawName = props.name || props.ADMIN || "Unknown country";
       const name = getDisplayCountryName(iso3, rawName);
       lastTooltipIso3 = iso3;
@@ -1316,7 +1344,7 @@
         })
         .on("click", (event, d) => {
           if (!d.code) return; // 无 ISO3 代码的 tile 只显示为灰色，不跳转
-          const target = `country.html?code=${encodeURIComponent(d.code)}`;
+          const target = `country.html?code=${encodeURIComponent(normalizeIso3(d.code))}&name=${encodeURIComponent(d.name || "")}`;
           window.location.href = target;
         });
     }
@@ -1343,8 +1371,9 @@
     }
 
     function navigateToCountry(code) {
-      if (!code) return;
-      const target = `country.html?code=${encodeURIComponent(code)}`;
+      const iso3 = normalizeIso3(code);
+      if (!iso3) return;
+      const target = `country.html?code=${encodeURIComponent(iso3)}`;
       window.location.href = target;
     }
 
@@ -1460,7 +1489,7 @@
 
       // 先处理旧 CSV：Entity,Code,Year,Renewables (% equivalent primary energy)
       rows.forEach(row => {
-        const code = row.Code && row.Code.trim();
+        const code = normalizeIso3(row.Code && row.Code.trim());
         const entity = row.Entity && row.Entity.trim();
         const year = +row.Year;
         const valueRaw = row["Renewables (% equivalent primary energy)"];
@@ -1510,7 +1539,7 @@
       if (Array.isArray(newRows)) {
         newRows.forEach(row => {
           const area = (row["Area"] || "").trim();
-          const code = (row["ISO 3 code"] || "").trim();
+          const code = normalizeIso3(row["ISO 3 code"]);
           const year = +row["Year"];
           const source = (row["Energy_source"] || "").trim();
           const shareRaw = row["Share"];
@@ -1565,7 +1594,7 @@
       // 其他年份保持原有逻辑不变。
       if (Array.isArray(elecRows)) {
         elecRows.forEach(row => {
-          const code = row.Code && row.Code.trim();
+          const code = normalizeIso3(row.Code && row.Code.trim());
           const entity = row.Entity && row.Entity.trim();
           const year = +row.Year;
           const valueRaw = row.Renewables;
@@ -1601,10 +1630,7 @@
 
       // Build a name-key -> ISO3 map for tile template lookup
       function nameKey(str) {
-        return String(str)
-          .toLowerCase()
-          .replace(/&/g, "and")
-          .replace(/[^a-z]/g, "");
+        return makeNameKey(str);
       }
       const nameToCode = new Map();
       let unitedKingdomCode = null;
@@ -1761,6 +1787,8 @@
         }
       });
 
+      featureNameToIso3 = nameToCode;
+
       // Color scale domain: 0–75%+, with more steps
       valueMin = 0;
       valueMax = 75;
@@ -1867,9 +1895,10 @@
         })
         .on("click", (event, d) => {
           const props = d.properties || {};
-          const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+          const iso3 = resolveFeatureIso3(d);
+          const name = props.name || props.ADMIN || "";
           if (!iso3) return;
-          const target = `country.html?code=${encodeURIComponent(iso3)}`;
+          const target = `country.html?code=${encodeURIComponent(iso3)}&name=${encodeURIComponent(name)}`;
           window.location.href = target;
         });
 
@@ -1892,9 +1921,10 @@
           })
           .on("click", (event, d) => {
             const props = d.properties || {};
-            const iso3 = props.iso_a3 || props.ISO_A3 || d.id || "";
+            const iso3 = resolveFeatureIso3(d);
+            const name = props.name || props.ADMIN || "";
             if (!iso3) return;
-            const target = `country.html?code=${encodeURIComponent(iso3)}`;
+            const target = `country.html?code=${encodeURIComponent(iso3)}&name=${encodeURIComponent(name)}`;
             window.location.href = target;
           });
       }
