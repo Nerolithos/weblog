@@ -6,6 +6,7 @@ categories:
   - 帮助
 tags: 
   - 技术
+featured_image: "/images/ear.jpg"
 ---
 
 

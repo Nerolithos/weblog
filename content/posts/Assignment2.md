@@ -8,6 +8,7 @@ categories:
 tags: 
 - CSC1003
 - 练习
+featured_image: "/images/2D.jpg"
 ---
 
 
