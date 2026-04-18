@@ -149,6 +149,67 @@
       color: var(--muted);
     }
 
+    .extra-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #d7e7ff;
+      margin-bottom: 0.4rem;
+    }
+
+    .extra-media-frame {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(160deg, rgba(12, 18, 38, 0.95), rgba(3, 5, 12, 0.96));
+      aspect-ratio: 4 / 3;
+    }
+
+    .extra-media-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .extra-media-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.72rem;
+      color: #a9b7d6;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.03) 0,
+        rgba(255, 255, 255, 0.03) 10px,
+        rgba(255, 255, 255, 0.01) 10px,
+        rgba(255, 255, 255, 0.01) 20px
+      );
+    }
+
+    .extra-caption {
+      margin-top: 0.4rem;
+      font-size: 0.68rem;
+      color: #93a4c9;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .extra-caption a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .extra-caption a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 960px) {
       main.layout {
         grid-template-columns: minmax(0, 1fr);
@@ -899,7 +960,15 @@
         </div>
         <div class="extra-stack">
           <div class="extra-box">
-            <!-- TODO: 上方小框，可以放课堂问题、练习等 -->
+            <div class="extra-title" id="extra-photo-title">Element image</div>
+            <div class="extra-media-frame">
+              <img id="extra-element-photo" alt="Selected element appearance" hidden />
+              <div class="extra-media-empty" id="extra-photo-empty">Pick an element to load image</div>
+            </div>
+            <div class="extra-caption">
+              <span id="extra-photo-caption">Source: Wikipedia</span>
+              <a id="extra-photo-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Open page</a>
+            </div>
           </div>
           <div class="extra-box">
             <!-- TODO: 下方小框，可以放备注、链接等 -->
@@ -1070,18 +1139,18 @@
       56: [2, 8, 18, 18, 8, 2],
       57: [2, 8, 18, 18, 9, 2],     // La: [Xe] 5d1 6s2
       58: [2, 8, 18, 19, 9, 2],    // Ce: [Xe] 4f1 5d1 6s2
-      59: [2, 8, 18, 20, 9, 2],    // Pr
-      60: [2, 8, 18, 21, 9, 2],    // Nd
-      61: [2, 8, 18, 22, 9, 2],    // Pm
-      62: [2, 8, 18, 23, 9, 2],    // Sm
-      63: [2, 8, 18, 24, 9, 2],    // Eu
+      59: [2, 8, 18, 21, 8, 2],    // Pr: [Xe] 4f3 6s2
+      60: [2, 8, 18, 22, 8, 2],    // Nd: [Xe] 4f4 6s2
+      61: [2, 8, 18, 23, 8, 2],    // Pm: [Xe] 4f5 6s2
+      62: [2, 8, 18, 24, 8, 2],    // Sm: [Xe] 4f6 6s2
+      63: [2, 8, 18, 25, 8, 2],    // Eu: [Xe] 4f7 6s2
       64: [2, 8, 18, 25, 9, 2],    // Gd: [Xe] 4f7 5d1 6s2
-      65: [2, 8, 18, 26, 9, 2],    // Tb
-      66: [2, 8, 18, 27, 9, 2],    // Dy
-      67: [2, 8, 18, 28, 9, 2],    // Ho
-      68: [2, 8, 18, 29, 9, 2],    // Er
-      69: [2, 8, 18, 30, 9, 2],    // Tm
-      70: [2, 8, 18, 31, 9, 2],    // Yb
+      65: [2, 8, 18, 27, 8, 2],    // Tb: [Xe] 4f9 6s2
+      66: [2, 8, 18, 28, 8, 2],    // Dy: [Xe] 4f10 6s2
+      67: [2, 8, 18, 29, 8, 2],    // Ho: [Xe] 4f11 6s2
+      68: [2, 8, 18, 30, 8, 2],    // Er: [Xe] 4f12 6s2
+      69: [2, 8, 18, 31, 8, 2],    // Tm: [Xe] 4f13 6s2
+      70: [2, 8, 18, 32, 8, 2],    // Yb: [Xe] 4f14 6s2
       71: [2, 8, 18, 32, 9, 2],    // Lu
       72: [2, 8, 18, 32, 10, 2],   // Hf
       73: [2, 8, 18, 32, 11, 2],   // Ta
@@ -1151,6 +1220,10 @@
 
     const VALENCE_DATA = new Map();
     const ELEMENT_NOTES = new Map();
+    const ELEMENT_IMAGE_CACHE = new Map();
+    const LOCAL_ELEMENT_IMAGE_CACHE = new Map();
+    let elementImageFetchController = null;
+    let elementImageRequestToken = 0;
 
     // Pauling electronegativity (approx., H=2.20). null for undefined values.
     const ELECTRONEGATIVITY = {
@@ -2321,6 +2394,163 @@
       svg.appendChild(nucleusText);
     }
 
+    async function fetchWikiImageForElement(name, signal) {
+      const title = encodeURIComponent(name);
+
+      // 1) REST summary usually contains thumbnail/original image.
+      try {
+        const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`, { signal });
+        if (res.ok) {
+          const data = await res.json();
+          const img = data?.originalimage?.source || data?.thumbnail?.source;
+          const pageUrl = data?.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${title}`;
+          if (img) {
+            return {
+              imageUrl: img,
+              pageUrl
+            };
+          }
+        }
+      } catch (err) {
+        if (err && err.name === "AbortError") throw err;
+      }
+
+      // 2) Fallback to pageimages API.
+      const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&piprop=original&titles=${title}&format=json&origin=*`;
+      const apiRes = await fetch(apiUrl, { signal });
+      if (!apiRes.ok) return null;
+
+      const apiData = await apiRes.json();
+      const pages = apiData?.query?.pages;
+      if (!pages || typeof pages !== "object") return null;
+
+      const firstPage = Object.values(pages)[0];
+      const img = firstPage?.original?.source;
+      if (!img) return null;
+
+      return {
+        imageUrl: img,
+        pageUrl: `https://en.wikipedia.org/wiki/${title}`
+      };
+    }
+
+    function probeImageUrl(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+      });
+    }
+
+    async function findLocalElementImage(z) {
+      if (LOCAL_ELEMENT_IMAGE_CACHE.has(z)) {
+        return LOCAL_ELEMENT_IMAGE_CACHE.get(z);
+      }
+
+      const exts = ["JPG", "jpeg", "jpg", "JPEG", "png", "PNG", "webp", "WEBP", "avif", "AVIF"];
+      for (const ext of exts) {
+        const candidate = `pic/${z}.${ext}`;
+        const ok = await probeImageUrl(candidate);
+        if (ok) {
+          LOCAL_ELEMENT_IMAGE_CACHE.set(z, candidate);
+          return candidate;
+        }
+      }
+
+      LOCAL_ELEMENT_IMAGE_CACHE.set(z, null);
+      return null;
+    }
+
+    async function updateElementImage(el) {
+      const titleEl = document.getElementById("extra-photo-title");
+      const imgEl = document.getElementById("extra-element-photo");
+      const emptyEl = document.getElementById("extra-photo-empty");
+      const captionEl = document.getElementById("extra-photo-caption");
+      const linkEl = document.getElementById("extra-photo-link");
+      if (!titleEl || !imgEl || !emptyEl || !captionEl || !linkEl) return;
+
+      const wikiTitle = encodeURIComponent(el.name);
+      const fallbackPageUrl = `https://en.wikipedia.org/wiki/${wikiTitle}`;
+      const reqToken = ++elementImageRequestToken;
+
+      titleEl.textContent = `${el.name} image`;
+      captionEl.textContent = "Source: Wikipedia";
+      linkEl.href = fallbackPageUrl;
+      linkEl.hidden = false;
+
+      imgEl.removeAttribute("src");
+      imgEl.hidden = true;
+      emptyEl.hidden = false;
+      emptyEl.textContent = "";
+
+      // Short-circuit: prefer local static image in static/chem/pic/{Z}.*
+      const localImage = await findLocalElementImage(el.z);
+      if (reqToken !== elementImageRequestToken) return;
+      if (localImage) {
+        if (elementImageFetchController) {
+          elementImageFetchController.abort();
+        }
+        imgEl.src = localImage;
+        imgEl.alt = `${el.name} (elemental form)`;
+        imgEl.hidden = false;
+        emptyEl.hidden = true;
+        captionEl.textContent = "Source: local /chem/pic";
+        linkEl.href = localImage;
+        linkEl.hidden = false;
+        return;
+      }
+
+      const cached = ELEMENT_IMAGE_CACHE.get(el.z);
+      if (cached) {
+        if (cached.imageUrl) {
+          imgEl.src = cached.imageUrl;
+          imgEl.alt = `${el.name} (elemental form)`;
+          imgEl.hidden = false;
+          emptyEl.hidden = true;
+        } else {
+          imgEl.removeAttribute("src");
+          imgEl.hidden = true;
+          emptyEl.hidden = false;
+          emptyEl.textContent = "No image found on Wikipedia";
+        }
+        return;
+      }
+
+      if (elementImageFetchController) {
+        elementImageFetchController.abort();
+      }
+      elementImageFetchController = new AbortController();
+      const { signal } = elementImageFetchController;
+
+      try {
+        const found = await fetchWikiImageForElement(el.name, signal);
+        if (reqToken !== elementImageRequestToken) return;
+
+        if (found && found.imageUrl) {
+          ELEMENT_IMAGE_CACHE.set(el.z, found);
+          imgEl.src = found.imageUrl;
+          imgEl.alt = `${el.name} (elemental form)`;
+          imgEl.hidden = false;
+          emptyEl.hidden = true;
+          linkEl.href = found.pageUrl || fallbackPageUrl;
+        } else {
+          ELEMENT_IMAGE_CACHE.set(el.z, { imageUrl: null, pageUrl: fallbackPageUrl });
+          imgEl.removeAttribute("src");
+          imgEl.hidden = true;
+          emptyEl.hidden = false;
+          emptyEl.textContent = "No image found on Wikipedia";
+        }
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+        if (reqToken !== elementImageRequestToken) return;
+        imgEl.removeAttribute("src");
+        imgEl.hidden = true;
+        emptyEl.hidden = false;
+        emptyEl.textContent = "Image load failed";
+      }
+    }
+
     // --- State & interaction ---
     let currentActiveZ = 1;
     let lockedZ = null;
@@ -2389,6 +2619,8 @@
           notesDiv.innerHTML = "";
         }
       }
+
+      updateElementImage(el);
 
       renderBohrDiagram(shells, totalElectrons);
     }
