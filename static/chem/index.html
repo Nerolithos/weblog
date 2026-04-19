@@ -966,7 +966,7 @@
               <div class="extra-media-empty" id="extra-photo-empty">Pick an element to load image</div>
             </div>
             <div class="extra-caption">
-              <span id="extra-photo-caption">Source: Wikipedia</span>
+              <span id="extra-photo-caption">Source: local /chem/pic</span>
               <a id="extra-photo-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Open page</a>
             </div>
           </div>
@@ -1220,10 +1220,45 @@
 
     const VALENCE_DATA = new Map();
     const ELEMENT_NOTES = new Map();
-    const ELEMENT_IMAGE_CACHE = new Map();
-    const LOCAL_ELEMENT_IMAGE_CACHE = new Map();
-    let elementImageFetchController = null;
-    let elementImageRequestToken = 0;
+    // 本地元素图片清单：仅使用 static/chem/pic 下已存在文件
+    const LOCAL_ELEMENT_IMAGE_MAP = new Map([
+      [3, "pic/3.JPG"],
+      [4, "pic/4.jpeg"],
+      [5, "pic/5.JPG"],
+      [6, "pic/6.JPG"],
+      [7, "pic/7.jpg"],
+      [11, "pic/11.jpeg"],
+      [12, "pic/12.JPG"],
+      [14, "pic/14.JPG"],
+      [15, "pic/15.JPG"],
+      [16, "pic/16.JPG"],
+      [17, "pic/17.JPG"],
+      [19, "pic/19.jpeg"],
+      [20, "pic/20.JPG"],
+      [21, "pic/21.JPG"],
+      [23, "pic/23.jpeg"],
+      [24, "pic/24.jpeg"],
+      [25, "pic/25.jpeg"],
+      [29, "pic/29.JPG"],
+      [34, "pic/34.JPG"],
+      [35, "pic/35.JPG"],
+      [40, "pic/40.JPG"],
+      [41, "pic/41.jpeg"],
+      [47, "pic/47.jpeg"],
+      [48, "pic/48.jpeg"],
+      [53, "pic/53.JPG"],
+      [55, "pic/55.JPG"],
+      [57, "pic/57.jpeg"],
+      [59, "pic/59.JPG"],
+      [63, "pic/63.JPG"],
+      [67, "pic/67.JPG"],
+      [73, "pic/73.jpeg"],
+      [75, "pic/75.jpeg"],
+      [79, "pic/79.JPG"],
+      [80, "pic/80.jpeg"],
+      [82, "pic/82.jpeg"],
+      [83, "pic/83.JPG"]
+    ]);
 
     // Pauling electronegativity (approx., H=2.20). null for undefined values.
     const ELECTRONEGATIVITY = {
@@ -2394,75 +2429,14 @@
       svg.appendChild(nucleusText);
     }
 
-    async function fetchWikiImageForElement(name, signal) {
-      const title = encodeURIComponent(name);
-
-      // 1) REST summary usually contains thumbnail/original image.
-      try {
-        const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`, { signal });
-        if (res.ok) {
-          const data = await res.json();
-          const img = data?.originalimage?.source || data?.thumbnail?.source;
-          const pageUrl = data?.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${title}`;
-          if (img) {
-            return {
-              imageUrl: img,
-              pageUrl
-            };
-          }
-        }
-      } catch (err) {
-        if (err && err.name === "AbortError") throw err;
-      }
-
-      // 2) Fallback to pageimages API.
-      const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&piprop=original&titles=${title}&format=json&origin=*`;
-      const apiRes = await fetch(apiUrl, { signal });
-      if (!apiRes.ok) return null;
-
-      const apiData = await apiRes.json();
-      const pages = apiData?.query?.pages;
-      if (!pages || typeof pages !== "object") return null;
-
-      const firstPage = Object.values(pages)[0];
-      const img = firstPage?.original?.source;
-      if (!img) return null;
-
-      return {
-        imageUrl: img,
-        pageUrl: `https://en.wikipedia.org/wiki/${title}`
-      };
-    }
-
-    function probeImageUrl(url) {
-      return new Promise((resolve) => {
+    function preloadLocalElementImages() {
+      LOCAL_ELEMENT_IMAGE_MAP.forEach((path) => {
         const img = new Image();
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-        img.src = url;
+        img.src = path;
       });
     }
 
-    async function findLocalElementImage(z) {
-      if (LOCAL_ELEMENT_IMAGE_CACHE.has(z)) {
-        return LOCAL_ELEMENT_IMAGE_CACHE.get(z);
-      }
-
-      const exts = ["JPG", "jpeg", "jpg", "JPEG", "png", "PNG", "webp", "WEBP", "avif", "AVIF"];
-      for (const ext of exts) {
-        const candidate = `pic/${z}.${ext}`;
-        const ok = await probeImageUrl(candidate);
-        if (ok) {
-          LOCAL_ELEMENT_IMAGE_CACHE.set(z, candidate);
-          return candidate;
-        }
-      }
-
-      LOCAL_ELEMENT_IMAGE_CACHE.set(z, null);
-      return null;
-    }
-
-    async function updateElementImage(el) {
+    function updateElementImage(el) {
       const titleEl = document.getElementById("extra-photo-title");
       const imgEl = document.getElementById("extra-element-photo");
       const emptyEl = document.getElementById("extra-photo-empty");
@@ -2470,85 +2444,27 @@
       const linkEl = document.getElementById("extra-photo-link");
       if (!titleEl || !imgEl || !emptyEl || !captionEl || !linkEl) return;
 
-      const wikiTitle = encodeURIComponent(el.name);
-      const fallbackPageUrl = `https://en.wikipedia.org/wiki/${wikiTitle}`;
-      const reqToken = ++elementImageRequestToken;
-
       titleEl.textContent = `${el.name} image`;
-      captionEl.textContent = "Source: Wikipedia";
-      linkEl.href = fallbackPageUrl;
-      linkEl.hidden = false;
+      captionEl.textContent = "Source: local /chem/pic";
 
-      imgEl.removeAttribute("src");
-      imgEl.hidden = true;
-      emptyEl.hidden = false;
-      emptyEl.textContent = "";
-
-      // Short-circuit: prefer local static image in static/chem/pic/{Z}.*
-      const localImage = await findLocalElementImage(el.z);
-      if (reqToken !== elementImageRequestToken) return;
+      const localImage = LOCAL_ELEMENT_IMAGE_MAP.get(el.z) || null;
       if (localImage) {
-        if (elementImageFetchController) {
-          elementImageFetchController.abort();
+        if (imgEl.getAttribute("src") !== localImage) {
+          imgEl.src = localImage;
         }
-        imgEl.src = localImage;
         imgEl.alt = `${el.name} (elemental form)`;
         imgEl.hidden = false;
         emptyEl.hidden = true;
-        captionEl.textContent = "Source: local /chem/pic";
         linkEl.href = localImage;
         linkEl.hidden = false;
         return;
       }
 
-      const cached = ELEMENT_IMAGE_CACHE.get(el.z);
-      if (cached) {
-        if (cached.imageUrl) {
-          imgEl.src = cached.imageUrl;
-          imgEl.alt = `${el.name} (elemental form)`;
-          imgEl.hidden = false;
-          emptyEl.hidden = true;
-        } else {
-          imgEl.removeAttribute("src");
-          imgEl.hidden = true;
-          emptyEl.hidden = false;
-          emptyEl.textContent = "No image found on Wikipedia";
-        }
-        return;
-      }
-
-      if (elementImageFetchController) {
-        elementImageFetchController.abort();
-      }
-      elementImageFetchController = new AbortController();
-      const { signal } = elementImageFetchController;
-
-      try {
-        const found = await fetchWikiImageForElement(el.name, signal);
-        if (reqToken !== elementImageRequestToken) return;
-
-        if (found && found.imageUrl) {
-          ELEMENT_IMAGE_CACHE.set(el.z, found);
-          imgEl.src = found.imageUrl;
-          imgEl.alt = `${el.name} (elemental form)`;
-          imgEl.hidden = false;
-          emptyEl.hidden = true;
-          linkEl.href = found.pageUrl || fallbackPageUrl;
-        } else {
-          ELEMENT_IMAGE_CACHE.set(el.z, { imageUrl: null, pageUrl: fallbackPageUrl });
-          imgEl.removeAttribute("src");
-          imgEl.hidden = true;
-          emptyEl.hidden = false;
-          emptyEl.textContent = "No image found on Wikipedia";
-        }
-      } catch (err) {
-        if (err && err.name === "AbortError") return;
-        if (reqToken !== elementImageRequestToken) return;
-        imgEl.removeAttribute("src");
-        imgEl.hidden = true;
-        emptyEl.hidden = false;
-        emptyEl.textContent = "Image load failed";
-      }
+      imgEl.removeAttribute("src");
+      imgEl.hidden = true;
+      emptyEl.hidden = false;
+      emptyEl.textContent = "";
+      linkEl.hidden = true;
     }
 
     // --- State & interaction ---
@@ -2701,6 +2617,8 @@
 
       // 先从 CSS 变量载入 Hue 颜色，保证你在 element_hues.css 里调的颜色立即生效
       loadHueFromCSSVars();
+      // 预加载本地元素图片，避免悬浮切换时卡顿
+      preloadLocalElementImages();
 
       Promise.allSettled([
         loadValenceData(),
