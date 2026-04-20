@@ -36,5 +36,12 @@
       <guid>http://localhost:1313/categories/sse/</guid>
       <description></description>
     </item>
+    <item>
+      <title>Non-Major</title>
+      <link>http://localhost:1313/categories/non-major/</link>
+      <pubDate>Wed, 11 Dec 2024 12:10:58 +0800</pubDate>
+      <guid>http://localhost:1313/categories/non-major/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

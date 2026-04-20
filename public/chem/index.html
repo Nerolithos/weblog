@@ -149,6 +149,67 @@
       color: var(--muted);
     }
 
+    .extra-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #d7e7ff;
+      margin-bottom: 0.4rem;
+    }
+
+    .extra-media-frame {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(160deg, rgba(12, 18, 38, 0.95), rgba(3, 5, 12, 0.96));
+      aspect-ratio: 4 / 3;
+    }
+
+    .extra-media-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .extra-media-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.72rem;
+      color: #a9b7d6;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.03) 0,
+        rgba(255, 255, 255, 0.03) 10px,
+        rgba(255, 255, 255, 0.01) 10px,
+        rgba(255, 255, 255, 0.01) 20px
+      );
+    }
+
+    .extra-caption {
+      margin-top: 0.4rem;
+      font-size: 0.68rem;
+      color: #93a4c9;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .extra-caption a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .extra-caption a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 960px) {
       main.layout {
         grid-template-columns: minmax(0, 1fr);
@@ -899,7 +960,15 @@
         </div>
         <div class="extra-stack">
           <div class="extra-box">
-            <!-- TODO: 上方小框，可以放课堂问题、练习等 -->
+            <div class="extra-title" id="extra-photo-title">Element image</div>
+            <div class="extra-media-frame">
+              <img id="extra-element-photo" alt="Selected element appearance" hidden />
+              <div class="extra-media-empty" id="extra-photo-empty">Pick an element to load image</div>
+            </div>
+            <div class="extra-caption">
+              <span id="extra-photo-caption">Source: local /chem/pic</span>
+              <a id="extra-photo-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Open page</a>
+            </div>
           </div>
           <div class="extra-box">
             <!-- TODO: 下方小框，可以放备注、链接等 -->
@@ -1070,18 +1139,18 @@
       56: [2, 8, 18, 18, 8, 2],
       57: [2, 8, 18, 18, 9, 2],     // La: [Xe] 5d1 6s2
       58: [2, 8, 18, 19, 9, 2],    // Ce: [Xe] 4f1 5d1 6s2
-      59: [2, 8, 18, 20, 9, 2],    // Pr
-      60: [2, 8, 18, 21, 9, 2],    // Nd
-      61: [2, 8, 18, 22, 9, 2],    // Pm
-      62: [2, 8, 18, 23, 9, 2],    // Sm
-      63: [2, 8, 18, 24, 9, 2],    // Eu
+      59: [2, 8, 18, 21, 8, 2],    // Pr: [Xe] 4f3 6s2
+      60: [2, 8, 18, 22, 8, 2],    // Nd: [Xe] 4f4 6s2
+      61: [2, 8, 18, 23, 8, 2],    // Pm: [Xe] 4f5 6s2
+      62: [2, 8, 18, 24, 8, 2],    // Sm: [Xe] 4f6 6s2
+      63: [2, 8, 18, 25, 8, 2],    // Eu: [Xe] 4f7 6s2
       64: [2, 8, 18, 25, 9, 2],    // Gd: [Xe] 4f7 5d1 6s2
-      65: [2, 8, 18, 26, 9, 2],    // Tb
-      66: [2, 8, 18, 27, 9, 2],    // Dy
-      67: [2, 8, 18, 28, 9, 2],    // Ho
-      68: [2, 8, 18, 29, 9, 2],    // Er
-      69: [2, 8, 18, 30, 9, 2],    // Tm
-      70: [2, 8, 18, 31, 9, 2],    // Yb
+      65: [2, 8, 18, 27, 8, 2],    // Tb: [Xe] 4f9 6s2
+      66: [2, 8, 18, 28, 8, 2],    // Dy: [Xe] 4f10 6s2
+      67: [2, 8, 18, 29, 8, 2],    // Ho: [Xe] 4f11 6s2
+      68: [2, 8, 18, 30, 8, 2],    // Er: [Xe] 4f12 6s2
+      69: [2, 8, 18, 31, 8, 2],    // Tm: [Xe] 4f13 6s2
+      70: [2, 8, 18, 32, 8, 2],    // Yb: [Xe] 4f14 6s2
       71: [2, 8, 18, 32, 9, 2],    // Lu
       72: [2, 8, 18, 32, 10, 2],   // Hf
       73: [2, 8, 18, 32, 11, 2],   // Ta
@@ -1151,6 +1220,47 @@
 
     const VALENCE_DATA = new Map();
     const ELEMENT_NOTES = new Map();
+    // 本地元素图片清单：仅使用 static/chem/pic 下已存在文件
+    const LOCAL_ELEMENT_IMAGE_MAP = new Map([
+      [2, "pic/2.jpeg"],
+      [3, "pic/3.JPG"],
+      [4, "pic/4.jpeg"],
+      [5, "pic/5.JPG"],
+      [6, "pic/6.JPG"],
+      [7, "pic/7.jpg"],
+      [11, "pic/11.jpeg"],
+      [12, "pic/12.JPG"],
+      [14, "pic/14.JPG"],
+      [15, "pic/15.JPG"],
+      [16, "pic/16.JPG"],
+      [17, "pic/17.JPG"],
+      [18, "pic/18.jpeg"],
+      [19, "pic/19.jpeg"],
+      [20, "pic/20.JPG"],
+      [21, "pic/21.JPG"],
+      [23, "pic/23.jpeg"],
+      [24, "pic/24.jpeg"],
+      [25, "pic/25.jpeg"],
+      [29, "pic/29.JPG"],
+      [34, "pic/34.JPG"],
+      [35, "pic/35.JPG"],
+      [40, "pic/40.JPG"],
+      [41, "pic/41.jpeg"],
+      [47, "pic/47.jpeg"],
+      [48, "pic/48.jpeg"],
+      [53, "pic/53.JPG"],
+      [55, "pic/55.JPG"],
+      [57, "pic/57.jpeg"],
+      [59, "pic/59.JPG"],
+      [63, "pic/63.JPG"],
+      [67, "pic/67.JPG"],
+      [73, "pic/73.jpeg"],
+      [75, "pic/75.jpeg"],
+      [79, "pic/79.JPG"],
+      [80, "pic/80.jpeg"],
+      [82, "pic/82.jpeg"],
+      [83, "pic/83.JPG"]
+    ]);
 
     // Pauling electronegativity (approx., H=2.20). null for undefined values.
     const ELECTRONEGATIVITY = {
@@ -2321,6 +2431,44 @@
       svg.appendChild(nucleusText);
     }
 
+    function preloadLocalElementImages() {
+      LOCAL_ELEMENT_IMAGE_MAP.forEach((path) => {
+        const img = new Image();
+        img.src = path;
+      });
+    }
+
+    function updateElementImage(el) {
+      const titleEl = document.getElementById("extra-photo-title");
+      const imgEl = document.getElementById("extra-element-photo");
+      const emptyEl = document.getElementById("extra-photo-empty");
+      const captionEl = document.getElementById("extra-photo-caption");
+      const linkEl = document.getElementById("extra-photo-link");
+      if (!titleEl || !imgEl || !emptyEl || !captionEl || !linkEl) return;
+
+      titleEl.textContent = `${el.name} image`;
+      captionEl.textContent = "Source: local /chem/pic";
+
+      const localImage = LOCAL_ELEMENT_IMAGE_MAP.get(el.z) || null;
+      if (localImage) {
+        if (imgEl.getAttribute("src") !== localImage) {
+          imgEl.src = localImage;
+        }
+        imgEl.alt = `${el.name} (elemental form)`;
+        imgEl.hidden = false;
+        emptyEl.hidden = true;
+        linkEl.href = localImage;
+        linkEl.hidden = false;
+        return;
+      }
+
+      imgEl.removeAttribute("src");
+      imgEl.hidden = true;
+      emptyEl.hidden = false;
+      emptyEl.textContent = "";
+      linkEl.hidden = true;
+    }
+
     // --- State & interaction ---
     let currentActiveZ = 1;
     let lockedZ = null;
@@ -2389,6 +2537,8 @@
           notesDiv.innerHTML = "";
         }
       }
+
+      updateElementImage(el);
 
       renderBohrDiagram(shells, totalElectrons);
     }
@@ -2469,6 +2619,8 @@
 
       // 先从 CSS 变量载入 Hue 颜色，保证你在 element_hues.css 里调的颜色立即生效
       loadHueFromCSSVars();
+      // 预加载本地元素图片，避免悬浮切换时卡顿
+      preloadLocalElementImages();
 
       Promise.allSettled([
         loadValenceData(),
