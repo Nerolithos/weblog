@@ -213,13 +213,38 @@ body.dark-mode .home-hero-search form {
 /* 顶部导航：菜单链接悬浮特效，提醒可点击 */
 .site-nav-fixed .site-nav-link {
   position: relative;
-  padding: 0.1rem 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0.26rem 0.82rem;
+  font-size: 1.05rem;
+  line-height: 1;
+  white-space: nowrap;
   border-radius: 999px;
-  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.04) 100%),
+    rgba(15, 23, 42, 0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.38),
+    0 8px 20px rgba(2, 6, 23, 0.28);
+  backdrop-filter: blur(12px) saturate(145%);
+  -webkit-backdrop-filter: blur(12px) saturate(145%);
+  text-decoration: none !important;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
 }
 
 .site-nav-fixed .site-nav-link:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.03);
+  border-color: rgba(191, 219, 254, 0.75);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.48),
+    0 12px 24px rgba(2, 6, 23, 0.34);
+}
+
+.site-nav-fixed .site-nav-link:active {
+  transform: translateY(0) scale(1.01);
 }
 
 .site-nav-fixed a:hover {
@@ -243,7 +268,9 @@ body.dark-mode .site-nav-fixed a {
 }
 
 body.dark-mode .site-nav-fixed .site-nav-link:hover {
-  background-color: rgba(148, 163, 184, 0.35);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.07) 100%),
+    rgba(15, 23, 42, 0.44);
 }
 
 body.dark-mode .site-nav-fixed .site-nav-title {
@@ -266,7 +293,23 @@ body:not(.dark-mode) .site-nav-fixed .site-nav-title {
 }
 
 body:not(.dark-mode) .site-nav-fixed .site-nav-link:hover {
-  background-color: rgba(15, 23, 42, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.74) 0%, rgba(255,255,255,0.3) 100%),
+    rgba(241, 245, 249, 0.58);
+  border-color: rgba(100, 116, 139, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    0 12px 24px rgba(15, 23, 42, 0.18);
+}
+
+body:not(.dark-mode) .site-nav-fixed .site-nav-link {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.38) 100%),
+    rgba(241, 245, 249, 0.62);
+  border-color: rgba(148, 163, 184, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    0 8px 20px rgba(15, 23, 42, 0.16);
 }
 
 /* 顶部导航右侧搜索框：根据深浅模式反色显示 */
