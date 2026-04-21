@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 11 Apr 2026 20:08:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 21 Apr 2026 11:45:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC3060 Week 12-13 Optimizing Program Performance</title>
+      <link>http://localhost:1313/posts/3060.7/</link>
+      <pubDate>Tue, 21 Apr 2026 11:45:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.7/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 12-13 (Chapter5), 怎样做软件优化——把程序写得更快、更省资源、更贴近硬件实际执行方式。</description>
+    </item>
     <item>
       <title>🧪 Interactive Periodic Table</title>
       <link>http://localhost:1313/posts/chemistry/</link>
@@ -245,13 +252,6 @@
       <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
       <guid>http://localhost:1313/posts/autorelease/</guid>
       <description>SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？</description>
-    </item>
-    <item>
-      <title>💻 CSC3060 Week 12-13 Optimizing Program Performance</title>
-      <link>http://localhost:1313/posts/3060.7/</link>
-      <pubDate>Mon, 21 Apr 2025 11:45:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.7/</guid>
-      <description>CUHKSZ 大二课程 CSC3060 的 Week 12-13 (Chapter5), 怎样做软件优化——把程序写得更快、更省资源、更贴近硬件实际执行方式。</description>
     </item>
     <item>
       <title>🧠 Brainstorming Beyond Textbooks</title>
