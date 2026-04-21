@@ -6,8 +6,15 @@
     <description>Recent content on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 11 Apr 2026 20:08:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 21 Apr 2026 11:45:34 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC3060 Week 12-13 Optimizing Program Performance</title>
+      <link>http://localhost:1313/posts/3060.7/</link>
+      <pubDate>Tue, 21 Apr 2026 11:45:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.7/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 12-13 (Chapter5), 怎样做软件优化——把程序写得更快、更省资源、更贴近硬件实际执行方式。</description>
+    </item>
     <item>
       <title>🧪 Interactive Periodic Table</title>
       <link>http://localhost:1313/posts/chemistry/</link>
@@ -90,7 +97,7 @@
       <link>http://localhost:1313/posts/history-today/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/history-today/</guid>
-      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-20)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2023&lt;/strong&gt; — SpaceX&amp;#39;s Starship rocket, the largest and most powerful rocket ever built, launches for the first time. It explodes four minutes into flight.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2021&lt;/strong&gt; — State of Minnesota v. Derek Michael Chauvin: Derek Chauvin is found guilty of all charges in the murder of George Floyd by the Fourth Judicial District Court of Minnesota.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2020&lt;/strong&gt; — For the first time in history, oil prices drop below zero, an effect of the 2020 Russia-Saudi Arabia oil price war.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2015&lt;/strong&gt; — Ten people are killed in a bomb attack on a convoy carrying food supplies to a United Nations compound in Garowe in the Somali region of Puntland.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2013&lt;/strong&gt; — A 6.6-magnitude earthquake strikes Lushan County, Ya&amp;#39;an, in China&amp;#39;s Sichuan province, killing at least 193 people and injuring thousands.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
+      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-21)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2021&lt;/strong&gt; — Indonesian Navy submarine KRI Nanggala (402) sinks in the Bali Sea during a military drill, killing all 53 on board.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2019&lt;/strong&gt; — Eight bombs explode at churches, hotels, and other locations in Sri Lanka on Easter Sunday, killing at least 269.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2014&lt;/strong&gt; — The American city of Flint, Michigan switches its water source to the Flint River, beginning the ongoing Flint water crisis which has caused lead poisoning in up to 12,000 people, and at least 12 deaths from Legionnaires&amp;#39; disease, ultimately leading to criminal indictments against 15 people, five of whom have been charged with involuntary manslaughter.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2012&lt;/strong&gt; — Two trains are involved in a head-on collision near Sloterdijk, Amsterdam, in the Netherlands, killing one person and injuring 116 others.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2010&lt;/strong&gt; — The controversial Kharkiv Pact (Russian Ukrainian Naval Base for Gas Treaty) is signed in Kharkiv, Ukraine, by Ukrainian president Viktor Yanukovych and Russian president Dmitry Medvedev; it was unilaterally terminated by Russia on March 31, 2014.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>

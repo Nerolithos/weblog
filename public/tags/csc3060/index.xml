@@ -64,5 +64,12 @@
       <guid>http://localhost:1313/posts/3060.1/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
     </item>
+    <item>
+      <title>💻 CSC3060 Week 12-13 Optimizing Program Performance</title>
+      <link>http://localhost:1313/posts/3060.7/</link>
+      <pubDate>Mon, 21 Apr 2025 11:45:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/3060.7/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 12-13 (Chapter5), 怎样做软件优化——把程序写得更快、更省资源、更贴近硬件实际执行方式。</description>
+    </item>
   </channel>
 </rss>
