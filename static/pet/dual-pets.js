@@ -108,6 +108,8 @@
       musicGain: null,
       ambienceGain: null,
       sfxGain: null,
+      masterVolume: 30,
+      sfxVolume: 150,
       backgroundStarted: false,
       noiseBuffer: null,
       lastKeyboardAt: 0,
@@ -115,6 +117,23 @@
       lastFaceBurstAt: 0,
       cameraSignalEnabled: false
     };
+
+    var SFX_RAW_MAX = 500;
+
+    function getSfxGainValue() {
+      var clamped = Math.max(0, Math.min(SFX_RAW_MAX, audioState.sfxVolume));
+      // 让 150 对应 30%，整体范围 0-500
+      return 0.24 + (clamped / SFX_RAW_MAX) * 0.96;
+    }
+
+    function sfxRawToPercent(raw) {
+      return Math.round((Math.max(0, Math.min(SFX_RAW_MAX, raw)) / SFX_RAW_MAX) * 100);
+    }
+
+    function sfxPercentToRaw(percent) {
+      var clamped = Math.max(0, Math.min(100, percent));
+      return Math.round((clamped / 100) * SFX_RAW_MAX);
+    }
 
     function ensureAudioContext() {
       var AudioCtx = global.AudioContext || global.webkitAudioContext;
@@ -127,10 +146,11 @@
         var ambienceGain = ctx.createGain();
         var sfxGain = ctx.createGain();
 
+        // 主输出固定，背景音乐与音效分别在各自通道控制
         masterGain.gain.value = 0.42;
         musicGain.gain.value = 0.16;
         ambienceGain.gain.value = 0.14;
-        sfxGain.gain.value = 0.22;
+        sfxGain.gain.value = getSfxGainValue();
 
         musicGain.connect(masterGain);
         ambienceGain.connect(masterGain);
@@ -197,7 +217,7 @@
       var bgAudio = new Audio("Resources/ArkPetBGA.m4a");
       bgAudio.loop = true;
       bgAudio.preload = "auto";
-      bgAudio.volume = 0.55; // 初始音量，与音量条默认值 55 对应
+      bgAudio.volume = audioState.masterVolume / 100;
       audioState.bgAudioEl = bgAudio;
       // 立即尝试自动播放；若被浏览器拦截则等待用户首次交互
       bgAudio.play().catch(function () {});
@@ -206,11 +226,16 @@
     // 统一设置主音量（0–100），同步背景音乐和 SFX 增益
     function setMasterVolume(val) {
       var v = Math.max(0, Math.min(100, val)) / 100;
+      audioState.masterVolume = Math.round(v * 100);
       if (audioState.bgAudioEl) {
         audioState.bgAudioEl.volume = v;
       }
-      if (audioState.masterGain) {
-        audioState.masterGain.gain.value = v * 0.42;
+    }
+
+    function setSfxVolumeFromPercent(percent) {
+      audioState.sfxVolume = sfxPercentToRaw(percent);
+      if (audioState.sfxGain) {
+        audioState.sfxGain.gain.value = getSfxGainValue();
       }
     }
 
@@ -222,8 +247,8 @@
       audioState.lastClickAt = now;
 
       var t = ctx.currentTime;
-      scheduleTone(t, 0.045, 1580, 860, "square", 0.018);
-      scheduleTone(t + 0.012, 0.04, 820, 540, "triangle", 0.012);
+      scheduleTone(t, 0.062, 1660, 900, "square", 0.085);
+      scheduleTone(t + 0.01, 0.052, 980, 620, "triangle", 0.062);
     }
 
     function shouldPlayKeyboardForEvent(ev) {
@@ -246,7 +271,7 @@
 
       var t = ctx.currentTime;
       var baseFreq = ev && ev.repeat ? 1220 : 1480;
-      scheduleTone(t, 0.028, baseFreq, 980, "square", 0.009);
+      scheduleTone(t, 0.038, baseFreq, 900, "square", 0.05);
     }
 
     function playFaceDetectBurst() {
@@ -258,9 +283,9 @@
       audioState.lastFaceBurstAt = nowMs;
 
       var t = ctx.currentTime;
-      scheduleTone(t + 0.00, 0.06, 1240, 1100, "square", 0.024);
-      scheduleTone(t + 0.11, 0.06, 1240, 1100, "square", 0.024);
-      scheduleTone(t + 0.22, 0.06, 1320, 1160, "square", 0.026);
+      scheduleTone(t + 0.00, 0.075, 1240, 1100, "square", 0.078);
+      scheduleTone(t + 0.11, 0.075, 1240, 1100, "square", 0.078);
+      scheduleTone(t + 0.22, 0.075, 1320, 1160, "square", 0.082);
     }
 
     function setCameraSignalEnabled(enabled) {
@@ -273,7 +298,7 @@
     function isButtonLikeTarget(target) {
       if (!target || !target.closest) return false;
       return !!target.closest(
-        "button, .ark-term-btn, .taskbar-window-button, #taskbar-home, .home-menu-item, .desktop-icon, .line-contact, .pet-menu-item"
+        "button, .ark-term-btn, .taskbar-window-button, #taskbar-home, .home-menu-item, .desktop-icon, .line-contact, .pet-menu-item, #taskbar-volume-btn, #volume-slider"
       );
     }
 
@@ -308,9 +333,17 @@
       var volBtn = document.getElementById("taskbar-volume-btn");
       var volPopup = document.getElementById("volume-popup");
       var volSlider = document.getElementById("volume-slider");
+      var sfxSlider = document.getElementById("sfx-slider");
       var volPct = document.getElementById("volume-popup-pct");
 
-      if (volBtn && volPopup && volSlider) {
+      if (volBtn && volPopup && volSlider && sfxSlider) {
+        var initVol = audioState.masterVolume;
+        var initSfxPercent = sfxRawToPercent(audioState.sfxVolume);
+        volSlider.value = initVol;
+        sfxSlider.value = initSfxPercent;
+        if (volPct) volPct.textContent = "BGM " + initVol + "% | SFX " + initSfxPercent + "%";
+        volBtn.textContent = initVol === 0 ? "🔇" : initVol < 40 ? "🔉" : "🔊";
+
         // 点击音量图标切换弹出框（pointer + click 双保险）
         function toggleVolumePopup(ev) {
           if (ev) {
@@ -319,10 +352,12 @@
           }
           volPopup.classList.toggle("open");
           // 同步滑块与当前音量
-          if (volPopup.classList.contains("open") && audioState.bgAudioEl) {
-            var cur = Math.round(audioState.bgAudioEl.volume * 100);
+          if (volPopup.classList.contains("open")) {
+            var cur = audioState.bgAudioEl ? Math.round(audioState.bgAudioEl.volume * 100) : audioState.masterVolume;
             volSlider.value = cur;
-            if (volPct) volPct.textContent = cur + "%";
+            var curSfx = sfxRawToPercent(audioState.sfxVolume);
+            sfxSlider.value = curSfx;
+            if (volPct) volPct.textContent = "BGM " + cur + "% | SFX " + curSfx + "%";
           }
         }
 
@@ -331,10 +366,19 @@
         // 滑动时实时调整音量
         volSlider.addEventListener("input", function () {
           var val = parseInt(volSlider.value, 10);
-          if (volPct) volPct.textContent = val + "%";
           setMasterVolume(val);
+          var sfxNow = sfxRawToPercent(audioState.sfxVolume);
+          if (volPct) volPct.textContent = "BGM " + val + "% | SFX " + sfxNow + "%";
           // 根据音量更新图标
           if (volBtn) volBtn.textContent = val === 0 ? "🔇" : val < 40 ? "🔉" : "🔊";
+        });
+
+        // 独立音效音量（0-100 映射到原始 0-300，150 即 50%）
+        sfxSlider.addEventListener("input", function () {
+          var val = parseInt(sfxSlider.value, 10);
+          setSfxVolumeFromPercent(val);
+          var bgNow = audioState.bgAudioEl ? Math.round(audioState.bgAudioEl.volume * 100) : audioState.masterVolume;
+          if (volPct) volPct.textContent = "BGM " + bgNow + "% | SFX " + val + "%";
         });
 
         // 点击音量弹出框以外的地方关闭
