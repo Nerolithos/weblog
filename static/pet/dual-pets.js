@@ -101,6 +101,251 @@
       chatap: false
     };
 
+    // 统一音频系统：全部使用 Web Audio API 合成，避免引入外部版权素材。
+    var audioState = {
+      context: null,
+      masterGain: null,
+      musicGain: null,
+      ambienceGain: null,
+      sfxGain: null,
+      backgroundStarted: false,
+      noiseBuffer: null,
+      lastKeyboardAt: 0,
+      lastClickAt: 0,
+      lastFaceBurstAt: 0,
+      cameraSignalEnabled: false
+    };
+
+    function ensureAudioContext() {
+      var AudioCtx = global.AudioContext || global.webkitAudioContext;
+      if (!AudioCtx) return null;
+
+      if (!audioState.context) {
+        var ctx = new AudioCtx();
+        var masterGain = ctx.createGain();
+        var musicGain = ctx.createGain();
+        var ambienceGain = ctx.createGain();
+        var sfxGain = ctx.createGain();
+
+        masterGain.gain.value = 0.42;
+        musicGain.gain.value = 0.16;
+        ambienceGain.gain.value = 0.14;
+        sfxGain.gain.value = 0.22;
+
+        musicGain.connect(masterGain);
+        ambienceGain.connect(masterGain);
+        sfxGain.connect(masterGain);
+        masterGain.connect(ctx.destination);
+
+        audioState.context = ctx;
+        audioState.masterGain = masterGain;
+        audioState.musicGain = musicGain;
+        audioState.ambienceGain = ambienceGain;
+        audioState.sfxGain = sfxGain;
+      }
+
+      if (audioState.context && audioState.context.state === "suspended") {
+        try { audioState.context.resume(); } catch (e) {}
+      }
+
+      return audioState.context;
+    }
+
+    function createNoiseBuffer(ctx) {
+      if (!ctx) return null;
+      if (audioState.noiseBuffer) return audioState.noiseBuffer;
+      var buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+      var data = buffer.getChannelData(0);
+      for (var i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.22;
+      }
+      audioState.noiseBuffer = buffer;
+      return buffer;
+    }
+
+    function scheduleTone(startAt, duration, frequencyStart, frequencyEnd, type, gainLevel) {
+      var ctx = ensureAudioContext();
+      if (!ctx || !audioState.sfxGain) return;
+
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      var filter = ctx.createBiquadFilter();
+
+      osc.type = type || "sine";
+      osc.frequency.setValueAtTime(Math.max(40, frequencyStart || 440), startAt);
+      if (frequencyEnd && frequencyEnd !== frequencyStart) {
+        osc.frequency.exponentialRampToValueAtTime(Math.max(40, frequencyEnd), startAt + duration);
+      }
+
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(2800, startAt);
+      gain.gain.setValueAtTime(0.0001, startAt);
+      gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, gainLevel || 0.03), startAt + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioState.sfxGain);
+
+      osc.start(startAt);
+      osc.stop(startAt + duration + 0.02);
+    }
+
+    // 背景音乐单独用 HTMLAudioElement，不经过 AudioContext，绕开自动播放限制
+    function initBackgroundAudio() {
+      if (audioState.bgAudioEl) return;
+      var bgAudio = new Audio("Resources/ArkPetBGA.m4a");
+      bgAudio.loop = true;
+      bgAudio.preload = "auto";
+      bgAudio.volume = 0.55; // 初始音量，与音量条默认值 55 对应
+      audioState.bgAudioEl = bgAudio;
+      // 立即尝试自动播放；若被浏览器拦截则等待用户首次交互
+      bgAudio.play().catch(function () {});
+    }
+
+    // 统一设置主音量（0–100），同步背景音乐和 SFX 增益
+    function setMasterVolume(val) {
+      var v = Math.max(0, Math.min(100, val)) / 100;
+      if (audioState.bgAudioEl) {
+        audioState.bgAudioEl.volume = v;
+      }
+      if (audioState.masterGain) {
+        audioState.masterGain.gain.value = v * 0.42;
+      }
+    }
+
+    function playUiClickSound() {
+      var ctx = ensureAudioContext();
+      if (!ctx) return;
+      var now = performance.now();
+      if (now - audioState.lastClickAt < 30) return;
+      audioState.lastClickAt = now;
+
+      var t = ctx.currentTime;
+      scheduleTone(t, 0.045, 1580, 860, "square", 0.018);
+      scheduleTone(t + 0.012, 0.04, 820, 540, "triangle", 0.012);
+    }
+
+    function shouldPlayKeyboardForEvent(ev) {
+      if (!ev) return false;
+      if (ev.metaKey || ev.ctrlKey || ev.altKey) return false;
+      if (ev.key === "Shift" || ev.key === "CapsLock" || ev.key === "Escape") return false;
+      if (typeof ev.key !== "string") return false;
+      if (ev.key.length === 1) return true;
+      return ev.key === "Enter" || ev.key === "Backspace" || ev.key === "Delete" ||
+        ev.key === "Tab" || ev.key === " " || ev.key.indexOf("Arrow") === 0;
+    }
+
+    function playKeyboardSound(ev) {
+      if (!shouldPlayKeyboardForEvent(ev)) return;
+      var ctx = ensureAudioContext();
+      if (!ctx) return;
+      var now = performance.now();
+      if (now - audioState.lastKeyboardAt < 24) return;
+      audioState.lastKeyboardAt = now;
+
+      var t = ctx.currentTime;
+      var baseFreq = ev && ev.repeat ? 1220 : 1480;
+      scheduleTone(t, 0.028, baseFreq, 980, "square", 0.009);
+    }
+
+    function playFaceDetectBurst() {
+      if (!audioState.cameraSignalEnabled) return;
+      var ctx = ensureAudioContext();
+      if (!ctx) return;
+      var nowMs = performance.now();
+      if (nowMs - audioState.lastFaceBurstAt < 780) return;
+      audioState.lastFaceBurstAt = nowMs;
+
+      var t = ctx.currentTime;
+      scheduleTone(t + 0.00, 0.06, 1240, 1100, "square", 0.024);
+      scheduleTone(t + 0.11, 0.06, 1240, 1100, "square", 0.024);
+      scheduleTone(t + 0.22, 0.06, 1320, 1160, "square", 0.026);
+    }
+
+    function setCameraSignalEnabled(enabled) {
+      audioState.cameraSignalEnabled = !!enabled;
+      if (!enabled) {
+        audioState.lastFaceBurstAt = 0;
+      }
+    }
+
+    function isButtonLikeTarget(target) {
+      if (!target || !target.closest) return false;
+      return !!target.closest(
+        "button, .ark-term-btn, .taskbar-window-button, #taskbar-home, .home-menu-item, .desktop-icon, .line-contact, .pet-menu-item"
+      );
+    }
+
+    function initAudioSystem() {
+      // 页面加载时立即初始化背景音乐，尽量自动播放
+      initBackgroundAudio();
+
+      // 首次用户交互时：解锁 AudioContext（SFX 用）+ 确保背景音乐在播放
+      function unlockAudio() {
+        ensureAudioContext();
+        if (audioState.bgAudioEl && audioState.bgAudioEl.paused) {
+          audioState.bgAudioEl.play().catch(function () {});
+        }
+        document.removeEventListener("pointerdown", unlockAudio, true);
+        document.removeEventListener("keydown", unlockAudio, true);
+      }
+
+      document.addEventListener("pointerdown", unlockAudio, true);
+      document.addEventListener("keydown", unlockAudio, true);
+
+      document.addEventListener("pointerdown", function (ev) {
+        if (ev.button !== 0) return;
+        if (!isButtonLikeTarget(ev.target)) return;
+        playUiClickSound();
+      }, true);
+
+      document.addEventListener("keydown", function (ev) {
+        playKeyboardSound(ev);
+      }, true);
+
+      // Win7 音量控件
+      var volBtn = document.getElementById("taskbar-volume-btn");
+      var volPopup = document.getElementById("volume-popup");
+      var volSlider = document.getElementById("volume-slider");
+      var volPct = document.getElementById("volume-popup-pct");
+
+      if (volBtn && volPopup && volSlider) {
+        // 点击音量图标切换弹出框（pointer + click 双保险）
+        function toggleVolumePopup(ev) {
+          if (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+          }
+          volPopup.classList.toggle("open");
+          // 同步滑块与当前音量
+          if (volPopup.classList.contains("open") && audioState.bgAudioEl) {
+            var cur = Math.round(audioState.bgAudioEl.volume * 100);
+            volSlider.value = cur;
+            if (volPct) volPct.textContent = cur + "%";
+          }
+        }
+
+        volBtn.addEventListener("click", toggleVolumePopup);
+
+        // 滑动时实时调整音量
+        volSlider.addEventListener("input", function () {
+          var val = parseInt(volSlider.value, 10);
+          if (volPct) volPct.textContent = val + "%";
+          setMasterVolume(val);
+          // 根据音量更新图标
+          if (volBtn) volBtn.textContent = val === 0 ? "🔇" : val < 40 ? "🔉" : "🔊";
+        });
+
+        // 点击音量弹出框以外的地方关闭
+        document.addEventListener("pointerdown", function (ev) {
+          if (!volPopup.classList.contains("open")) return;
+          if (volBtn.contains(ev.target) || volPopup.contains(ev.target)) return;
+          volPopup.classList.remove("open");
+        }, true);
+      }
+    }
+
     // 简单窗口层级管理：最近被点击的窗口浮到最上层（但始终低于摄像头与错误覆盖层）
     var BASE_Z = 20;
     var MAX_Z = 80;
@@ -1890,6 +2135,7 @@
     }
 
     function showCameraError() {
+      setCameraSignalEnabled(false);
       clearCameraPopups();
       if (cameraVideoEl) cameraVideoEl.style.display = "none";
       if (cameraErrorEl) {
@@ -1908,6 +2154,7 @@
       try {
         navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(function (stream) {
           cameraStreamObj = stream;
+          setCameraSignalEnabled(true);
           cameraVideoEl.srcObject = stream;
           cameraVideoEl.style.display = "block";
           // 准备基于 OpenCV.js 的人脸/上半身检测，结果通过 dlibHogDetectFaces 暴露给前端循环
@@ -1990,6 +2237,7 @@
     }
 
     function stopCameraStream() {
+      setCameraSignalEnabled(false);
       if (cameraStreamObj && cameraStreamObj.getTracks) {
         var tracks = cameraStreamObj.getTracks();
         for (var i = 0; i < tracks.length; i++) {
@@ -2057,6 +2305,7 @@
         var elapsed = now - detectStart;
 
         if (faces.length > 0) {
+          playFaceDetectBurst();
           // 仅在真正检测到人脸时绘制绿色框，不再造“中心假框”，
           // 避免出现与人位置无关的静止矩形。
           var vx, vy, vw, vh;
@@ -2228,6 +2477,7 @@
       if (cameraVideoEl) {
         cameraVideoEl.style.display = "none";
       }
+      setCameraSignalEnabled(false);
       // 摄像头验证通过后不再重置 faceDetectionSucceeded，
       // 只停止视频流，保留登录成功状态供其他应用使用。
       if (cameraStreamObj && cameraStreamObj.getTracks) {
@@ -3806,6 +4056,7 @@
     }
 
     // 在 Spine 初始化前先把终端、拖拽与布局缩放设置好
+    initAudioSystem();
     initArkTerminal();
     initTerminalDrag();
     initPetWindowDrag();
