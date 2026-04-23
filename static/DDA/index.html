@@ -404,10 +404,113 @@
       .dda-page {
         padding: 0 0.75rem 1.75rem;
       }
+      .dda-header {
+        margin-bottom: 1rem;
+      }
+      .dda-header h1 {
+        font-size: 1.55rem;
+        line-height: 1.15;
+      }
+      .dda-header p {
+        font-size: 0.86rem;
+        line-height: 1.4;
+      }
+      .dda-globe-wrapper {
+        margin-top: 1rem;
+        padding: 6.85rem 0.75rem 0.9rem;
+      }
+      .dda-search-container {
+        left: 0.75rem;
+        top: 0.75rem;
+        width: calc(100% - 1.5rem);
+        max-width: none;
+      }
+      .dda-view-toggle {
+        top: 3.25rem;
+        max-width: calc(100% - 1.5rem);
+      }
+      .dda-view-toggle button {
+        padding: 0.28rem 0.72rem;
+        font-size: 0.78rem;
+      }
+      .dda-linechart-toggle {
+        left: 0.75rem;
+        top: 5.55rem;
+        padding: 0.32rem 0.75rem;
+      }
       .dda-globe-svg,
       .dda-tile-svg,
       .dda-map-svg {
-        height: min(60vh, 420px);
+        height: min(52vh, 380px);
+      }
+      .dda-linechart-panel {
+        inset: 0.45rem;
+        padding: 0.85rem 0.85rem 0.95rem;
+      }
+      .dda-linechart-header {
+        align-items: flex-start;
+        gap: 0.55rem;
+      }
+      .dda-linechart-title {
+        font-size: 0.9rem;
+        line-height: 1.35;
+      }
+      .dda-linechart-controls {
+        gap: 0.5rem;
+      }
+      .dda-linechart-controls label {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .dda-linechart-controls select {
+        flex: 1;
+        min-width: 0;
+      }
+      .dda-linechart-draw {
+        width: 100%;
+      }
+      .dda-linechart-svg {
+        height: 290px;
+      }
+      .dda-legend {
+        max-width: none;
+        margin-top: 0.5rem;
+        padding: 0.35rem 0.8rem 0.95rem;
+      }
+      .dda-legend-caption {
+        margin-top: 1rem;
+        font-size: 0.68rem;
+        line-height: 1.35;
+      }
+      .dda-slider-section {
+        margin-top: 1rem;
+        padding: 0.85rem 0.85rem 0.7rem;
+      }
+      .dda-slider-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+      }
+      .dda-slider-header-left {
+        font-size: 0.88rem;
+      }
+      .dda-slider-wrapper {
+        flex-wrap: wrap;
+        gap: 0.55rem;
+      }
+      .dda-play-button {
+        order: -1;
+      }
+      .dda-slider-wrapper input[type="range"] {
+        min-width: 100%;
+      }
+      .dda-info-panel {
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+      .dda-tooltip {
+        max-width: min(78vw, 260px);
+        white-space: normal;
       }
     }
 
