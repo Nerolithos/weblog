@@ -488,6 +488,17 @@
     @media (max-width: 900px) {
       .country-layout {
         flex-direction: column;
+        align-items: stretch;
+      }
+      .country-left,
+      .country-right {
+        width: 100%;
+        display: block;
+      }
+      .country-globe-card,
+      .country-right-card {
+        width: 100%;
+        box-sizing: border-box;
       }
       .country-globe-svg {
         max-width: 100%;
@@ -507,6 +518,9 @@
     @media (max-width: 640px) {
       .country-page {
         padding: 0 0.75rem 1.75rem;
+      }
+      .country-layout {
+        gap: 1rem;
       }
       .country-top-bar {
         gap: 0.75rem;
@@ -1837,6 +1851,43 @@
     let countryPathsSelection = null;
     let mapCountryPathsSelection = null;
 
+    function getResponsiveSvgSize(svgSelection, fallbackWidth, fallbackHeight) {
+      const node = svgSelection && svgSelection.node ? svgSelection.node() : null;
+      if (!node) return { width: fallbackWidth, height: fallbackHeight };
+
+      const bounds = node.getBoundingClientRect();
+      const parent = node.parentElement;
+      const computed = window.getComputedStyle(node);
+
+      const width = bounds.width || node.clientWidth || (parent ? parent.clientWidth : 0) || fallbackWidth;
+      const height = bounds.height || node.clientHeight || parseFloat(computed.height) || fallbackHeight;
+
+      return {
+        width: Math.max(1, width),
+        height: Math.max(1, height)
+      };
+    }
+
+    function updateCountryViewLayout() {
+      const globeSize = getResponsiveSvgSize(globeSvg, 520, 520);
+      globeSvg.attr("viewBox", `0 0 ${globeSize.width} ${globeSize.height}`);
+      projection
+        .scale(Math.min(globeSize.width, globeSize.height) / 2.1)
+        .translate([globeSize.width / 2, globeSize.height / 2 - 20]);
+      renderGlobe();
+
+      const mapSize = getResponsiveSvgSize(mapSvg, globeSize.width, globeSize.height);
+      mapSvg.attr("viewBox", `0 0 ${mapSize.width} ${mapSize.height}`);
+      mapProjection
+        .scale(Math.min(mapSize.width, mapSize.height) / 2.3 * 0.64)
+        .translate([mapSize.width / 2, mapSize.height / 2]);
+      renderMap();
+
+      if (worldFeatures && countryViewMode === "tiles") {
+        buildCountryTileGrid({ features: worldFeatures });
+      }
+    }
+
     function getShareValueForYear(year, iso3) {
       if (!shareColorReady || !iso3 || year == null) return null;
       const byIso = shareDataByYearAndIso3.get(year);
@@ -2211,9 +2262,7 @@
         return;
       }
       renderCountries(world);
-      renderGlobe();
-      renderMap();
-      buildCountryTileGrid(world);
+      updateCountryViewLayout();
       updateCountryHighlighting();
 
       // Once world names/ISO codes are available, load true_clustering.csv
@@ -2229,6 +2278,18 @@
         });
     }).catch(err => {
       console.error("Failed to load world geojson for country view", err);
+    });
+
+    let countryViewResizeFrame = null;
+    window.addEventListener("resize", () => {
+      if (countryViewResizeFrame != null) {
+        window.cancelAnimationFrame(countryViewResizeFrame);
+      }
+      countryViewResizeFrame = window.requestAnimationFrame(() => {
+        countryViewResizeFrame = null;
+        updateCountryViewLayout();
+        updateCountryHighlighting();
+      });
     });
     // ==========================
     // Rotation & drag interaction for country globe
@@ -2373,6 +2434,8 @@
         if (mode === "map") viewMapBtn.classList.add("country-view-toggle--active");
         else viewMapBtn.classList.remove("country-view-toggle--active");
       }
+
+      updateCountryViewLayout();
     }
 
     if (viewGlobeBtn) {
