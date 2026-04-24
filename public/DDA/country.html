@@ -488,6 +488,17 @@
     @media (max-width: 900px) {
       .country-layout {
         flex-direction: column;
+        align-items: stretch;
+      }
+      .country-left,
+      .country-right {
+        width: 100%;
+        display: block;
+      }
+      .country-globe-card,
+      .country-right-card {
+        width: 100%;
+        box-sizing: border-box;
       }
       .country-globe-svg {
         max-width: 100%;
@@ -501,6 +512,125 @@
       }
       .country-right-card {
         margin-top: 1rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .country-page {
+        padding: 0 0.75rem 1.75rem;
+      }
+      .country-layout {
+        gap: 1rem;
+      }
+      .country-top-bar {
+        gap: 0.75rem;
+        align-items: stretch;
+      }
+      .country-mode-toggle {
+        width: 100%;
+        justify-content: center;
+        gap: 0.35rem;
+        padding: 0.2rem;
+        font-size: 1rem;
+      }
+      .country-mode-toggle button {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 0.38rem 0.55rem;
+        font-size: 0.92rem;
+      }
+      .country-back-arrow {
+        top: 0.8rem;
+        left: 0.8rem;
+        width: 36px;
+        height: 36px;
+        font-size: 1.35rem;
+      }
+      .country-globe-card,
+      .country-right-card {
+        padding: 0.95rem;
+        border-radius: 12px;
+      }
+      .country-globe-card {
+        padding-top: 3.6rem;
+      }
+      .country-view-toggle {
+        top: 0.7rem;
+        max-width: calc(100% - 1.25rem);
+      }
+      .country-view-toggle button {
+        padding: 0.24rem 0.68rem;
+        font-size: 0.76rem;
+      }
+      .country-color-controls {
+        margin-top: 0.55rem;
+      }
+      .country-color-toggle {
+        justify-content: flex-start;
+        gap: 0.4rem;
+      }
+      .country-color-toggle-label {
+        width: 100%;
+      }
+      .country-legend {
+        max-width: none;
+      }
+      .country-globe-svg,
+      .country-tile-svg,
+      #country-map-svg {
+        height: min(50vh, 360px);
+      }
+      .country-title {
+        font-size: 1.2rem;
+        line-height: 1.2;
+      }
+      .country-cluster-summary,
+      .country-cluster-detail,
+      .pie-subtitle,
+      .change-point-text {
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+      .pie-wrapper {
+        gap: 0.9rem;
+      }
+      .pie-svg {
+        width: 220px;
+        height: 220px;
+      }
+      .pie-legend {
+        max-width: none;
+      }
+      .country-energy-title,
+      .country-share-title,
+      .change-point-title,
+      .pie-title {
+        line-height: 1.3;
+      }
+      .country-energy-slider-wrapper {
+        min-width: 0;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .country-energy-slider-wrapper > span {
+        min-width: 0;
+      }
+      .country-energy-slider-wrapper input[type="range"] {
+        min-width: 100%;
+      }
+      .country-energy-play-button {
+        order: -1;
+      }
+      .country-energy-bar,
+      .country-share-line {
+        height: 108px;
+      }
+      .country-tooltip,
+      .country-share-tooltip,
+      .country-energy-tooltip {
+        max-width: min(76vw, 240px);
+        white-space: normal;
+        line-height: 1.35;
       }
     }
 
@@ -1721,6 +1851,43 @@
     let countryPathsSelection = null;
     let mapCountryPathsSelection = null;
 
+    function getResponsiveSvgSize(svgSelection, fallbackWidth, fallbackHeight) {
+      const node = svgSelection && svgSelection.node ? svgSelection.node() : null;
+      if (!node) return { width: fallbackWidth, height: fallbackHeight };
+
+      const bounds = node.getBoundingClientRect();
+      const parent = node.parentElement;
+      const computed = window.getComputedStyle(node);
+
+      const width = bounds.width || node.clientWidth || (parent ? parent.clientWidth : 0) || fallbackWidth;
+      const height = bounds.height || node.clientHeight || parseFloat(computed.height) || fallbackHeight;
+
+      return {
+        width: Math.max(1, width),
+        height: Math.max(1, height)
+      };
+    }
+
+    function updateCountryViewLayout() {
+      const globeSize = getResponsiveSvgSize(globeSvg, 520, 520);
+      globeSvg.attr("viewBox", `0 0 ${globeSize.width} ${globeSize.height}`);
+      projection
+        .scale(Math.min(globeSize.width, globeSize.height) / 2.1)
+        .translate([globeSize.width / 2, globeSize.height / 2 - 20]);
+      renderGlobe();
+
+      const mapSize = getResponsiveSvgSize(mapSvg, globeSize.width, globeSize.height);
+      mapSvg.attr("viewBox", `0 0 ${mapSize.width} ${mapSize.height}`);
+      mapProjection
+        .scale(Math.min(mapSize.width, mapSize.height) / 2.3 * 0.64)
+        .translate([mapSize.width / 2, mapSize.height / 2]);
+      renderMap();
+
+      if (worldFeatures && countryViewMode === "tiles") {
+        buildCountryTileGrid({ features: worldFeatures });
+      }
+    }
+
     function getShareValueForYear(year, iso3) {
       if (!shareColorReady || !iso3 || year == null) return null;
       const byIso = shareDataByYearAndIso3.get(year);
@@ -2095,9 +2262,7 @@
         return;
       }
       renderCountries(world);
-      renderGlobe();
-      renderMap();
-      buildCountryTileGrid(world);
+      updateCountryViewLayout();
       updateCountryHighlighting();
 
       // Once world names/ISO codes are available, load true_clustering.csv
@@ -2113,6 +2278,18 @@
         });
     }).catch(err => {
       console.error("Failed to load world geojson for country view", err);
+    });
+
+    let countryViewResizeFrame = null;
+    window.addEventListener("resize", () => {
+      if (countryViewResizeFrame != null) {
+        window.cancelAnimationFrame(countryViewResizeFrame);
+      }
+      countryViewResizeFrame = window.requestAnimationFrame(() => {
+        countryViewResizeFrame = null;
+        updateCountryViewLayout();
+        updateCountryHighlighting();
+      });
     });
     // ==========================
     // Rotation & drag interaction for country globe
@@ -2257,6 +2434,8 @@
         if (mode === "map") viewMapBtn.classList.add("country-view-toggle--active");
         else viewMapBtn.classList.remove("country-view-toggle--active");
       }
+
+      updateCountryViewLayout();
     }
 
     if (viewGlobeBtn) {
@@ -2860,7 +3039,8 @@
         .selectAll("*").remove();
 
       // Keep a wider plotting area now that x-axis focuses on 2000-2024.
-      const margin = { top: 16, right: 8, bottom: 22, left: 34 };
+      // Keep enough left padding for labels like "100.0%" on narrow screens.
+      const margin = { top: 16, right: 8, bottom: 22, left: 56 };
       const innerWidth = width - margin.left - margin.right;
       const innerHeight = height - margin.top - margin.bottom;
 

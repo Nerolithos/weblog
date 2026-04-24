@@ -1096,8 +1096,8 @@
       position: fixed;
       bottom: 36px;
       right: 6px;
-      width: 38px;
-      height: 140px;
+      width: 92px;
+      height: 168px;
       background: linear-gradient(180deg, #e8e8f8 0%, #d0d0e8 100%);
       border: 1px solid #7a7aa0;
       border-top: 2px solid #9090c0;
@@ -1107,7 +1107,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 0 6px;
+      padding: 8px 6px 6px;
       z-index: 90;
       font-family: "Segoe UI", "MS Sans Serif", system-ui, sans-serif;
       font-size: 10px;
@@ -1126,17 +1126,33 @@
       flex: 1;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-around;
       width: 100%;
+      gap: 6px;
+    }
+    .volume-slider-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 3px;
+      width: 36px;
+    }
+    .volume-slider-title {
+      font-size: 8px;
+      color: #444466;
+      letter-spacing: 0.03em;
+      text-align: center;
     }
     /* 垂直 range 滑块，Win7 蓝色风格 */
-    #volume-slider {
+    #volume-slider,
+    #sfx-slider {
       -webkit-appearance: slider-vertical;
       appearance: slider-vertical;
       writing-mode: vertical-lr;
       direction: rtl;
       width: 18px;
-      height: 96px;
+      height: 104px;
       cursor: default;
       accent-color: #3a72c8;
       background: transparent;
@@ -1645,9 +1661,16 @@ You did not answered the call of the trapped souls, soon, some security officers
   <div id="volume-popup">
     <div id="volume-popup-label">Volume</div>
     <div id="volume-slider-wrap">
-      <input type="range" id="volume-slider" min="0" max="100" value="55" orient="vertical">
+      <div class="volume-slider-col">
+        <div class="volume-slider-title">BGM</div>
+        <input type="range" id="volume-slider" min="0" max="100" value="30" orient="vertical">
+      </div>
+      <div class="volume-slider-col">
+        <div class="volume-slider-title">SFX</div>
+        <input type="range" id="sfx-slider" min="0" max="100" value="30" orient="vertical">
+      </div>
     </div>
-    <div id="volume-popup-pct">55%</div>
+    <div id="volume-popup-pct">BGM 30% | SFX 30%</div>
   </div>
 
   <!-- home 菜单：关机 / 重启 选项 -->
