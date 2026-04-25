@@ -156,6 +156,99 @@
   letter-spacing: 0.02em;
 }
 
+.home-subtitle-row,
+.category-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.home-category-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  padding: 0.5rem 1.15rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #e5e7eb;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.home-category-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(15, 23, 42, 0.84);
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.45);
+}
+
+.category-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0.8rem 0 1rem;
+}
+
+.category-filter-btn {
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 999px;
+  padding: 0.36rem 0.85rem;
+  font-size: 0.84rem;
+  color: #e5e7eb;
+  background: rgba(15, 23, 42, 0.72);
+  cursor: pointer;
+}
+
+.category-filter-btn:hover {
+  background: rgba(15, 23, 42, 0.86);
+}
+
+.category-filter-btn.is-active {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: rgba(125, 211, 252, 0.88);
+  color: #f8fafc;
+}
+
+.category-panel {
+  display: none;
+}
+
+.category-panel.is-active {
+  display: block;
+}
+
+body:not(.dark-mode) .home-category-btn {
+  background: rgba(241, 245, 249, 0.82);
+  color: #111827;
+  border-color: rgba(148, 163, 184, 0.8);
+}
+
+body:not(.dark-mode) .home-category-btn:hover {
+  background: rgba(226, 232, 240, 0.9);
+}
+
+body:not(.dark-mode) .category-filter-btn {
+  background: rgba(241, 245, 249, 0.82);
+  color: #111827;
+  border-color: rgba(148, 163, 184, 0.8);
+}
+
+body:not(.dark-mode) .category-filter-btn:hover {
+  background: rgba(226, 232, 240, 0.92);
+}
+
+body:not(.dark-mode) .category-filter-btn.is-active {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.58);
+}
+
 /* 首页 hero 区域中的搜索条：稍微拉高背景区域 */
 .home-hero-search {
   max-width: 720px;

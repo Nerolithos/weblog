@@ -3,7 +3,14 @@
 <div class="pa4">
   {{ $all := .Site.RegularPages }}
   {{ $count := len $all }}
-  <h1 class="f2">📚 Recent Blogs (Currently {{ $count }} blogs)</h1>
+  <div class="home-subtitle-row flex items-center justify-between flex-wrap" style="gap: 12px; margin-bottom: 12px;">
+    <h1 class="f2 ma0">📚 Recent Blogs (Currently {{ $count }} blogs)</h1>
+    <a
+      class="home-category-btn no-underline"
+      href="{{ "categories/" | relURL }}"
+      style="display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;font-size:1.02rem;font-weight:700;border-radius:999px;border:1px solid rgba(148,163,184,.65);background:rgba(15,23,42,.78);color:#f8fafc;"
+    >分类显示</a>
+  </div>
 
   {{ with .Content }}
   <section class="mb4">

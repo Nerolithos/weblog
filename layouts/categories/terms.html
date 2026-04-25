@@ -1,0 +1,132 @@
+{{ define "header" }}
+<header>
+  <div class="pb2 pb3-l {{ .Site.Params.background_color_class | default "bg-black" }}">
+    {{ partial "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+
+{{ define "main" }}
+<div class="pa4 category-page">
+  {{ $posts := where .Site.RegularPages "Section" "posts" }}
+
+  {{ $scratch := newScratch }}
+  {{ $scratch.Set "g_csc1003" (slice) }}
+  {{ $scratch.Set "g_bio1008" (slice) }}
+  {{ $scratch.Set "g_csc3001" (slice) }}
+  {{ $scratch.Set "g_csc3200" (slice) }}
+  {{ $scratch.Set "g_phy1001" (slice) }}
+  {{ $scratch.Set "g_csc3060" (slice) }}
+  {{ $scratch.Set "g_dda3003" (slice) }}
+  {{ $scratch.Set "g_projects" (slice) }}
+  {{ $scratch.Set "g_tutorials" (slice) }}
+
+  {{ range $posts }}
+    {{ $title := upper .Title }}
+    {{ $tags := .Params.tags | default (slice) }}
+    {{ $tagText := upper (delimit $tags " ") }}
+    {{ $base := upper .File.BaseFileName }}
+    {{ $isRedirect := .Param "redirect" }}
+
+    {{ if or $isRedirect (eq $base "HISTORY-TODAY") (in $title "历史上的今天") }}
+      {{ $scratch.Add "g_projects" (slice .) }}
+    {{ else if or (in $tagText "CSC1003") (in $title "CSC1003") (eq $base "OOP") }}
+      {{ $scratch.Add "g_csc1003" (slice .) }}
+    {{ else if or (in $tagText "BIO1008") (in $title "BIO1008") }}
+      {{ $scratch.Add "g_bio1008" (slice .) }}
+    {{ else if or (in $tagText "CSC3001") (in $title "CSC3001") }}
+      {{ $scratch.Add "g_csc3001" (slice .) }}
+    {{ else if or (in $tagText "CSC3200") (in $title "CSC3200") }}
+      {{ $scratch.Add "g_csc3200" (slice .) }}
+    {{ else if or (in $tagText "PHY1001") (in $title "PHY1001") }}
+      {{ $scratch.Add "g_phy1001" (slice .) }}
+    {{ else if or (in $tagText "CSC3060") (in $title "CSC3060") }}
+      {{ $scratch.Add "g_csc3060" (slice .) }}
+    {{ else if or (in $tagText "DDA3003") (in $title "DDA3003") }}
+      {{ $scratch.Add "g_dda3003" (slice .) }}
+    {{ else }}
+      {{ $scratch.Add "g_tutorials" (slice .) }}
+    {{ end }}
+  {{ end }}
+
+  <div class="category-title-row">
+    <h1 class="f2 ma0">📂 分类显示</h1>
+    <a class="home-category-btn" href="{{ .Site.Home.RelPermalink }}">返回全部</a>
+  </div>
+
+  <div class="category-filter-bar" id="category-filter-bar">
+    <button class="category-filter-btn is-active" data-cat="csc1003">CSC1003 ({{ len ($scratch.Get "g_csc1003") }})</button>
+    <button class="category-filter-btn" data-cat="bio1008">BIO1008 ({{ len ($scratch.Get "g_bio1008") }})</button>
+    <button class="category-filter-btn" data-cat="csc3001">CSC3001 ({{ len ($scratch.Get "g_csc3001") }})</button>
+    <button class="category-filter-btn" data-cat="csc3200">CSC3200 ({{ len ($scratch.Get "g_csc3200") }})</button>
+    <button class="category-filter-btn" data-cat="phy1001">PHY1001 ({{ len ($scratch.Get "g_phy1001") }})</button>
+    <button class="category-filter-btn" data-cat="csc3060">CSC3060 ({{ len ($scratch.Get "g_csc3060") }})</button>
+    <button class="category-filter-btn" data-cat="dda3003">DDA3003 ({{ len ($scratch.Get "g_dda3003") }})</button>
+    <button class="category-filter-btn" data-cat="projects">projects ({{ len ($scratch.Get "g_projects") }})</button>
+    <button class="category-filter-btn" data-cat="tutorials">Tutorials&others ({{ len ($scratch.Get "g_tutorials") }})</button>
+  </div>
+
+  <div class="category-panels" id="category-panels">
+    {{ $groups := slice
+      (dict "key" "csc1003" "title" "CSC1003" "items" ($scratch.Get "g_csc1003"))
+      (dict "key" "bio1008" "title" "BIO1008" "items" ($scratch.Get "g_bio1008"))
+      (dict "key" "csc3001" "title" "CSC3001" "items" ($scratch.Get "g_csc3001"))
+      (dict "key" "csc3200" "title" "CSC3200" "items" ($scratch.Get "g_csc3200"))
+      (dict "key" "phy1001" "title" "PHY1001" "items" ($scratch.Get "g_phy1001"))
+      (dict "key" "csc3060" "title" "CSC3060" "items" ($scratch.Get "g_csc3060"))
+      (dict "key" "dda3003" "title" "DDA3003" "items" ($scratch.Get "g_dda3003"))
+      (dict "key" "projects" "title" "projects" "items" ($scratch.Get "g_projects"))
+      (dict "key" "tutorials" "title" "Tutorials&others" "items" ($scratch.Get "g_tutorials"))
+    }}
+
+    {{ range $idx, $g := $groups }}
+    <section class="category-panel {{ if eq $idx 0 }}is-active{{ end }}" data-cat="{{ $g.key }}" {{ if ne $idx 0 }}hidden{{ end }}>
+      <h2 class="f3 mt2 mb3">{{ $g.title }}</h2>
+      {{ if gt (len $g.items) 0 }}
+        {{ range sort $g.items "Date" "desc" }}
+        <article class="cf pv3 bb b--black-10">
+          <h3 class="f4 fw6 mt0 mb1">
+            <a class="link dark-gray dim" href="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">{{ .Title }}</a>
+          </h3>
+          <p class="gray f6 mv1">{{ .Date.Format "2006-01-02" }}</p>
+          <div class="mid-gray lh-copy">{{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 170 }}{{ end }}</div>
+        </article>
+        {{ end }}
+      {{ else }}
+        <p class="mid-gray">该分类暂时没有文章。</p>
+      {{ end }}
+    </section>
+    {{ end }}
+  </div>
+</div>
+
+<script>
+  (function () {
+    var filterBar = document.getElementById('category-filter-bar');
+    var panelsRoot = document.getElementById('category-panels');
+    if (!filterBar || !panelsRoot) return;
+
+    var buttons = Array.prototype.slice.call(filterBar.querySelectorAll('.category-filter-btn'));
+    var panels = Array.prototype.slice.call(panelsRoot.querySelectorAll('.category-panel'));
+
+    function activate(cat) {
+      buttons.forEach(function (btn) {
+        btn.classList.toggle('is-active', btn.getAttribute('data-cat') === cat);
+      });
+      panels.forEach(function (panel) {
+        var isActive = panel.getAttribute('data-cat') === cat;
+        panel.classList.toggle('is-active', isActive);
+        panel.hidden = !isActive;
+      });
+    }
+
+    filterBar.addEventListener('click', function (event) {
+      var btn = event.target.closest('.category-filter-btn');
+      if (!btn) return;
+      activate(btn.getAttribute('data-cat'));
+    });
+
+    activate('csc1003');
+  })();
+</script>
+{{ end }}
