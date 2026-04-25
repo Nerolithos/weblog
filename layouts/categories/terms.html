@@ -49,9 +49,13 @@
     {{ end }}
   {{ end }}
 
-  <div class="category-title-row">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
     <h1 class="f2 ma0">📂 分类显示</h1>
-    <a class="home-category-btn" href="{{ .Site.Home.RelPermalink }}">返回全部</a>
+    <a
+      class="home-category-btn no-underline"
+      href="{{ .Site.Home.RelPermalink }}"
+      style="display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;font-size:1.02rem;font-weight:700;border-radius:999px;border:1px solid rgba(148,163,184,.65);background:rgba(15,23,42,.78);color:#f8fafc;text-decoration:none;"
+    >返回全部</a>
   </div>
 
   <div class="category-filter-bar" id="category-filter-bar">

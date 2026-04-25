@@ -2,45 +2,45 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Lithos&#39; Blog</title>
-    <link>https://blog.nero-lithos.com/categories/</link>
+    <link>http://localhost:1313/categories/</link>
     <description>Recent content in Categories on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 21 Apr 2026 11:45:34 +0800</lastBuildDate>
-    <atom:link href="https://blog.nero-lithos.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>SDS</title>
-      <link>https://blog.nero-lithos.com/categories/sds/</link>
+      <link>http://localhost:1313/categories/sds/</link>
       <pubDate>Tue, 21 Apr 2026 11:45:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/categories/sds/</guid>
+      <guid>http://localhost:1313/categories/sds/</guid>
       <description></description>
     </item>
     <item>
       <title>帮助</title>
-      <link>https://blog.nero-lithos.com/categories/%E5%B8%AE%E5%8A%A9/</link>
+      <link>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</link>
       <pubDate>Sat, 11 Apr 2026 20:08:00 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/categories/%E5%B8%AE%E5%8A%A9/</guid>
+      <guid>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</guid>
       <description></description>
     </item>
     <item>
       <title>DDA</title>
-      <link>https://blog.nero-lithos.com/categories/dda/</link>
+      <link>http://localhost:1313/categories/dda/</link>
       <pubDate>Thu, 26 Mar 2026 17:30:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/categories/dda/</guid>
+      <guid>http://localhost:1313/categories/dda/</guid>
       <description></description>
     </item>
     <item>
       <title>SSE</title>
-      <link>https://blog.nero-lithos.com/categories/sse/</link>
+      <link>http://localhost:1313/categories/sse/</link>
       <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/categories/sse/</guid>
+      <guid>http://localhost:1313/categories/sse/</guid>
       <description></description>
     </item>
     <item>
       <title>Non-Major</title>
-      <link>https://blog.nero-lithos.com/categories/non-major/</link>
+      <link>http://localhost:1313/categories/non-major/</link>
       <pubDate>Wed, 11 Dec 2024 12:10:58 +0800</pubDate>
-      <guid>https://blog.nero-lithos.com/categories/non-major/</guid>
+      <guid>http://localhost:1313/categories/non-major/</guid>
       <description></description>
     </item>
   </channel>

@@ -987,9 +987,13 @@
     
   
 
-  <div class="category-title-row">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
     <h1 class="f2 ma0">📂 分类显示</h1>
-    <a class="home-category-btn" href="http://localhost:1313/">返回全部</a>
+    <a
+      class="home-category-btn no-underline"
+      href="http://localhost:1313/"
+      style="display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;font-size:1.02rem;font-weight:700;border-radius:999px;border:1px solid rgba(148,163,184,.65);background:rgba(15,23,42,.78);color:#f8fafc;text-decoration:none;"
+    >返回全部</a>
   </div>
 
   <div class="category-filter-bar" id="category-filter-bar">
@@ -1536,6 +1540,36 @@
 </script>
 
     </main>
+    
+      
+<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+  <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
+    <span class="liquid-dock-main-dot"></span>
+  </button>
+  <div class="liquid-dock-menu">
+    <a href="https://lguide.net" class="liquid-dock-item" data-dock-item target="_blank" rel="noopener noreferrer" aria-label="龙大课程助手" data-tooltip="龙大课程助手" title="龙大课程助手">
+      <span class="liquid-dock-icon">🕒</span>
+      <span class="liquid-dock-tooltip" aria-hidden="true">龙大课程助手</span>
+    </a>
+    <a href="https://ideas.nero-lithos.com/" class="liquid-dock-item" data-dock-item target="_blank" rel="noopener noreferrer" aria-label="思想实验室" data-tooltip="思想实验室" title="思想实验室">
+      <span class="liquid-dock-icon">💭</span>
+      <span class="liquid-dock-tooltip" aria-hidden="true">思想实验室</span>
+    </a>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索" data-tooltip="站内搜索" title="站内搜索">
+      <span class="liquid-dock-icon">🔍</span>
+      <span class="liquid-dock-tooltip" aria-hidden="true">站内搜索</span>
+    </button>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="theme" aria-label="切换显示方案" data-tooltip="切换显示方案" title="切换显示方案">
+      <span class="liquid-dock-icon">☾</span>
+      <span class="liquid-dock-tooltip" aria-hidden="true">切换显示方案</span>
+    </button>
+    <a href="https://bubble.nero-lithos.com" class="liquid-dock-item" data-dock-item target="_blank" rel="noopener noreferrer" aria-label="ADHD 解压" data-tooltip="ADHD 解压" title="ADHD 解压">
+      <span class="liquid-dock-icon">🫧</span>
+      <span class="liquid-dock-tooltip" aria-hidden="true">ADHD 解压</span>
+    </a>
+  </div>
+</div>
+
     
     <footer class="custom-footer">
   <p>&copy; Lithos&#39; Blog 2026</p>
