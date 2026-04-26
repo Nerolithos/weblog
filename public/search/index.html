@@ -100,7 +100,16 @@
     const statusEl = document.getElementById('status');
     const button = document.getElementById('search-button');
 
-    let indexData = [];
+    const TITLE_WEIGHT = 3.0;
+    const SUMMARY_WEIGHT = 1.6;
+    const CONTENT_WEIGHT = 1.0;
+    const BM25_K1 = 1.2;
+    const BM25_B = 0.75;
+
+    let rawIndexData = [];
+    let searchableDocs = [];
+    let termDocFreq = new Map();
+    let avgDocLen = 0;
 
     function getQueryFromURL() {
       const params = new URLSearchParams(window.location.search);
@@ -117,14 +126,178 @@
       window.history.replaceState({}, '', url);
     }
 
-    function highlight(text, q) {
-      if (!q) return text;
+    function highlight(text, q, tokens) {
+      if (!text) return '';
+      const terms = [];
+      if (q && q.trim()) terms.push(q.trim());
+      if (Array.isArray(tokens)) {
+        for (const t of tokens) {
+          if (t && t.length >= 2) terms.push(t);
+        }
+      }
+      if (!terms.length) return text;
+
       try {
-        const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const re = new RegExp(escaped, 'ig');
+        const unique = Array.from(new Set(terms));
+        unique.sort((a, b) => b.length - a.length);
+        const escaped = unique.map(function(term) {
+          return term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        });
+        const re = new RegExp('(' + escaped.join('|') + ')', 'ig');
         return text.replace(re, m => '<mark>' + m + '</mark>');
       } catch (e) {
         return text;
+      }
+    }
+
+    function extractLatinTokens(text) {
+      const tokens = [];
+      const re = /[a-z0-9_]+/g;
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        if (m[0]) tokens.push(m[0]);
+      }
+      return tokens;
+    }
+
+    function extractCjkTokens(text) {
+      const tokens = [];
+      const runs = text.match(/[\u3400-\u9fff]+/g) || [];
+      for (const run of runs) {
+        const chars = Array.from(run);
+        for (let i = 0; i < chars.length; i++) {
+          tokens.push(chars[i]);
+          if (i + 1 < chars.length) {
+            tokens.push(chars[i] + chars[i + 1]);
+          }
+        }
+      }
+      return tokens;
+    }
+
+    function tokenize(text) {
+      const normalized = (text || '').toLowerCase();
+      if (!normalized) return [];
+      return extractLatinTokens(normalized).concat(extractCjkTokens(normalized));
+    }
+
+    function countTerms(tokens) {
+      const tf = new Map();
+      for (const t of tokens) {
+        tf.set(t, (tf.get(t) || 0) + 1);
+      }
+      return tf;
+    }
+
+    function mergeWeightedTf(target, source, weight) {
+      for (const [term, freq] of source.entries()) {
+        target.set(term, (target.get(term) || 0) + freq * weight);
+      }
+    }
+
+    function buildSearchableIndex(data) {
+      searchableDocs = [];
+      termDocFreq = new Map();
+      avgDocLen = 0;
+
+      for (const item of data) {
+        const title = item.title || '';
+        const summary = item.summary || '';
+        const content = item.content || '';
+
+        const titleTf = countTerms(tokenize(title));
+        const summaryTf = countTerms(tokenize(summary));
+        const contentTf = countTerms(tokenize(content));
+        const tf = new Map();
+
+        mergeWeightedTf(tf, titleTf, TITLE_WEIGHT);
+        mergeWeightedTf(tf, summaryTf, SUMMARY_WEIGHT);
+        mergeWeightedTf(tf, contentTf, CONTENT_WEIGHT);
+
+        let docLen = 0;
+        for (const freq of tf.values()) {
+          docLen += freq;
+        }
+
+        const doc = {
+          title: title,
+          summary: summary,
+          content: content,
+          permalink: item.permalink,
+          date: item.date,
+          tags: item.tags || [],
+          tf: tf,
+          dl: docLen,
+          searchText: (title + ' ' + summary + ' ' + content).toLowerCase(),
+          titleLower: title.toLowerCase(),
+          summaryLower: summary.toLowerCase(),
+          contentLower: content.toLowerCase()
+        };
+
+        searchableDocs.push(doc);
+
+        for (const term of tf.keys()) {
+          termDocFreq.set(term, (termDocFreq.get(term) || 0) + 1);
+        }
+      }
+
+      const totalLen = searchableDocs.reduce((sum, doc) => sum + doc.dl, 0);
+      avgDocLen = searchableDocs.length ? totalLen / searchableDocs.length : 0;
+    }
+
+    function bm25Idf(term, docCount) {
+      const df = termDocFreq.get(term) || 0;
+      if (!df || !docCount) return 0;
+      return Math.log(1 + (docCount - df + 0.5) / (df + 0.5));
+    }
+
+    function bm25ScoreDoc(doc, queryTerms, docCount) {
+      if (!queryTerms.length) return 0;
+      let score = 0;
+      const denomNorm = 1 - BM25_B + BM25_B * (avgDocLen > 0 ? (doc.dl / avgDocLen) : 1);
+
+      for (const term of queryTerms) {
+        const tf = doc.tf.get(term) || 0;
+        if (!tf) continue;
+        const idf = bm25Idf(term, docCount);
+        const num = tf * (BM25_K1 + 1);
+        const den = tf + BM25_K1 * denomNorm;
+        score += idf * (num / den);
+      }
+
+      return score;
+    }
+
+    function findSnippet(source, query, queryTerms) {
+      const text = source || '';
+      if (!text) return '';
+
+      const sourceLower = text.toLowerCase();
+      let pos = sourceLower.indexOf(query.toLowerCase());
+
+      if (pos === -1) {
+        for (const term of queryTerms) {
+          pos = sourceLower.indexOf(term);
+          if (pos !== -1) break;
+        }
+      }
+
+      if (pos === -1) {
+        return text.slice(0, 180);
+      }
+
+      const start = Math.max(0, pos - 70);
+      const end = Math.min(text.length, pos + query.length + 90);
+      return (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
+    }
+
+    function appendHighlightParam(permalink, query) {
+      try {
+        const url = new URL(permalink, window.location.origin);
+        url.searchParams.set('hl', query);
+        return url.toString();
+      } catch (e) {
+        return permalink;
       }
     }
 
@@ -139,31 +312,36 @@
       }
 
       const qLower = query.toLowerCase();
+      const queryTerms = tokenize(query);
+      const queryTermsUnique = Array.from(new Set(queryTerms));
       const results = [];
 
-      for (const item of indexData) {
-        const haystack = (item.title + ' ' + (item.content || '') + ' ' + (item.summary || '')).toLowerCase();
-        if (!haystack.includes(qLower)) continue;
+      for (const doc of searchableDocs) {
+        const baseScore = bm25ScoreDoc(doc, queryTermsUnique, searchableDocs.length);
+        const hasSubstring = doc.searchText.includes(qLower);
 
-        let source = item.content || item.summary || '';
-        const pos = source.toLowerCase().indexOf(qLower);
-        let snippet;
-        if (pos === -1) {
-          snippet = source.slice(0, 160);
-        } else {
-          const start = Math.max(0, pos - 60);
-          const end = Math.min(source.length, pos + query.length + 60);
-          snippet = (start > 0 ? '…' : '') + source.slice(start, end) + (end < source.length ? '…' : '');
-        }
+        if (baseScore <= 0 && !hasSubstring) continue;
+
+        let score = baseScore;
+        if (doc.titleLower.includes(qLower)) score += 6;
+        if (doc.summaryLower.includes(qLower)) score += 2;
+        if (doc.contentLower.includes(qLower)) score += 1;
+
+        let source = doc.content || doc.summary || '';
+        const snippet = findSnippet(source, query, queryTermsUnique);
 
         results.push({
-          title: item.title,
-          permalink: item.permalink,
-          date: item.date,
-          tags: item.tags || [],
-          snippet: snippet
+          score: score,
+          title: doc.title,
+          permalink: doc.permalink,
+          date: doc.date,
+          tags: doc.tags || [],
+          snippet: snippet,
+          queryTerms: queryTermsUnique
         });
       }
+
+      results.sort((a, b) => b.score - a.score);
 
       if (!results.length) {
         statusEl.textContent = '未找到相关结果。试试中英翻译或使用近似词？';
@@ -174,11 +352,12 @@
       statusEl.textContent = `共找到 ${results.length} 条结果。`;
       resultsEl.innerHTML = results.map(r => {
         const tags = (r.tags || []).join(', ');
+        const jumpUrl = appendHighlightParam(r.permalink, query);
         return `
           <div class="result-item">
-            <div class="result-title"><a href="${r.permalink}">${highlight(r.title, query)}</a></div>
+            <div class="result-title"><a href="${jumpUrl}">${highlight(r.title, query, r.queryTerms)}</a></div>
             <div class="result-meta">${r.date || ''}${tags ? ' · ' + tags : ''}</div>
-            <div class="result-snippet">${highlight(r.snippet, query)}</div>
+            <div class="result-snippet">${highlight(r.snippet, query, r.queryTerms)}</div>
           </div>
         `;
       }).join('');
@@ -197,8 +376,9 @@
       })
       .then(data => {
         if (!Array.isArray(data)) throw new Error('Unexpected index format');
-        indexData = data;
-        statusEl.textContent = `索引已加载，共 ${indexData.length} 篇文章。`;
+        rawIndexData = data;
+        buildSearchableIndex(rawIndexData);
+        statusEl.textContent = `索引已加载，共 ${rawIndexData.length} 篇文章（BM25 排序）。`;
         const initial = getQueryFromURL();
         if (initial) {
           input.value = initial;

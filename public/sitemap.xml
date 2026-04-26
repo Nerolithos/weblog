@@ -89,6 +89,12 @@
     <loc>http://localhost:1313/posts/3060.1/</loc>
     <lastmod>2026-01-06T10:30:34+08:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/posts/kansai/</loc>
+    <lastmod>2026-01-01T14:23:58+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/%E6%97%A5%E8%A8%98/</loc>
+    <lastmod>2026-01-01T14:23:58+08:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/posts/3200.f3/</loc>
     <lastmod>2025-12-11T07:07:34+08:00</lastmod>
   </url><url>
@@ -165,12 +171,6 @@
     <lastmod>2024-12-11T12:10:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/lgu/</loc>
-    <lastmod>2024-12-09T14:23:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/kansai/</loc>
-    <lastmod>2024-12-09T14:23:58+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/%E6%97%A5%E8%A8%98/</loc>
     <lastmod>2024-12-09T14:23:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/1003.6/</loc>

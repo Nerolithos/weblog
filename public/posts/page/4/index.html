@@ -112,6 +112,13 @@
 	.home-post-card:hover .home-post-preview {
 		max-height: 12em;  
 	}
+
+	 
+	.search-jump-highlight {
+		background: rgba(251, 146, 60, 0.38);
+		box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.45);
+		border-radius: 3px;
+	}
 </style>
 
 
@@ -244,6 +251,98 @@
 			toggleBtn.addEventListener('click', hideToc);
 			miniBtn.addEventListener('click', showToc);
 		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var params = new URLSearchParams(window.location.search);
+		var query = (params.get('hl') || '').trim();
+		if (!query) return;
+
+		var contentRoot = document.querySelector('.nested-copy-line-height');
+		if (!contentRoot) return;
+
+		function escapeRegExp(s) {
+			return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		}
+
+		function tokenizeForFallback(text) {
+			var normalized = (text || '').toLowerCase();
+			if (!normalized) return [];
+			var tokens = [];
+			var latin = normalized.match(/[a-z0-9_]+/g) || [];
+			tokens = tokens.concat(latin);
+			var cjkRuns = normalized.match(/[\u3400-\u9fff]+/g) || [];
+			for (var r = 0; r < cjkRuns.length; r++) {
+				var chars = Array.from(cjkRuns[r]);
+				for (var i = 0; i < chars.length; i++) {
+					tokens.push(chars[i]);
+					if (i + 1 < chars.length) tokens.push(chars[i] + chars[i + 1]);
+				}
+			}
+			var unique = Array.from(new Set(tokens));
+			unique.sort(function (a, b) { return b.length - a.length; });
+			return unique;
+		}
+
+		function findFirstTextMatch(patterns) {
+			var walker = document.createTreeWalker(contentRoot, NodeFilter.SHOW_TEXT, {
+				acceptNode: function (node) {
+					if (!node || !node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+					var p = node.parentNode;
+					if (!p || !p.tagName) return NodeFilter.FILTER_REJECT;
+					var tag = p.tagName.toLowerCase();
+					if (tag === 'script' || tag === 'style' || tag === 'noscript' || tag === 'mark') {
+						return NodeFilter.FILTER_REJECT;
+					}
+					return NodeFilter.FILTER_ACCEPT;
+				}
+			});
+
+			while (walker.nextNode()) {
+				var node = walker.currentNode;
+				var text = node.nodeValue;
+				for (var i = 0; i < patterns.length; i++) {
+					var re = patterns[i];
+					re.lastIndex = 0;
+					var m = re.exec(text);
+					if (m && m[0]) {
+						return { node: node, start: m.index, end: m.index + m[0].length };
+					}
+				}
+			}
+			return null;
+		}
+
+		var patterns = [];
+		patterns.push(new RegExp(escapeRegExp(query), 'i'));
+		var fallbackTokens = tokenizeForFallback(query).filter(function (t) { return t.length >= 2; });
+		for (var i = 0; i < fallbackTokens.length; i++) {
+			patterns.push(new RegExp(escapeRegExp(fallbackTokens[i]), 'i'));
+		}
+
+		var hit = findFirstTextMatch(patterns);
+		if (!hit) return;
+
+		var textNode = hit.node;
+		var original = textNode.nodeValue;
+		var before = original.slice(0, hit.start);
+		var matchText = original.slice(hit.start, hit.end);
+		var after = original.slice(hit.end);
+
+		var wrapper = document.createElement('span');
+		wrapper.className = 'search-jump-highlight';
+		wrapper.textContent = matchText;
+
+		var frag = document.createDocumentFragment();
+		if (before) frag.appendChild(document.createTextNode(before));
+		frag.appendChild(wrapper);
+		if (after) frag.appendChild(document.createTextNode(after));
+		textNode.parentNode.replaceChild(frag, textNode);
+
+		wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
 	});
 </script>
 
@@ -486,6 +585,34 @@
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="http://localhost:1313/posts/kansai/">📒 關西近畿行記</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2026-01-01 · 54 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              2025 年 10 月 1 日至 10 月 7 日，日本關西奈良、和歌山、京都的旅遊日記，心得和推薦
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="http://localhost:1313/posts/kansai/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+            
+              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
+                <img src="http://localhost:1313/images/kansai.jpg" alt="Posts"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
               <a class="link dark-gray dim" href="http://localhost:1313/posts/3200.f3/">💯 CSC3200 Final Revision C&#43;&#43; 期末样卷</a>
             </h2>
             <p class="gray f6 mb2">
@@ -616,34 +743,6 @@
             
               <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
                 <img src="http://localhost:1313/images/30017.jpg" alt="Posts"
-                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
-              </a>
-            
-          
-        </article>
-      
-        <article class="cf pv4 bb b--black-10 flex-l items-start">
-          
-          <div class="w-100 w-two-thirds-l pr3">
-            <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts/phy2/">⚛️ PHY1001 LEC10-15 旋转运动学</a>
-            </h2>
-            <p class="gray f6 mb2">
-              2025-11-06 · 3 分钟阅读
-            </p>
-            <div class="lh-copy mid-gray">
-              CUHKSZ 大一/大二课程 PHY1001 绕轴运动 important takeaway
-            </div>
-            <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts/phy2/">阅读全文 →</a>
-            </p>
-          </div>
-
-          
-          
-            
-              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
-                <img src="http://localhost:1313/images/phy2.jpg" alt="Posts"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             

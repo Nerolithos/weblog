@@ -116,6 +116,13 @@
 	.home-post-card:hover .home-post-preview {
 		max-height: 12em;  
 	}
+
+	 
+	.search-jump-highlight {
+		background: rgba(251, 146, 60, 0.38);
+		box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.45);
+		border-radius: 3px;
+	}
 </style>
 
 
@@ -248,6 +255,98 @@
 			toggleBtn.addEventListener('click', hideToc);
 			miniBtn.addEventListener('click', showToc);
 		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var params = new URLSearchParams(window.location.search);
+		var query = (params.get('hl') || '').trim();
+		if (!query) return;
+
+		var contentRoot = document.querySelector('.nested-copy-line-height');
+		if (!contentRoot) return;
+
+		function escapeRegExp(s) {
+			return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		}
+
+		function tokenizeForFallback(text) {
+			var normalized = (text || '').toLowerCase();
+			if (!normalized) return [];
+			var tokens = [];
+			var latin = normalized.match(/[a-z0-9_]+/g) || [];
+			tokens = tokens.concat(latin);
+			var cjkRuns = normalized.match(/[\u3400-\u9fff]+/g) || [];
+			for (var r = 0; r < cjkRuns.length; r++) {
+				var chars = Array.from(cjkRuns[r]);
+				for (var i = 0; i < chars.length; i++) {
+					tokens.push(chars[i]);
+					if (i + 1 < chars.length) tokens.push(chars[i] + chars[i + 1]);
+				}
+			}
+			var unique = Array.from(new Set(tokens));
+			unique.sort(function (a, b) { return b.length - a.length; });
+			return unique;
+		}
+
+		function findFirstTextMatch(patterns) {
+			var walker = document.createTreeWalker(contentRoot, NodeFilter.SHOW_TEXT, {
+				acceptNode: function (node) {
+					if (!node || !node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+					var p = node.parentNode;
+					if (!p || !p.tagName) return NodeFilter.FILTER_REJECT;
+					var tag = p.tagName.toLowerCase();
+					if (tag === 'script' || tag === 'style' || tag === 'noscript' || tag === 'mark') {
+						return NodeFilter.FILTER_REJECT;
+					}
+					return NodeFilter.FILTER_ACCEPT;
+				}
+			});
+
+			while (walker.nextNode()) {
+				var node = walker.currentNode;
+				var text = node.nodeValue;
+				for (var i = 0; i < patterns.length; i++) {
+					var re = patterns[i];
+					re.lastIndex = 0;
+					var m = re.exec(text);
+					if (m && m[0]) {
+						return { node: node, start: m.index, end: m.index + m[0].length };
+					}
+				}
+			}
+			return null;
+		}
+
+		var patterns = [];
+		patterns.push(new RegExp(escapeRegExp(query), 'i'));
+		var fallbackTokens = tokenizeForFallback(query).filter(function (t) { return t.length >= 2; });
+		for (var i = 0; i < fallbackTokens.length; i++) {
+			patterns.push(new RegExp(escapeRegExp(fallbackTokens[i]), 'i'));
+		}
+
+		var hit = findFirstTextMatch(patterns);
+		if (!hit) return;
+
+		var textNode = hit.node;
+		var original = textNode.nodeValue;
+		var before = original.slice(0, hit.start);
+		var matchText = original.slice(hit.start, hit.end);
+		var after = original.slice(hit.end);
+
+		var wrapper = document.createElement('span');
+		wrapper.className = 'search-jump-highlight';
+		wrapper.textContent = matchText;
+
+		var frag = document.createDocumentFragment();
+		if (before) frag.appendChild(document.createTextNode(before));
+		frag.appendChild(wrapper);
+		if (after) frag.appendChild(document.createTextNode(after));
+		textNode.parentNode.replaceChild(frag, textNode);
+
+		wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
 	});
 </script>
 

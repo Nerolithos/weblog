@@ -97,7 +97,7 @@
       <link>http://localhost:1313/posts/history-today/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/history-today/</guid>
-      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-25)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2015&lt;/strong&gt; — At least 8,962 are killed in Nepal after a massive 7.8 magnitude earthquake strikes Nepal.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2014&lt;/strong&gt; — The Flint water crisis begins when officials at Flint, Michigan switch the city&amp;#39;s water supply to the Flint River, leading to lead and bacteria contamination.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2007&lt;/strong&gt; — Boris Yeltsin&amp;#39;s funeral: The first to be sanctioned by the Russian Orthodox Church for a head of state since the funeral of Emperor Alexander III in 1894.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2005&lt;/strong&gt; — The final piece of the Obelisk of Axum is returned to Ethiopia after being stolen by the invading Italian army in 1937.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2005&lt;/strong&gt; — A seven-car commuter train derails and crashes into an apartment building near Amagasaki Station in Japan, killing 107, including the driver.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
+      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-26)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2025&lt;/strong&gt; — A car ramming attack at a Lapu-Lapu Day festival kills 11 people and injures at least 30 in Vancouver, Canada.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2015&lt;/strong&gt; — Nursultan Nazarbayev is re-elected President of Kazakhstan with 97.7% of the vote, one of the biggest vote shares in Kazakhstan&amp;#39;s history.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2005&lt;/strong&gt; — Cedar Revolution: Under international pressure, Syria withdraws the last of its 14,000 troop military garrison in Lebanon, ending its 29-year military domination of that country (Syrian occupation of Lebanon).&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2002&lt;/strong&gt; — Robert Steinhäuser kills 16 at Gutenberg-Gymnasium in Erfurt, Germany before committing suicide.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;1999&lt;/strong&gt; — Outbreak of CIH computer virus.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
@@ -133,6 +133,13 @@
       <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
       <guid>http://localhost:1313/posts/3060.1/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
+    </item>
+    <item>
+      <title>📒 關西近畿行記</title>
+      <link>http://localhost:1313/posts/kansai/</link>
+      <pubDate>Thu, 01 Jan 2026 14:23:58 +0800</pubDate>
+      <guid>http://localhost:1313/posts/kansai/</guid>
+      <description>2025 年 10 月 1 日至 10 月 7 日，日本關西奈良、和歌山、京都的旅遊日記，心得和推薦</description>
     </item>
     <item>
       <title>💯 CSC3200 Final Revision C&#43;&#43; 期末样卷</title>
@@ -273,13 +280,6 @@
       <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
       <guid>http://localhost:1313/posts/lgu/</guid>
       <description>龙大人自己的生存指南，绝赞创作中</description>
-    </item>
-    <item>
-      <title>📒 關西近畿行記</title>
-      <link>http://localhost:1313/posts/kansai/</link>
-      <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/kansai/</guid>
-      <description>2025 年 10 月 1 日至 10 月 7 日，日本關西奈良、和歌山、京都的旅遊日記，心得和推薦</description>
     </item>
     <item>
       <title>💻 CSC1003 期末总结</title>
