@@ -105,6 +105,16 @@
     const CONTENT_WEIGHT = 1.0;
     const BM25_K1 = 1.2;
     const BM25_B = 0.75;
+    const EXACT_TITLE_BOOST = 16;
+    const TITLE_PREFIX_BOOST = 8;
+
+    const SYNONYM_MAP = {
+      csc306: ['csc3060'],
+      csc3060: ['csc306'],
+      riscv: ['risc-v', 'risc v'],
+      'risc-v': ['riscv', 'risc v'],
+      'risc v': ['riscv', 'risc-v']
+    };
 
     let rawIndexData = [];
     let searchableDocs = [];
@@ -124,6 +134,12 @@
         url.searchParams.delete('q');
       }
       window.history.replaceState({}, '', url);
+    }
+
+    function normalizeLoose(text) {
+      return (text || '')
+        .toLowerCase()
+        .replace(/[\s_-]+/g, '');
     }
 
     function highlight(text, q, tokens) {
@@ -160,6 +176,17 @@
       return tokens;
     }
 
+    function extractJoinedLatinTokens(text) {
+      const tokens = [];
+      const re = /[a-z0-9]+(?:[\s_-]+[a-z0-9]+)+/g;
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        const compact = m[0].replace(/[\s_-]+/g, '');
+        if (compact) tokens.push(compact);
+      }
+      return tokens;
+    }
+
     function extractCjkTokens(text) {
       const tokens = [];
       const runs = text.match(/[\u3400-\u9fff]+/g) || [];
@@ -178,7 +205,66 @@
     function tokenize(text) {
       const normalized = (text || '').toLowerCase();
       if (!normalized) return [];
-      return extractLatinTokens(normalized).concat(extractCjkTokens(normalized));
+      return extractLatinTokens(normalized)
+        .concat(extractJoinedLatinTokens(normalized))
+        .concat(extractCjkTokens(normalized));
+    }
+
+    function expandSynonyms(value, termSet, highlightSet, normalizedVariantSet) {
+      const normalizedValue = normalizeLoose(value);
+      const candidates = [];
+
+      if (value) candidates.push(value.toLowerCase());
+      if (normalizedValue) candidates.push(normalizedValue);
+
+      for (const candidate of candidates) {
+        const synonyms = SYNONYM_MAP[candidate];
+        if (!synonyms) continue;
+        for (const synonym of synonyms) {
+          if (!synonym) continue;
+          highlightSet.add(synonym.toLowerCase());
+          const normalizedSynonym = normalizeLoose(synonym);
+          if (normalizedSynonym) normalizedVariantSet.add(normalizedSynonym);
+          tokenize(synonym).forEach(function (token) {
+            termSet.add(token);
+            if (token.length >= 2) highlightSet.add(token);
+            const normalizedToken = normalizeLoose(token);
+            if (normalizedToken) normalizedVariantSet.add(normalizedToken);
+          });
+        }
+      }
+    }
+
+    function buildQueryFeatures(query) {
+      const normalizedQuery = normalizeLoose(query);
+      const termSet = new Set();
+      const highlightSet = new Set();
+      const normalizedVariantSet = new Set();
+
+      tokenize(query).forEach(function (token) {
+        termSet.add(token);
+        if (token.length >= 2) highlightSet.add(token);
+        const normalizedToken = normalizeLoose(token);
+        if (normalizedToken) normalizedVariantSet.add(normalizedToken);
+        expandSynonyms(token, termSet, highlightSet, normalizedVariantSet);
+      });
+
+      if (query) {
+        highlightSet.add(query.toLowerCase());
+        expandSynonyms(query, termSet, highlightSet, normalizedVariantSet);
+      }
+
+      if (normalizedQuery) {
+        normalizedVariantSet.add(normalizedQuery);
+        expandSynonyms(normalizedQuery, termSet, highlightSet, normalizedVariantSet);
+      }
+
+      return {
+        normalizedQuery: normalizedQuery,
+        terms: Array.from(termSet),
+        highlightTerms: Array.from(highlightSet),
+        normalizedVariants: Array.from(normalizedVariantSet)
+      };
     }
 
     function countTerms(tokens) {
@@ -229,8 +315,11 @@
           tf: tf,
           dl: docLen,
           searchText: (title + ' ' + summary + ' ' + content).toLowerCase(),
+          normalizedSearchText: normalizeLoose(title + ' ' + summary + ' ' + content),
           titleLower: title.toLowerCase(),
+          normalizedTitle: normalizeLoose(title),
           summaryLower: summary.toLowerCase(),
+          normalizedSummary: normalizeLoose(summary),
           contentLower: content.toLowerCase()
         };
 
@@ -312,20 +401,28 @@
       }
 
       const qLower = query.toLowerCase();
-      const queryTerms = tokenize(query);
-      const queryTermsUnique = Array.from(new Set(queryTerms));
+      const queryFeatures = buildQueryFeatures(query);
+      const queryTermsUnique = queryFeatures.terms;
       const results = [];
 
       for (const doc of searchableDocs) {
         const baseScore = bm25ScoreDoc(doc, queryTermsUnique, searchableDocs.length);
-        const hasSubstring = doc.searchText.includes(qLower);
+        const hasNormalizedVariant = queryFeatures.normalizedVariants.some(function (variant) {
+          return variant && doc.normalizedSearchText.includes(variant);
+        });
+        const hasSubstring = doc.searchText.includes(qLower) || hasNormalizedVariant;
 
         if (baseScore <= 0 && !hasSubstring) continue;
 
         let score = baseScore;
-        if (doc.titleLower.includes(qLower)) score += 6;
+        if (doc.titleLower === qLower || (queryFeatures.normalizedQuery && doc.normalizedTitle === queryFeatures.normalizedQuery)) {
+          score += EXACT_TITLE_BOOST;
+        } else if (doc.titleLower.includes(qLower) || (queryFeatures.normalizedQuery && doc.normalizedTitle.includes(queryFeatures.normalizedQuery))) {
+          score += TITLE_PREFIX_BOOST;
+        }
         if (doc.summaryLower.includes(qLower)) score += 2;
         if (doc.contentLower.includes(qLower)) score += 1;
+        if (queryFeatures.normalizedQuery && doc.normalizedSummary.includes(queryFeatures.normalizedQuery)) score += 1.2;
 
         let source = doc.content || doc.summary || '';
         const snippet = findSnippet(source, query, queryTermsUnique);
@@ -337,7 +434,7 @@
           date: doc.date,
           tags: doc.tags || [],
           snippet: snippet,
-          queryTerms: queryTermsUnique
+          queryTerms: queryFeatures.highlightTerms
         });
       }
 
