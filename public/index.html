@@ -486,8 +486,8 @@
     
 
   
-  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/Head.jpg');">
-    <div class="bg-black-60">
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/Head.jpg'); position:relative;">
+    <div class="bg-black-60" style="position:relative;">
       <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
   <div class="flex-l justify-between items-center center">
     <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
@@ -575,6 +575,55 @@
         </div>
         
       </div>
+      
+      
+      <img id="pixel-cat" src="http://localhost:1313/images/pixel-cat.png"
+        data-light-src="http://localhost:1313/images/pixel-cat.png"
+        data-dark-src="http://localhost:1313/images/cat_sleep.png"
+        style="position:absolute;bottom:-79px;right:24px;image-rendering:pixelated;cursor:pointer;z-index:10;opacity:0.92;width:auto;height:200px;transition:transform 0.1s ease-out;"
+        title="Meow~" alt="pixel ragdoll cat" />
+      <script>
+      (function(){
+        var img = document.getElementById('pixel-cat');
+        if (!img) return;
+        function updateCatByTheme(isDark) {
+          img.src = isDark ? img.dataset.darkSrc : img.dataset.lightSrc;
+        }
+
+        function updateCatByCurrentTheme() {
+          var isDark = document.body && document.body.classList.contains('dark-mode');
+          if (!isDark) {
+            var saved = null;
+            try { saved = localStorage.getItem('site-theme-mode'); } catch (e) {}
+            if (saved !== 'light' && saved !== 'dark' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              isDark = true;
+            }
+          }
+          updateCatByTheme(isDark);
+        }
+
+        updateCatByCurrentTheme();
+
+        if (document.body && window.MutationObserver) {
+          var observer = new MutationObserver(updateCatByCurrentTheme);
+          observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        }
+
+        var bounce = 0, dir = -1, idle = true;
+        function animate() {
+          if (!idle) {
+            bounce += dir * 0.5;
+            if (bounce <= -4) dir = 1;
+            if (bounce >= 0) { bounce = 0; dir = -1; idle = true; }
+          }
+          img.style.transform = 'translateY(' + Math.round(bounce) + 'px)';
+          requestAnimationFrame(animate);
+        }
+        img.addEventListener('mouseenter', function(){ idle = false; dir = -1; });
+        animate();
+      })();
+      </script>
+      
     </div>
   </header>
 
@@ -606,7 +655,7 @@
       </h2>
       <p class="gray f6 mb2">
         
-          2026-04-26 · 1 分钟阅读
+          2026-04-27 · 1 分钟阅读
         
       </p>
       <div class="lh-copy mid-gray home-post-preview">
@@ -617,7 +666,7 @@
           
           
             
-            <p>历史上的今天 (04-26) <strong>2025</strong> — A car ramming attack at a Lapu-Lapu Day festival kills 11 people and injures at least 30 in Vancouver, Canada. ……</p>
+            <p>历史上的今天 (04-27) <strong>2018</strong> — The Panmunjom Declaration is signed between North and South Korea, officially declaring their intentions to end the Korean conflict. ……</p>
           
         
       </div>

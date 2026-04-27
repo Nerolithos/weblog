@@ -1,8 +1,8 @@
 {{ $featured_image := partial "func/GetFeaturedImage.html" . }}
 {{ if $featured_image }}
   {{/* 首页和文章页：有封面图时的头图区域 */}}
-  <header class="cover bg-top" style="background-image: url('{{ $featured_image }}');">
-    <div class="{{ .Site.Params.cover_dimming_class | default "bg-black-60" }}">
+  <header class="cover bg-top" style="background-image: url('{{ $featured_image }}'); position:relative;">
+    <div class="{{ .Site.Params.cover_dimming_class | default "bg-black-60" }}" style="position:relative;">
       {{ partial "site-navigation.html" .}}
       <div class="tc-l pv4 pv6-l ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
@@ -30,6 +30,55 @@
         </div>
         {{ end }}
       </div>
+      {{ if .IsHome }}
+      <!-- Pixel ragdoll cat - bottom right of hero -->
+      <img id="pixel-cat" src="{{ "images/pixel-cat.png" | relURL }}"
+        data-light-src="{{ "images/pixel-cat.png" | relURL }}"
+        data-dark-src="{{ "images/cat_sleep.png" | relURL }}"
+        style="position:absolute;bottom:-79px;right:24px;image-rendering:pixelated;cursor:pointer;z-index:10;opacity:0.92;width:auto;height:200px;transition:transform 0.1s ease-out;"
+        title="Meow~" alt="pixel ragdoll cat" />
+      <script>
+      (function(){
+        var img = document.getElementById('pixel-cat');
+        if (!img) return;
+        function updateCatByTheme(isDark) {
+          img.src = isDark ? img.dataset.darkSrc : img.dataset.lightSrc;
+        }
+
+        function updateCatByCurrentTheme() {
+          var isDark = document.body && document.body.classList.contains('dark-mode');
+          if (!isDark) {
+            var saved = null;
+            try { saved = localStorage.getItem('site-theme-mode'); } catch (e) {}
+            if (saved !== 'light' && saved !== 'dark' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              isDark = true;
+            }
+          }
+          updateCatByTheme(isDark);
+        }
+
+        updateCatByCurrentTheme();
+
+        if (document.body && window.MutationObserver) {
+          var observer = new MutationObserver(updateCatByCurrentTheme);
+          observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        }
+
+        var bounce = 0, dir = -1, idle = true;
+        function animate() {
+          if (!idle) {
+            bounce += dir * 0.5;
+            if (bounce <= -4) dir = 1;
+            if (bounce >= 0) { bounce = 0; dir = -1; idle = true; }
+          }
+          img.style.transform = 'translateY(' + Math.round(bounce) + 'px)';
+          requestAnimationFrame(animate);
+        }
+        img.addEventListener('mouseenter', function(){ idle = false; dir = -1; });
+        animate();
+      })();
+      </script>
+      {{ end }}
     </div>
   </header>
 {{ else }}
