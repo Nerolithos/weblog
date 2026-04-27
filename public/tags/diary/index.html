@@ -112,6 +112,13 @@
 	.home-post-card:hover .home-post-preview {
 		max-height: 12em;  
 	}
+
+	 
+	.search-jump-highlight {
+		background: rgba(251, 146, 60, 0.38);
+		box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.45);
+		border-radius: 3px;
+	}
 </style>
 
 
@@ -178,6 +185,277 @@
 </script>
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var toc = document.querySelector('.post-toc');
+		if (!toc) return;
+
+		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+		if (!links.length) return;
+
+		var sections = [];
+		links.forEach(function (link) {
+			var href = link.getAttribute('href');
+			if (!href || href.charAt(0) !== '#') return;
+			var id = decodeURIComponent(href.slice(1));
+			var el = document.getElementById(id);
+			if (el) {
+				sections.push({ link: link, el: el });
+			}
+		});
+
+		if (!sections.length) return;
+
+		function onScroll() {
+			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var offset = 120; 
+			var current = null;
+
+			for (var i = 0; i < sections.length; i++) {
+				var rect = sections[i].el.getBoundingClientRect();
+				var top = rect.top + scrollY;
+				if (top - offset <= scrollY) {
+					current = sections[i];
+				} else {
+					break;
+				}
+			}
+
+			links.forEach(function (lnk) {
+				lnk.classList.remove('post-toc-active');
+			});
+			if (current) {
+				current.link.classList.add('post-toc-active');
+			}
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		
+		onScroll();
+
+		
+		var miniBtn = document.querySelector('.post-toc-mini');
+		var toggleBtn = toc.querySelector('.post-toc-toggle');
+		if (miniBtn && toggleBtn) {
+			function hideToc() {
+				toc.style.display = 'none';
+				miniBtn.style.display = 'inline-flex';
+			}
+
+			function showToc() {
+				toc.style.display = 'block';
+				miniBtn.style.display = 'none';
+			}
+
+			toggleBtn.addEventListener('click', hideToc);
+			miniBtn.addEventListener('click', showToc);
+		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var params = new URLSearchParams(window.location.search);
+		var query = (params.get('hl') || '').trim();
+		if (!query) return;
+
+		var contentRoot = document.querySelector('.nested-copy-line-height');
+		if (!contentRoot) return;
+
+		function escapeRegExp(s) {
+			return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		}
+
+		function tokenizeForFallback(text) {
+			var normalized = (text || '').toLowerCase();
+			if (!normalized) return [];
+			var tokens = [];
+			var latin = normalized.match(/[a-z0-9_]+/g) || [];
+			tokens = tokens.concat(latin);
+			var cjkRuns = normalized.match(/[\u3400-\u9fff]+/g) || [];
+			for (var r = 0; r < cjkRuns.length; r++) {
+				var chars = Array.from(cjkRuns[r]);
+				for (var i = 0; i < chars.length; i++) {
+					tokens.push(chars[i]);
+					if (i + 1 < chars.length) tokens.push(chars[i] + chars[i + 1]);
+				}
+			}
+			var unique = Array.from(new Set(tokens));
+			unique.sort(function (a, b) { return b.length - a.length; });
+			return unique;
+		}
+
+		function findFirstTextMatch(patterns) {
+			var walker = document.createTreeWalker(contentRoot, NodeFilter.SHOW_TEXT, {
+				acceptNode: function (node) {
+					if (!node || !node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+					var p = node.parentNode;
+					if (!p || !p.tagName) return NodeFilter.FILTER_REJECT;
+					var tag = p.tagName.toLowerCase();
+					if (tag === 'script' || tag === 'style' || tag === 'noscript' || tag === 'mark') {
+						return NodeFilter.FILTER_REJECT;
+					}
+					return NodeFilter.FILTER_ACCEPT;
+				}
+			});
+
+			while (walker.nextNode()) {
+				var node = walker.currentNode;
+				var text = node.nodeValue;
+				for (var i = 0; i < patterns.length; i++) {
+					var re = patterns[i];
+					re.lastIndex = 0;
+					var m = re.exec(text);
+					if (m && m[0]) {
+						return { node: node, start: m.index, end: m.index + m[0].length };
+					}
+				}
+			}
+			return null;
+		}
+
+		var patterns = [];
+		patterns.push(new RegExp(escapeRegExp(query), 'i'));
+		var fallbackTokens = tokenizeForFallback(query).filter(function (t) { return t.length >= 2; });
+		for (var i = 0; i < fallbackTokens.length; i++) {
+			patterns.push(new RegExp(escapeRegExp(fallbackTokens[i]), 'i'));
+		}
+
+		var hit = findFirstTextMatch(patterns);
+		if (!hit) return;
+
+		var textNode = hit.node;
+		var original = textNode.nodeValue;
+		var before = original.slice(0, hit.start);
+		var matchText = original.slice(hit.start, hit.end);
+		var after = original.slice(hit.end);
+
+		var wrapper = document.createElement('span');
+		wrapper.className = 'search-jump-highlight';
+		wrapper.textContent = matchText;
+
+		var frag = document.createDocumentFragment();
+		if (before) frag.appendChild(document.createTextNode(before));
+		frag.appendChild(wrapper);
+		if (after) frag.appendChild(document.createTextNode(after));
+		textNode.parentNode.replaceChild(frag, textNode);
+
+		wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var body = document.body;
+		var storageKey = 'site-theme-mode';
+
+		
+		function applyThemeClass(mode) {
+			if (mode === 'dark') {
+				body.classList.add('dark-mode');
+			} else {
+				body.classList.remove('dark-mode');
+			}
+		}
+
+		
+		function saveTheme(mode) {
+			try {
+				localStorage.setItem(storageKey, mode);
+			} catch (e) {}
+		}
+
+		
+		function applyAndSave(mode) {
+			applyThemeClass(mode);
+			saveTheme(mode);
+		}
+
+		function initTheme() {
+			var saved = null;
+			try {
+				saved = localStorage.getItem(storageKey);
+			} catch (e) {}
+			if (saved === 'dark' || saved === 'light') {
+				
+				applyThemeClass(saved);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				
+				applyThemeClass('dark');
+			}
+		}
+
+		function toggleTheme() {
+			var isDark = body.classList.contains('dark-mode');
+			var next = isDark ? 'light' : 'dark';
+			applyAndSave(next);
+		}
+
+		
+		initTheme();
+
+		
+		window.addEventListener('storage', function (event) {
+			if (event.key !== storageKey) return;
+			var value = event.newValue;
+			var mode = value === 'dark' ? 'dark' : 'light';
+			
+			applyThemeClass(mode);
+		});
+
+		
+		var dock = document.querySelector('[data-liquid-dock]');
+		if (!dock) return;
+
+		var mainBtn = dock.querySelector('[data-dock-main]');
+		var items = dock.querySelectorAll('[data-dock-item]');
+		if (!mainBtn || !items.length) return;
+
+		function openDock() {
+			dock.classList.add('dock-open');
+		}
+
+		function closeDock() {
+			dock.classList.remove('dock-open');
+		}
+
+		function toggleDockOpen() {
+			dock.classList.toggle('dock-open');
+		}
+
+		mainBtn.addEventListener('click', function (event) {
+			event.stopPropagation();
+			toggleDockOpen();
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!dock.contains(event.target)) {
+				closeDock();
+			}
+		});
+
+		items.forEach(function (btn) {
+			btn.addEventListener('click', function (event) {
+				event.stopPropagation();
+				var action = btn.getAttribute('data-action');
+				if (action === 'search') {
+					var url = dock.getAttribute('data-search-url') || '/search/';
+					window.location.href = url;
+				} else if (action === 'theme') {
+					toggleTheme();
+				} else if (action === 'lang') {
+					
+				}
+				closeDock();
+			});
+		});
+	});
+</script>
+
+
     
     <link rel="stylesheet" href="https://unpkg.com/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://unpkg.com/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -204,11 +482,12 @@
 
     
 
+  
   <header>
     <div class="pb3-m pb6-l bg-black">
-      <nav class="pv3 ph3 ph4-ns" role="navigation">
+      <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib">
+    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
       
         Lithos&#39; Blog
       
@@ -220,30 +499,54 @@
         <ul class="pl0 mr3">
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://github.com/Nerolithos" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://github.com/Nerolithos" title="">
               💻 GitHub
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://www.pixiv.net/users/107379421" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="http://localhost:1313/pixiv/" title="">
               🎨 Pixiv
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/emoji" title="">
-              🎮 EmojiGame
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/DDA/" title="">
+              📊 EnergyVis
             </a>
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white no-underline white-90" href="https://blog.nero-lithos.com/pet" title="">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/chem/" title="">
+              ⚗️ ChemVis
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/courseai/" title="">
+              🤖 LGU CourseAI
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90 site-nav-link" href="https://blog.nero-lithos.com/pet" title="">
               🐈 ArkPet
             </a>
           </li>
           
         </ul>
+      
+      
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
+        <input
+          type="search"
+          name="q"
+          placeholder="站内搜索"
+          class="pa1 br2 bn"
+          style="font-size: 0.85rem; min-width: 140px;"
+        />
+        <span class="site-nav-search-emoji" aria-hidden="true">⌕</span>
+      </form>
       
       
 <div class="ananke-socials">
@@ -254,10 +557,11 @@
   </div>
 </nav>
 
-      <div class="tc-l pv3 ph3 ph4-ns">
+      <div class="tc-l pv3 ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
           Diary
         </h1>
+        
         
       </div>
     </div>
@@ -277,68 +581,21 @@
         <div class="relative w-100  mb4 bg-white">
           <div class="relative w-100 mb4 bg-white nested-copy-line-height">
   <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Lithos&#39; Blog</span>
+    <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/sheperd/" class="link black dim">
-        # 《牧羊人》
+      <a href="http://localhost:1313/posts/sheperd/" class="link black dim">
+        牧羊人的故事
       </a>
     </h1>
     <div class="gray f6 mt2">
       📅 2024-10-30 |
-      📝 762 字 |
-      ⏱️ 2 分钟阅读
+      📝 2198 字 |
+      ⏱️ 5 分钟阅读
     </div>
     <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <p>牧羊人是个精明人，他总是能从羊群身上获得最多价值。冬天，羊长出很多毛，他就把大半的毛都剃掉，薄利多销地卖与人。因为价格实惠，人们都赞不绝口，经常从他那里进货。但牧羊人告诉羊群这些毛是为了实现羊群富足的必要牺牲，他永远以羊群利益至上。之所以要把毛交给牧羊人是因为他是羊群的主心骨，带领羊群走向温饱。</p>
+      牧羊人是个精明人，他总能从羊群身上获得毛，但他永远以羊群利益至上，因为太多毛会重到把羊压死。牧羊犬是吃了羊肉的羊幻化而来，它们以为自己属于人类，帮助牧羊人放羊。
     </div>
-    <a href="http://localhost:1313/sheperd/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Lithos&#39; Blog</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/river_town/" class="link black dim">
-        📝 River Town: the Metaphor of Chapter VI. ‘Storm’
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-09-10 |
-      📝 442 字 |
-      ⏱️ 3 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <p>In Chapter six of River Town, the metaphor of &ldquo;storm&rdquo; is incredibly ingenious, much like the line from <em>Border Town</em>: &ldquo;The heavy rain washed everything, yet it washed away nothing.&rdquo; True, storms rinsed both HongKong and Fuling the night of HongKong’s handover to China. Yet only when people, like Andy in <em>The Shawshank Redemption</em>, allow the rain to cleanse the blockages and stubbornness deep within their souls, and reach their arms out to the sky, can they attain true liberation.</p>
-    </div>
-    <a href="http://localhost:1313/river_town/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        </div>
-      
-        <div class="relative w-100  mb4 bg-white">
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Lithos&#39; Blog</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/yaumatei/" class="link black dim">
-        📝 Grassroot HongKong
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-09-10 |
-      📝 324 字 |
-      ⏱️ 2 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <p>What is HongKong? What is it in its pure form, in a most representative phrase, in just words without bias? No other place dare to utter before YauMaTei makes its point.</p>
-<p>I find myself always agitated to be surrounded by old, down-to-earth, and perhaps dusty, dirty alleyways. It&rsquo;s not just about the unique historic scent. Yet, still worth mentioning, the old city wall of Peking and the brick-stone alleys in Shanghai have been mostly arbitrarily wiped out, which makes this block in HongKong appears to be a solitary time-space isolated from the modern world.</p>
-    </div>
-    <a href="http://localhost:1313/yaumatei/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="http://localhost:1313/posts/sheperd/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -348,6 +605,7 @@
   </div>
 
     </main>
+    
     <footer class="custom-footer">
   <p>&copy; Lithos&#39; Blog 2026</p>
 
@@ -356,9 +614,13 @@
       
         <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
       
-        <li><a href="https://www.pixiv.net/users/107379421" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
       
-        <li><a href="https://blog.nero-lithos.com/emoji" target="_blank" rel="noopener noreferrer">🎮 EmojiGame</a></li>
+        <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/chem/" target="_blank" rel="noopener noreferrer">⚗️ ChemVis</a></li>
+      
+        <li><a href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer">🤖 LGU CourseAI</a></li>
       
         <li><a href="https://blog.nero-lithos.com/pet" target="_blank" rel="noopener noreferrer">🐈 ArkPet</a></li>
       
