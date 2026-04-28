@@ -2,73 +2,80 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>CSC3060 on Lithos&#39; Blog</title>
-    <link>http://localhost:1313/tags/csc3060/</link>
+    <link>http://localhost:59095/tags/csc3060/</link>
     <description>Recent content in CSC3060 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 21 Apr 2026 11:45:34 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/csc3060/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Apr 2026 11:45:34 +0800</lastBuildDate>
+    <atom:link href="http://localhost:59095/tags/csc3060/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC3060 Week 14 Linking</title>
+      <link>http://localhost:59095/posts/3060.8/</link>
+      <pubDate>Tue, 28 Apr 2026 11:45:34 +0800</pubDate>
+      <guid>http://localhost:59095/posts/3060.8/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 14 (Chapter7)，一个 C 程序从多个 .c 文件，如何经过编译、汇编、链接，最终变成可以运行的可执行文件。</description>
+    </item>
     <item>
       <title>💻 CSC3060 Week 12-13 Optimizing Program Performance</title>
-      <link>http://localhost:1313/posts/3060.7/</link>
+      <link>http://localhost:59095/posts/3060.7/</link>
       <pubDate>Tue, 21 Apr 2026 11:45:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.7/</guid>
+      <guid>http://localhost:59095/posts/3060.7/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 12-13 (Chapter5), 怎样做软件优化——把程序写得更快、更省资源、更贴近硬件实际执行方式。</description>
     </item>
     <item>
       <title>💯 CSC3060 Quiz Q&amp;A</title>
-      <link>http://localhost:1313/posts/3060q/</link>
+      <link>http://localhost:59095/posts/3060q/</link>
       <pubDate>Tue, 07 Apr 2026 13:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060q/</guid>
+      <guid>http://localhost:59095/posts/3060q/</guid>
       <description>Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>
-      <link>http://localhost:1313/posts/3060.6/</link>
+      <link>http://localhost:59095/posts/3060.6/</link>
       <pubDate>Thu, 02 Apr 2026 10:11:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.6/</guid>
+      <guid>http://localhost:59095/posts/3060.6/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</title>
-      <link>http://localhost:1313/posts/3060.5/</link>
+      <link>http://localhost:59095/posts/3060.5/</link>
       <pubDate>Tue, 17 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.5/</guid>
+      <guid>http://localhost:59095/posts/3060.5/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险</description>
     </item>
     <item>
       <title>💻 CSC3060 Project: Code Scheduling</title>
-      <link>http://localhost:1313/posts/3060p3/</link>
+      <link>http://localhost:59095/posts/3060p3/</link>
       <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060p3/</guid>
+      <guid>http://localhost:59095/posts/3060p3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
-      <link>http://localhost:1313/posts/3060.4/</link>
+      <link>http://localhost:59095/posts/3060.4/</link>
       <pubDate>Tue, 03 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.4/</guid>
+      <guid>http://localhost:59095/posts/3060.4/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 5 Continuation of Machine Level Programming</title>
-      <link>http://localhost:1313/posts/3060.3/</link>
+      <link>http://localhost:59095/posts/3060.3/</link>
       <pubDate>Tue, 03 Feb 2026 20:37:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.3/</guid>
+      <guid>http://localhost:59095/posts/3060.3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
-      <link>http://localhost:1313/posts/3060.2/</link>
+      <link>http://localhost:59095/posts/3060.2/</link>
       <pubDate>Sat, 24 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.2/</guid>
+      <guid>http://localhost:59095/posts/3060.2/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 1-2 Introduction to Computer System</title>
-      <link>http://localhost:1313/posts/3060.1/</link>
+      <link>http://localhost:59095/posts/3060.1/</link>
       <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.1/</guid>
+      <guid>http://localhost:59095/posts/3060.1/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
     </item>
   </channel>

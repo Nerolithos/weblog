@@ -2,45 +2,45 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>技术 on Lithos&#39; Blog</title>
-    <link>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</link>
+    <link>http://localhost:59095/tags/%E6%8A%80%E6%9C%AF/</link>
     <description>Recent content in 技术 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 07 Apr 2026 11:30:34 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:59095/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>🛠️ GitHub Action Bot 自动化管理仓库入门</title>
-      <link>http://localhost:1313/posts/gab/</link>
+      <link>http://localhost:59095/posts/gab/</link>
       <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/gab/</guid>
+      <guid>http://localhost:59095/posts/gab/</guid>
       <description>从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。</description>
     </item>
     <item>
       <title>📢 如何快速批量地将音频转文字？</title>
-      <link>http://localhost:1313/posts/whisper/</link>
+      <link>http://localhost:59095/posts/whisper/</link>
       <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/whisper/</guid>
+      <guid>http://localhost:59095/posts/whisper/</guid>
       <description>如何简单的不用 LLM，在 CLI 将本地音频文件转文字。</description>
     </item>
     <item>
       <title>🌐 龙大邮箱抓取尝试</title>
-      <link>http://localhost:1313/posts/outlook/</link>
+      <link>http://localhost:59095/posts/outlook/</link>
       <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/outlook/</guid>
+      <guid>http://localhost:59095/posts/outlook/</guid>
       <description>未解决的 LGU 邮箱自动化尝试思路分享。</description>
     </item>
     <item>
       <title>🛠️ Important tools: CLI, shell and git commands</title>
-      <link>http://localhost:1313/posts/cligit/</link>
+      <link>http://localhost:59095/posts/cligit/</link>
       <pubDate>Tue, 10 Sep 2024 08:45:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/cligit/</guid>
+      <guid>http://localhost:59095/posts/cligit/</guid>
       <description>计算机初学者必学的 CLI 基本用法和工作流管理，以及如何处理网络不佳、提交过大、版本控制等常见 git 问题。</description>
     </item>
     <item>
       <title>🌐 在 cloudflare 部署 Hugo 构架博客的 manual</title>
-      <link>http://localhost:1313/posts/weblog_deploy/</link>
+      <link>http://localhost:59095/posts/weblog_deploy/</link>
       <pubDate>Thu, 15 Aug 2024 23:34:08 +0800</pubDate>
-      <guid>http://localhost:1313/posts/weblog_deploy/</guid>
+      <guid>http://localhost:59095/posts/weblog_deploy/</guid>
       <description>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。</description>
     </item>
   </channel>

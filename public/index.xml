@@ -2,381 +2,388 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Lithos&#39; Blog</title>
-    <link>http://localhost:1313/</link>
+    <link>http://localhost:59095/</link>
     <description>Recent content on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 21 Apr 2026 11:45:34 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Apr 2026 11:45:34 +0800</lastBuildDate>
+    <atom:link href="http://localhost:59095/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>💻 CSC3060 Week 14 Linking</title>
+      <link>http://localhost:59095/posts/3060.8/</link>
+      <pubDate>Tue, 28 Apr 2026 11:45:34 +0800</pubDate>
+      <guid>http://localhost:59095/posts/3060.8/</guid>
+      <description>CUHKSZ 大二课程 CSC3060 的 Week 14 (Chapter7)，一个 C 程序从多个 .c 文件，如何经过编译、汇编、链接，最终变成可以运行的可执行文件。</description>
+    </item>
     <item>
       <title>💻 CSC3060 Week 12-13 Optimizing Program Performance</title>
-      <link>http://localhost:1313/posts/3060.7/</link>
+      <link>http://localhost:59095/posts/3060.7/</link>
       <pubDate>Tue, 21 Apr 2026 11:45:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.7/</guid>
+      <guid>http://localhost:59095/posts/3060.7/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 12-13 (Chapter5), 怎样做软件优化——把程序写得更快、更省资源、更贴近硬件实际执行方式。</description>
     </item>
     <item>
       <title>🧪 Interactive Periodic Table</title>
-      <link>http://localhost:1313/posts/chemistry/</link>
+      <link>http://localhost:59095/posts/chemistry/</link>
       <pubDate>Sat, 11 Apr 2026 20:08:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/chemistry/</guid>
+      <guid>http://localhost:59095/posts/chemistry/</guid>
       <description>交互式元素周期表，展示单质颜色、熔沸点、第一电离能、电负性、原子半径、波义耳电子排布、化合价、冷知识等等。</description>
     </item>
     <item>
       <title>🐈 ArkPets suspense puzzle game (final version)</title>
-      <link>http://localhost:1313/posts/pet/</link>
+      <link>http://localhost:59095/posts/pet/</link>
       <pubDate>Sat, 11 Apr 2026 07:00:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/pet/</guid>
+      <guid>http://localhost:59095/posts/pet/</guid>
       <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
     </item>
     <item>
       <title>🎨 DDA3003 Visual Analytics of Global Energy Transition Patterns (Prototype)</title>
-      <link>http://localhost:1313/posts/dda3003/</link>
+      <link>http://localhost:59095/posts/dda3003/</link>
       <pubDate>Wed, 08 Apr 2026 10:16:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/dda3003/</guid>
+      <guid>http://localhost:59095/posts/dda3003/</guid>
       <description>DDA3003 Group4 Project Prototype, show global and country-wise renewable energy share on D3 globe, and cluster analysis.</description>
     </item>
     <item>
       <title>🎓 LGU 选课 AI 助手</title>
-      <link>http://localhost:1313/posts/courseai/</link>
+      <link>http://localhost:59095/posts/courseai/</link>
       <pubDate>Tue, 07 Apr 2026 19:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/courseai/</guid>
+      <guid>http://localhost:59095/posts/courseai/</guid>
       <description>基于卡园和开源平台扒下来的课程信息与免费的 Qwen LLM 构建的 LGU 选课辅助 AI ———— LGU courseai-2.0。</description>
     </item>
     <item>
       <title>💯 CSC3060 Quiz Q&amp;A</title>
-      <link>http://localhost:1313/posts/3060q/</link>
+      <link>http://localhost:59095/posts/3060q/</link>
       <pubDate>Tue, 07 Apr 2026 13:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060q/</guid>
+      <guid>http://localhost:59095/posts/3060q/</guid>
       <description>Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.</description>
     </item>
     <item>
       <title>🛠️ GitHub Action Bot 自动化管理仓库入门</title>
-      <link>http://localhost:1313/posts/gab/</link>
+      <link>http://localhost:59095/posts/gab/</link>
       <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/gab/</guid>
+      <guid>http://localhost:59095/posts/gab/</guid>
       <description>从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 10-11 Memory Hierarchy</title>
-      <link>http://localhost:1313/posts/3060.6/</link>
+      <link>http://localhost:59095/posts/3060.6/</link>
       <pubDate>Thu, 02 Apr 2026 10:11:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.6/</guid>
+      <guid>http://localhost:59095/posts/3060.6/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理</description>
     </item>
     <item>
       <title>🎨 DDA3003 Midterm revision</title>
-      <link>http://localhost:1313/posts/3003.2/</link>
+      <link>http://localhost:59095/posts/3003.2/</link>
       <pubDate>Thu, 26 Mar 2026 17:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3003.2/</guid>
+      <guid>http://localhost:59095/posts/3003.2/</guid>
       <description>CUHKSZ 选修课程 DDA3003 Visualization。期中复习 InfoVis, Tufte&amp;rsquo;s Design Principles, Gestalt Laws of encoding data, Visual perception, Color scheme, D3, HTML, CSS as well as Multivariate data cleaning, common tables and plots.</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</title>
-      <link>http://localhost:1313/posts/3060.5/</link>
+      <link>http://localhost:59095/posts/3060.5/</link>
       <pubDate>Tue, 17 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.5/</guid>
+      <guid>http://localhost:59095/posts/3060.5/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险</description>
     </item>
     <item>
       <title>🎮 Super &#39;Emojio&#39;</title>
-      <link>http://localhost:1313/posts/emoji/</link>
+      <link>http://localhost:59095/posts/emoji/</link>
       <pubDate>Mon, 16 Mar 2026 14:57:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/emoji/</guid>
+      <guid>http://localhost:59095/posts/emoji/</guid>
       <description>Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game</description>
     </item>
     <item>
       <title>💻 CSC3060 Project: Code Scheduling</title>
-      <link>http://localhost:1313/posts/3060p3/</link>
+      <link>http://localhost:59095/posts/3060p3/</link>
       <pubDate>Sat, 14 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060p3/</guid>
+      <guid>http://localhost:59095/posts/3060p3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等</description>
     </item>
     <item>
       <title>🕰️ 历史上的今天</title>
-      <link>http://localhost:1313/posts/history-today/</link>
+      <link>http://localhost:59095/posts/history-today/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/history-today/</guid>
-      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-27)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2018&lt;/strong&gt; — The Panmunjom Declaration is signed between North and South Korea, officially declaring their intentions to end the Korean conflict.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2012&lt;/strong&gt; — At least four explosions hit the Ukrainian city of Dnipropetrovsk with at least 27 people injured.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2011&lt;/strong&gt; — The 2011 Super Outbreak devastates parts of the Southeastern United States, especially the states of Alabama, Mississippi, Georgia, and Tennessee. Two hundred five tornadoes touched down on April 27 alone, killing more than 300 and injuring hundreds more.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2007&lt;/strong&gt; — Estonian authorities remove the Bronze Soldier, a Soviet Red Army war memorial in Tallinn, amid political controversy with Russia.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2007&lt;/strong&gt; — Israeli archaeologists discover the tomb of Herod the Great south of Jerusalem.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
+      <guid>http://localhost:59095/posts/history-today/</guid>
+      <description>&lt;div class=&#34;history-today&#34;&gt;&#xA;      &lt;h2&gt;历史上的今天 (04-28)&lt;/h2&gt;&#xA;      &lt;ul class=&#34;history-today-list&#34;&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;2004&lt;/strong&gt; — CBS News releases evidence of the Abu Ghraib torture and prisoner abuse. The photographs show rape and abuse from the American troops over Iraqi detainees.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;1996&lt;/strong&gt; — Whitewater controversy: President Bill Clinton gives a 41⁄2 hour videotaped testimony for the defense.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;1996&lt;/strong&gt; — Port Arthur massacre, Tasmania: A gunman, Martin Bryant, opens fire at the Broad Arrow Cafe in Port Arthur, Tasmania, killing 35 people and wounding 23 others.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;1994&lt;/strong&gt; — Former Central Intelligence Agency counterintelligence officer and analyst Aldrich Ames pleads guilty to giving US secrets to the Soviet Union and later Russia.&lt;/li&gt;&#xA;        &#xA;          &lt;li style=&#34;margin-bottom: 1em;&#34;&gt;&lt;strong&gt;1991&lt;/strong&gt; — Space Shuttle Discovery launches on STS-39, the first unclassified shuttle mission for the United States Department of Defense.&lt;/li&gt;&#xA;        &#xA;      &lt;/ul&gt;&#xA;      &lt;p style=&#34;margin-top: 2em; font-size: 0.9rem; color: #666;&#34;&gt;&#xA;        数据来源：Wikipedia On This Day。每天 UTC+1 (北京时间 9 点) 更新。&#xA;      &lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 6-7 Processor SW and HW</title>
-      <link>http://localhost:1313/posts/3060.4/</link>
+      <link>http://localhost:59095/posts/3060.4/</link>
       <pubDate>Tue, 03 Mar 2026 10:37:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.4/</guid>
+      <guid>http://localhost:59095/posts/3060.4/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 5 Continuation of Machine Level Programming</title>
-      <link>http://localhost:1313/posts/3060.3/</link>
+      <link>http://localhost:59095/posts/3060.3/</link>
       <pubDate>Tue, 03 Feb 2026 20:37:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.3/</guid>
+      <guid>http://localhost:59095/posts/3060.3/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 3-4 More about Computer System Fundamentals</title>
-      <link>http://localhost:1313/posts/3060.2/</link>
+      <link>http://localhost:59095/posts/3060.2/</link>
       <pubDate>Sat, 24 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.2/</guid>
+      <guid>http://localhost:59095/posts/3060.2/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)</description>
     </item>
     <item>
       <title>🎨 DDA3003 Introduction to D3</title>
-      <link>http://localhost:1313/posts/3003.1/</link>
+      <link>http://localhost:59095/posts/3003.1/</link>
       <pubDate>Thu, 22 Jan 2026 16:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3003.1/</guid>
+      <guid>http://localhost:59095/posts/3003.1/</guid>
       <description>CUHKSZ 选修课程 DDA3003 Visualization，介绍 D3.js ——— 一种 HTML 可视化工具</description>
     </item>
     <item>
       <title>💻 CSC3060 Week 1-2 Introduction to Computer System</title>
-      <link>http://localhost:1313/posts/3060.1/</link>
+      <link>http://localhost:59095/posts/3060.1/</link>
       <pubDate>Tue, 06 Jan 2026 10:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3060.1/</guid>
+      <guid>http://localhost:59095/posts/3060.1/</guid>
       <description>CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识</description>
     </item>
     <item>
       <title>📒 關西近畿行記</title>
-      <link>http://localhost:1313/posts/kansai/</link>
+      <link>http://localhost:59095/posts/kansai/</link>
       <pubDate>Thu, 01 Jan 2026 14:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/kansai/</guid>
+      <guid>http://localhost:59095/posts/kansai/</guid>
       <description>2025 年 10 月 1 日至 10 月 7 日，日本關西奈良、和歌山、京都的旅遊日記，心得和推薦</description>
     </item>
     <item>
       <title>💯 CSC3200 Final Revision C&#43;&#43; 期末样卷</title>
-      <link>http://localhost:1313/posts/3200.f3/</link>
+      <link>http://localhost:59095/posts/3200.f3/</link>
       <pubDate>Thu, 11 Dec 2025 07:07:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3200.f3/</guid>
+      <guid>http://localhost:59095/posts/3200.f3/</guid>
       <description>CUHKSZ 大二课程 CSC3200 是新课，我们用 3002 真卷作复习参考</description>
     </item>
     <item>
       <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)</title>
-      <link>http://localhost:1313/posts/3200.f2/</link>
+      <link>http://localhost:59095/posts/3200.f2/</link>
       <pubDate>Thu, 27 Nov 2025 13:33:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3200.f2/</guid>
+      <guid>http://localhost:59095/posts/3200.f2/</guid>
       <description>CUHKSZ 大二课程 CSC3200 关于树、堆、图的相关知识期末总结</description>
     </item>
     <item>
       <title>💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)</title>
-      <link>http://localhost:1313/posts/3200.f1/</link>
+      <link>http://localhost:59095/posts/3200.f1/</link>
       <pubDate>Fri, 21 Nov 2025 13:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3200.f1/</guid>
+      <guid>http://localhost:59095/posts/3200.f1/</guid>
       <description>CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC17-19 function mapping</title>
-      <link>http://localhost:1313/posts/3001.8/</link>
+      <link>http://localhost:59095/posts/3001.8/</link>
       <pubDate>Mon, 17 Nov 2025 12:19:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3001.8/</guid>
+      <guid>http://localhost:59095/posts/3001.8/</guid>
       <description>CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem</title>
-      <link>http://localhost:1313/posts/3001.7/</link>
+      <link>http://localhost:59095/posts/3001.7/</link>
       <pubDate>Thu, 13 Nov 2025 09:24:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3001.7/</guid>
+      <guid>http://localhost:59095/posts/3001.7/</guid>
       <description>CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理</description>
     </item>
     <item>
       <title>⚛️ PHY1001 LEC10-15 旋转运动学</title>
-      <link>http://localhost:1313/posts/phy2/</link>
+      <link>http://localhost:59095/posts/phy2/</link>
       <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/phy2/</guid>
+      <guid>http://localhost:59095/posts/phy2/</guid>
       <description>CUHKSZ 大一/大二课程 PHY1001 绕轴运动 important takeaway</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC14-16 Graph</title>
-      <link>http://localhost:1313/posts/3001.6/</link>
+      <link>http://localhost:59095/posts/3001.6/</link>
       <pubDate>Tue, 28 Oct 2025 17:30:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3001.6/</guid>
+      <guid>http://localhost:59095/posts/3001.6/</guid>
       <description>CUHKSZ CSC3001 图论</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC11-13 GCD and Mod</title>
-      <link>http://localhost:1313/posts/3001.5/</link>
+      <link>http://localhost:59095/posts/3001.5/</link>
       <pubDate>Tue, 14 Oct 2025 12:30:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3001.5/</guid>
+      <guid>http://localhost:59095/posts/3001.5/</guid>
       <description>CUHKSZ CSC3001 最大公因数问题与模问题</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC8-10 递归</title>
-      <link>http://localhost:1313/posts/3001.4/</link>
+      <link>http://localhost:59095/posts/3001.4/</link>
       <pubDate>Sat, 11 Oct 2025 12:16:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3001.4/</guid>
+      <guid>http://localhost:59095/posts/3001.4/</guid>
       <description>CUHKSZ CSC3001 从数学证明法到递归思想，以及解递归式</description>
     </item>
     <item>
       <title>⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学</title>
-      <link>http://localhost:1313/posts/phy1/</link>
+      <link>http://localhost:59095/posts/phy1/</link>
       <pubDate>Tue, 16 Sep 2025 11:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/phy1/</guid>
+      <guid>http://localhost:59095/posts/phy1/</guid>
       <description>CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway</description>
     </item>
     <item>
       <title>💻 CSC3200 LEC3-5 C&#43;&#43;进阶</title>
-      <link>http://localhost:1313/posts/3200.2/</link>
+      <link>http://localhost:59095/posts/3200.2/</link>
       <pubDate>Mon, 15 Sep 2025 18:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3200.2/</guid>
+      <guid>http://localhost:59095/posts/3200.2/</guid>
       <description>CUHKSZ 大二课程 CSC3200 关于 C/C++ 中数组、指针和流操作</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC6-7 数学归纳法</title>
-      <link>http://localhost:1313/posts/3001.3/</link>
+      <link>http://localhost:59095/posts/3001.3/</link>
       <pubDate>Thu, 11 Sep 2025 11:31:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3001.3/</guid>
+      <guid>http://localhost:59095/posts/3001.3/</guid>
       <description>CUHKSZ CSC3001 更多数学证明法</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法</title>
-      <link>http://localhost:1313/posts/3001.2/</link>
+      <link>http://localhost:59095/posts/3001.2/</link>
       <pubDate>Tue, 02 Sep 2025 13:31:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3001.2/</guid>
+      <guid>http://localhost:59095/posts/3001.2/</guid>
       <description>CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑</description>
     </item>
     <item>
       <title>💻 CSC3200 LEC1-2 C&#43;&#43;入门</title>
-      <link>http://localhost:1313/posts/3200.1/</link>
+      <link>http://localhost:59095/posts/3200.1/</link>
       <pubDate>Mon, 01 Sep 2025 18:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3200.1/</guid>
+      <guid>http://localhost:59095/posts/3200.1/</guid>
       <description>CUHKSZ 大二课程 CSC3200 关于 C++ 基础语法和 OOP 的介绍</description>
     </item>
     <item>
       <title>🧮 CSC3001 LEC1-2 离散数学入门</title>
-      <link>http://localhost:1313/posts/3001.1/</link>
+      <link>http://localhost:59095/posts/3001.1/</link>
       <pubDate>Sun, 31 Aug 2025 11:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/3001.1/</guid>
+      <guid>http://localhost:59095/posts/3001.1/</guid>
       <description>CUHKSZ 大二课程 CSC3001 的入门指导</description>
     </item>
     <item>
       <title>🌐 How to personalize Streamlit URL?</title>
-      <link>http://localhost:1313/posts/streamliturl/</link>
+      <link>http://localhost:59095/posts/streamliturl/</link>
       <pubDate>Sun, 31 Aug 2025 10:50:30 +0800</pubDate>
-      <guid>http://localhost:1313/posts/streamliturl/</guid>
+      <guid>http://localhost:59095/posts/streamliturl/</guid>
       <description>一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试</description>
     </item>
     <item>
       <title>🌐 Automation of Ssg Post Release</title>
-      <link>http://localhost:1313/posts/autorelease/</link>
+      <link>http://localhost:59095/posts/autorelease/</link>
       <pubDate>Fri, 25 Apr 2025 15:43:45 +0800</pubDate>
-      <guid>http://localhost:1313/posts/autorelease/</guid>
+      <guid>http://localhost:59095/posts/autorelease/</guid>
       <description>SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？</description>
     </item>
     <item>
       <title>🧠 Brainstorming Beyond Textbooks</title>
-      <link>http://localhost:1313/posts/brainstorm/</link>
+      <link>http://localhost:59095/posts/brainstorm/</link>
       <pubDate>Thu, 10 Apr 2025 17:15:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/brainstorm/</guid>
+      <guid>http://localhost:59095/posts/brainstorm/</guid>
       <description>从 MAT2041 课上的一次胡思乱想，到跨学科的突发奇想如何带来突破性进展…</description>
     </item>
     <item>
       <title>🧬 BIO1008 Final Revision</title>
-      <link>http://localhost:1313/posts/1008/</link>
+      <link>http://localhost:59095/posts/1008/</link>
       <pubDate>Wed, 11 Dec 2024 12:10:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/1008/</guid>
+      <guid>http://localhost:59095/posts/1008/</guid>
       <description>SDS 以及所有非 MED 学生必修的通识课 BIO1008 的复习，资料是我当年用的 Cheating Paper。</description>
     </item>
     <item>
       <title>🐉🧱 龙大生存指南 CUHKSZ Survival Handbook</title>
-      <link>http://localhost:1313/posts/lgu/</link>
+      <link>http://localhost:59095/posts/lgu/</link>
       <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/lgu/</guid>
+      <guid>http://localhost:59095/posts/lgu/</guid>
       <description>龙大人自己的生存指南，绝赞创作中</description>
     </item>
     <item>
       <title>💻 CSC1003 期末总结</title>
-      <link>http://localhost:1313/posts/1003.6/</link>
+      <link>http://localhost:59095/posts/1003.6/</link>
       <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/1003.6/</guid>
+      <guid>http://localhost:59095/posts/1003.6/</guid>
       <description>总结 Java 中好用的语句和易错的用法</description>
     </item>
     <item>
       <title>💻 CSC1003 Assignment2 二维数组</title>
-      <link>http://localhost:1313/posts/assignment2/</link>
+      <link>http://localhost:59095/posts/assignment2/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/assignment2/</guid>
+      <guid>http://localhost:59095/posts/assignment2/</guid>
       <description>CSC1003-JAVA 的第二份作业例题讲解。</description>
     </item>
     <item>
       <title>牧羊人的故事</title>
-      <link>http://localhost:1313/posts/sheperd/</link>
+      <link>http://localhost:59095/posts/sheperd/</link>
       <pubDate>Wed, 30 Oct 2024 13:49:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/sheperd/</guid>
+      <guid>http://localhost:59095/posts/sheperd/</guid>
       <description>牧羊人是个精明人，他总能从羊群身上获得毛，但他永远以羊群利益至上，因为太多毛会重到把羊压死。牧羊犬是吃了羊肉的羊幻化而来，它们以为自己属于人类，帮助牧羊人放羊。</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC13-15 递归</title>
-      <link>http://localhost:1313/posts/1003.5/</link>
+      <link>http://localhost:59095/posts/1003.5/</link>
       <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/1003.5/</guid>
+      <guid>http://localhost:59095/posts/1003.5/</guid>
       <description>介绍递归，栈与堆，以及栈溢出</description>
     </item>
     <item>
       <title>📢 如何快速批量地将音频转文字？</title>
-      <link>http://localhost:1313/posts/whisper/</link>
+      <link>http://localhost:59095/posts/whisper/</link>
       <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/whisper/</guid>
+      <guid>http://localhost:59095/posts/whisper/</guid>
       <description>如何简单的不用 LLM，在 CLI 将本地音频文件转文字。</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC10-12 Midterm Revision</title>
-      <link>http://localhost:1313/posts/1003.4/</link>
+      <link>http://localhost:59095/posts/1003.4/</link>
       <pubDate>Sat, 19 Oct 2024 23:56:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/1003.4/</guid>
+      <guid>http://localhost:59095/posts/1003.4/</guid>
       <description>期中考试复习与模拟题</description>
     </item>
     <item>
       <title>💻 CSC1003 Assignment1 OJPractice</title>
-      <link>http://localhost:1313/posts/assignment1/</link>
+      <link>http://localhost:59095/posts/assignment1/</link>
       <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/assignment1/</guid>
+      <guid>http://localhost:59095/posts/assignment1/</guid>
       <description>CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践</description>
     </item>
     <item>
       <title>☕️ 咖啡与OOP</title>
-      <link>http://localhost:1313/posts/oop/</link>
+      <link>http://localhost:59095/posts/oop/</link>
       <pubDate>Thu, 12 Sep 2024 11:28:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/oop/</guid>
+      <guid>http://localhost:59095/posts/oop/</guid>
       <description>&lt;p&gt;OOP(Object-Oriented Programming) 即面向对象编程。我们来了解 Java (不是指咖啡) 中的 OOP。它包括以下内容：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;类(Class)&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;对象(Object) ≈ 实例(Instance)&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>💻 CSC1003 TBL1 网络与计算机史</title>
-      <link>http://localhost:1313/posts/1003.2/</link>
+      <link>http://localhost:59095/posts/1003.2/</link>
       <pubDate>Wed, 11 Sep 2024 16:10:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/1003.2/</guid>
+      <guid>http://localhost:59095/posts/1003.2/</guid>
       <description>讲座直接略过的互联网基础 —— LGU 完全没有网络相关的基础课，导致大家的相关知识储备薄弱。</description>
     </item>
     <item>
       <title>💻 CSC1003 LEC1~3 函数、数据类型与计算</title>
-      <link>http://localhost:1313/posts/1003.1/</link>
+      <link>http://localhost:59095/posts/1003.1/</link>
       <pubDate>Wed, 11 Sep 2024 11:27:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/1003.1/</guid>
+      <guid>http://localhost:59095/posts/1003.1/</guid>
       <description>CUHKSZ 大一课程 CSC1003（Java） 的入门</description>
     </item>
     <item>
       <title> 🌐 IP地址与子网掩码</title>
-      <link>http://localhost:1313/posts/web/</link>
+      <link>http://localhost:59095/posts/web/</link>
       <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/web/</guid>
+      <guid>http://localhost:59095/posts/web/</guid>
       <description>&lt;p&gt;240822，有几位同学在龙大的选课培训直播间提出几个网络问题 (见下图)。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。&lt;/p&gt;</description>
     </item>
     <item>
       <title>🌐 龙大邮箱抓取尝试</title>
-      <link>http://localhost:1313/posts/outlook/</link>
+      <link>http://localhost:59095/posts/outlook/</link>
       <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/outlook/</guid>
+      <guid>http://localhost:59095/posts/outlook/</guid>
       <description>未解决的 LGU 邮箱自动化尝试思路分享。</description>
     </item>
     <item>
       <title>🛠️ Important tools: CLI, shell and git commands</title>
-      <link>http://localhost:1313/posts/cligit/</link>
+      <link>http://localhost:59095/posts/cligit/</link>
       <pubDate>Tue, 10 Sep 2024 08:45:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/cligit/</guid>
+      <guid>http://localhost:59095/posts/cligit/</guid>
       <description>计算机初学者必学的 CLI 基本用法和工作流管理，以及如何处理网络不佳、提交过大、版本控制等常见 git 问题。</description>
     </item>
     <item>
       <title>🌐 在 cloudflare 部署 Hugo 构架博客的 manual</title>
-      <link>http://localhost:1313/posts/weblog_deploy/</link>
+      <link>http://localhost:59095/posts/weblog_deploy/</link>
       <pubDate>Thu, 15 Aug 2024 23:34:08 +0800</pubDate>
-      <guid>http://localhost:1313/posts/weblog_deploy/</guid>
+      <guid>http://localhost:59095/posts/weblog_deploy/</guid>
       <description>一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。</description>
     </item>
   </channel>

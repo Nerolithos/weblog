@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Projects on Lithos&#39; Blog</title>
-    <link>http://localhost:1313/tags/projects/</link>
+    <link>http://localhost:59095/tags/projects/</link>
     <description>Recent content in Projects on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 11 Apr 2026 07:00:34 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/projects/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:59095/tags/projects/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>🐈 ArkPets suspense puzzle game (final version)</title>
-      <link>http://localhost:1313/posts/pet/</link>
+      <link>http://localhost:59095/posts/pet/</link>
       <pubDate>Sat, 11 Apr 2026 07:00:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/pet/</guid>
+      <guid>http://localhost:59095/posts/pet/</guid>
       <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
     </item>
     <item>
       <title>🎨 DDA3003 Visual Analytics of Global Energy Transition Patterns (Prototype)</title>
-      <link>http://localhost:1313/posts/dda3003/</link>
+      <link>http://localhost:59095/posts/dda3003/</link>
       <pubDate>Wed, 08 Apr 2026 10:16:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/dda3003/</guid>
+      <guid>http://localhost:59095/posts/dda3003/</guid>
       <description>DDA3003 Group4 Project Prototype, show global and country-wise renewable energy share on D3 globe, and cluster analysis.</description>
     </item>
     <item>
       <title>🎮 Super &#39;Emojio&#39;</title>
-      <link>http://localhost:1313/posts/emoji/</link>
+      <link>http://localhost:59095/posts/emoji/</link>
       <pubDate>Mon, 16 Mar 2026 14:57:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/emoji/</guid>
+      <guid>http://localhost:59095/posts/emoji/</guid>
       <description>Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game</description>
     </item>
   </channel>

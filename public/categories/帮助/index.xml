@@ -2,52 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>帮助 on Lithos&#39; Blog</title>
-    <link>http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/</link>
+    <link>http://localhost:59095/categories/%E5%B8%AE%E5%8A%A9/</link>
     <description>Recent content in 帮助 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 11 Apr 2026 20:08:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/%E5%B8%AE%E5%8A%A9/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:59095/categories/%E5%B8%AE%E5%8A%A9/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>🧪 Interactive Periodic Table</title>
-      <link>http://localhost:1313/posts/chemistry/</link>
+      <link>http://localhost:59095/posts/chemistry/</link>
       <pubDate>Sat, 11 Apr 2026 20:08:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/chemistry/</guid>
+      <guid>http://localhost:59095/posts/chemistry/</guid>
       <description>交互式元素周期表，展示单质颜色、熔沸点、第一电离能、电负性、原子半径、波义耳电子排布、化合价、冷知识等等。</description>
     </item>
     <item>
       <title>🎓 LGU 选课 AI 助手</title>
-      <link>http://localhost:1313/posts/courseai/</link>
+      <link>http://localhost:59095/posts/courseai/</link>
       <pubDate>Tue, 07 Apr 2026 19:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/courseai/</guid>
+      <guid>http://localhost:59095/posts/courseai/</guid>
       <description>基于卡园和开源平台扒下来的课程信息与免费的 Qwen LLM 构建的 LGU 选课辅助 AI ———— LGU courseai-2.0。</description>
     </item>
     <item>
       <title>🛠️ GitHub Action Bot 自动化管理仓库入门</title>
-      <link>http://localhost:1313/posts/gab/</link>
+      <link>http://localhost:59095/posts/gab/</link>
       <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/gab/</guid>
+      <guid>http://localhost:59095/posts/gab/</guid>
       <description>从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。</description>
     </item>
     <item>
       <title>🐉🧱 龙大生存指南 CUHKSZ Survival Handbook</title>
-      <link>http://localhost:1313/posts/lgu/</link>
+      <link>http://localhost:59095/posts/lgu/</link>
       <pubDate>Mon, 09 Dec 2024 14:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/lgu/</guid>
+      <guid>http://localhost:59095/posts/lgu/</guid>
       <description>龙大人自己的生存指南，绝赞创作中</description>
     </item>
     <item>
       <title>📢 如何快速批量地将音频转文字？</title>
-      <link>http://localhost:1313/posts/whisper/</link>
+      <link>http://localhost:59095/posts/whisper/</link>
       <pubDate>Mon, 21 Oct 2024 00:26:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/whisper/</guid>
+      <guid>http://localhost:59095/posts/whisper/</guid>
       <description>如何简单的不用 LLM，在 CLI 将本地音频文件转文字。</description>
     </item>
     <item>
       <title>🌐 龙大邮箱抓取尝试</title>
-      <link>http://localhost:1313/posts/outlook/</link>
+      <link>http://localhost:59095/posts/outlook/</link>
       <pubDate>Wed, 11 Sep 2024 09:26:58 +0800</pubDate>
-      <guid>http://localhost:1313/posts/outlook/</guid>
+      <guid>http://localhost:59095/posts/outlook/</guid>
       <description>未解决的 LGU 邮箱自动化尝试思路分享。</description>
     </item>
   </channel>

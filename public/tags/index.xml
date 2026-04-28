@@ -2,87 +2,94 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Lithos&#39; Blog</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>http://localhost:59095/tags/</link>
     <description>Recent content in Tags on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 21 Apr 2026 11:45:34 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Apr 2026 11:45:34 +0800</lastBuildDate>
+    <atom:link href="http://localhost:59095/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CSC3060</title>
-      <link>http://localhost:1313/tags/csc3060/</link>
-      <pubDate>Tue, 21 Apr 2026 11:45:34 +0800</pubDate>
-      <guid>http://localhost:1313/tags/csc3060/</guid>
+      <link>http://localhost:59095/tags/csc3060/</link>
+      <pubDate>Tue, 28 Apr 2026 11:45:34 +0800</pubDate>
+      <guid>http://localhost:59095/tags/csc3060/</guid>
       <description></description>
     </item>
     <item>
       <title>Projects</title>
-      <link>http://localhost:1313/tags/projects/</link>
+      <link>http://localhost:59095/tags/projects/</link>
       <pubDate>Sat, 11 Apr 2026 07:00:34 +0800</pubDate>
-      <guid>http://localhost:1313/tags/projects/</guid>
+      <guid>http://localhost:59095/tags/projects/</guid>
       <description></description>
     </item>
     <item>
       <title>技术</title>
-      <link>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</link>
+      <link>http://localhost:59095/tags/%E6%8A%80%E6%9C%AF/</link>
       <pubDate>Tue, 07 Apr 2026 11:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</guid>
+      <guid>http://localhost:59095/tags/%E6%8A%80%E6%9C%AF/</guid>
       <description></description>
     </item>
     <item>
       <title>DDA3003</title>
-      <link>http://localhost:1313/tags/dda3003/</link>
+      <link>http://localhost:59095/tags/dda3003/</link>
       <pubDate>Thu, 26 Mar 2026 17:30:34 +0800</pubDate>
-      <guid>http://localhost:1313/tags/dda3003/</guid>
+      <guid>http://localhost:59095/tags/dda3003/</guid>
       <description></description>
     </item>
     <item>
       <title>CSC3200</title>
-      <link>http://localhost:1313/tags/csc3200/</link>
+      <link>http://localhost:59095/tags/csc3200/</link>
       <pubDate>Thu, 11 Dec 2025 07:07:34 +0800</pubDate>
-      <guid>http://localhost:1313/tags/csc3200/</guid>
+      <guid>http://localhost:59095/tags/csc3200/</guid>
       <description></description>
     </item>
     <item>
       <title>CSC3001</title>
-      <link>http://localhost:1313/tags/csc3001/</link>
+      <link>http://localhost:59095/tags/csc3001/</link>
       <pubDate>Mon, 17 Nov 2025 12:19:24 +0800</pubDate>
-      <guid>http://localhost:1313/tags/csc3001/</guid>
+      <guid>http://localhost:59095/tags/csc3001/</guid>
       <description></description>
     </item>
     <item>
       <title>PHY1001</title>
-      <link>http://localhost:1313/tags/phy1001/</link>
+      <link>http://localhost:59095/tags/phy1001/</link>
       <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
-      <guid>http://localhost:1313/tags/phy1001/</guid>
+      <guid>http://localhost:59095/tags/phy1001/</guid>
       <description></description>
     </item>
     <item>
       <title>帮助</title>
-      <link>http://localhost:1313/tags/%E5%B8%AE%E5%8A%A9/</link>
+      <link>http://localhost:59095/tags/%E5%B8%AE%E5%8A%A9/</link>
       <pubDate>Sun, 31 Aug 2025 10:50:30 +0800</pubDate>
-      <guid>http://localhost:1313/tags/%E5%B8%AE%E5%8A%A9/</guid>
+      <guid>http://localhost:59095/tags/%E5%B8%AE%E5%8A%A9/</guid>
       <description></description>
     </item>
     <item>
       <title>CSC1003</title>
-      <link>http://localhost:1313/tags/csc1003/</link>
+      <link>http://localhost:59095/tags/csc1003/</link>
       <pubDate>Fri, 29 Nov 2024 14:15:34 +0800</pubDate>
-      <guid>http://localhost:1313/tags/csc1003/</guid>
+      <guid>http://localhost:59095/tags/csc1003/</guid>
       <description></description>
     </item>
     <item>
       <title>练习</title>
-      <link>http://localhost:1313/tags/%E7%BB%83%E4%B9%A0/</link>
+      <link>http://localhost:59095/tags/%E7%BB%83%E4%B9%A0/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
-      <guid>http://localhost:1313/tags/%E7%BB%83%E4%B9%A0/</guid>
+      <guid>http://localhost:59095/tags/%E7%BB%83%E4%B9%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Diary</title>
+      <link>http://localhost:59095/tags/diary/</link>
+      <pubDate>Wed, 30 Oct 2024 13:49:58 +0800</pubDate>
+      <guid>http://localhost:59095/tags/diary/</guid>
       <description></description>
     </item>
     <item>
       <title>讲座</title>
-      <link>http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/</link>
+      <link>http://localhost:59095/tags/%E8%AE%B2%E5%BA%A7/</link>
       <pubDate>Tue, 22 Oct 2024 17:23:58 +0800</pubDate>
-      <guid>http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/</guid>
+      <guid>http://localhost:59095/tags/%E8%AE%B2%E5%BA%A7/</guid>
       <description></description>
     </item>
   </channel>
