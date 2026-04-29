@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>练习 on Lithos&#39; Blog</title>
-    <link>http://localhost:59095/tags/%E7%BB%83%E4%B9%A0/</link>
+    <link>https://blog.nero-lithos.com/tags/%E7%BB%83%E4%B9%A0/</link>
     <description>Recent content in 练习 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Thu, 31 Oct 2024 14:49:58 +0800</lastBuildDate>
-    <atom:link href="http://localhost:59095/tags/%E7%BB%83%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.nero-lithos.com/tags/%E7%BB%83%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>💻 CSC1003 Assignment2 二维数组</title>
-      <link>http://localhost:59095/posts/assignment2/</link>
+      <link>https://blog.nero-lithos.com/posts/assignment2/</link>
       <pubDate>Thu, 31 Oct 2024 14:49:58 +0800</pubDate>
-      <guid>http://localhost:59095/posts/assignment2/</guid>
+      <guid>https://blog.nero-lithos.com/posts/assignment2/</guid>
       <description>CSC1003-JAVA 的第二份作业例题讲解。</description>
     </item>
     <item>
       <title>💻 CSC1003 Assignment1 OJPractice</title>
-      <link>http://localhost:59095/posts/assignment1/</link>
+      <link>https://blog.nero-lithos.com/posts/assignment1/</link>
       <pubDate>Sun, 22 Sep 2024 15:49:58 +0800</pubDate>
-      <guid>http://localhost:59095/posts/assignment1/</guid>
+      <guid>https://blog.nero-lithos.com/posts/assignment1/</guid>
       <description>CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践</description>
     </item>
   </channel>

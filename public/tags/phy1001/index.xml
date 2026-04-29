@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>PHY1001 on Lithos&#39; Blog</title>
-    <link>http://localhost:59095/tags/phy1001/</link>
+    <link>https://blog.nero-lithos.com/tags/phy1001/</link>
     <description>Recent content in PHY1001 on Lithos&#39; Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Thu, 06 Nov 2025 14:29:34 +0800</lastBuildDate>
-    <atom:link href="http://localhost:59095/tags/phy1001/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.nero-lithos.com/tags/phy1001/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>⚛️ PHY1001 LEC10-15 旋转运动学</title>
-      <link>http://localhost:59095/posts/phy2/</link>
+      <link>https://blog.nero-lithos.com/posts/phy2/</link>
       <pubDate>Thu, 06 Nov 2025 14:29:34 +0800</pubDate>
-      <guid>http://localhost:59095/posts/phy2/</guid>
+      <guid>https://blog.nero-lithos.com/posts/phy2/</guid>
       <description>CUHKSZ 大一/大二课程 PHY1001 绕轴运动 important takeaway</description>
     </item>
     <item>
       <title>⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学</title>
-      <link>http://localhost:59095/posts/phy1/</link>
+      <link>https://blog.nero-lithos.com/posts/phy1/</link>
       <pubDate>Tue, 16 Sep 2025 11:29:34 +0800</pubDate>
-      <guid>http://localhost:59095/posts/phy1/</guid>
+      <guid>https://blog.nero-lithos.com/posts/phy1/</guid>
       <description>CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway</description>
     </item>
   </channel>

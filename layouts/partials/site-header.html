@@ -32,17 +32,34 @@
       </div>
       {{ if .IsHome }}
       <!-- Pixel ragdoll cat - bottom right of hero -->
-      <img id="pixel-cat" src="{{ "images/pixel-cat.png" | relURL }}"
-        data-light-src="{{ "images/pixel-cat.png" | relURL }}"
-        data-dark-src="{{ "images/cat_sleep.png" | relURL }}"
-        style="position:absolute;bottom:-79px;right:24px;image-rendering:pixelated;pointer-events:none;z-index:10;opacity:0.92;width:auto;height:200px;transition:transform 0.1s ease-out;"
-        title="Meow~" alt="pixel ragdoll cat" />
+      <div id="pixel-cat-wrap" style="position:absolute;bottom:-79px;right:24px;z-index:10;pointer-events:none;">
+        <img id="pixel-cat" src="{{ "images/pixel-cat.png" | relURL }}"
+          data-light-src="{{ "images/pixel-cat.png" | relURL }}"
+          data-dark-src="{{ "images/cat_sleep.png" | relURL }}"
+          style="display:block;image-rendering:pixelated;opacity:0.92;width:auto;height:200px;transition:transform 0.1s ease-out;pointer-events:none;user-select:none;-webkit-user-drag:none;"
+          alt="pixel ragdoll cat" />
+        <div id="pixel-cat-meow" style="position:absolute;right:6px;bottom:168px;background:#fff;color:#000;border:1px solid #111;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:600;line-height:1;opacity:0;transform:translateY(6px);transition:opacity 0.14s ease,transform 0.14s ease;pointer-events:none;white-space:nowrap;">
+          Meow~
+        </div>
+      </div>
       <script>
       (function(){
+        var wrap = document.getElementById('pixel-cat-wrap');
         var img = document.getElementById('pixel-cat');
-        if (!img) return;
+        var bubble = document.getElementById('pixel-cat-meow');
+        if (!wrap || !img || !bubble) return;
+
+        function normalizeAssetUrl(url) {
+          try {
+            var parsed = new URL(url, window.location.href);
+            return parsed.pathname + parsed.search + parsed.hash;
+          } catch (e) {
+            return url;
+          }
+        }
+
         function updateCatByTheme(isDark) {
-          img.src = isDark ? img.dataset.darkSrc : img.dataset.lightSrc;
+          img.src = normalizeAssetUrl(isDark ? img.dataset.darkSrc : img.dataset.lightSrc);
         }
 
         function updateCatByCurrentTheme() {
@@ -64,6 +81,56 @@
           observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
         }
 
+        var hitCanvas = document.createElement('canvas');
+        var hitCtx = null;
+        try {
+          hitCtx = hitCanvas.getContext('2d', { willReadFrequently: true });
+        } catch (e) {}
+        if (!hitCtx) hitCtx = hitCanvas.getContext('2d');
+        var hitMap = null;
+
+        function rebuildHitMap() {
+          if (!img.naturalWidth || !img.naturalHeight || !hitCtx) {
+            hitMap = null;
+            return;
+          }
+          hitCanvas.width = img.naturalWidth;
+          hitCanvas.height = img.naturalHeight;
+          hitCtx.clearRect(0, 0, hitCanvas.width, hitCanvas.height);
+          hitCtx.drawImage(img, 0, 0);
+          try {
+            hitMap = hitCtx.getImageData(0, 0, hitCanvas.width, hitCanvas.height).data;
+          } catch (e) {
+            hitMap = null;
+          }
+        }
+
+        function isHitOpaque(clientX, clientY) {
+          if (!hitMap || !img.naturalWidth || !img.naturalHeight) return false;
+          var rect = img.getBoundingClientRect();
+          if (clientX < rect.left || clientX >= rect.right || clientY < rect.top || clientY >= rect.bottom) {
+            return false;
+          }
+          var x = Math.floor((clientX - rect.left) / rect.width * img.naturalWidth);
+          var y = Math.floor((clientY - rect.top) / rect.height * img.naturalHeight);
+          if (x < 0 || y < 0 || x >= img.naturalWidth || y >= img.naturalHeight) return false;
+          var i = (y * img.naturalWidth + x) * 4 + 3;
+          return hitMap[i] > 20;
+        }
+
+        var meowTimer = null;
+        function showMeow() {
+          var isDark = document.body && document.body.classList.contains('dark-mode');
+          bubble.textContent = isDark ? 'zzz...' : 'Meow~';
+          bubble.style.opacity = '1';
+          bubble.style.transform = 'translateY(0)';
+          if (meowTimer) window.clearTimeout(meowTimer);
+          meowTimer = window.setTimeout(function () {
+            bubble.style.opacity = '0';
+            bubble.style.transform = 'translateY(6px)';
+          }, 900);
+        }
+
         var bounce = 0, dir = -1, idle = true;
         function animate() {
           if (!idle) {
@@ -74,7 +141,17 @@
           img.style.transform = 'translateY(' + Math.round(bounce) + 'px)';
           requestAnimationFrame(animate);
         }
-        img.addEventListener('mouseenter', function(){ idle = false; dir = -1; });
+
+        img.addEventListener('load', rebuildHitMap);
+        if (img.complete) rebuildHitMap();
+
+        document.addEventListener('click', function (event) {
+          if (!isHitOpaque(event.clientX, event.clientY)) return;
+          idle = false;
+          dir = -1;
+          showMeow();
+        });
+
         animate();
       })();
       </script>
