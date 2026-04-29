@@ -88,7 +88,67 @@
       color: #ffffff;
     }
     .country-color-controls {
-      margin-top: 0.75rem;
+      margin-top: 0.45rem;
+    }
+    .country-cluster-view-toggle {
+      margin-top: 0.35rem;
+      display: flex;
+      justify-content: center;
+    }
+    .country-cluster-view-toggle button {
+      padding: 0.58rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.16);
+      background: #f8fafc;
+      color: #111827;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+    .country-cluster-view-toggle button:hover {
+      background: #eef2f7;
+    }
+    .country-cluster-view-toggle button.country-cluster-view-toggle--active {
+      background: #111827;
+      color: #ffffff;
+      border-color: #111827;
+    }
+    .country-cluster-legend {
+      margin: 0.6rem auto 0;
+      display: none;
+      width: min(100%, 560px);
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.3rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid rgba(15,23,42,0.08);
+      box-sizing: border-box;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      scrollbar-width: thin;
+    }
+    .country-cluster-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.34rem;
+      min-width: 0;
+      color: #334155;
+      font-size: 0.74rem;
+      flex: 0 0 auto;
+      line-height: 1.2;
+    }
+    .country-cluster-legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(15,23,42,0.08);
     }
     .country-color-toggle {
       display: flex;
@@ -145,9 +205,15 @@
     .country-tile-svg {
       width: 100%;
       max-width: 100%;
-      height: min(85vh, 720px);
+      height: min(74vh, 620px);
       display: none;
       margin: 0;
+    }
+    .country-globe-card.country-globe-card--tiles .country-color-controls {
+      margin-top: 0.2rem;
+    }
+    .country-globe-card.country-globe-card--tiles .country-cluster-view-toggle {
+      margin-top: 0.2rem;
     }
     #country-map-svg {
       height: min(75vh, 640px);
@@ -505,7 +571,7 @@
         height: min(70vh, 480px);
       }
       #country-tile-svg {
-        height: min(90vh, 600px);
+        height: min(72vh, 520px);
       }
       .pie-wrapper {
         justify-content: center;
@@ -565,6 +631,23 @@
       .country-color-controls {
         margin-top: 0.55rem;
       }
+      .country-cluster-view-toggle {
+        margin-top: 0.15rem;
+      }
+      .country-cluster-view-toggle button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.6rem 0.95rem;
+        font-size: 0.84rem;
+      }
+      .country-cluster-legend {
+        width: 100%;
+        gap: 0.22rem;
+        padding: 0.42rem 0.5rem;
+      }
+      .country-cluster-legend-item {
+        font-size: 0.7rem;
+      }
       .country-color-toggle {
         justify-content: flex-start;
         gap: 0.4rem;
@@ -579,6 +662,9 @@
       .country-tile-svg,
       #country-map-svg {
         height: min(50vh, 360px);
+      }
+      #country-tile-svg {
+        height: min(58vh, 420px);
       }
       .country-title {
         font-size: 1.2rem;
@@ -678,6 +764,10 @@
                 <span>30%+</span>
               </div>
             </div>
+            <div class="country-cluster-view-toggle">
+              <button id="country-cluster-view-toggle" type="button" style="display: none;">View All Clusters</button>
+            </div>
+            <div id="country-cluster-legend" class="country-cluster-legend" aria-hidden="true"></div>
           </div>
           <div id="country-tooltip" class="country-tooltip"></div>
         </div>
@@ -961,6 +1051,11 @@
     // 颜色模式：cluster 高亮（当前逻辑）或使用主页中的可再生能源占比颜色
     const COUNTRY_COLOR_MODE_KEY = "dda_country_color_mode";
     let countryColorMode = "share"; // "cluster" | "share"
+    let showAllClusters = false;
+    const clusterPalette = d3.scaleOrdinal()
+      .domain(["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"])
+      // Dirty -> clean: red/orange/yellow -> cyan/blue/indigo/purple
+      .range(["#3b82f6", "#f59e0b", "#dc2626", "#2563eb", "#facc15", "#7c3aed", "#06b6d4", "#ea580c", "#f97316"]);
 
     // Cluster assignments that change by year (loaded from true_clustering.csv)
     const clusterCsvUrl = "true_clustering.csv";
@@ -1055,6 +1150,8 @@
     const modeProfileBtn = document.getElementById("country-mode-profile");
     const panelCluster = document.getElementById("country-panel-cluster");
     const panelProfile = document.getElementById("country-panel-profile");
+    const clusterViewToggleBtn = document.getElementById("country-cluster-view-toggle");
+    const clusterLegendEl = document.getElementById("country-cluster-legend");
 
     const changePointByIso3 = new Map();
     const changePointByName = new Map();
@@ -1279,6 +1376,62 @@
       if (year == null) return undefined;
       const byIso = clusterAssignmentsByYear.get(year);
       return byIso ? byIso.get(iso3) : undefined;
+    }
+
+    function getDisplayClusterId(iso3) {
+      if (!iso3) return null;
+      let clusterId = null;
+      if (currentClusterYear != null) {
+        const dynId = getClusterIdForYear(currentClusterYear, iso3);
+        if (dynId !== undefined) clusterId = dynId;
+      }
+      if (clusterId == null && clusterByIso3[iso3] !== undefined) {
+        clusterId = clusterByIso3[iso3];
+      }
+      return clusterId;
+    }
+
+    function getClusterPaletteFill(clusterId, isSelectedCountry) {
+      const baseColor = clusterId ? clusterPalette(clusterId) : null;
+      if (!baseColor) return "#e0e0e0";
+      if (!isSelectedCountry) return baseColor;
+      const brighter = d3.color(baseColor);
+      return brighter ? brighter.brighter(0.45).formatHex() : baseColor;
+    }
+
+    function syncClusterViewToggleButton() {
+      const visible = countryColorMode === "cluster";
+      if (clusterViewToggleBtn) {
+        clusterViewToggleBtn.style.display = visible ? "inline-flex" : "none";
+        clusterViewToggleBtn.textContent = showAllClusters ? "Hide other Clusters" : "View All Clusters";
+        clusterViewToggleBtn.setAttribute("aria-pressed", showAllClusters ? "true" : "false");
+        clusterViewToggleBtn.classList.toggle("country-cluster-view-toggle--active", visible && showAllClusters);
+      }
+      if (clusterLegendEl) {
+        const showLegend = visible && showAllClusters;
+        clusterLegendEl.style.display = showLegend ? "flex" : "none";
+        clusterLegendEl.setAttribute("aria-hidden", showLegend ? "false" : "true");
+      }
+    }
+
+    function renderClusterLegend() {
+      if (!clusterLegendEl) return;
+      clusterLegendEl.innerHTML = "";
+      clusterPalette.domain().forEach(clusterId => {
+        const item = document.createElement("div");
+        item.className = "country-cluster-legend-item";
+
+        const swatch = document.createElement("span");
+        swatch.className = "country-cluster-legend-swatch";
+        swatch.style.background = clusterPalette(clusterId);
+
+        const label = document.createElement("span");
+        label.textContent = clusterId;
+
+        item.appendChild(swatch);
+        item.appendChild(label);
+        clusterLegendEl.appendChild(item);
+      });
     }
 
     function computeCurrentCluster() {
@@ -1984,47 +2137,47 @@
       if (!countryPathsSelection) return;
       const { clusterId } = computeCurrentCluster();
       const useClusterColors = countryColorMode === "cluster";
+      const useAllClusterColors = useClusterColors && showAllClusters;
+
+      function getClusterClass(baseClass, iso3) {
+        let cls = baseClass;
+        const countryClusterId = getDisplayClusterId(iso3);
+        if (useClusterColors && !useAllClusterColors) {
+          const inSameCluster = clusterId != null && countryClusterId === clusterId;
+          if (inSameCluster) cls += baseClass === "tile-country" ? " tile-country--highlight" : " globe-country--highlight";
+        }
+        if (iso3 === selectedIso3) {
+          cls += baseClass === "tile-country" ? " tile-country--selected" : " globe-country--selected";
+        }
+        return cls;
+      }
+
+      function getClusterAwareFill(iso3) {
+        const countryClusterId = getDisplayClusterId(iso3);
+        if (useClusterColors) {
+          if (useAllClusterColors) {
+            return getClusterPaletteFill(countryClusterId, iso3 === selectedIso3);
+          }
+          const inSameCluster = clusterId != null && countryClusterId === clusterId;
+          if (inSameCluster) {
+            if (iso3 === selectedIso3) return "#00ff6a";
+            return "#1b9e77";
+          }
+          return "#e0e0e0";
+        }
+        return getShareColorForIso3(iso3);
+      }
+
       countryPathsSelection
         .attr("class", d => {
           const props = d.properties || {};
           const iso3 = resolveFeatureIso3(props, d.id);
-          let countryClusterId = null;
-          let cls = "globe-country";
-          if (useClusterColors) {
-            if (currentClusterYear != null) {
-              const dynId = getClusterIdForYear(currentClusterYear, iso3);
-              if (dynId !== undefined) countryClusterId = dynId;
-            }
-            if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
-              countryClusterId = clusterByIso3[iso3];
-            }
-            const inSameCluster = clusterId != null && countryClusterId === clusterId;
-            if (inSameCluster) cls += " globe-country--highlight";
-          }
-          if (iso3 === selectedIso3) cls += " globe-country--selected";
-          return cls;
+          return getClusterClass("globe-country", iso3);
         })
         .attr("fill", d => {
           const props = d.properties || {};
           const iso3 = resolveFeatureIso3(props, d.id);
-          let countryClusterId = null;
-          if (useClusterColors) {
-            if (currentClusterYear != null) {
-              const dynId = getClusterIdForYear(currentClusterYear, iso3);
-              if (dynId !== undefined) countryClusterId = dynId;
-            }
-            if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
-              countryClusterId = clusterByIso3[iso3];
-            }
-            const inSameCluster = clusterId != null && countryClusterId === clusterId;
-            if (inSameCluster) {
-              // 在 cluster 模式下，选中国家使用更亮的绿色，其余同簇国家用普通绿色
-              if (iso3 === selectedIso3) return "#00ff6a";
-              return "#1b9e77";
-            }
-            return "#e0e0e0";
-          }
-          return getShareColorForIso3(iso3);
+          return getClusterAwareFill(iso3);
         });
 
       // Sync tile colors as well if tiles are built
@@ -2032,41 +2185,11 @@
         tileRects
           .attr("class", d => {
             const iso3 = d.code;
-            let countryClusterId = null;
-            let cls = "tile-country";
-            if (useClusterColors) {
-              if (currentClusterYear != null) {
-                const dynId = getClusterIdForYear(currentClusterYear, iso3);
-                if (dynId !== undefined) countryClusterId = dynId;
-              }
-              if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
-                countryClusterId = clusterByIso3[iso3];
-              }
-              const inSameCluster = clusterId != null && countryClusterId === clusterId;
-              if (inSameCluster) cls += " tile-country--highlight";
-            }
-            if (iso3 === selectedIso3) cls += " tile-country--selected";
-            return cls;
+            return getClusterClass("tile-country", iso3);
           })
           .attr("fill", d => {
             const iso3 = d.code;
-            let countryClusterId = null;
-            if (useClusterColors) {
-              if (currentClusterYear != null) {
-                const dynId = getClusterIdForYear(currentClusterYear, iso3);
-                if (dynId !== undefined) countryClusterId = dynId;
-              }
-              if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
-                countryClusterId = clusterByIso3[iso3];
-              }
-              const inSameCluster = clusterId != null && countryClusterId === clusterId;
-              if (inSameCluster) {
-                if (iso3 === selectedIso3) return "#00ff6a";
-                return "#1b9e77";
-              }
-              return "#e0e0e0";
-            }
-            return getShareColorForIso3(iso3);
+            return getClusterAwareFill(iso3);
           });
 
         // 同步平面地图上的高亮
@@ -2075,42 +2198,12 @@
             .attr("class", d => {
               const props = d.properties || {};
               const iso3 = resolveFeatureIso3(props, d.id);
-              let countryClusterId = null;
-              let cls = "globe-country";
-              if (useClusterColors) {
-                if (currentClusterYear != null) {
-                  const dynId = getClusterIdForYear(currentClusterYear, iso3);
-                  if (dynId !== undefined) countryClusterId = dynId;
-                }
-                if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
-                  countryClusterId = clusterByIso3[iso3];
-                }
-                const inSameCluster = clusterId != null && countryClusterId === clusterId;
-                if (inSameCluster) cls += " globe-country--highlight";
-              }
-              if (iso3 === selectedIso3) cls += " globe-country--selected";
-              return cls;
+              return getClusterClass("globe-country", iso3);
             })
             .attr("fill", d => {
               const props = d.properties || {};
               const iso3 = resolveFeatureIso3(props, d.id);
-              let countryClusterId = null;
-              if (useClusterColors) {
-                if (currentClusterYear != null) {
-                  const dynId = getClusterIdForYear(currentClusterYear, iso3);
-                  if (dynId !== undefined) countryClusterId = dynId;
-                }
-                if (countryClusterId == null && clusterByIso3[iso3] !== undefined) {
-                  countryClusterId = clusterByIso3[iso3];
-                }
-                const inSameCluster = clusterId != null && countryClusterId === clusterId;
-                if (inSameCluster) {
-                  if (iso3 === selectedIso3) return "#00ff6a";
-                  return "#1b9e77";
-                }
-                return "#e0e0e0";
-              }
-              return getShareColorForIso3(iso3);
+              return getClusterAwareFill(iso3);
             });
         }
       }
@@ -2362,6 +2455,7 @@
     const colorModeClusterBtn = document.getElementById("country-color-mode-cluster");
     const colorModeShareBtn = document.getElementById("country-color-mode-share");
     const countryLegendEl = document.getElementById("country-share-legend");
+    const countryGlobeCardEl = document.querySelector(".country-globe-card");
 
     // Tile 视图缩放：对内部 g 应用缩放变换
     const tileZoom = d3.zoom()
@@ -2395,6 +2489,8 @@
       if (countryLegendEl) {
         countryLegendEl.style.display = countryColorMode === "share" ? "block" : "none";
       }
+
+      syncClusterViewToggleButton();
 
       // 进入占比颜色模式时，如果数据和色标已经准备好，则绘制 / 刷新图例
       if (countryColorMode === "share" && shareColorReady) {
@@ -2435,6 +2531,10 @@
         else viewMapBtn.classList.remove("country-view-toggle--active");
       }
 
+      if (countryGlobeCardEl) {
+        countryGlobeCardEl.classList.toggle("country-globe-card--tiles", mode === "tiles");
+      }
+
       updateCountryViewLayout();
     }
 
@@ -2454,6 +2554,13 @@
     if (colorModeShareBtn) {
       colorModeShareBtn.addEventListener("click", () => setCountryColorMode("share"));
     }
+    if (clusterViewToggleBtn) {
+      clusterViewToggleBtn.addEventListener("click", () => {
+        showAllClusters = !showAllClusters;
+        syncClusterViewToggleButton();
+        updateCountryHighlighting();
+      });
+    }
 
     // 初次进入国家页面时，从全局视图偏好中读取默认模式；否则默认使用 tile 视图
     (function initCountryViewMode() {
@@ -2469,6 +2576,7 @@
 
     // 初始化颜色模式：与右侧默认模式保持一致（国家画像 -> 占比着色）
     (function initCountryColorMode() {
+      renderClusterLegend();
       setCountryColorMode(countryDetailMode === "profile" ? "share" : "cluster");
     })();
 
