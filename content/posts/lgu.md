@@ -74,4 +74,4 @@ featured_image: "/images/lgu.jpg"
   2、专业主任、班主任
   3、院长接待日，内容要合理
   
-- CSE/DS 的大三/大四选修**建议：CSC4140 和 DDA4310 by Sun Qi Lin**（教的很难但给分好完全没有考试没有签到）**避雷：DDA3003 和 CSC3100 by Liu Mengmeng**（喜欢过度细化给分，堆积 workload，3100 签到不给分反而倒扣分）
+- CSE/DS 的大三/大四选修**建议：CSC4140 和 DDA4310 by Sun Qi Lin**（教的很难但给分好完全没有考试没有签到）**DDA3003 和 CSC3100 by Liu Mengmeng**（教务处导致的过度细化给分，堆积 workload，3100 签到不给分反而倒扣分）
