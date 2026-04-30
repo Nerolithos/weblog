@@ -54,12 +54,13 @@
     </div>
 
     <!-- 右侧：featured_image（有才显示） -->
+    {{ $post := . }}
     {{ with .Params.featured_image }}
       {{ $img := . }}
       {{ if reflect.IsMap . }}{{ $img = .src }}{{ end }}
       {{ with $img }}
-        <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
-          <img src="{{ . | relURL }}" alt="{{ $.Title }}"
+        <a class="dn db-l w-third-l pl3" href="{{ with $post.Param "redirect" }}{{ . | relURL }}{{ else }}{{ $post.RelPermalink }}{{ end }}">
+          <img src="{{ . | relURL }}" alt="{{ $post.Title }}"
                style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
         </a>
       {{ end }}
@@ -118,12 +119,13 @@
     </div>
 
     <!-- 右侧：featured_image（有才显示） -->
+    {{ $post := . }}
     {{ with .Params.featured_image }}
       {{ $img := . }}
       {{ if reflect.IsMap . }}{{ $img = .src }}{{ end }}
       {{ with $img }}
-        <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
-          <img src="{{ . | relURL }}" alt="{{ $.Title }}"
+        <a class="dn db-l w-third-l pl3" href="{{ with $post.Param "redirect" }}{{ . | relURL }}{{ else }}{{ $post.RelPermalink }}{{ end }}">
+          <img src="{{ . | relURL }}" alt="{{ $post.Title }}"
                style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
         </a>
       {{ end }}
