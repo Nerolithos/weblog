@@ -27,7 +27,7 @@ enableRobotsTXT = true
     { name = "💻 GitHub", url = "https://github.com/Nerolithos" },
     { name = "🎨 Pixiv", url = "/pixiv/" },
     { name = "📊 EnergyVis", url = "https://blog.nero-lithos.com/DDA/" },
-    { name = "⚗️ ChemVis", url = "https://blog.nero-lithos.com/chem/" },
+    { name = "🖋️ mdAnything", url = "https://md.nero-lithos.com" },
     { name = "🤖 LGU CourseAI", url = "https://blog.nero-lithos.com/courseai/" },
     { name = "🐈 ArkPet", url = "https://blog.nero-lithos.com/pet" }
   ]
@@ -47,8 +47,8 @@ enableRobotsTXT = true
     url  = "https://blog.nero-lithos.com/DDA/"
     weight = 3
   [[menu.main]]
-    name = "⚗️ ChemVis"
-    url  = "https://blog.nero-lithos.com/chem/"
+    name = "🖋️ mdAnything"
+    url  = "https://md.nero-lithos.com"
     weight = 4
   [[menu.main]]
     name = "🤖 LGU CourseAI"
