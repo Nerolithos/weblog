@@ -10,13 +10,68 @@
     <div class="flex-l items-center">
       {{ partial "i18nlist.html" . }}
       {{ if .Site.Menus.main }}
+        {{ $mdaIcon := resources.Get "icons/mda.png" }}
+        {{ $pixivIcon := resources.Get "icons/pixiv.png" }}
+        {{ $mdaIconSrc := "" }}
+        {{ $pixivIconSrc := "" }}
+        {{ with $mdaIcon }}{{ $mdaIconSrc = printf "data:image/png;base64,%s" (.Content | base64Encode) }}{{ end }}
+        {{ with $pixivIcon }}{{ $pixivIconSrc = printf "data:image/png;base64,%s" (.Content | base64Encode) }}{{ end }}
         <ul class="{{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0 mr3" }}">
+          {{ $githubURL := "" }}
+          {{ $pixivURL := "" }}
+          {{ $mdAnythingURL := "" }}
           {{ range .Site.Menus.main }}
+            {{ $menuURLNorm := replaceRE "/+$" "" (lower .URL) }}
+            {{ if eq $menuURLNorm "https://github.com/nerolithos" }}
+              {{ $githubURL = .URL }}
+            {{ else if eq $menuURLNorm "/pixiv" }}
+              {{ $pixivURL = .URL }}
+            {{ else if eq $menuURLNorm "https://md.nero-lithos.com" }}
+              {{ $mdAnythingURL = .URL }}
+            {{ end }}
+          {{ end }}
+
+          {{ if $githubURL }}
+          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+            <a class="hover-white no-underline white-90 site-nav-icon-plain" href="{{ $githubURL }}" title="GitHub" aria-label="GitHub">
+              <span class="site-nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" role="img" focusable="false" aria-hidden="true">
+                  <path fill="currentColor" d="M12 0.3C5.4 0.3 0 5.7 0 12.3c0 5.3 3.4 9.8 8.2 11.4 0.6 0.1 0.8-0.3 0.8-0.6 0-0.3 0-1.1 0-2.1-3.3 0.7-4-1.6-4-1.6-0.6-1.4-1.3-1.8-1.3-1.8-1.1-0.7 0.1-0.7 0.1-0.7 1.2 0.1 1.9 1.2 1.9 1.2 1.1 1.9 2.8 1.3 3.5 1 0.1-0.8 0.4-1.3 0.8-1.6-2.7-0.3-5.5-1.3-5.5-6 0-1.3 0.5-2.4 1.2-3.3-0.1-0.3-0.5-1.5 0.1-3.1 0 0 1-0.3 3.4 1.2 1-0.3 2-0.4 3-0.4s2.1 0.1 3 0.4c2.4-1.6 3.4-1.2 3.4-1.2 0.7 1.7 0.3 2.9 0.1 3.1 0.8 0.9 1.2 2 1.2 3.3 0 4.6-2.8 5.7-5.5 6 0.4 0.4 0.8 1 0.8 2.1 0 1.5 0 2.6 0 3 0 0.3 0.2 0.7 0.8 0.6 4.8-1.6 8.2-6.1 8.2-11.4C24 5.7 18.6 0.3 12 0.3z"/>
+                </svg>
+              </span>
+            </a>
+          </li>
+          {{ end }}
+
+          {{ if $mdAnythingURL }}
+          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+            <a class="hover-white no-underline white-90 site-nav-icon-plain" href="{{ $mdAnythingURL }}" title="mdAnything" aria-label="mdAnything">
+              <img src="{{ $mdaIconSrc | safeURL }}" alt="" class="site-nav-icon-img" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+            </a>
+          </li>
+          {{ end }}
+
+          {{ if $pixivURL }}
+          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+            <a class="hover-white no-underline white-90 site-nav-icon-plain" href="{{ $pixivURL }}" title="Pixiv" aria-label="Pixiv">
+              <img src="{{ $pixivIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--pixiv" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+            </a>
+          </li>
+          {{ end }}
+
+          {{ range .Site.Menus.main }}
+          {{ $menuURL := .URL }}
+          {{ $menuURLNorm := replaceRE "/+$" "" (lower $menuURL) }}
+          {{ $isGithub := eq $menuURLNorm "https://github.com/nerolithos" }}
+          {{ $isPixiv := eq $menuURLNorm "/pixiv" }}
+          {{ $isMdAnything := eq $menuURLNorm "https://md.nero-lithos.com" }}
+          {{ if not (or $isGithub $isPixiv $isMdAnything) }}
           <li class="list f5 f4-ns fw4 dib {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }}">
             <a class="hover-white no-underline white-90 site-nav-link" href="{{ .URL }}" title="{{ i18n "pageTitle" . }}">
               {{ .Name }}
             </a>
           </li>
+          {{ end }}
           {{ end }}
         </ul>
       {{ end }}

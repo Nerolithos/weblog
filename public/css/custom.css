@@ -340,8 +340,83 @@ body.dark-mode .home-hero-search form {
   transform: translateY(0) scale(1.01);
 }
 
+.site-nav-fixed .site-nav-icon-item {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.site-nav-fixed .site-nav-icon-plain {
+  min-height: 34px;
+  min-width: 34px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  margin: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #4b5563 !important;
+  transform: none !important;
+  text-decoration: none !important;
+  line-height: 1;
+}
+
+.site-nav-fixed .site-nav-icon-plain .site-nav-icon {
+  color: #374151;
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  filter: none;
+}
+
+.site-nav-fixed .site-nav-icon-plain .site-nav-icon svg {
+  display: block;
+  width: 26px;
+  height: 26px;
+}
+
+.site-nav-fixed .site-nav-icon-plain .site-nav-icon-img {
+  display: block;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0) saturate(0) opacity(0.72) !important;
+}
+
+.site-nav-fixed .site-nav-icon-plain .site-nav-icon-img--pixiv {
+  width: 26px;
+  height: 26px;
+}
+
+.site-nav-fixed .site-nav-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .site-nav-fixed a:hover {
   color: #ffffff;
+}
+
+.site-nav-fixed a.site-nav-icon-plain:hover {
+  color: #4b5563 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 /* 让页面内容不被顶部导航遮住 */
@@ -403,6 +478,23 @@ body:not(.dark-mode) .site-nav-fixed .site-nav-link {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.95),
     0 8px 20px rgba(15, 23, 42, 0.16);
+}
+
+body.dark-mode .site-nav-fixed .site-nav-icon-plain,
+body.dark-mode .site-nav-fixed .site-nav-icon-plain:hover,
+body.dark-mode .site-nav-fixed .site-nav-icon-plain:active,
+body:not(.dark-mode) .site-nav-fixed .site-nav-icon-plain,
+body:not(.dark-mode) .site-nav-fixed .site-nav-icon-plain:hover,
+body:not(.dark-mode) .site-nav-fixed .site-nav-icon-plain:active {
+  color: #4b5563 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.dark-mode .site-nav-fixed .site-nav-icon-plain .site-nav-icon,
+body:not(.dark-mode) .site-nav-fixed .site-nav-icon-plain .site-nav-icon {
+  color: #374151 !important;
 }
 
 /* 顶部导航右侧搜索框：根据深浅模式反色显示 */
