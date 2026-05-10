@@ -37,11 +37,11 @@
       <description>Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&amp;rsquo; spine-cpp locally, and turned into a full-on suspense game.</description>
     </item>
     <item>
-      <title>🎨 DDA3003 Visual Analytics of Global Energy Transition Patterns (Prototype)</title>
+      <title>🎨 DDA3003 Visual Analytics of Global Shift in Energy Consumption Patterns</title>
       <link>http://localhost:1313/posts/dda3003/</link>
       <pubDate>Wed, 08 Apr 2026 10:16:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/dda3003/</guid>
-      <description>DDA3003 Group4 Project Prototype, show global and country-wise renewable energy share on D3 globe, and cluster analysis.</description>
+      <description>DDA3003 Group4 Project Platform, show global renewable energy share and energy mix on D3 globe/tilegrid/map, diving down into country-wise details, such as cluster and change point analysis.</description>
     </item>
     <item>
       <title>💯 CSC3060 Quiz Q&amp;A</title>

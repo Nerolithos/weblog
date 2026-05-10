@@ -55,7 +55,7 @@
   <meta itemprop="description" content="CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理">
   <meta itemprop="datePublished" content="2026-04-02T10:11:34+08:00">
   <meta itemprop="dateModified" content="2026-04-02T10:11:34+08:00">
-  <meta itemprop="wordCount" content="10647">
+  <meta itemprop="wordCount" content="10678">
   <meta itemprop="keywords" content="CSC3060">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="💻 CSC3060 Week 10-11 Memory Hierarchy">
@@ -707,7 +707,8 @@
       
     </header>
 
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"></br>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><a href="https://github.com/Nerolithos/CSC3060_Project4">Project4 Cache Simulation</a></p>
+</br>
 <h1 id="week-1011--memory-hierarchy">Week 10~11  Memory Hierarchy</h1>
 <blockquote>
 <p>记忆阶层出现的原因是主存和 CPU 的 <strong>memory wall (内存墙)</strong> 卡死了 CPU 算力。在记忆阶层中越高活动越频，每一级是下一级的缓存，CPU 寄存器处于最高级。利用 <strong>locality (局部性)</strong> 营造一种 “内存既大又快还便宜” 的假象。</p>
@@ -816,7 +817,8 @@
 <h2 id="where-can-a-block-be-placed">Where can a block be placed?</h2>
 <p><strong>Associativity</strong>：</p>
 <ul>
-<li><strong>set</strong> 记录了某个主存块被允许放进去的那一组 Cache line。⚠️ 通过 <strong><code>(block No.) mod #set</code></strong> 决定每条主存块能被映射到哪个 set 中。</li>
+<li><strong>set</strong> 记录了某个主存块被允许放进去的那一组 Cache line。⚠️ 通过 <strong><code>(block number) mod (number of set)</code></strong> 决定每条主存块能被映射到哪个 set 中。</li>
+<li><strong>Block number = address / block size = address &raquo; log<sub>2</sub>(block size)</strong> (这里表示二进制的移动位数)</li>
 <li><strong>way</strong> 代表每个 set 有多少 line(s)，即每个主存块映射到 Cache 有多少候选放法。</li>
 </ul>
 <p><strong>Fully associative (全相联) cache</strong>：<strong>1-set</strong>。任意内存块可以映射到 cache 的任意 line。优点：Hit 率高，冲突少；缺点：查找贵 (tag 大)，硬件复杂、慢、贵。</p>
