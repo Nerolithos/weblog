@@ -43,21 +43,25 @@ enableRobotsTXT = true
     url  = "/pixiv/"
     weight = 2
   [[menu.main]]
+    name = "💼 LinkedIn"
+    url  = "https://www.linkedin.com/in/zhu-ji-an/"
+    weight = 3
+  [[menu.main]]
     name = "📊 EnergyVis"
     url  = "https://blog.nero-lithos.com/DDA/"
-    weight = 3
+    weight = 4
   [[menu.main]]
     name = "🖋️ mdAnything"
     url  = "https://md.nero-lithos.com"
-    weight = 4
+    weight = 5
   [[menu.main]]
     name = "🤖 LGU CourseAI"
     url  = "https://blog.nero-lithos.com/courseai/"
-    weight = 5
+    weight = 6
   [[menu.main]]
     name = "🐈 ArkPet"
     url  = "https://blog.nero-lithos.com/pet"
-    weight = 6
+    weight = 7
 
 [services]
   [services.disqus]

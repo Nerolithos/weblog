@@ -14,11 +14,13 @@
         {{ $pixivIcon := resources.Get "icons/pixiv.png" }}
         {{ $mdaIconSrc := "" }}
         {{ $pixivIconSrc := "" }}
+        {{ $linkedinIconSrc := "/li.png" | relURL }}
         {{ with $mdaIcon }}{{ $mdaIconSrc = printf "data:image/png;base64,%s" (.Content | base64Encode) }}{{ end }}
         {{ with $pixivIcon }}{{ $pixivIconSrc = printf "data:image/png;base64,%s" (.Content | base64Encode) }}{{ end }}
         <ul class="{{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0 mr3" }}">
           {{ $githubURL := "" }}
           {{ $pixivURL := "" }}
+          {{ $linkedinURL := "" }}
           {{ $mdAnythingURL := "" }}
           {{ range .Site.Menus.main }}
             {{ $menuURLNorm := replaceRE "/+$" "" (lower .URL) }}
@@ -26,6 +28,8 @@
               {{ $githubURL = .URL }}
             {{ else if eq $menuURLNorm "/pixiv" }}
               {{ $pixivURL = .URL }}
+            {{ else if eq $menuURLNorm "https://www.linkedin.com/in/zhu-ji-an" }}
+              {{ $linkedinURL = .URL }}
             {{ else if eq $menuURLNorm "https://md.nero-lithos.com" }}
               {{ $mdAnythingURL = .URL }}
             {{ end }}
@@ -59,13 +63,22 @@
           </li>
           {{ end }}
 
+          {{ if $linkedinURL }}
+          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+            <a class="hover-white no-underline white-90 site-nav-icon-plain" href="{{ $linkedinURL }}" title="LinkedIn" aria-label="LinkedIn">
+              <img src="{{ $linkedinIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--linkedin" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+            </a>
+          </li>
+          {{ end }}
+
           {{ range .Site.Menus.main }}
           {{ $menuURL := .URL }}
           {{ $menuURLNorm := replaceRE "/+$" "" (lower $menuURL) }}
           {{ $isGithub := eq $menuURLNorm "https://github.com/nerolithos" }}
           {{ $isPixiv := eq $menuURLNorm "/pixiv" }}
+          {{ $isLinkedin := eq $menuURLNorm "https://www.linkedin.com/in/zhu-ji-an" }}
           {{ $isMdAnything := eq $menuURLNorm "https://md.nero-lithos.com" }}
-          {{ if not (or $isGithub $isPixiv $isMdAnything) }}
+          {{ if not (or $isGithub $isPixiv $isLinkedin $isMdAnything) }}
           <li class="list f5 f4-ns fw4 dib {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }}">
             <a class="hover-white no-underline white-90 site-nav-link" href="{{ .URL }}" title="{{ i18n "pageTitle" . }}">
               {{ .Name }}
