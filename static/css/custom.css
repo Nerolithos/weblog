@@ -395,6 +395,16 @@ body.dark-mode .home-hero-search form {
   height: 26px;
 }
 
+.site-nav-fixed .site-nav-icon-plain .site-nav-icon-emoji {
+  display: block;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  font-size: 22px;
+  filter: grayscale(1) brightness(0) saturate(0) opacity(0.72) !important;
+}
+
 .site-nav-fixed .site-nav-sr-only {
   position: absolute;
   width: 1px;

@@ -40,7 +40,7 @@ enableRobotsTXT = true
     weight = 1
   [[menu.main]]
     name = "🎨 Pixiv"
-    url  = "/pixiv/"
+    url  = "https://lguide.net/"
     weight = 2
   [[menu.main]]
     name = "💼 LinkedIn"
