@@ -57,6 +57,31 @@
       text-transform: uppercase;
       color: #ffffff;
       opacity: 0.88;
+      display: inline-flex;
+      align-items: center;
+      white-space: pre;
+      will-change: filter;
+    }
+    #ark-loading-brand .ark-brand-char {
+      display: inline-block;
+      transform-origin: center center;
+      transform: scale(1);
+      opacity: 0.82;
+      text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+      filter: brightness(1);
+      transition: transform 140ms ease-out, opacity 140ms ease-out, text-shadow 170ms ease-out, filter 170ms ease-out;
+    }
+    #ark-loading-brand .ark-brand-char.is-hot {
+      transform: scale(1.28);
+      opacity: 1;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.75), 0 0 18px rgba(255, 255, 255, 0.46);
+      filter: brightness(1.35);
+    }
+    #ark-loading-brand .ark-brand-char.is-trail {
+      transform: scale(1.12);
+      opacity: 0.96;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.45), 0 0 12px rgba(255, 255, 255, 0.28);
+      filter: brightness(1.18);
     }
     #ark-loading-progress {
       position: fixed;
@@ -1697,7 +1722,54 @@ You did not answered the call of the trapped souls, soon, some security officers
     (function () {
       var overlay = document.getElementById('ark-loading-overlay');
       var bar = document.getElementById('ark-loading-bar');
+      var brand = document.getElementById('ark-loading-brand');
       if (!overlay || !bar) return;
+
+      var brandChars = [];
+      var brandSweepTimer = null;
+      var brandSweepIndex = 0;
+
+      if (brand) {
+        var brandText = brand.textContent || '';
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < brandText.length; i++) {
+          var ch = brandText.charAt(i);
+          var span = document.createElement('span');
+          span.className = 'ark-brand-char';
+          span.textContent = ch === ' ' ? '\u00A0' : ch;
+          frag.appendChild(span);
+          brandChars.push(span);
+        }
+        brand.textContent = '';
+        brand.appendChild(frag);
+      }
+
+      function tickBrandSweep() {
+        if (!brandChars.length) return;
+        for (var k = 0; k < brandChars.length; k++) {
+          brandChars[k].classList.remove('is-hot', 'is-trail');
+        }
+        var idx = brandSweepIndex % brandChars.length;
+        brandChars[idx].classList.add('is-hot');
+        if (idx > 0) brandChars[idx - 1].classList.add('is-trail');
+        else brandChars[brandChars.length - 1].classList.add('is-trail');
+        brandSweepIndex += 1;
+      }
+
+      function startBrandSweep() {
+        if (!brandChars.length || brandSweepTimer) return;
+        tickBrandSweep();
+        brandSweepTimer = setInterval(tickBrandSweep, 95);
+      }
+
+      function stopBrandSweep() {
+        if (brandSweepTimer) {
+          clearInterval(brandSweepTimer);
+          brandSweepTimer = null;
+        }
+      }
+
+      startBrandSweep();
 
       var progress = 0;              // 0.0 ~ 1.0
       var preLoadMax = 0.9;          // 未触发 load 事件前的最大进度
@@ -1732,6 +1804,7 @@ You did not answered the call of the trapped souls, soon, some security officers
           clearInterval(timerId);
           timerId = null;
         }
+        stopBrandSweep();
         // 先把进度条推到 100%
         progress = 1;
         applyProgress();
