@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
@@ -17,48 +17,48 @@
     
 
     
-<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+<link rel="stylesheet" href="https://blog.nero-lithos.com/ananke/css/main.min.css" >
 
 
 
   
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
   
 
     
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
     
 
     
       
-<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://blog.nero-lithos.com/favicon.ico" type="image/x-icon" />
 
 
     
 
     
     
-      <link href="http://localhost:1313/posts/index.xml" rel="alternate" type="application/rss+xml" title="Lithos&#39; Blog" />
-      <link href="http://localhost:1313/posts/index.xml" rel="feed" type="application/rss+xml" title="Lithos&#39; Blog" />
+      <link href="https://blog.nero-lithos.com/posts/index.xml" rel="alternate" type="application/rss+xml" title="Lithos&#39; Blog" />
+      <link href="https://blog.nero-lithos.com/posts/index.xml" rel="feed" type="application/rss+xml" title="Lithos&#39; Blog" />
       
     
 
     
-      <link rel="canonical" href="http://localhost:1313/posts/">
-    <meta property="og:url" content="http://localhost:1313/posts/">
+      <link rel="canonical" href="https://blog.nero-lithos.com/posts/">
+    <meta property="og:url" content="https://blog.nero-lithos.com/posts/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
   <meta property="og:title" content="Posts">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="website">
 
   <meta itemprop="name" content="Posts">
-  <meta itemprop="datePublished" content="2026-05-07T13:43:34+08:00">
-  <meta itemprop="dateModified" content="2026-05-07T13:43:34+08:00">
+  <meta itemprop="datePublished" content="2026-06-14T13:43:34+08:00">
+  <meta itemprop="dateModified" content="2026-06-14T13:43:34+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Posts">
 
 
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
 
 <style>
 	 
@@ -119,6 +119,73 @@
 		box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.45);
 		border-radius: 3px;
 	}
+
+	 
+	.post-content-image-zoomable {
+		cursor: zoom-in;
+		transition: filter 0.15s ease-out;
+	}
+
+	.post-content-image-zoomable:hover {
+		filter: brightness(0.96);
+	}
+
+	.post-image-lightbox {
+		position: fixed;
+		inset: 0;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 24px;
+		background: rgba(10, 14, 20, 0.88);
+		z-index: 10000;
+	}
+
+	.post-image-lightbox.is-open {
+		display: flex;
+	}
+
+	.post-image-lightbox__inner {
+		position: relative;
+		max-width: min(96vw, 1400px);
+		max-height: 92vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.post-image-lightbox__image {
+		max-width: 100%;
+		max-height: calc(92vh - 3rem);
+		width: auto;
+		height: auto;
+		border-radius: 6px;
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+	}
+
+	.post-image-lightbox__close {
+		position: absolute;
+		top: -14px;
+		right: -14px;
+		width: 36px;
+		height: 36px;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(0, 0, 0, 0.66);
+		color: #ffffff;
+		font-size: 22px;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.post-image-lightbox__caption {
+		max-width: 80ch;
+		text-align: center;
+		font-size: 0.95rem;
+		line-height: 1.4;
+		color: #f8fafc;
+	}
 </style>
 
 
@@ -174,8 +241,9 @@
 			if (!url) return;
 
 			card.addEventListener('click', function (event) {
+				var targetElement = event.target && event.target.nodeType === 1 ? event.target : (event.target ? event.target.parentElement : null);
 				
-				if (event.target && event.target.closest('a')) {
+				if (targetElement && targetElement.closest && targetElement.closest('a, button, [data-no-card-nav]')) {
 					return;
 				}
 				window.location.href = url;
@@ -192,6 +260,8 @@
 
 		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
 		if (!links.length) return;
+		var tocInner = toc.querySelector('.post-toc-inner');
+		var lastActiveLink = null;
 
 		var sections = [];
 		links.forEach(function (link) {
@@ -205,6 +275,25 @@
 		});
 
 		if (!sections.length) return;
+
+		function ensureActiveTocVisible(activeLink) {
+			if (!tocInner || !activeLink) return;
+
+			var containerRect = tocInner.getBoundingClientRect();
+			var linkRect = activeLink.getBoundingClientRect();
+			var padding = 14;
+
+			if (linkRect.top >= containerRect.top + padding && linkRect.bottom <= containerRect.bottom - padding) {
+				return;
+			}
+
+			var targetTop = activeLink.offsetTop - tocInner.clientHeight * 0.35;
+			if (targetTop < 0) targetTop = 0;
+			var maxTop = tocInner.scrollHeight - tocInner.clientHeight;
+			if (targetTop > maxTop) targetTop = maxTop;
+
+			tocInner.scrollTo({ top: targetTop, behavior: 'smooth' });
+		}
 
 		function onScroll() {
 			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
@@ -226,6 +315,12 @@
 			});
 			if (current) {
 				current.link.classList.add('post-toc-active');
+				if (current.link !== lastActiveLink) {
+					lastActiveLink = current.link;
+					ensureActiveTocVisible(current.link);
+				}
+			} else {
+				lastActiveLink = null;
 			}
 		}
 
@@ -251,6 +346,110 @@
 			toggleBtn.addEventListener('click', hideToc);
 			miniBtn.addEventListener('click', showToc);
 		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		if (!document.getElementById('reading-progress')) return;
+
+		var contentRoot = document.querySelector('.nested-copy-line-height');
+		if (!contentRoot) return;
+
+		var images = contentRoot.querySelectorAll('img');
+		if (!images.length) return;
+
+		var lightbox = document.createElement('div');
+		lightbox.className = 'post-image-lightbox';
+		lightbox.setAttribute('role', 'dialog');
+		lightbox.setAttribute('aria-modal', 'true');
+		lightbox.setAttribute('aria-hidden', 'true');
+		lightbox.innerHTML =
+			'<div class="post-image-lightbox__inner">' +
+				'<button type="button" class="post-image-lightbox__close" aria-label="Close image preview">&times;</button>' +
+				'<img class="post-image-lightbox__image" alt="" />' +
+				'<div class="post-image-lightbox__caption"></div>' +
+			'</div>';
+		document.body.appendChild(lightbox);
+
+		var previewImage = lightbox.querySelector('.post-image-lightbox__image');
+		var caption = lightbox.querySelector('.post-image-lightbox__caption');
+		var closeBtn = lightbox.querySelector('.post-image-lightbox__close');
+		var previousOverflow = '';
+
+		function closeLightbox() {
+			if (!lightbox.classList.contains('is-open')) return;
+			lightbox.classList.remove('is-open');
+			lightbox.setAttribute('aria-hidden', 'true');
+			previewImage.removeAttribute('src');
+			previewImage.setAttribute('alt', '');
+			caption.textContent = '';
+			caption.style.display = 'none';
+			document.body.style.overflow = previousOverflow;
+		}
+
+		function openLightbox(src, alt) {
+			if (!src) return;
+			previousOverflow = document.body.style.overflow || '';
+			previewImage.src = src;
+			previewImage.alt = alt || '';
+			caption.textContent = alt || '';
+			caption.style.display = alt ? 'block' : 'none';
+			lightbox.classList.add('is-open');
+			lightbox.setAttribute('aria-hidden', 'false');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function pickPreviewSource(img) {
+			var link = img.closest('a[href]');
+			if (link) {
+				var href = (link.getAttribute('href') || '').trim();
+				if (href && href.charAt(0) !== '#' && !/^javascript:/i.test(href)) {
+					return link.href;
+				}
+			}
+			return img.currentSrc || img.src || '';
+		}
+
+		function bindImage(img) {
+			if (img.dataset.zoomBound === 'true') return;
+			img.dataset.zoomBound = 'true';
+			img.classList.add('post-content-image-zoomable');
+
+			if (!img.hasAttribute('tabindex')) {
+				img.setAttribute('tabindex', '0');
+			}
+
+			img.addEventListener('click', function (event) {
+				if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+					return;
+				}
+				event.preventDefault();
+				openLightbox(pickPreviewSource(img), img.getAttribute('alt') || '');
+			});
+
+			img.addEventListener('keydown', function (event) {
+				if (event.key !== 'Enter' && event.key !== ' ') return;
+				event.preventDefault();
+				openLightbox(pickPreviewSource(img), img.getAttribute('alt') || '');
+			});
+		}
+
+		images.forEach(bindImage);
+
+		closeBtn.addEventListener('click', closeLightbox);
+		lightbox.addEventListener('click', function (event) {
+			if (event.target === lightbox) {
+				closeLightbox();
+			}
+		});
+
+		document.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape') {
+				closeLightbox();
+			}
+		});
 	});
 </script>
 
@@ -491,7 +690,7 @@
     <div class="pb3-m pb6-l bg-black">
       <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+    <a href="https://blog.nero-lithos.com/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
       
         Lithos&#39; Blog
       
@@ -564,7 +763,7 @@
           
           <li class="list f5 f4-ns fw4 dib v-mid pr3 site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://lguide.net/" title="LGuide" aria-label="LGuide">
-              <img src="http://localhost:1313/lguide.png" alt="" class="site-nav-icon-img site-nav-icon-img--lguide" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+              <img src="https://blog.nero-lithos.com/lguide.png" alt="" class="site-nav-icon-img site-nav-icon-img--lguide" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
           </li>
           
@@ -572,7 +771,7 @@
           
           <li class="list f5 f4-ns fw4 dib v-mid pr3 site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://www.linkedin.com/in/zhu-ji-an/" title="LinkedIn" aria-label="LinkedIn">
-              <img src="http://localhost:1313/li.png" alt="" class="site-nav-icon-img site-nav-icon-img--linkedin" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+              <img src="https://blog.nero-lithos.com/li.png" alt="" class="site-nav-icon-img site-nav-icon-img--linkedin" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
           </li>
           
@@ -655,7 +854,7 @@
         </ul>
       
       
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="https://blog.nero-lithos.com/search/">
         <input
           type="search"
           name="q"
@@ -699,7 +898,35 @@
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts/emoji/">🎮 Super &#39;Emojio&#39;</a>
+              <a class="link dark-gray dim" href="https://blog.nero-lithos.com/posts/3060.5/">💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards</a>
+            </h2>
+            <p class="gray f6 mb2">
+              2026-03-17 · 13 分钟阅读
+            </p>
+            <div class="lh-copy mid-gray">
+              CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险
+            </div>
+            <p class="mt3">
+              <a class="link dim" href="https://blog.nero-lithos.com/posts/3060.5/">阅读全文 →</a>
+            </p>
+          </div>
+
+          
+          
+            
+              <a class="dn db-l w-third-l pl3" href="https://blog.nero-lithos.com/posts/">
+                <img src="https://blog.nero-lithos.com/images/30605.jpg" alt="Posts"
+                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
+              </a>
+            
+          
+        </article>
+      
+        <article class="cf pv4 bb b--black-10 flex-l items-start">
+          
+          <div class="w-100 w-two-thirds-l pr3">
+            <h2 class="f3 fw6 mt0 mb2">
+              <a class="link dark-gray dim" href="https://blog.nero-lithos.com/posts/emoji/">🎮 Super &#39;Emojio&#39;</a>
             </h2>
             <p class="gray f6 mb2">
               2026-03-16 · 0 分钟阅读
@@ -708,15 +935,15 @@
               Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts/emoji/">阅读全文 →</a>
+              <a class="link dim" href="https://blog.nero-lithos.com/posts/emoji/">阅读全文 →</a>
             </p>
           </div>
 
           
           
             
-              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
-                <img src="http://localhost:1313/images/emoji.jpg" alt="Posts"
+              <a class="dn db-l w-third-l pl3" href="https://blog.nero-lithos.com/posts/">
+                <img src="https://blog.nero-lithos.com/images/emoji.jpg" alt="Posts"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
@@ -727,7 +954,7 @@
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
+              <a class="link dark-gray dim" href="https://blog.nero-lithos.com/posts/3060p3/">💻 CSC3060 Project: Code Scheduling</a>
             </h2>
             <p class="gray f6 mb2">
               2026-03-14 · 7 分钟阅读
@@ -736,15 +963,15 @@
               CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts/3060p3/">阅读全文 →</a>
+              <a class="link dim" href="https://blog.nero-lithos.com/posts/3060p3/">阅读全文 →</a>
             </p>
           </div>
 
           
           
             
-              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
-                <img src="http://localhost:1313/images/3060p3.jpg" alt="Posts"
+              <a class="dn db-l w-third-l pl3" href="https://blog.nero-lithos.com/posts/">
+                <img src="https://blog.nero-lithos.com/images/3060p3.jpg" alt="Posts"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
@@ -755,25 +982,25 @@
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts/history-today/">🕰️ 历史上的今天</a>
+              <a class="link dark-gray dim" href="https://blog.nero-lithos.com/posts/history-today/">🕰️ 历史上的今天</a>
             </h2>
             <p class="gray f6 mb2">
               2026-03-12 · 1 分钟阅读
             </p>
             <div class="lh-copy mid-gray">
               <div class="history-today">
-      <h2>历史上的今天 (05-13)</h2>
+      <h2>历史上的今天 (07-15)</h2>
       <ul class="history-today-list">
         
-          <li style="margin-bottom: 1em;"><strong>2014</strong> — An explosion at an underground coal mine in southwest Turkey kills 301 miners.</li>
+          <li style="margin-bottom: 1em;"><strong>2018</strong> — France win their second World Cup title, defeating Croatia 4–2.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2013</strong> — American physician Kermit Gosnell is found guilty in Pennsylvania of murdering three infants born alive during attempted abortions, involuntary manslaughter of a woman during an abortion procedure, and other charges.</li>
+          <li style="margin-bottom: 1em;"><strong>2016</strong> — Factions of the Turkish Armed Forces attempt a coup.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2012</strong> — Forty-nine dismembered bodies are discovered by Mexican authorities on Mexican Federal Highway 40.</li>
+          <li style="margin-bottom: 1em;"><strong>2014</strong> — A train derails on the Moscow Metro, killing at least 24 and injuring more than 160 others.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2011</strong> — Two bombs explode in the Charsadda District of Pakistan killing 98 people and wounding 140 others.</li>
+          <li style="margin-bottom: 1em;"><strong>2012</strong> — South Korean rapper Psy releases his hit single Gangnam Style.</li>
         
-          <li style="margin-bottom: 1em;"><strong>2006</strong> — São Paulo violence: Rebellions occur in several prisons in Brazil.</li>
+          <li style="margin-bottom: 1em;"><strong>2009</strong> — Caspian Airlines Flight 7908 crashes near Jannatabad, Qazvin, Iran, killing 168.</li>
         
       </ul>
       <p style="margin-top: 2em; font-size: 0.9rem; color: #666;">
@@ -781,15 +1008,15 @@
       </p>
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts/history-today/">阅读全文 →</a>
+              <a class="link dim" href="https://blog.nero-lithos.com/posts/history-today/">阅读全文 →</a>
             </p>
           </div>
 
           
           
             
-              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
-                <img src="http://localhost:1313/images/history.jpg" alt="Posts"
+              <a class="dn db-l w-third-l pl3" href="https://blog.nero-lithos.com/posts/">
+                <img src="https://blog.nero-lithos.com/images/history.jpg" alt="Posts"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
@@ -800,7 +1027,7 @@
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
+              <a class="link dark-gray dim" href="https://blog.nero-lithos.com/posts/3060.4/">💻 CSC3060 Week 6-7 Processor SW and HW</a>
             </h2>
             <p class="gray f6 mb2">
               2026-03-03 · 8 分钟阅读
@@ -809,15 +1036,15 @@
               CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts/3060.4/">阅读全文 →</a>
+              <a class="link dim" href="https://blog.nero-lithos.com/posts/3060.4/">阅读全文 →</a>
             </p>
           </div>
 
           
           
             
-              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
-                <img src="http://localhost:1313/images/30604.jpg" alt="Posts"
+              <a class="dn db-l w-third-l pl3" href="https://blog.nero-lithos.com/posts/">
+                <img src="https://blog.nero-lithos.com/images/30604.jpg" alt="Posts"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
@@ -828,7 +1055,7 @@
           
           <div class="w-100 w-two-thirds-l pr3">
             <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
+              <a class="link dark-gray dim" href="https://blog.nero-lithos.com/posts/3060.3/">💻 CSC3060 Week 5 Continuation of Machine Level Programming</a>
             </h2>
             <p class="gray f6 mb2">
               2026-02-03 · 2 分钟阅读
@@ -837,43 +1064,15 @@
               CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器
             </div>
             <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts/3060.3/">阅读全文 →</a>
+              <a class="link dim" href="https://blog.nero-lithos.com/posts/3060.3/">阅读全文 →</a>
             </p>
           </div>
 
           
           
             
-              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
-                <img src="http://localhost:1313/images/30603.jpg" alt="Posts"
-                     style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
-              </a>
-            
-          
-        </article>
-      
-        <article class="cf pv4 bb b--black-10 flex-l items-start">
-          
-          <div class="w-100 w-two-thirds-l pr3">
-            <h2 class="f3 fw6 mt0 mb2">
-              <a class="link dark-gray dim" href="http://localhost:1313/posts/3060.2/">💻 CSC3060 Week 3-4 More about Computer System Fundamentals</a>
-            </h2>
-            <p class="gray f6 mb2">
-              2026-01-24 · 14 分钟阅读
-            </p>
-            <div class="lh-copy mid-gray">
-              CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)
-            </div>
-            <p class="mt3">
-              <a class="link dim" href="http://localhost:1313/posts/3060.2/">阅读全文 →</a>
-            </p>
-          </div>
-
-          
-          
-            
-              <a class="dn db-l w-third-l pl3" href="http://localhost:1313/posts/">
-                <img src="http://localhost:1313/images/30602.jpg" alt="Posts"
+              <a class="dn db-l w-third-l pl3" href="https://blog.nero-lithos.com/posts/">
+                <img src="https://blog.nero-lithos.com/images/30603.jpg" alt="Posts"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             
@@ -883,38 +1082,38 @@
     </section>
     <ul class="pagination pagination-default">
       <li class="page-item">
-        <a href="http://localhost:1313/posts/" aria-label="First" class="page-link" role="button"><span aria-hidden="true">&laquo;&laquo;</span></a>
+        <a href="https://blog.nero-lithos.com/posts/" aria-label="First" class="page-link" role="button"><span aria-hidden="true">&laquo;&laquo;</span></a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts/page/2/" aria-label="Previous" class="page-link" role="button"><span aria-hidden="true">&laquo;</span></a>
+        <a href="https://blog.nero-lithos.com/posts/page/2/" aria-label="Previous" class="page-link" role="button"><span aria-hidden="true">&laquo;</span></a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts/" aria-label="Page 1" class="page-link" role="button">1</a>
+        <a href="https://blog.nero-lithos.com/posts/" aria-label="Page 1" class="page-link" role="button">1</a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts/page/2/" aria-label="Page 2" class="page-link" role="button">2</a>
+        <a href="https://blog.nero-lithos.com/posts/page/2/" aria-label="Page 2" class="page-link" role="button">2</a>
       </li>
       <li class="page-item active">
         <a aria-current="page" aria-label="Page 3" class="page-link" role="button">3</a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts/page/4/" aria-label="Page 4" class="page-link" role="button">4</a>
+        <a href="https://blog.nero-lithos.com/posts/page/4/" aria-label="Page 4" class="page-link" role="button">4</a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts/page/5/" aria-label="Page 5" class="page-link" role="button">5</a>
+        <a href="https://blog.nero-lithos.com/posts/page/5/" aria-label="Page 5" class="page-link" role="button">5</a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts/page/4/" aria-label="Next" class="page-link" role="button"><span aria-hidden="true">&raquo;</span></a>
+        <a href="https://blog.nero-lithos.com/posts/page/4/" aria-label="Next" class="page-link" role="button"><span aria-hidden="true">&raquo;</span></a>
       </li>
       <li class="page-item">
-        <a href="http://localhost:1313/posts/page/10/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
+        <a href="https://blog.nero-lithos.com/posts/page/10/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
       </li>
     </ul></article>
 
     </main>
     
       
-<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+<div class="liquid-dock" data-liquid-dock data-search-url="https://blog.nero-lithos.com/search/">
   <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
     <span class="liquid-dock-main-dot"></span>
   </button>
@@ -951,7 +1150,7 @@
       
         <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
       
-        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+        <li><a href="https://blog.nero-lithos.com/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
       
         <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
       

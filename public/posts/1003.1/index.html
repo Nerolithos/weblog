@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
@@ -17,21 +17,21 @@
     
 
     
-<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+<link rel="stylesheet" href="https://blog.nero-lithos.com/ananke/css/main.min.css" >
 
 
 
   
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
   
 
     
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
     
 
     
       
-<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://blog.nero-lithos.com/favicon.ico" type="image/x-icon" />
 
 
     
@@ -39,8 +39,8 @@
     
 
     
-      <link rel="canonical" href="http://localhost:1313/posts/1003.1/">
-    <meta property="og:url" content="http://localhost:1313/posts/1003.1/">
+      <link rel="canonical" href="https://blog.nero-lithos.com/posts/1003.1/">
+    <meta property="og:url" content="https://blog.nero-lithos.com/posts/1003.1/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
   <meta property="og:title" content="💻 CSC1003 LEC1~3 函数、数据类型与计算">
   <meta property="og:description" content="CUHKSZ 大一课程 CSC1003（Java） 的入门">
@@ -63,7 +63,7 @@
   <meta name="twitter:description" content="CUHKSZ 大一课程 CSC1003（Java） 的入门">
 
 
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
 
 <style>
 	 
@@ -124,6 +124,73 @@
 		box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.45);
 		border-radius: 3px;
 	}
+
+	 
+	.post-content-image-zoomable {
+		cursor: zoom-in;
+		transition: filter 0.15s ease-out;
+	}
+
+	.post-content-image-zoomable:hover {
+		filter: brightness(0.96);
+	}
+
+	.post-image-lightbox {
+		position: fixed;
+		inset: 0;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 24px;
+		background: rgba(10, 14, 20, 0.88);
+		z-index: 10000;
+	}
+
+	.post-image-lightbox.is-open {
+		display: flex;
+	}
+
+	.post-image-lightbox__inner {
+		position: relative;
+		max-width: min(96vw, 1400px);
+		max-height: 92vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.post-image-lightbox__image {
+		max-width: 100%;
+		max-height: calc(92vh - 3rem);
+		width: auto;
+		height: auto;
+		border-radius: 6px;
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+	}
+
+	.post-image-lightbox__close {
+		position: absolute;
+		top: -14px;
+		right: -14px;
+		width: 36px;
+		height: 36px;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(0, 0, 0, 0.66);
+		color: #ffffff;
+		font-size: 22px;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.post-image-lightbox__caption {
+		max-width: 80ch;
+		text-align: center;
+		font-size: 0.95rem;
+		line-height: 1.4;
+		color: #f8fafc;
+	}
 </style>
 
 
@@ -179,8 +246,9 @@
 			if (!url) return;
 
 			card.addEventListener('click', function (event) {
+				var targetElement = event.target && event.target.nodeType === 1 ? event.target : (event.target ? event.target.parentElement : null);
 				
-				if (event.target && event.target.closest('a')) {
+				if (targetElement && targetElement.closest && targetElement.closest('a, button, [data-no-card-nav]')) {
 					return;
 				}
 				window.location.href = url;
@@ -197,6 +265,8 @@
 
 		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
 		if (!links.length) return;
+		var tocInner = toc.querySelector('.post-toc-inner');
+		var lastActiveLink = null;
 
 		var sections = [];
 		links.forEach(function (link) {
@@ -210,6 +280,25 @@
 		});
 
 		if (!sections.length) return;
+
+		function ensureActiveTocVisible(activeLink) {
+			if (!tocInner || !activeLink) return;
+
+			var containerRect = tocInner.getBoundingClientRect();
+			var linkRect = activeLink.getBoundingClientRect();
+			var padding = 14;
+
+			if (linkRect.top >= containerRect.top + padding && linkRect.bottom <= containerRect.bottom - padding) {
+				return;
+			}
+
+			var targetTop = activeLink.offsetTop - tocInner.clientHeight * 0.35;
+			if (targetTop < 0) targetTop = 0;
+			var maxTop = tocInner.scrollHeight - tocInner.clientHeight;
+			if (targetTop > maxTop) targetTop = maxTop;
+
+			tocInner.scrollTo({ top: targetTop, behavior: 'smooth' });
+		}
 
 		function onScroll() {
 			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
@@ -231,6 +320,12 @@
 			});
 			if (current) {
 				current.link.classList.add('post-toc-active');
+				if (current.link !== lastActiveLink) {
+					lastActiveLink = current.link;
+					ensureActiveTocVisible(current.link);
+				}
+			} else {
+				lastActiveLink = null;
 			}
 		}
 
@@ -256,6 +351,110 @@
 			toggleBtn.addEventListener('click', hideToc);
 			miniBtn.addEventListener('click', showToc);
 		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		if (!document.getElementById('reading-progress')) return;
+
+		var contentRoot = document.querySelector('.nested-copy-line-height');
+		if (!contentRoot) return;
+
+		var images = contentRoot.querySelectorAll('img');
+		if (!images.length) return;
+
+		var lightbox = document.createElement('div');
+		lightbox.className = 'post-image-lightbox';
+		lightbox.setAttribute('role', 'dialog');
+		lightbox.setAttribute('aria-modal', 'true');
+		lightbox.setAttribute('aria-hidden', 'true');
+		lightbox.innerHTML =
+			'<div class="post-image-lightbox__inner">' +
+				'<button type="button" class="post-image-lightbox__close" aria-label="Close image preview">&times;</button>' +
+				'<img class="post-image-lightbox__image" alt="" />' +
+				'<div class="post-image-lightbox__caption"></div>' +
+			'</div>';
+		document.body.appendChild(lightbox);
+
+		var previewImage = lightbox.querySelector('.post-image-lightbox__image');
+		var caption = lightbox.querySelector('.post-image-lightbox__caption');
+		var closeBtn = lightbox.querySelector('.post-image-lightbox__close');
+		var previousOverflow = '';
+
+		function closeLightbox() {
+			if (!lightbox.classList.contains('is-open')) return;
+			lightbox.classList.remove('is-open');
+			lightbox.setAttribute('aria-hidden', 'true');
+			previewImage.removeAttribute('src');
+			previewImage.setAttribute('alt', '');
+			caption.textContent = '';
+			caption.style.display = 'none';
+			document.body.style.overflow = previousOverflow;
+		}
+
+		function openLightbox(src, alt) {
+			if (!src) return;
+			previousOverflow = document.body.style.overflow || '';
+			previewImage.src = src;
+			previewImage.alt = alt || '';
+			caption.textContent = alt || '';
+			caption.style.display = alt ? 'block' : 'none';
+			lightbox.classList.add('is-open');
+			lightbox.setAttribute('aria-hidden', 'false');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function pickPreviewSource(img) {
+			var link = img.closest('a[href]');
+			if (link) {
+				var href = (link.getAttribute('href') || '').trim();
+				if (href && href.charAt(0) !== '#' && !/^javascript:/i.test(href)) {
+					return link.href;
+				}
+			}
+			return img.currentSrc || img.src || '';
+		}
+
+		function bindImage(img) {
+			if (img.dataset.zoomBound === 'true') return;
+			img.dataset.zoomBound = 'true';
+			img.classList.add('post-content-image-zoomable');
+
+			if (!img.hasAttribute('tabindex')) {
+				img.setAttribute('tabindex', '0');
+			}
+
+			img.addEventListener('click', function (event) {
+				if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+					return;
+				}
+				event.preventDefault();
+				openLightbox(pickPreviewSource(img), img.getAttribute('alt') || '');
+			});
+
+			img.addEventListener('keydown', function (event) {
+				if (event.key !== 'Enter' && event.key !== ' ') return;
+				event.preventDefault();
+				openLightbox(pickPreviewSource(img), img.getAttribute('alt') || '');
+			});
+		}
+
+		images.forEach(bindImage);
+
+		closeBtn.addEventListener('click', closeLightbox);
+		lightbox.addEventListener('click', function (event) {
+			if (event.target === lightbox) {
+				closeLightbox();
+			}
+		});
+
+		document.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape') {
+				closeLightbox();
+			}
+		});
 	});
 </script>
 
@@ -493,11 +692,11 @@
   
 
   
-  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/10031.jpg'); position:relative;">
+  <header class="cover bg-top" style="background-image: url('https://blog.nero-lithos.com/images/10031.jpg'); position:relative;">
     <div class="bg-black-60" style="position:relative;">
       <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+    <a href="https://blog.nero-lithos.com/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
       
         Lithos&#39; Blog
       
@@ -570,7 +769,7 @@
           
           <li class="list f5 f4-ns fw4 dib v-mid pr3 site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://lguide.net/" title="LGuide" aria-label="LGuide">
-              <img src="http://localhost:1313/lguide.png" alt="" class="site-nav-icon-img site-nav-icon-img--lguide" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+              <img src="https://blog.nero-lithos.com/lguide.png" alt="" class="site-nav-icon-img site-nav-icon-img--lguide" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
           </li>
           
@@ -578,7 +777,7 @@
           
           <li class="list f5 f4-ns fw4 dib v-mid pr3 site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://www.linkedin.com/in/zhu-ji-an/" title="LinkedIn" aria-label="LinkedIn">
-              <img src="http://localhost:1313/li.png" alt="" class="site-nav-icon-img site-nav-icon-img--linkedin" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+              <img src="https://blog.nero-lithos.com/li.png" alt="" class="site-nav-icon-img site-nav-icon-img--linkedin" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
           </li>
           
@@ -661,7 +860,7 @@
         </ul>
       
       
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="https://blog.nero-lithos.com/search/">
         <input
           type="search"
           name="q"
@@ -873,11 +1072,11 @@
 <ul class="pa0">
   
    <li class="list di">
-     <a href="http://localhost:1313/tags/csc1003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC1003</a>
+     <a href="https://blog.nero-lithos.com/tags/csc1003/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">CSC1003</a>
    </li>
   
    <li class="list di">
-     <a href="http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">讲座</a>
+     <a href="https://blog.nero-lithos.com/tags/%E8%AE%B2%E5%BA%A7/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">讲座</a>
    </li>
   
 </ul>
@@ -951,7 +1150,7 @@
     </main>
     
       
-<div class="liquid-dock" data-liquid-dock data-search-url="http://localhost:1313/search/">
+<div class="liquid-dock" data-liquid-dock data-search-url="https://blog.nero-lithos.com/search/">
   <button type="button" class="liquid-dock-main" data-dock-main aria-label="打开工具菜单">
     <span class="liquid-dock-main-dot"></span>
   </button>
@@ -988,7 +1187,7 @@
       
         <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
       
-        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+        <li><a href="https://blog.nero-lithos.com/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
       
         <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
       

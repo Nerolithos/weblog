@@ -59,6 +59,73 @@
 		box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.45);
 		border-radius: 3px;
 	}
+
+	/* 文章内图片点击放大 */
+	.post-content-image-zoomable {
+		cursor: zoom-in;
+		transition: filter 0.15s ease-out;
+	}
+
+	.post-content-image-zoomable:hover {
+		filter: brightness(0.96);
+	}
+
+	.post-image-lightbox {
+		position: fixed;
+		inset: 0;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 24px;
+		background: rgba(10, 14, 20, 0.88);
+		z-index: 10000;
+	}
+
+	.post-image-lightbox.is-open {
+		display: flex;
+	}
+
+	.post-image-lightbox__inner {
+		position: relative;
+		max-width: min(96vw, 1400px);
+		max-height: 92vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.post-image-lightbox__image {
+		max-width: 100%;
+		max-height: calc(92vh - 3rem);
+		width: auto;
+		height: auto;
+		border-radius: 6px;
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+	}
+
+	.post-image-lightbox__close {
+		position: absolute;
+		top: -14px;
+		right: -14px;
+		width: 36px;
+		height: 36px;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(0, 0, 0, 0.66);
+		color: #ffffff;
+		font-size: 22px;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.post-image-lightbox__caption {
+		max-width: 80ch;
+		text-align: center;
+		font-size: 0.95rem;
+		line-height: 1.4;
+		color: #f8fafc;
+	}
 </style>
 
 {{/* 阅读进度条逻辑：在有对应 DOM 时才生效，避免干扰其它页面 */}}
@@ -114,8 +181,9 @@
 			if (!url) return;
 
 			card.addEventListener('click', function (event) {
+				var targetElement = event.target && event.target.nodeType === 1 ? event.target : (event.target ? event.target.parentElement : null);
 				// 如果点击的是内部已有的 <a>，沿用原生行为
-				if (event.target && event.target.closest('a')) {
+				if (targetElement && targetElement.closest && targetElement.closest('a, button, [data-no-card-nav]')) {
 					return;
 				}
 				window.location.href = url;
@@ -132,6 +200,8 @@
 
 		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
 		if (!links.length) return;
+		var tocInner = toc.querySelector('.post-toc-inner');
+		var lastActiveLink = null;
 
 		var sections = [];
 		links.forEach(function (link) {
@@ -145,6 +215,25 @@
 		});
 
 		if (!sections.length) return;
+
+		function ensureActiveTocVisible(activeLink) {
+			if (!tocInner || !activeLink) return;
+
+			var containerRect = tocInner.getBoundingClientRect();
+			var linkRect = activeLink.getBoundingClientRect();
+			var padding = 14;
+
+			if (linkRect.top >= containerRect.top + padding && linkRect.bottom <= containerRect.bottom - padding) {
+				return;
+			}
+
+			var targetTop = activeLink.offsetTop - tocInner.clientHeight * 0.35;
+			if (targetTop < 0) targetTop = 0;
+			var maxTop = tocInner.scrollHeight - tocInner.clientHeight;
+			if (targetTop > maxTop) targetTop = maxTop;
+
+			tocInner.scrollTo({ top: targetTop, behavior: 'smooth' });
+		}
 
 		function onScroll() {
 			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
@@ -166,6 +255,12 @@
 			});
 			if (current) {
 				current.link.classList.add('post-toc-active');
+				if (current.link !== lastActiveLink) {
+					lastActiveLink = current.link;
+					ensureActiveTocVisible(current.link);
+				}
+			} else {
+				lastActiveLink = null;
 			}
 		}
 
@@ -191,6 +286,110 @@
 			toggleBtn.addEventListener('click', hideToc);
 			miniBtn.addEventListener('click', showToc);
 		}
+	});
+</script>
+
+{{/* 文章内图片点击放大：仅 posts 正文生效 */}}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		if (!document.getElementById('reading-progress')) return;
+
+		var contentRoot = document.querySelector('.nested-copy-line-height');
+		if (!contentRoot) return;
+
+		var images = contentRoot.querySelectorAll('img');
+		if (!images.length) return;
+
+		var lightbox = document.createElement('div');
+		lightbox.className = 'post-image-lightbox';
+		lightbox.setAttribute('role', 'dialog');
+		lightbox.setAttribute('aria-modal', 'true');
+		lightbox.setAttribute('aria-hidden', 'true');
+		lightbox.innerHTML =
+			'<div class="post-image-lightbox__inner">' +
+				'<button type="button" class="post-image-lightbox__close" aria-label="Close image preview">&times;</button>' +
+				'<img class="post-image-lightbox__image" alt="" />' +
+				'<div class="post-image-lightbox__caption"></div>' +
+			'</div>';
+		document.body.appendChild(lightbox);
+
+		var previewImage = lightbox.querySelector('.post-image-lightbox__image');
+		var caption = lightbox.querySelector('.post-image-lightbox__caption');
+		var closeBtn = lightbox.querySelector('.post-image-lightbox__close');
+		var previousOverflow = '';
+
+		function closeLightbox() {
+			if (!lightbox.classList.contains('is-open')) return;
+			lightbox.classList.remove('is-open');
+			lightbox.setAttribute('aria-hidden', 'true');
+			previewImage.removeAttribute('src');
+			previewImage.setAttribute('alt', '');
+			caption.textContent = '';
+			caption.style.display = 'none';
+			document.body.style.overflow = previousOverflow;
+		}
+
+		function openLightbox(src, alt) {
+			if (!src) return;
+			previousOverflow = document.body.style.overflow || '';
+			previewImage.src = src;
+			previewImage.alt = alt || '';
+			caption.textContent = alt || '';
+			caption.style.display = alt ? 'block' : 'none';
+			lightbox.classList.add('is-open');
+			lightbox.setAttribute('aria-hidden', 'false');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function pickPreviewSource(img) {
+			var link = img.closest('a[href]');
+			if (link) {
+				var href = (link.getAttribute('href') || '').trim();
+				if (href && href.charAt(0) !== '#' && !/^javascript:/i.test(href)) {
+					return link.href;
+				}
+			}
+			return img.currentSrc || img.src || '';
+		}
+
+		function bindImage(img) {
+			if (img.dataset.zoomBound === 'true') return;
+			img.dataset.zoomBound = 'true';
+			img.classList.add('post-content-image-zoomable');
+
+			if (!img.hasAttribute('tabindex')) {
+				img.setAttribute('tabindex', '0');
+			}
+
+			img.addEventListener('click', function (event) {
+				if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+					return;
+				}
+				event.preventDefault();
+				openLightbox(pickPreviewSource(img), img.getAttribute('alt') || '');
+			});
+
+			img.addEventListener('keydown', function (event) {
+				if (event.key !== 'Enter' && event.key !== ' ') return;
+				event.preventDefault();
+				openLightbox(pickPreviewSource(img), img.getAttribute('alt') || '');
+			});
+		}
+
+		images.forEach(bindImage);
+
+		closeBtn.addEventListener('click', closeLightbox);
+		lightbox.addEventListener('click', function (event) {
+			if (event.target === lightbox) {
+				closeLightbox();
+			}
+		});
+
+		document.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape') {
+				closeLightbox();
+			}
+		});
 	});
 </script>
 

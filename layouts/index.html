@@ -20,6 +20,16 @@
 
   {{/* 先渲染「历史上的今天」，保证置顶 */}}
   {{ range where $all "File.BaseFileName" "history-today" }}
+  {{ $mdURL := printf "https://raw.githubusercontent.com/Nerolithos/weblog/main/content/%s" .File.Path }}
+  {{ $mdB64 := printf "content/%s" .File.Path | readFile | base64Encode }}
+  {{ $qrTarget := .Permalink }}
+  {{ with .Param "redirect" }}
+    {{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}
+      {{ $qrTarget = . }}
+    {{ else }}
+      {{ $qrTarget = . | absURL }}
+    {{ end }}
+  {{ end }}
   <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">
     <!-- 左侧：标题 / 元信息 / 摘要 -->
     <div class="w-100 w-two-thirds-l pr3">
@@ -49,8 +59,26 @@
           {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
         {{ end }}
       </div>
-      
-      
+      <div class="mt3 home-post-actions">
+        <button type="button" class="home-post-download-btn" data-md-b64="{{ $mdB64 }}">
+          <span class="home-post-download-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 2v7.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M4.5 7.8 8 11.5l3.5-3.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 12.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="home-post-download-text">下载 md</span>
+        </button>
+        <button type="button" class="home-post-download-btn home-post-qr-btn" data-qr-target="{{ $qrTarget }}" data-qr-title="{{ .Title }}">
+          <span class="home-post-download-icon" aria-hidden="true">⛶</span>
+          <span class="home-post-download-text">QR Code</span>
+        </button>
+      </div>
+      <div class="home-post-qr-inline" data-home-qr-inline data-no-card-nav hidden>
+        <p class="home-post-qr-loading">加载中...</p>
+        <img class="home-post-qr-image" alt="QR Code: {{ .Title }}" />
+      </div>
     </div>
 
     <!-- 右侧：featured_image（有才显示） -->
@@ -72,6 +100,14 @@
   {{ range where $all "File.BaseFileName" "ne" "history-today" }}
   {{ $mdURL := printf "https://raw.githubusercontent.com/Nerolithos/weblog/main/content/%s" .File.Path }}
   {{ $mdB64 := printf "content/%s" .File.Path | readFile | base64Encode }}
+  {{ $qrTarget := .Permalink }}
+  {{ with .Param "redirect" }}
+    {{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}
+      {{ $qrTarget = . }}
+    {{ else }}
+      {{ $qrTarget = . | absURL }}
+    {{ end }}
+  {{ end }}
   <article class="cf pv4 bb b--black-10 flex-l items-start home-post-card" data-post-url="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">
     <!-- 左侧：标题 / 元信息 / 摘要 -->
     <div class="w-100 w-two-thirds-l pr3">
@@ -101,9 +137,8 @@
           {{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 180 }}{{ end }}
         {{ end }}
       </div>
-      {{ if not (.Param "redirect") }}
-      <div class="mt3">
-        <a class="home-post-download-btn" href="{{ $mdURL }}" data-md-b64="{{ $mdB64 }}">
+      <div class="mt3 home-post-actions">
+        <button type="button" class="home-post-download-btn" data-md-b64="{{ $mdB64 }}">
           <span class="home-post-download-icon" aria-hidden="true">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M8 2v7.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -112,9 +147,16 @@
             </svg>
           </span>
           <span class="home-post-download-text">下载 md</span>
-        </a>
+        </button>
+        <button type="button" class="home-post-download-btn home-post-qr-btn" data-qr-target="{{ $qrTarget }}" data-qr-title="{{ .Title }}">
+          <span class="home-post-download-icon" aria-hidden="true">⛶</span>
+          <span class="home-post-download-text">QR Code</span>
+        </button>
       </div>
-      {{ end }}
+      <div class="home-post-qr-inline" data-home-qr-inline data-no-card-nav hidden>
+        <p class="home-post-qr-loading">加载中...</p>
+        <img class="home-post-qr-image" alt="QR Code: {{ .Title }}" />
+      </div>
       
     </div>
 
@@ -135,56 +177,110 @@
 </div>
 
 <script>
-  document.addEventListener('click', function (event) {
-    var btn = event.target.closest('.home-post-download-btn');
-    if (!btn) return;
+  document.addEventListener('DOMContentLoaded', function () {
+    var qrButtons = document.querySelectorAll('.home-post-qr-btn');
+    qrButtons.forEach(function (btn) {
+      btn.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
 
-    var encoded = btn.getAttribute('data-md-b64');
-    if (!encoded) return;
+        var card = btn.closest('.home-post-card');
+        if (!card) return;
+        var panel = card.querySelector('[data-home-qr-inline]');
+        if (!panel) return;
 
-    event.preventDefault();
+        var targetURL = btn.getAttribute('data-qr-target') || '';
+        if (!targetURL) return;
 
-    var text;
-    try {
-      // 先用 atob 拿到二进制字符串，再按 UTF-8 解码，避免中文乱码
-      var binary = atob(encoded);
-      var bytes = new Uint8Array(binary.length);
-      for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-      }
-      if (window.TextDecoder) {
-        text = new TextDecoder('utf-8').decode(bytes);
-      } else {
-        // 兼容旧浏览器的退化方案
-        text = decodeURIComponent(escape(binary));
-      }
-    } catch (e) {
-      console.error('无法解码 Markdown 内容', e);
-      return;
-    }
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      var originalLabel = btn.querySelector('.home-post-download-text');
-      var originalText = originalLabel ? originalLabel.textContent : '';
-
-      navigator.clipboard.writeText(text).then(function () {
-        btn.classList.add('is-copied');
-        if (originalLabel) {
-          originalLabel.textContent = '已复制 ✓';
-        }
-        setTimeout(function () {
-          btn.classList.remove('is-copied');
-          if (originalLabel) {
-            originalLabel.textContent = originalText || '复制 md';
+        var shouldOpen = panel.hasAttribute('hidden');
+        var allPanels = document.querySelectorAll('.home-post-qr-inline');
+        allPanels.forEach(function (other) {
+          if (other !== panel) {
+            other.setAttribute('hidden', '');
           }
-        }, 1200);
-      }).catch(function (err) {
-        console.error('写入剪贴板失败', err);
+        });
+
+        if (!shouldOpen) {
+          panel.setAttribute('hidden', '');
+          return;
+        }
+
+        panel.removeAttribute('hidden');
+
+        var qrImage = panel.querySelector('.home-post-qr-image');
+        var qrLoading = panel.querySelector('.home-post-qr-loading');
+        if (!qrImage || !qrLoading) return;
+
+        qrLoading.textContent = '加载中...';
+        qrLoading.style.display = 'block';
+        qrImage.style.display = 'none';
+
+        qrImage.onload = function () {
+          qrLoading.style.display = 'none';
+          qrImage.style.display = 'block';
+        };
+        qrImage.onerror = function () {
+          qrLoading.textContent = '加载失败，请重试';
+          qrLoading.style.display = 'block';
+          qrImage.style.display = 'none';
+        };
+
+        qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&ecc=M&margin=1&data=' + encodeURIComponent(targetURL);
       });
-    } else {
-      // 简单降级方案：弹出对话框，用户可以手动复制
-      window.prompt('复制以下内容到剪贴板：', text);
-    }
+    });
+
+    var downloadButtons = document.querySelectorAll('.home-post-download-btn[data-md-b64]');
+    downloadButtons.forEach(function (btn) {
+      btn.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var encoded = btn.getAttribute('data-md-b64');
+        if (!encoded) return;
+
+        var text;
+        try {
+          // 先用 atob 拿到二进制字符串，再按 UTF-8 解码，避免中文乱码
+          var binary = atob(encoded);
+          var bytes = new Uint8Array(binary.length);
+          for (var i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          if (window.TextDecoder) {
+            text = new TextDecoder('utf-8').decode(bytes);
+          } else {
+            // 兼容旧浏览器的退化方案
+            text = decodeURIComponent(escape(binary));
+          }
+        } catch (e) {
+          console.error('无法解码 Markdown 内容', e);
+          return;
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          var originalLabel = btn.querySelector('.home-post-download-text');
+          var originalText = originalLabel ? originalLabel.textContent : '';
+
+          navigator.clipboard.writeText(text).then(function () {
+            btn.classList.add('is-copied');
+            if (originalLabel) {
+              originalLabel.textContent = '已复制 ✓';
+            }
+            setTimeout(function () {
+              btn.classList.remove('is-copied');
+              if (originalLabel) {
+                originalLabel.textContent = originalText || '复制 md';
+              }
+            }, 1200);
+          }).catch(function (err) {
+            console.error('写入剪贴板失败', err);
+          });
+        } else {
+          // 简单降级方案：弹出对话框，用户可以手动复制
+          window.prompt('复制以下内容到剪贴板：', text);
+        }
+      });
+    });
   });
 </script>
 {{ end }}

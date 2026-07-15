@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
@@ -17,48 +17,48 @@
     
 
     
-<link rel="stylesheet" href="http://localhost:1313/ananke/css/main.min.css" >
+<link rel="stylesheet" href="https://blog.nero-lithos.com/ananke/css/main.min.css" >
 
 
 
   
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
   
 
     
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
     
 
     
       
-<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://blog.nero-lithos.com/favicon.ico" type="image/x-icon" />
 
 
     
 
     
     
-      <link href="http://localhost:1313/tags/index.xml" rel="alternate" type="application/rss+xml" title="Lithos&#39; Blog" />
-      <link href="http://localhost:1313/tags/index.xml" rel="feed" type="application/rss+xml" title="Lithos&#39; Blog" />
+      <link href="https://blog.nero-lithos.com/tags/index.xml" rel="alternate" type="application/rss+xml" title="Lithos&#39; Blog" />
+      <link href="https://blog.nero-lithos.com/tags/index.xml" rel="feed" type="application/rss+xml" title="Lithos&#39; Blog" />
       
     
 
     
-      <link rel="canonical" href="http://localhost:1313/tags/">
-    <meta property="og:url" content="http://localhost:1313/tags/">
+      <link rel="canonical" href="https://blog.nero-lithos.com/tags/">
+    <meta property="og:url" content="https://blog.nero-lithos.com/tags/">
   <meta property="og:site_name" content="Lithos&#39; Blog">
   <meta property="og:title" content="Tags">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="website">
 
   <meta itemprop="name" content="Tags">
-  <meta itemprop="datePublished" content="2026-05-07T13:43:34+08:00">
-  <meta itemprop="dateModified" content="2026-05-07T13:43:34+08:00">
+  <meta itemprop="datePublished" content="2026-06-14T13:43:34+08:00">
+  <meta itemprop="dateModified" content="2026-06-14T13:43:34+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Tags">
 
 
-    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <link rel="stylesheet" href="https://blog.nero-lithos.com/css/custom.css">
 
 <style>
 	 
@@ -119,6 +119,73 @@
 		box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.45);
 		border-radius: 3px;
 	}
+
+	 
+	.post-content-image-zoomable {
+		cursor: zoom-in;
+		transition: filter 0.15s ease-out;
+	}
+
+	.post-content-image-zoomable:hover {
+		filter: brightness(0.96);
+	}
+
+	.post-image-lightbox {
+		position: fixed;
+		inset: 0;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 24px;
+		background: rgba(10, 14, 20, 0.88);
+		z-index: 10000;
+	}
+
+	.post-image-lightbox.is-open {
+		display: flex;
+	}
+
+	.post-image-lightbox__inner {
+		position: relative;
+		max-width: min(96vw, 1400px);
+		max-height: 92vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.post-image-lightbox__image {
+		max-width: 100%;
+		max-height: calc(92vh - 3rem);
+		width: auto;
+		height: auto;
+		border-radius: 6px;
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+	}
+
+	.post-image-lightbox__close {
+		position: absolute;
+		top: -14px;
+		right: -14px;
+		width: 36px;
+		height: 36px;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(0, 0, 0, 0.66);
+		color: #ffffff;
+		font-size: 22px;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.post-image-lightbox__caption {
+		max-width: 80ch;
+		text-align: center;
+		font-size: 0.95rem;
+		line-height: 1.4;
+		color: #f8fafc;
+	}
 </style>
 
 
@@ -174,8 +241,9 @@
 			if (!url) return;
 
 			card.addEventListener('click', function (event) {
+				var targetElement = event.target && event.target.nodeType === 1 ? event.target : (event.target ? event.target.parentElement : null);
 				
-				if (event.target && event.target.closest('a')) {
+				if (targetElement && targetElement.closest && targetElement.closest('a, button, [data-no-card-nav]')) {
 					return;
 				}
 				window.location.href = url;
@@ -192,6 +260,8 @@
 
 		var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
 		if (!links.length) return;
+		var tocInner = toc.querySelector('.post-toc-inner');
+		var lastActiveLink = null;
 
 		var sections = [];
 		links.forEach(function (link) {
@@ -205,6 +275,25 @@
 		});
 
 		if (!sections.length) return;
+
+		function ensureActiveTocVisible(activeLink) {
+			if (!tocInner || !activeLink) return;
+
+			var containerRect = tocInner.getBoundingClientRect();
+			var linkRect = activeLink.getBoundingClientRect();
+			var padding = 14;
+
+			if (linkRect.top >= containerRect.top + padding && linkRect.bottom <= containerRect.bottom - padding) {
+				return;
+			}
+
+			var targetTop = activeLink.offsetTop - tocInner.clientHeight * 0.35;
+			if (targetTop < 0) targetTop = 0;
+			var maxTop = tocInner.scrollHeight - tocInner.clientHeight;
+			if (targetTop > maxTop) targetTop = maxTop;
+
+			tocInner.scrollTo({ top: targetTop, behavior: 'smooth' });
+		}
 
 		function onScroll() {
 			var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
@@ -226,6 +315,12 @@
 			});
 			if (current) {
 				current.link.classList.add('post-toc-active');
+				if (current.link !== lastActiveLink) {
+					lastActiveLink = current.link;
+					ensureActiveTocVisible(current.link);
+				}
+			} else {
+				lastActiveLink = null;
 			}
 		}
 
@@ -251,6 +346,110 @@
 			toggleBtn.addEventListener('click', hideToc);
 			miniBtn.addEventListener('click', showToc);
 		}
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		if (!document.getElementById('reading-progress')) return;
+
+		var contentRoot = document.querySelector('.nested-copy-line-height');
+		if (!contentRoot) return;
+
+		var images = contentRoot.querySelectorAll('img');
+		if (!images.length) return;
+
+		var lightbox = document.createElement('div');
+		lightbox.className = 'post-image-lightbox';
+		lightbox.setAttribute('role', 'dialog');
+		lightbox.setAttribute('aria-modal', 'true');
+		lightbox.setAttribute('aria-hidden', 'true');
+		lightbox.innerHTML =
+			'<div class="post-image-lightbox__inner">' +
+				'<button type="button" class="post-image-lightbox__close" aria-label="Close image preview">&times;</button>' +
+				'<img class="post-image-lightbox__image" alt="" />' +
+				'<div class="post-image-lightbox__caption"></div>' +
+			'</div>';
+		document.body.appendChild(lightbox);
+
+		var previewImage = lightbox.querySelector('.post-image-lightbox__image');
+		var caption = lightbox.querySelector('.post-image-lightbox__caption');
+		var closeBtn = lightbox.querySelector('.post-image-lightbox__close');
+		var previousOverflow = '';
+
+		function closeLightbox() {
+			if (!lightbox.classList.contains('is-open')) return;
+			lightbox.classList.remove('is-open');
+			lightbox.setAttribute('aria-hidden', 'true');
+			previewImage.removeAttribute('src');
+			previewImage.setAttribute('alt', '');
+			caption.textContent = '';
+			caption.style.display = 'none';
+			document.body.style.overflow = previousOverflow;
+		}
+
+		function openLightbox(src, alt) {
+			if (!src) return;
+			previousOverflow = document.body.style.overflow || '';
+			previewImage.src = src;
+			previewImage.alt = alt || '';
+			caption.textContent = alt || '';
+			caption.style.display = alt ? 'block' : 'none';
+			lightbox.classList.add('is-open');
+			lightbox.setAttribute('aria-hidden', 'false');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function pickPreviewSource(img) {
+			var link = img.closest('a[href]');
+			if (link) {
+				var href = (link.getAttribute('href') || '').trim();
+				if (href && href.charAt(0) !== '#' && !/^javascript:/i.test(href)) {
+					return link.href;
+				}
+			}
+			return img.currentSrc || img.src || '';
+		}
+
+		function bindImage(img) {
+			if (img.dataset.zoomBound === 'true') return;
+			img.dataset.zoomBound = 'true';
+			img.classList.add('post-content-image-zoomable');
+
+			if (!img.hasAttribute('tabindex')) {
+				img.setAttribute('tabindex', '0');
+			}
+
+			img.addEventListener('click', function (event) {
+				if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+					return;
+				}
+				event.preventDefault();
+				openLightbox(pickPreviewSource(img), img.getAttribute('alt') || '');
+			});
+
+			img.addEventListener('keydown', function (event) {
+				if (event.key !== 'Enter' && event.key !== ' ') return;
+				event.preventDefault();
+				openLightbox(pickPreviewSource(img), img.getAttribute('alt') || '');
+			});
+		}
+
+		images.forEach(bindImage);
+
+		closeBtn.addEventListener('click', closeLightbox);
+		lightbox.addEventListener('click', function (event) {
+			if (event.target === lightbox) {
+				closeLightbox();
+			}
+		});
+
+		document.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape') {
+				closeLightbox();
+			}
+		});
 	});
 </script>
 
@@ -487,7 +686,7 @@
     <div class="pb3-m pb6-l bg-black">
       <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+    <a href="https://blog.nero-lithos.com/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
       
         Lithos&#39; Blog
       
@@ -560,7 +759,7 @@
           
           <li class="list f5 f4-ns fw4 dib v-mid pr3 site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://lguide.net/" title="LGuide" aria-label="LGuide">
-              <img src="http://localhost:1313/lguide.png" alt="" class="site-nav-icon-img site-nav-icon-img--lguide" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+              <img src="https://blog.nero-lithos.com/lguide.png" alt="" class="site-nav-icon-img site-nav-icon-img--lguide" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
           </li>
           
@@ -568,7 +767,7 @@
           
           <li class="list f5 f4-ns fw4 dib v-mid pr3 site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://www.linkedin.com/in/zhu-ji-an/" title="LinkedIn" aria-label="LinkedIn">
-              <img src="http://localhost:1313/li.png" alt="" class="site-nav-icon-img site-nav-icon-img--linkedin" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
+              <img src="https://blog.nero-lithos.com/li.png" alt="" class="site-nav-icon-img site-nav-icon-img--linkedin" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
           </li>
           
@@ -651,7 +850,7 @@
         </ul>
       
       
-      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="http://localhost:1313/search/">
+      <form class="dn db-ns ml3 site-nav-search" role="search" method="get" action="https://blog.nero-lithos.com/search/">
         <input
           type="search"
           name="q"
@@ -694,7 +893,35 @@
     <section class="ph4">
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/csc3060/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/competition/" class="link blue hover-black">
+            Tag: Competition
+          </a>
+        </h2>
+        
+          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
+  <div class="bg-white mb3 pa4 gray overflow-hidden">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="https://blog.nero-lithos.com/posts/meituan/" class="link black dim">
+        Meituan 1st AI Hackathon
+      </a>
+    </h1>
+    <div class="gray f6 mt2">
+      📅 2026-06-14 |
+      📝 5095 字 |
+      ⏱️ 11 分钟阅读
+    </div>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      美团首届 AI Hackathon 的结果、回顾、吐槽
+    </div>
+    <a href="https://blog.nero-lithos.com/posts/meituan/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+      
+        <h2 class="f1">
+          <a href="https://blog.nero-lithos.com/tags/csc3060/" class="link blue hover-black">
             Tag: CSC3060
           </a>
         </h2>
@@ -703,7 +930,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.f/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.f/" class="link black dim">
         💯 CSC3060 Week 15 Final Revision
       </a>
     </h1>
@@ -715,7 +942,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 考试规划，期末复习，以及往年样卷。
     </div>
-    <a href="http://localhost:1313/posts/3060.f/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.f/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -724,7 +951,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.8/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.8/" class="link black dim">
         💻 CSC3060 Week 14 Linking
       </a>
     </h1>
@@ -736,7 +963,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Week 14 (Chapter7)，一个 C 程序从多个 .c 文件，如何经过编译、汇编、链接，最终变成可以运行的可执行文件。
     </div>
-    <a href="http://localhost:1313/posts/3060.8/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.8/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -745,7 +972,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.7/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.7/" class="link black dim">
         💻 CSC3060 Week 12-13 Optimizing Program Performance
       </a>
     </h1>
@@ -757,7 +984,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Week 12-13 (Chapter5), 怎样做软件优化——把程序写得更快、更省资源、更贴近硬件实际执行方式。
     </div>
-    <a href="http://localhost:1313/posts/3060.7/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.7/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -766,7 +993,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060q/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060q/" class="link black dim">
         💯 CSC3060 Quiz Q&amp;A
       </a>
     </h1>
@@ -778,7 +1005,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       Since both quizes of CSC3060 is over in 2026, this blog shares the questions and answers to those quizes. You can use them as revision material for future quizes if you intend to take this course. Note that in total they take up 25% of GPA.
     </div>
-    <a href="http://localhost:1313/posts/3060q/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060q/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -787,7 +1014,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.6/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.6/" class="link black dim">
         💻 CSC3060 Week 10-11 Memory Hierarchy
       </a>
     </h1>
@@ -799,7 +1026,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Week 10-11 对第一周基础知识的延伸——电脑的记忆分区、阶级和缓存原理
     </div>
-    <a href="http://localhost:1313/posts/3060.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -808,7 +1035,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.5/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.5/" class="link black dim">
         💻 CSC3060 Week 8-9 Pipeline and Pipeline Hazards
       </a>
     </h1>
@@ -820,7 +1047,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Week 8-9 理想流水线的实现、优点和潜在风险
     </div>
-    <a href="http://localhost:1313/posts/3060.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -829,7 +1056,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060p3/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060p3/" class="link black dim">
         💻 CSC3060 Project: Code Scheduling
       </a>
     </h1>
@@ -841,7 +1068,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Project3，指令调度、DAG 依赖关系图等
     </div>
-    <a href="http://localhost:1313/posts/3060p3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060p3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -850,7 +1077,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.4/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.4/" class="link black dim">
         💻 CSC3060 Week 6-7 Processor SW and HW
       </a>
     </h1>
@@ -862,7 +1089,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Week 6，处理器的软硬件架构以及指令到底如何被执行
     </div>
-    <a href="http://localhost:1313/posts/3060.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -871,7 +1098,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.3/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.3/" class="link black dim">
         💻 CSC3060 Week 5 Continuation of Machine Level Programming
       </a>
     </h1>
@@ -883,7 +1110,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Week 5，继续探索机器级代码———调用约定和寄存器
     </div>
-    <a href="http://localhost:1313/posts/3060.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -892,7 +1119,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.2/" class="link black dim">
         💻 CSC3060 Week 3-4 More about Computer System Fundamentals
       </a>
     </h1>
@@ -904,7 +1131,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Week 3-4，引入机器级别的四则运算和机器级代码 (ISA 和汇编语言)
     </div>
-    <a href="http://localhost:1313/posts/3060.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -913,7 +1140,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3060.1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3060.1/" class="link black dim">
         💻 CSC3060 Week 1-2 Introduction to Computer System
       </a>
     </h1>
@@ -925,14 +1152,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3060 的 Week 1~2，引入计算机系统中软硬件的基础知识
     </div>
-    <a href="http://localhost:1313/posts/3060.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3060.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/projects/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/projects/" class="link blue hover-black">
             Tag: Projects
           </a>
         </h2>
@@ -941,7 +1168,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/pet/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/pet/" class="link black dim">
         🐈 ArkPets suspense puzzle game (final version)
       </a>
     </h1>
@@ -953,7 +1180,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       Proof of Work of a html + js puzzle-game exercise, powered by openrouter, spine-ts, opencv and d3. This project began as fabricating Arknights&rsquo; spine-cpp locally, and turned into a full-on suspense game.
     </div>
-    <a href="http://localhost:1313/posts/pet/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/pet/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -962,7 +1189,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/dda3003/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/dda3003/" class="link black dim">
         🎨 DDA3003 Visual Analytics of Global Shift in Energy Consumption Patterns
       </a>
     </h1>
@@ -974,7 +1201,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       DDA3003 Group4 Project Platform, show global renewable energy share and energy mix on D3 globe/tilegrid/map, diving down into country-wise details, such as cluster and change point analysis.
     </div>
-    <a href="http://localhost:1313/posts/dda3003/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/dda3003/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -983,7 +1210,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/emoji/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/emoji/" class="link black dim">
         🎮 Super &#39;Emojio&#39;
       </a>
     </h1>
@@ -995,14 +1222,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       Proof of Work of a minimalistic html + js Super-Mario-type, rogue-like game
     </div>
-    <a href="http://localhost:1313/posts/emoji/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/emoji/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/%E6%8A%80%E6%9C%AF/" class="link blue hover-black">
             Tag: 技术
           </a>
         </h2>
@@ -1011,7 +1238,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/gab/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/gab/" class="link black dim">
         🛠️ GitHub Action Bot 自动化管理仓库入门
       </a>
     </h1>
@@ -1023,7 +1250,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       从我的《历史上的今天》项目，分享 CS Amateur/Enthusiast 大学生如何初步利用 Action Bot 自动化远端仓库，以及需要当心的坑。
     </div>
-    <a href="http://localhost:1313/posts/gab/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/gab/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1032,7 +1259,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/whisper/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/whisper/" class="link black dim">
         📢 如何快速批量地将音频转文字？
       </a>
     </h1>
@@ -1044,7 +1271,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       如何简单的不用 LLM，在 CLI 将本地音频文件转文字。
     </div>
-    <a href="http://localhost:1313/posts/whisper/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/whisper/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1053,7 +1280,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/outlook/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/outlook/" class="link black dim">
         🌐 龙大邮箱抓取尝试
       </a>
     </h1>
@@ -1065,7 +1292,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       未解决的 LGU 邮箱自动化尝试思路分享。
     </div>
-    <a href="http://localhost:1313/posts/outlook/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/outlook/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1074,7 +1301,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/cligit/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/cligit/" class="link black dim">
         🛠️ Important tools: CLI, shell and git commands
       </a>
     </h1>
@@ -1086,7 +1313,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       计算机初学者必学的 CLI 基本用法和工作流管理，以及如何处理网络不佳、提交过大、版本控制等常见 git 问题。
     </div>
-    <a href="http://localhost:1313/posts/cligit/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/cligit/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1095,7 +1322,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/weblog_deploy/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/weblog_deploy/" class="link black dim">
         🌐 在 cloudflare 部署 Hugo 构架博客的 manual
       </a>
     </h1>
@@ -1107,14 +1334,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       一直听说建博客可以薅 github 和 cloudflare 羊毛，而且很容易实现。真正做一遍却过程曲折，网上的文章，有坑。
     </div>
-    <a href="http://localhost:1313/posts/weblog_deploy/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/weblog_deploy/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/dda3003/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/dda3003/" class="link blue hover-black">
             Tag: DDA3003
           </a>
         </h2>
@@ -1123,7 +1350,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3003.2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3003.2/" class="link black dim">
         🎨 DDA3003 Midterm revision
       </a>
     </h1>
@@ -1135,7 +1362,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 选修课程 DDA3003 Visualization。期中复习 InfoVis, Tufte&rsquo;s Design Principles, Gestalt Laws of encoding data, Visual perception, Color scheme, D3, HTML, CSS as well as Multivariate data cleaning, common tables and plots.
     </div>
-    <a href="http://localhost:1313/posts/3003.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3003.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1144,7 +1371,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3003.1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3003.1/" class="link black dim">
         🎨 DDA3003 Introduction to D3
       </a>
     </h1>
@@ -1156,14 +1383,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 选修课程 DDA3003 Visualization，介绍 D3.js ——— 一种 HTML 可视化工具
     </div>
-    <a href="http://localhost:1313/posts/3003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/csc3200/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/csc3200/" class="link blue hover-black">
             Tag: CSC3200
           </a>
         </h2>
@@ -1172,7 +1399,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3200.f3/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3200.f3/" class="link black dim">
         💯 CSC3200 Final Revision C&#43;&#43; 期末样卷
       </a>
     </h1>
@@ -1184,7 +1411,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3200 是新课，我们用 3002 真卷作复习参考
     </div>
-    <a href="http://localhost:1313/posts/3200.f3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3200.f3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1193,7 +1420,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3200.f2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3200.f2/" class="link black dim">
         💻 CSC3200 Final Revision C&#43;&#43; 数据结构(非线性)
       </a>
     </h1>
@@ -1205,7 +1432,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3200 关于树、堆、图的相关知识期末总结
     </div>
-    <a href="http://localhost:1313/posts/3200.f2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3200.f2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1214,7 +1441,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3200.f1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3200.f1/" class="link black dim">
         💻 CSC3200 Final Revision C&#43;&#43; 数据结构(线性)
       </a>
     </h1>
@@ -1226,7 +1453,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3200 关于链表、栈、队列、映射和集合这些数据结构
     </div>
-    <a href="http://localhost:1313/posts/3200.f1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3200.f1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1235,7 +1462,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3200.2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3200.2/" class="link black dim">
         💻 CSC3200 LEC3-5 C&#43;&#43;进阶
       </a>
     </h1>
@@ -1247,7 +1474,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3200 关于 C/C++ 中数组、指针和流操作
     </div>
-    <a href="http://localhost:1313/posts/3200.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3200.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1256,7 +1483,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3200.1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3200.1/" class="link black dim">
         💻 CSC3200 LEC1-2 C&#43;&#43;入门
       </a>
     </h1>
@@ -1268,14 +1495,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3200 关于 C++ 基础语法和 OOP 的介绍
     </div>
-    <a href="http://localhost:1313/posts/3200.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3200.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/csc3001/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/csc3001/" class="link blue hover-black">
             Tag: CSC3001
           </a>
         </h2>
@@ -1284,7 +1511,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3001.8/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3001.8/" class="link black dim">
         🧮 CSC3001 LEC17-19 function mapping
       </a>
     </h1>
@@ -1296,7 +1523,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ CSC3001 函数映射与除法规则，以及如何用它理解排列组合、隔板法、卡塔兰数
     </div>
-    <a href="http://localhost:1313/posts/3001.8/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3001.8/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1305,7 +1532,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3001.7/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3001.7/" class="link black dim">
         🧮 CSC3001 LEC14-16 Binomial and IE Principles, Pigeonhole Theorem
       </a>
     </h1>
@@ -1317,7 +1544,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ CSC3001 二项式系数的恒等式及其推理、容斥原理的扩展，以及抽屉原理
     </div>
-    <a href="http://localhost:1313/posts/3001.7/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3001.7/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1326,7 +1553,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3001.6/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3001.6/" class="link black dim">
         🧮 CSC3001 LEC14-16 Graph
       </a>
     </h1>
@@ -1338,7 +1565,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ CSC3001 图论
     </div>
-    <a href="http://localhost:1313/posts/3001.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3001.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1347,7 +1574,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3001.5/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3001.5/" class="link black dim">
         🧮 CSC3001 LEC11-13 GCD and Mod
       </a>
     </h1>
@@ -1359,7 +1586,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ CSC3001 最大公因数问题与模问题
     </div>
-    <a href="http://localhost:1313/posts/3001.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3001.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1368,7 +1595,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3001.4/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3001.4/" class="link black dim">
         🧮 CSC3001 LEC8-10 递归
       </a>
     </h1>
@@ -1380,7 +1607,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ CSC3001 从数学证明法到递归思想，以及解递归式
     </div>
-    <a href="http://localhost:1313/posts/3001.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3001.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1389,7 +1616,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3001.3/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3001.3/" class="link black dim">
         🧮 CSC3001 LEC6-7 数学归纳法
       </a>
     </h1>
@@ -1401,7 +1628,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ CSC3001 更多数学证明法
     </div>
-    <a href="http://localhost:1313/posts/3001.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3001.3/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1410,7 +1637,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3001.2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3001.2/" class="link black dim">
         🧮 CSC3001 LEC3-5 集合论、FOL和 基础证明法
       </a>
     </h1>
@@ -1422,7 +1649,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ CSC3001 命题逻辑的升级——谓词逻辑
     </div>
-    <a href="http://localhost:1313/posts/3001.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3001.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1431,7 +1658,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/3001.1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/3001.1/" class="link black dim">
         🧮 CSC3001 LEC1-2 离散数学入门
       </a>
     </h1>
@@ -1443,14 +1670,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大二课程 CSC3001 的入门指导
     </div>
-    <a href="http://localhost:1313/posts/3001.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/3001.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/phy1001/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/phy1001/" class="link blue hover-black">
             Tag: PHY1001
           </a>
         </h2>
@@ -1459,7 +1686,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/phy2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/phy2/" class="link black dim">
         ⚛️ PHY1001 LEC10-15 旋转运动学
       </a>
     </h1>
@@ -1471,7 +1698,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大一/大二课程 PHY1001 绕轴运动 important takeaway
     </div>
-    <a href="http://localhost:1313/posts/phy2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/phy2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1480,7 +1707,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/phy1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/phy1/" class="link black dim">
         ⚛️ PHY1001 LEC1-5 基础运动学与牛顿力学
       </a>
     </h1>
@@ -1492,14 +1719,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大一/大二课程 PHY1001 基础运动学与牛顿力学的 important takeaway
     </div>
-    <a href="http://localhost:1313/posts/phy1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/phy1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/%E5%B8%AE%E5%8A%A9/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/%E5%B8%AE%E5%8A%A9/" class="link blue hover-black">
             Tag: 帮助
           </a>
         </h2>
@@ -1508,7 +1735,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/streamliturl/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/streamliturl/" class="link black dim">
         🌐 How to personalize Streamlit URL?
       </a>
     </h1>
@@ -1520,7 +1747,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       一次在没有外网 VPS 的前提下试图将 Streamlit app 指向自定义域名的尝试
     </div>
-    <a href="http://localhost:1313/posts/streamliturl/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/streamliturl/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1529,7 +1756,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/autorelease/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/autorelease/" class="link black dim">
         🌐 Automation of Ssg Post Release
       </a>
     </h1>
@@ -1541,14 +1768,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       SSG (Hugo + Cloudflare) 中部落格的发布如何实现半自动化？
     </div>
-    <a href="http://localhost:1313/posts/autorelease/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/autorelease/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/csc1003/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/csc1003/" class="link blue hover-black">
             Tag: CSC1003
           </a>
         </h2>
@@ -1557,7 +1784,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/1003.6/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/1003.6/" class="link black dim">
         💻 CSC1003 期末总结
       </a>
     </h1>
@@ -1569,7 +1796,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       总结 Java 中好用的语句和易错的用法
     </div>
-    <a href="http://localhost:1313/posts/1003.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/1003.6/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1578,7 +1805,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/assignment2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/assignment2/" class="link black dim">
         💻 CSC1003 Assignment2 二维数组
       </a>
     </h1>
@@ -1590,7 +1817,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CSC1003-JAVA 的第二份作业例题讲解。
     </div>
-    <a href="http://localhost:1313/posts/assignment2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/assignment2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1599,7 +1826,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/1003.5/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/1003.5/" class="link black dim">
         💻 CSC1003 LEC13-15 递归
       </a>
     </h1>
@@ -1611,7 +1838,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       介绍递归，栈与堆，以及栈溢出
     </div>
-    <a href="http://localhost:1313/posts/1003.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/1003.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1620,7 +1847,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/1003.4/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/1003.4/" class="link black dim">
         💻 CSC1003 LEC10-12 Midterm Revision
       </a>
     </h1>
@@ -1632,7 +1859,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       期中考试复习与模拟题
     </div>
-    <a href="http://localhost:1313/posts/1003.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/1003.4/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1641,7 +1868,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/assignment1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/assignment1/" class="link black dim">
         💻 CSC1003 Assignment1 OJPractice
       </a>
     </h1>
@@ -1653,7 +1880,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践
     </div>
-    <a href="http://localhost:1313/posts/assignment1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/assignment1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1662,7 +1889,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/1003.2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/1003.2/" class="link black dim">
         💻 CSC1003 TBL1 网络与计算机史
       </a>
     </h1>
@@ -1674,7 +1901,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       讲座直接略过的互联网基础 —— LGU 完全没有网络相关的基础课，导致大家的相关知识储备薄弱。
     </div>
-    <a href="http://localhost:1313/posts/1003.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/1003.2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1683,7 +1910,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/1003.1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/1003.1/" class="link black dim">
         💻 CSC1003 LEC1~3 函数、数据类型与计算
       </a>
     </h1>
@@ -1695,14 +1922,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大一课程 CSC1003（Java） 的入门
     </div>
-    <a href="http://localhost:1313/posts/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/%E7%BB%83%E4%B9%A0/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/%E7%BB%83%E4%B9%A0/" class="link blue hover-black">
             Tag: 练习
           </a>
         </h2>
@@ -1711,7 +1938,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/assignment2/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/assignment2/" class="link black dim">
         💻 CSC1003 Assignment2 二维数组
       </a>
     </h1>
@@ -1723,7 +1950,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CSC1003-JAVA 的第二份作业例题讲解。
     </div>
-    <a href="http://localhost:1313/posts/assignment2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/assignment2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1732,7 +1959,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/assignment1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/assignment1/" class="link black dim">
         💻 CSC1003 Assignment1 OJPractice
       </a>
     </h1>
@@ -1744,42 +1971,14 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大一课程 CSC1003 的第一次 OJ 编程实践
     </div>
-    <a href="http://localhost:1313/posts/assignment1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/assignment1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
         
       
         <h2 class="f1">
-          <a href="http://localhost:1313/tags/diary/" class="link blue hover-black">
-            Tag: Diary
-          </a>
-        </h2>
-        
-          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
-  <div class="bg-white mb3 pa4 gray overflow-hidden">
-    <span class="f6 db">Posts</span>
-    <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/sheperd/" class="link black dim">
-        牧羊人的故事
-      </a>
-    </h1>
-    <div class="gray f6 mt2">
-      📅 2024-10-30 |
-      📝 2198 字 |
-      ⏱️ 5 分钟阅读
-    </div>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      牧羊人是个精明人，他总能从羊群身上获得毛，但他永远以羊群利益至上，因为太多毛会重到把羊压死。牧羊犬是吃了羊肉的羊幻化而来，它们以为自己属于人类，帮助牧羊人放羊。
-    </div>
-    <a href="http://localhost:1313/posts/sheperd/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-      
-        <h2 class="f1">
-          <a href="http://localhost:1313/tags/%E8%AE%B2%E5%BA%A7/" class="link blue hover-black">
+          <a href="https://blog.nero-lithos.com/tags/%E8%AE%B2%E5%BA%A7/" class="link blue hover-black">
             Tag: 讲座
           </a>
         </h2>
@@ -1788,7 +1987,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/1003.5/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/1003.5/" class="link black dim">
         💻 CSC1003 LEC13-15 递归
       </a>
     </h1>
@@ -1800,7 +1999,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       介绍递归，栈与堆，以及栈溢出
     </div>
-    <a href="http://localhost:1313/posts/1003.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/1003.5/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1809,7 +2008,7 @@
   <div class="bg-white mb3 pa4 gray overflow-hidden">
     <span class="f6 db">Posts</span>
     <h1 class="f3 near-black">
-      <a href="http://localhost:1313/posts/1003.1/" class="link black dim">
+      <a href="https://blog.nero-lithos.com/posts/1003.1/" class="link black dim">
         💻 CSC1003 LEC1~3 函数、数据类型与计算
       </a>
     </h1>
@@ -1821,7 +2020,7 @@
     <div class="nested-links f5 lh-copy nested-copy-line-height">
       CUHKSZ 大一课程 CSC1003（Java） 的入门
     </div>
-    <a href="http://localhost:1313/posts/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+    <a href="https://blog.nero-lithos.com/posts/1003.1/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1840,7 +2039,7 @@
       
         <li><a href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
       
-        <li><a href="http://localhost:1313/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
+        <li><a href="https://blog.nero-lithos.com/pixiv/" target="_blank" rel="noopener noreferrer">🎨 Pixiv</a></li>
       
         <li><a href="https://blog.nero-lithos.com/DDA/" target="_blank" rel="noopener noreferrer">📊 EnergyVis</a></li>
       
