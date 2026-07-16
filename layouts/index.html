@@ -1,6 +1,10 @@
 {{ define "main" }}
 
-<div class="pa4">
+<div class="pa4 home-main-shell">
+  <div class="home-life-grid" data-home-life-grid aria-hidden="true">
+    <canvas class="home-life-grid-canvas" data-home-life-grid-canvas></canvas>
+  </div>
+  <div class="home-main-content">
   {{ $all := .Site.RegularPages }}
   {{ $count := len $all }}
   <div class="home-subtitle-row flex items-center justify-between flex-wrap" style="gap: 12px; margin-bottom: 12px;">
@@ -174,6 +178,8 @@
     {{ end }}
   </article>
   {{ end }}
+
+  </div>
 </div>
 
 <script>
@@ -281,6 +287,433 @@
         }
       });
     });
+
+    function initHomeLifeGrid() {
+      var scene = document.querySelector('[data-home-life-grid]');
+      if (!scene) return;
+
+      var canvas = scene.querySelector('[data-home-life-grid-canvas]');
+      if (!canvas) return;
+
+      var context = canvas.getContext('2d', { alpha: true });
+      if (!context) return;
+
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+      var cols = 0;
+      var rows = 0;
+      var cellSize = 10;
+      var total = 0;
+      var maxCells = 32000;
+      var tickInterval = 168;
+      var current = new Uint8Array(0);
+      var next = new Uint8Array(0);
+      var fade = new Uint8Array(0);
+      var animationId = 0;
+      var resizeTimer = 0;
+      var lastStepAt = 0;
+      var tickCount = 0;
+      var pointerX = -9999;
+      var pointerY = -9999;
+      var pointerActive = false;
+      var pointerRadius = 130;
+      var pointerRadiusSq = pointerRadius * pointerRadius;
+      var pointerAccent = '#7463ff';
+      var pointerFrameId = 0;
+      var conwayStorageKey = 'home-conway-grid-enabled';
+      var gridEnabled = true;
+      var baseCanvas = document.createElement('canvas');
+      var baseContext = baseCanvas.getContext('2d', { alpha: true });
+      if (!baseContext) return;
+      var baseDirty = true;
+      var lastBaseDarkMode = null;
+
+      function readGridEnabled() {
+        try {
+          var stored = localStorage.getItem(conwayStorageKey);
+          if (stored === null) return true;
+          return stored !== '0';
+        } catch (e) {
+          return true;
+        }
+      }
+
+      function at(x, y) {
+        return y * cols + x;
+      }
+
+      function stampBlock(cx, cy) {
+        if (cols < 3 || rows < 3) return;
+        var x = (cx + cols) % cols;
+        var y = (cy + rows) % rows;
+        current[at(x, y)] = 1;
+        current[at((x + 1) % cols, y)] = 1;
+        current[at(x, (y + 1) % rows)] = 1;
+        current[at((x + 1) % cols, (y + 1) % rows)] = 1;
+      }
+
+      function injectVitality(patches) {
+        var patchCount = Math.max(1, patches);
+        for (var p = 0; p < patchCount; p++) {
+          var centerX = Math.floor(Math.random() * cols);
+          var centerY = Math.floor(Math.random() * rows);
+          var radius = Math.max(2, Math.floor(Math.min(cols, rows) * 0.08));
+          for (var y = -radius; y <= radius; y++) {
+            for (var x = -radius; x <= radius; x++) {
+              var distance = Math.abs(x) + Math.abs(y);
+              if (distance > radius) continue;
+              if (Math.random() < 0.42) {
+                var tx = (centerX + x + cols) % cols;
+                var ty = (centerY + y + rows) % rows;
+                current[at(tx, ty)] = 1;
+              }
+            }
+          }
+        }
+
+        stampBlock(2, 2);
+        stampBlock(Math.floor(cols * 0.66), Math.floor(rows * 0.24));
+        stampBlock(cols - 4, rows - 4);
+      }
+
+      function countAlive() {
+        var alive = 0;
+        for (var i = 0; i < total; i++) {
+          alive += current[i];
+        }
+        return alive;
+      }
+
+      function seedInitial() {
+        current = new Uint8Array(total);
+        next = new Uint8Array(total);
+        fade = new Uint8Array(total);
+        for (var i = 0; i < total; i++) {
+          current[i] = Math.random() < 0.39 ? 1 : 0;
+          fade[i] = current[i] ? (110 + Math.floor(Math.random() * 85)) : 0;
+        }
+        injectVitality(Math.max(2, Math.floor(total * 0.008)));
+        baseDirty = true;
+      }
+
+      function ensurePopulationBounds() {
+        var alive = countAlive();
+        var minAlive = Math.floor(total * 0.08);
+        var maxAlive = Math.floor(total * 0.72);
+
+        if (alive < minAlive) {
+          injectVitality(Math.max(2, Math.floor(total * 0.012)));
+          return;
+        }
+
+        if (alive > maxAlive) {
+          var trimRatio = Math.min(0.26, (alive - maxAlive) / total + 0.04);
+          for (var i = 0; i < total; i++) {
+            if (current[i] && Math.random() < trimRatio) {
+              current[i] = 0;
+            }
+          }
+          stampBlock(2, 2);
+        }
+      }
+
+      function neighbors(x, y) {
+        var count = 0;
+        for (var oy = -1; oy <= 1; oy++) {
+          for (var ox = -1; ox <= 1; ox++) {
+            if (ox === 0 && oy === 0) continue;
+            var nx = (x + ox + cols) % cols;
+            var ny = (y + oy + rows) % rows;
+            count += current[at(nx, ny)];
+          }
+        }
+        return count;
+      }
+
+      function stepLife() {
+        for (var y = 0; y < rows; y++) {
+          for (var x = 0; x < cols; x++) {
+            var index = at(x, y);
+            var alive = current[index] === 1;
+            var n = neighbors(x, y);
+            next[index] = (alive && (n === 2 || n === 3)) || (!alive && n === 3) ? 1 : 0;
+          }
+        }
+
+        var swap = current;
+        current = next;
+        next = swap;
+
+        tickCount += 1;
+        if (tickCount % 32 === 0) {
+          injectVitality(Math.max(1, Math.floor(total * 0.003)));
+        }
+        ensurePopulationBounds();
+      }
+
+      function updateFadeLevels() {
+        var changed = false;
+        for (var i = 0; i < total; i++) {
+          var value = fade[i];
+          var nextValue = value;
+          if (current[i]) {
+            nextValue = value + 58;
+            if (nextValue > 255) nextValue = 255;
+          } else {
+            nextValue = value - 34;
+            if (nextValue < 0) nextValue = 0;
+          }
+          if (nextValue !== value) {
+            fade[i] = nextValue;
+            changed = true;
+          }
+        }
+        return changed;
+      }
+
+      function renderBaseLayer(darkMode, width, height) {
+        if (!width || !height) return;
+
+        baseContext.clearRect(0, 0, width, height);
+
+        var dotSize = Math.max(2, Math.floor(cellSize * 0.72));
+        var offset = Math.max(1, Math.floor((cellSize - dotSize) / 2));
+        var normalBaseAlpha = darkMode ? 0.175 : 0.255;
+        baseContext.fillStyle = darkMode ? '#f8fafc' : '#475569';
+
+        for (var y = 0; y < rows; y++) {
+          for (var x = 0; x < cols; x++) {
+            var intensity = fade[at(x, y)] / 255;
+            if (intensity <= 0.01) continue;
+            var alpha = normalBaseAlpha * intensity;
+            if (alpha <= 0.006) continue;
+            baseContext.globalAlpha = alpha;
+            baseContext.fillRect(x * cellSize + offset, y * cellSize + offset, dotSize, dotSize);
+          }
+        }
+
+        baseContext.globalAlpha = 1;
+        baseDirty = false;
+        lastBaseDarkMode = darkMode;
+      }
+
+      function drawPointerOverlay(width, height) {
+        if (!pointerActive) return;
+
+        var dotSize = Math.max(2, Math.floor(cellSize * 0.72));
+        var offset = Math.max(1, Math.floor((cellSize - dotSize) / 2));
+        var minX = Math.max(0, Math.floor((pointerX - pointerRadius) / cellSize) - 1);
+        var maxX = Math.min(cols - 1, Math.ceil((pointerX + pointerRadius) / cellSize) + 1);
+        var minY = Math.max(0, Math.floor((pointerY - pointerRadius) / cellSize) - 1);
+        var maxY = Math.min(rows - 1, Math.ceil((pointerY + pointerRadius) / cellSize) + 1);
+
+        context.fillStyle = pointerAccent;
+
+        for (var y = minY; y <= maxY; y++) {
+          for (var x = minX; x <= maxX; x++) {
+            var index = at(x, y);
+            if (fade[index] <= 2) continue;
+
+            var cellCenterX = x * cellSize + offset + (dotSize * 0.5);
+            var cellCenterY = y * cellSize + offset + (dotSize * 0.5);
+            var dx = cellCenterX - pointerX;
+            var dy = cellCenterY - pointerY;
+            var distSq = dx * dx + dy * dy;
+            if (distSq > pointerRadiusSq) continue;
+
+            var proximity = 1 - (distSq / pointerRadiusSq);
+            if (proximity < 0) continue;
+            var highlightWeight = proximity * proximity;
+            var alpha = 0.7 * highlightWeight;
+            if (alpha <= 0.01) continue;
+
+            context.globalAlpha = alpha;
+            context.fillRect(x * cellSize + offset, y * cellSize + offset, dotSize, dotSize);
+          }
+        }
+
+        context.globalAlpha = 1;
+      }
+
+      function drawFrame() {
+        var width = canvas.clientWidth;
+        var height = canvas.clientHeight;
+        if (!width || !height) return;
+
+        var darkMode = document.body.classList.contains('dark-mode');
+        if (baseDirty || lastBaseDarkMode !== darkMode) {
+          renderBaseLayer(darkMode, width, height);
+        }
+
+        context.clearRect(0, 0, width, height);
+        context.globalAlpha = 1;
+        context.drawImage(baseCanvas, 0, 0, width, height);
+        drawPointerOverlay(width, height);
+        context.globalAlpha = 1;
+      }
+
+      function updateGridClip() {
+        if (!gridEnabled) return;
+
+        var viewportHeight = Math.max(0, Math.floor(window.innerHeight || document.documentElement.clientHeight || 0));
+        var hero = document.querySelector('header.cover.bg-top');
+        var footer = document.querySelector('footer.custom-footer');
+        var clipTop = 0;
+        var clipBottom = 0;
+
+        if (hero && viewportHeight) {
+          var heroRect = hero.getBoundingClientRect();
+          clipTop = Math.max(0, Math.min(viewportHeight, heroRect.bottom));
+        }
+
+        if (footer && viewportHeight) {
+          var footerRect = footer.getBoundingClientRect();
+          clipBottom = Math.max(0, Math.min(viewportHeight, viewportHeight - footerRect.top));
+        }
+
+        if (!clipTop && !clipBottom) {
+          scene.style.clipPath = 'inset(0 0 0 0)';
+          return;
+        }
+
+        scene.style.clipPath = 'inset(' + Math.round(clipTop) + 'px 0 ' + Math.round(clipBottom) + 'px 0)';
+      }
+
+      function resizeGrid() {
+        var width = Math.max(320, Math.floor(window.innerWidth || document.documentElement.clientWidth || 320));
+        var height = Math.max(220, Math.floor(window.innerHeight || document.documentElement.clientHeight || 220));
+
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        baseCanvas.width = canvas.width;
+        baseCanvas.height = canvas.height;
+        baseContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        var widthBasedCell = Math.max(8, Math.min(14, Math.floor(width / 115)));
+        var areaBasedCell = Math.max(1, Math.ceil(Math.sqrt((width * height) / maxCells)));
+        cellSize = Math.max(widthBasedCell, areaBasedCell);
+        cols = Math.max(24, Math.floor(width / cellSize));
+        rows = Math.max(14, Math.floor(height / cellSize));
+        total = cols * rows;
+        seedInitial();
+        baseDirty = true;
+        drawFrame();
+      }
+
+      function startAnimation() {
+        if (!gridEnabled) return;
+        if (animationId) return;
+        lastStepAt = 0;
+        animationId = window.requestAnimationFrame(animate);
+      }
+
+      function stopAnimation() {
+        if (!animationId) return;
+        window.cancelAnimationFrame(animationId);
+        animationId = 0;
+        if (pointerFrameId) {
+          window.cancelAnimationFrame(pointerFrameId);
+          pointerFrameId = 0;
+        }
+      }
+
+      function requestPointerDraw() {
+        if (!gridEnabled) return;
+        if (pointerFrameId) return;
+        pointerFrameId = window.requestAnimationFrame(function () {
+          pointerFrameId = 0;
+          drawFrame();
+        });
+      }
+
+      function applyGridEnabledState(enabled) {
+        gridEnabled = enabled !== false;
+        scene.style.display = gridEnabled ? '' : 'none';
+
+        if (!gridEnabled) {
+          pointerActive = false;
+          stopAnimation();
+          context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+          return;
+        }
+
+        updateGridClip();
+        drawFrame();
+        startAnimation();
+      }
+
+      function animate(timestamp) {
+        if (!gridEnabled) return;
+
+        if (!lastStepAt) {
+          lastStepAt = timestamp;
+        }
+
+        if (timestamp - lastStepAt >= tickInterval) {
+          stepLife();
+          if (updateFadeLevels()) {
+            baseDirty = true;
+          }
+          drawFrame();
+          lastStepAt = timestamp;
+        }
+        animationId = window.requestAnimationFrame(animate);
+      }
+
+      function onResize() {
+        if (!gridEnabled) return;
+
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function () {
+          resizeGrid();
+          updateGridClip();
+        }, 140);
+      }
+
+      function onScroll() {
+        if (!gridEnabled) return;
+        updateGridClip();
+      }
+
+      function onPointerMove(event) {
+        if (!gridEnabled) return;
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        pointerActive = true;
+        requestPointerDraw();
+      }
+
+      function onPointerLeave() {
+        if (!gridEnabled) return;
+        pointerActive = false;
+        requestPointerDraw();
+      }
+
+      resizeGrid();
+      applyGridEnabledState(readGridEnabled());
+
+      document.addEventListener('conway-grid-toggle', function (event) {
+        var enabled = !event || !event.detail ? true : event.detail.enabled !== false;
+        applyGridEnabledState(enabled);
+      });
+
+      window.addEventListener('resize', onResize);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      document.addEventListener('mouseleave', onPointerLeave);
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          stopAnimation();
+        } else {
+          startAnimation();
+        }
+      });
+    }
+
+    initHomeLifeGrid();
   });
 </script>
 {{ end }}

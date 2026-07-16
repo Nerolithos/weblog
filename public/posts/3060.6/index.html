@@ -90,20 +90,57 @@
 	 
 	.home-post-card {
 		position: relative;
-		background: rgba(255, 255, 255, 0.96);
+		background: rgba(255, 255, 255, 0.34);
+		border: 1px solid rgba(255, 255, 255, 0.26);
 		border-radius: 8px;
 		padding: 0.75rem 1.5rem;  
+		backdrop-filter: blur(8px) saturate(130%);
+		-webkit-backdrop-filter: blur(8px) saturate(130%);
+		box-shadow:
+			inset 0 1px 0 rgba(255, 255, 255, 0.42),
+			0 10px 22px rgba(15, 23, 42, 0.1);
 		cursor: pointer;
 		transition: transform 0.15s ease-out,
 								box-shadow 0.15s ease-out,
-								background 0.15s ease-out;
+								background 0.15s ease-out,
+								border-color 0.15s ease-out;
+	}
+
+	.home-post-card::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
+		background: linear-gradient(132deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.01) 36%, rgba(255, 255, 255, 0.1) 100%);
+		opacity: 0.62;
 	}
 
 	.home-post-card:hover {
 		transform: translateY(-4px) scale(1.01);
-		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-		background: #ffffff;
+		box-shadow:
+			inset 0 1px 0 rgba(255, 255, 255, 0.5),
+			0 12px 28px rgba(15, 23, 42, 0.14);
+		background: rgba(255, 255, 255, 0.42);
+		border-color: rgba(255, 255, 255, 0.4);
 		z-index: 2;
+	}
+
+	body.dark-mode .home-post-card {
+		background: rgba(15, 23, 42, 0.34);
+		border-color: rgba(148, 163, 184, 0.22);
+		box-shadow:
+			inset 0 1px 0 rgba(203, 213, 225, 0.12),
+			0 10px 24px rgba(2, 6, 23, 0.42);
+	}
+
+	body.dark-mode .home-post-card::before {
+		background: linear-gradient(140deg, rgba(226, 232, 240, 0.18), rgba(226, 232, 240, 0.01) 42%, rgba(148, 163, 184, 0.1) 100%);
+	}
+
+	body.dark-mode .home-post-card:hover {
+		background: rgba(15, 23, 42, 0.4);
+		border-color: rgba(148, 163, 184, 0.3);
 	}
 
 	.home-post-preview {
@@ -159,13 +196,121 @@
 		gap: 10px;
 	}
 
+	.post-image-lightbox__loader {
+		position: absolute;
+		left: 50%;
+		top: 46%;
+		width: 74px;
+		height: 74px;
+		transform: translate(-50%, -50%) rotate(45deg);
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.16s ease-out;
+		z-index: 2;
+	}
+
+	.post-image-lightbox.is-loading .post-image-lightbox__loader {
+		opacity: 1;
+	}
+
+	.post-image-lightbox__loader::before,
+	.post-image-lightbox__loader::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: 0;
+	}
+
+	.post-image-lightbox__loader::before {
+		border: 4px solid rgba(241, 245, 249, 0.58);
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+			0 0 8px rgba(241, 245, 249, 0.45),
+			0 0 18px rgba(148, 163, 184, 0.45),
+			0 0 30px rgba(148, 163, 184, 0.22);
+	}
+
+	.post-image-lightbox__loader::after {
+		inset: auto;
+		top: -1px;
+		left: 8px;
+		width: 22px;
+		height: 6px;
+		background: rgba(10, 14, 20, 0.97);
+		box-shadow: 0 0 4px rgba(10, 14, 20, 0.95);
+		animation: post-image-square-gap-run 1.1s linear infinite;
+	}
+
+	@keyframes post-image-square-gap-run {
+		0% {
+			top: -1px;
+			left: 8px;
+			width: 22px;
+			height: 6px;
+		}
+		24.99% {
+			top: -1px;
+			left: 44px;
+			width: 22px;
+			height: 6px;
+		}
+		25% {
+			top: 8px;
+			left: 69px;
+			width: 6px;
+			height: 22px;
+		}
+		49.99% {
+			top: 44px;
+			left: 69px;
+			width: 6px;
+			height: 22px;
+		}
+		50% {
+			top: 69px;
+			left: 44px;
+			width: 22px;
+			height: 6px;
+		}
+		74.99% {
+			top: 69px;
+			left: 8px;
+			width: 22px;
+			height: 6px;
+		}
+		75% {
+			top: 44px;
+			left: -1px;
+			width: 6px;
+			height: 22px;
+		}
+		99.99% {
+			top: 8px;
+			left: -1px;
+			width: 6px;
+			height: 22px;
+		}
+		100% {
+			top: -1px;
+			left: 8px;
+			width: 22px;
+			height: 6px;
+		}
+	}
+
 	.post-image-lightbox__image {
 		max-width: 100%;
 		max-height: calc(92vh - 3rem);
 		width: auto;
 		height: auto;
+		opacity: 0;
 		border-radius: 6px;
 		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+		transition: opacity 0.16s ease-out;
+	}
+
+	.post-image-lightbox__image.is-ready {
+		opacity: 1;
 	}
 
 	.post-image-lightbox__close {
@@ -371,6 +516,7 @@
 		lightbox.setAttribute('aria-hidden', 'true');
 		lightbox.innerHTML =
 			'<div class="post-image-lightbox__inner">' +
+				'<div class="post-image-lightbox__loader" aria-hidden="true"></div>' +
 				'<button type="button" class="post-image-lightbox__close" aria-label="Close image preview">&times;</button>' +
 				'<img class="post-image-lightbox__image" alt="" />' +
 				'<div class="post-image-lightbox__caption"></div>' +
@@ -382,10 +528,29 @@
 		var closeBtn = lightbox.querySelector('.post-image-lightbox__close');
 		var previousOverflow = '';
 
+		function setLightboxLoading(isLoading) {
+			if (isLoading) {
+				lightbox.classList.add('is-loading');
+			} else {
+				lightbox.classList.remove('is-loading');
+			}
+		}
+
+		previewImage.addEventListener('load', function () {
+			previewImage.classList.add('is-ready');
+			setLightboxLoading(false);
+		});
+
+		previewImage.addEventListener('error', function () {
+			setLightboxLoading(false);
+		});
+
 		function closeLightbox() {
 			if (!lightbox.classList.contains('is-open')) return;
 			lightbox.classList.remove('is-open');
+			setLightboxLoading(false);
 			lightbox.setAttribute('aria-hidden', 'true');
+			previewImage.classList.remove('is-ready');
 			previewImage.removeAttribute('src');
 			previewImage.setAttribute('alt', '');
 			caption.textContent = '';
@@ -396,6 +561,8 @@
 		function openLightbox(src, alt) {
 			if (!src) return;
 			previousOverflow = document.body.style.overflow || '';
+			previewImage.classList.remove('is-ready');
+			setLightboxLoading(true);
 			previewImage.src = src;
 			previewImage.alt = alt || '';
 			caption.textContent = alt || '';
@@ -403,6 +570,11 @@
 			lightbox.classList.add('is-open');
 			lightbox.setAttribute('aria-hidden', 'false');
 			document.body.style.overflow = 'hidden';
+
+			if (previewImage.complete && previewImage.naturalWidth > 0) {
+				previewImage.classList.add('is-ready');
+				setLightboxLoading(false);
+			}
 		}
 
 		function pickPreviewSource(img) {
@@ -554,6 +726,7 @@
 	document.addEventListener('DOMContentLoaded', function () {
 		var body = document.body;
 		var storageKey = 'site-theme-mode';
+			var conwayStorageKey = 'home-conway-grid-enabled';
 
 		
 		function applyThemeClass(mode) {
@@ -597,16 +770,57 @@
 			applyAndSave(next);
 		}
 
+			function readConwayEnabled() {
+				try {
+					var stored = localStorage.getItem(conwayStorageKey);
+					if (stored === null) return true;
+					return stored !== '0';
+				} catch (e) {
+					return true;
+				}
+			}
+
+			function saveConwayEnabled(enabled) {
+				try {
+					localStorage.setItem(conwayStorageKey, enabled ? '1' : '0');
+				} catch (e) {}
+			}
+
+			function dispatchConwayToggle(enabled) {
+				document.dispatchEvent(new CustomEvent('conway-grid-toggle', {
+					detail: { enabled: !!enabled }
+				}));
+			}
+
+			function syncConwayDockButtons() {
+				var conwayButtons = document.querySelectorAll('[data-action="conway"]');
+				if (!conwayButtons.length) return;
+				var enabled = readConwayEnabled();
+				conwayButtons.forEach(function (button) {
+					button.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+					button.setAttribute('title', enabled ? 'Conway 显示控制（当前：开）' : 'Conway 显示控制（当前：关）');
+				});
+			}
+
 		
 		initTheme();
+			dispatchConwayToggle(readConwayEnabled());
+			syncConwayDockButtons();
 
 		
 		window.addEventListener('storage', function (event) {
-			if (event.key !== storageKey) return;
-			var value = event.newValue;
-			var mode = value === 'dark' ? 'dark' : 'light';
-			
-			applyThemeClass(mode);
+				if (event.key === storageKey) {
+					var value = event.newValue;
+					var mode = value === 'dark' ? 'dark' : 'light';
+					
+					applyThemeClass(mode);
+					return;
+				}
+				if (event.key === conwayStorageKey) {
+					var enabled = event.newValue !== '0';
+					dispatchConwayToggle(enabled);
+					syncConwayDockButtons();
+				}
 		});
 
 		
@@ -647,6 +861,11 @@
 				if (action === 'search') {
 					var url = dock.getAttribute('data-search-url') || '/search/';
 					window.location.href = url;
+					} else if (action === 'conway') {
+						var nextEnabled = !readConwayEnabled();
+						saveConwayEnabled(nextEnabled);
+						dispatchConwayToggle(nextEnabled);
+						syncConwayDockButtons();
 				} else if (action === 'theme') {
 					toggleTheme();
 				} else if (action === 'lang') {
@@ -1662,10 +1881,10 @@
       <span class="liquid-dock-icon">🕒</span>
       <span class="liquid-dock-tooltip" aria-hidden="true">龙大课程助手</span>
     </a>
-    <a href="https://ideas.nero-lithos.com/" class="liquid-dock-item" data-dock-item target="_blank" rel="noopener noreferrer" aria-label="思想实验室" data-tooltip="思想实验室" title="思想实验室">
-      <span class="liquid-dock-icon">💭</span>
-      <span class="liquid-dock-tooltip" aria-hidden="true">思想实验室</span>
-    </a>
+    <button type="button" class="liquid-dock-item" data-dock-item data-action="conway" aria-label="Conway 显示控制" aria-pressed="true" data-tooltip="Conway 显示控制" title="Conway 显示控制">
+      <span class="liquid-dock-icon">⊞</span>
+      <span class="liquid-dock-tooltip" aria-hidden="true">Conway 显示控制</span>
+    </button>
     <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索" data-tooltip="站内搜索" title="站内搜索">
       <span class="liquid-dock-icon">🔍</span>
       <span class="liquid-dock-tooltip" aria-hidden="true">站内搜索</span>
