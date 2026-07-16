@@ -14,6 +14,7 @@
         {{ $mdaIconSrc := "" }}
         {{ $lguideIconSrc := "/lguide.png" | relURL }}
         {{ $linkedinIconSrc := "/li.png" | relURL }}
+        {{ $bonjourIconSrc := "/bonjour.png" | relURL }}
         {{ with $mdaIcon }}{{ $mdaIconSrc = printf "data:image/png;base64,%s" (.Content | base64Encode) }}{{ end }}
         <ul class="{{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0 mr3" }}">
           {{ $githubURL := "" }}
@@ -68,6 +69,12 @@
             </a>
           </li>
           {{ end }}
+
+          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+            <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://bonjour.bio/dh5568" title="Bonjour" aria-label="Bonjour">
+              <img src="{{ $bonjourIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--bonjour" aria-hidden="true" style="width:38px;height:38px;max-width:38px;max-height:38px;display:block;" />
+            </a>
+          </li>
 
           {{ range .Site.Menus.main }}
           {{ $menuURL := .URL }}

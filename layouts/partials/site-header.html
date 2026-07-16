@@ -4,6 +4,57 @@
   <header class="cover bg-top" style="background-image: url('{{ $featured_image }}'); position:relative;">
     <div class="{{ .Site.Params.cover_dimming_class | default "bg-black-60" }}" style="position:relative;">
       {{ partial "site-navigation.html" .}}
+      {{ if .IsHome }}
+      <div class="hero-curtain-layer" aria-hidden="true">
+        <div id="hero-curtain-panel" class="hero-curtain-panel" aria-hidden="true">
+          <div class="hero-curtain-board" aria-hidden="true">
+            <div class="hero-curtain-writing">
+              <p class="hero-curtain-writing-title">AboutMe:</p>
+              <p>外向且红偏绿性格，上海，CSE 专业，大三的港中深学生。</p>
+              <p>2 年 Pixiv 二创投稿经历 (iykyk)，2 个月上海链主金融企业市场部工作经验，2 次黑客松、2 个软件设计、2 个域名。</p>
+
+              <ul class="hero-curtain-writing-list">
+                <li>热衷：绘画 (Procreate)、3D 打印、Agent 架构设计、化学、矿物学、公开演讲、活动策划</li>
+                <li>熟悉：Cloudflare、Vite、Hugo、D3、Tableau、Excel、JS/TS、Python、C、Git</li>
+                <li>语言：高中时雅思 7.5，现在稍好，吴语能讲但洋泾浜</li>
+              </ul>
+
+              <p class="hero-curtain-writing-title">Work:</p>
+              <ul class="hero-curtain-writing-list">
+                <li>2026/6~7 · 外滩 FTC 绝赞打工中（浦发银行与黄浦区政府的银政合办领头者）</li>
+                <li>长期 · 上海阳光种子青少年服务发展中心的一员</li>
+              </ul>
+
+              <p class="hero-curtain-writing-title">Resources:</p>
+              <ul class="hero-curtain-writing-list">
+                <li>人：北大创业营 CEO、启源基金分管领导、国投研究院和浦耀信晔老总、交大教授...</li>
+                <li>AI：OpenAI Plus 会员；Openrouter 稳定充钱；Arkclaw 月度会员；GH Copilot 会员</li>
+                <li>Others：Canva 会员；Tableau 订阅</li>
+              </ul>
+
+              <p class="hero-curtain-writing-title">Contact:</p>
+              <p><a href="mailto:Nerolithos@hotmail.com">Nerolithos@hotmail.com</a></p>
+              <p>vx=zhuja1</p>
+            </div>
+            <span class="hero-curtain-chalk hero-curtain-chalk--white"></span>
+            <span class="hero-curtain-chalk hero-curtain-chalk--red"></span>
+            <span class="hero-curtain-eraser"></span>
+          </div>
+        </div>
+      </div>
+      <button
+        id="hero-curtain-rope"
+        class="hero-curtain-rope"
+        type="button"
+        aria-controls="hero-curtain-panel"
+        aria-expanded="false"
+        aria-label="拉动幕布"
+      >
+        <span class="hero-curtain-rope-thread" aria-hidden="true"></span>
+        <span class="hero-curtain-rope-knot" aria-hidden="true"></span>
+        <span class="hero-curtain-rope-grip" aria-hidden="true"></span>
+      </button>
+      {{ end }}
       <div class="tc-l pv4 pv6-l ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
           {{ .Title | default .Site.Title }}
@@ -153,6 +204,47 @@
         });
 
         animate();
+      })();
+      </script>
+
+      <script>
+      (function(){
+        var rope = document.getElementById('hero-curtain-rope');
+        var panel = document.getElementById('hero-curtain-panel');
+        if (!rope || !panel) return;
+
+        var isOpen = false;
+
+        function applyState() {
+          if (isOpen) {
+            panel.classList.add('is-open');
+            panel.setAttribute('aria-hidden', 'false');
+            rope.setAttribute('aria-expanded', 'true');
+          } else {
+            panel.classList.remove('is-open');
+            panel.setAttribute('aria-hidden', 'true');
+            rope.setAttribute('aria-expanded', 'false');
+          }
+        }
+
+        rope.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          rope.classList.remove('is-pulling');
+          // Force reflow so repeated clicks retrigger pull animation.
+          void rope.offsetWidth;
+          rope.classList.add('is-pulling');
+
+          isOpen = !isOpen;
+          applyState();
+        });
+
+        rope.addEventListener('animationend', function () {
+          rope.classList.remove('is-pulling');
+        });
+
+        applyState();
       })();
       </script>
       {{ end }}
