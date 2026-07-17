@@ -321,6 +321,7 @@
       var pointerFrameId = 0;
       var conwayStorageKey = 'home-conway-grid-enabled';
       var gridEnabled = true;
+      var pageVisible = !document.hidden;
       var baseCanvas = document.createElement('canvas');
       var baseContext = baseCanvas.getContext('2d', { alpha: true });
       if (!baseContext) return;
@@ -535,6 +536,8 @@
       }
 
       function drawFrame() {
+        if (!gridEnabled || !pageVisible) return;
+
         var width = canvas.clientWidth;
         var height = canvas.clientHeight;
         if (!width || !height) return;
@@ -552,7 +555,7 @@
       }
 
       function updateGridClip() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
 
         var viewportHeight = Math.max(0, Math.floor(window.innerHeight || document.documentElement.clientHeight || 0));
         var hero = document.querySelector('header.cover.bg-top');
@@ -604,16 +607,17 @@
       }
 
       function startAnimation() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         if (animationId) return;
         lastStepAt = 0;
         animationId = window.requestAnimationFrame(animate);
       }
 
       function stopAnimation() {
-        if (!animationId) return;
-        window.cancelAnimationFrame(animationId);
-        animationId = 0;
+        if (animationId) {
+          window.cancelAnimationFrame(animationId);
+          animationId = 0;
+        }
         if (pointerFrameId) {
           window.cancelAnimationFrame(pointerFrameId);
           pointerFrameId = 0;
@@ -621,12 +625,26 @@
       }
 
       function requestPointerDraw() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         if (pointerFrameId) return;
         pointerFrameId = window.requestAnimationFrame(function () {
           pointerFrameId = 0;
           drawFrame();
         });
+      }
+
+      function applyPageVisibilityState(isVisible) {
+        pageVisible = isVisible !== false;
+        if (!pageVisible) {
+          pointerActive = false;
+          stopAnimation();
+          return;
+        }
+        if (gridEnabled) {
+          updateGridClip();
+          drawFrame();
+          startAnimation();
+        }
       }
 
       function applyGridEnabledState(enabled) {
@@ -640,13 +658,15 @@
           return;
         }
 
+        if (!pageVisible) return;
+
         updateGridClip();
         drawFrame();
         startAnimation();
       }
 
       function animate(timestamp) {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
 
         if (!lastStepAt) {
           lastStepAt = timestamp;
@@ -664,7 +684,7 @@
       }
 
       function onResize() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
 
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(function () {
@@ -674,12 +694,12 @@
       }
 
       function onScroll() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         updateGridClip();
       }
 
       function onPointerMove(event) {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         pointerX = event.clientX;
         pointerY = event.clientY;
         pointerActive = true;
@@ -687,7 +707,7 @@
       }
 
       function onPointerLeave() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         pointerActive = false;
         requestPointerDraw();
       }
@@ -705,11 +725,13 @@
       window.addEventListener('pointermove', onPointerMove, { passive: true });
       document.addEventListener('mouseleave', onPointerLeave);
       document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-          stopAnimation();
-        } else {
-          startAnimation();
-        }
+        applyPageVisibilityState(!document.hidden);
+      });
+      window.addEventListener('pagehide', function () {
+        applyPageVisibilityState(false);
+      });
+      window.addEventListener('pageshow', function () {
+        applyPageVisibilityState(!document.hidden);
       });
     }
 

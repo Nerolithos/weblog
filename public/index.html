@@ -1371,7 +1371,7 @@
       </h2>
       <p class="gray f6 mb2">
         
-          2026-07-16 · 1 分钟阅读
+          2026-07-17 · 1 分钟阅读
         
       </p>
       <div class="lh-copy mid-gray home-post-preview">
@@ -1382,7 +1382,7 @@
           
           
             
-            <p>历史上的今天 (07-16) <strong>2019</strong> — A 100-year-old building in Mumbai, India, collapses, killing at least 10 people and leaving many others trapped. ……</p>
+            <p>历史上的今天 (07-17) <strong>2015</strong> — At least 120 people are killed and 130 injured by a suicide bombing in Diyala Governorate, Iraq. ……</p>
           
         
       </div>
@@ -4786,6 +4786,7 @@
       var pointerFrameId = 0;
       var conwayStorageKey = 'home-conway-grid-enabled';
       var gridEnabled = true;
+      var pageVisible = !document.hidden;
       var baseCanvas = document.createElement('canvas');
       var baseContext = baseCanvas.getContext('2d', { alpha: true });
       if (!baseContext) return;
@@ -5000,6 +5001,8 @@
       }
 
       function drawFrame() {
+        if (!gridEnabled || !pageVisible) return;
+
         var width = canvas.clientWidth;
         var height = canvas.clientHeight;
         if (!width || !height) return;
@@ -5017,7 +5020,7 @@
       }
 
       function updateGridClip() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
 
         var viewportHeight = Math.max(0, Math.floor(window.innerHeight || document.documentElement.clientHeight || 0));
         var hero = document.querySelector('header.cover.bg-top');
@@ -5069,16 +5072,17 @@
       }
 
       function startAnimation() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         if (animationId) return;
         lastStepAt = 0;
         animationId = window.requestAnimationFrame(animate);
       }
 
       function stopAnimation() {
-        if (!animationId) return;
-        window.cancelAnimationFrame(animationId);
-        animationId = 0;
+        if (animationId) {
+          window.cancelAnimationFrame(animationId);
+          animationId = 0;
+        }
         if (pointerFrameId) {
           window.cancelAnimationFrame(pointerFrameId);
           pointerFrameId = 0;
@@ -5086,12 +5090,26 @@
       }
 
       function requestPointerDraw() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         if (pointerFrameId) return;
         pointerFrameId = window.requestAnimationFrame(function () {
           pointerFrameId = 0;
           drawFrame();
         });
+      }
+
+      function applyPageVisibilityState(isVisible) {
+        pageVisible = isVisible !== false;
+        if (!pageVisible) {
+          pointerActive = false;
+          stopAnimation();
+          return;
+        }
+        if (gridEnabled) {
+          updateGridClip();
+          drawFrame();
+          startAnimation();
+        }
       }
 
       function applyGridEnabledState(enabled) {
@@ -5105,13 +5123,15 @@
           return;
         }
 
+        if (!pageVisible) return;
+
         updateGridClip();
         drawFrame();
         startAnimation();
       }
 
       function animate(timestamp) {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
 
         if (!lastStepAt) {
           lastStepAt = timestamp;
@@ -5129,7 +5149,7 @@
       }
 
       function onResize() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
 
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(function () {
@@ -5139,12 +5159,12 @@
       }
 
       function onScroll() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         updateGridClip();
       }
 
       function onPointerMove(event) {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         pointerX = event.clientX;
         pointerY = event.clientY;
         pointerActive = true;
@@ -5152,7 +5172,7 @@
       }
 
       function onPointerLeave() {
-        if (!gridEnabled) return;
+        if (!gridEnabled || !pageVisible) return;
         pointerActive = false;
         requestPointerDraw();
       }
@@ -5170,11 +5190,13 @@
       window.addEventListener('pointermove', onPointerMove, { passive: true });
       document.addEventListener('mouseleave', onPointerLeave);
       document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-          stopAnimation();
-        } else {
-          startAnimation();
-        }
+        applyPageVisibilityState(!document.hidden);
+      });
+      window.addEventListener('pagehide', function () {
+        applyPageVisibilityState(false);
+      });
+      window.addEventListener('pageshow', function () {
+        applyPageVisibilityState(!document.hidden);
       });
     }
 
@@ -5196,7 +5218,7 @@
     </a>
     <button type="button" class="liquid-dock-item" data-dock-item data-action="conway" aria-label="Conway 显示控制" aria-pressed="true" data-tooltip="Conway 显示控制" title="Conway 显示控制">
       <span class="liquid-dock-icon">⊞</span>
-      <span class="liquid-dock-tooltip" aria-hidden="true">Conway 显示控制</span>
+      <span class="liquid-dock-tooltip" aria-hidden="true">"Conway's Game of Life"</span>
     </button>
     <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索" data-tooltip="站内搜索" title="站内搜索">
       <span class="liquid-dock-icon">🔍</span>
