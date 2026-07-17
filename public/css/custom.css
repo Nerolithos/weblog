@@ -386,6 +386,81 @@ body.dark-mode .home-hero-search form {
   background: transparent;
 }
 
+.site-nav-brand-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.repo-stats-badge {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+}
+
+.repo-stats-badge-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 1.00rem;
+  font-weight: 200;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: opacity 0.14s ease-out;
+}
+
+.repo-stats-badge-link:hover,
+.repo-stats-badge-link:focus-visible {
+  opacity: 0.82;
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+}
+
+.repo-stats-label {
+  opacity: 0.9;
+}
+
+.repo-stats-sep {
+  opacity: 0.62;
+}
+
+.site-nav-fixed .repo-stats-badge-link,
+.site-nav-fixed .repo-stats-badge-link:hover,
+.site-nav-fixed .repo-stats-badge-link:focus-visible,
+.site-nav-fixed .repo-stats-badge-link:active {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+}
+
+@media (max-width: 900px) {
+  .site-nav-brand-row {
+    gap: 0.72rem;
+  }
+
+  .repo-stats-badge-link {
+    font-size: 0.96rem;
+    gap: 0.26rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .repo-stats-badge-link {
+    font-size: 0.82rem;
+  }
+}
+
 /* 首页舞台幕布：绳索 + 幕布收放 */
 .hero-curtain-layer {
   position: absolute;

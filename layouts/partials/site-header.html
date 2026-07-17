@@ -253,7 +253,7 @@
 {{ else }}
   {{/* 无封面图时的简化头部 */}}
   <header>
-    <div class="pb3-m pb6-l {{ .Site.Params.background_color_class | default "bg-black" }}">
+    <div class="pb3-m pb6-l {{ .Site.Params.background_color_class | default "bg-black" }}" style="position:relative;">
       {{ partial "site-navigation.html" . }}
       <div class="tc-l pv3 ph3 ph4-ns home-hero-inner">
         <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">

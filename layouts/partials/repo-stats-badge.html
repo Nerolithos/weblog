@@ -1,0 +1,32 @@
+{{ $repoURL := "https://github.com/Nerolithos/weblog" }}
+{{ $stars := default 0 .Site.Data.github_repo_stats.stars }}
+{{ $commits := default 0 .Site.Data.github_repo_stats.commits }}
+{{ $updatedAt := default "" .Site.Data.github_repo_stats.updated_at }}
+{{ $owner := "Nerolithos" }}
+{{ $repoName := "weblog" }}
+{{ $tooltip := printf "GitHub repo stats: %v stars, %v commits" $stars $commits }}
+{{ if $updatedAt }}
+  {{ $tooltip = printf "%s (updated %s UTC)" $tooltip $updatedAt }}
+{{ end }}
+<div
+  class="repo-stats-badge"
+  data-repo-stats
+  data-repo-owner="{{ $owner }}"
+  data-repo-name="{{ $repoName }}"
+  data-fallback-stars="{{ $stars }}"
+  data-fallback-commits="{{ $commits }}"
+>
+  <a
+    href="{{ $repoURL }}"
+    class="repo-stats-badge-link no-underline"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="GitHub repository stats"
+    title="{{ $tooltip }}"
+  >
+    <span class="repo-stats-label">GitHub</span>
+    <span>★ <span data-repo-stars>{{ $stars }}</span></span>
+    <span class="repo-stats-sep">|</span>
+    <span>Commits <span data-repo-commits>{{ $commits }}</span></span>
+  </a>
+</div>

@@ -8,7 +8,7 @@
   {{ $all := .Site.RegularPages }}
   {{ $count := len $all }}
   <div class="home-subtitle-row flex items-center justify-between flex-wrap" style="gap: 12px; margin-bottom: 12px;">
-    <h1 class="f2 ma0">📚 Recent Blogs (Currently {{ $count }} blogs)</h1>
+    <h1 class="f2 ma0">📚 Recent Blogs ({{ $count }})</h1>
     <a
       class="home-category-btn no-underline"
       href="{{ "categories/" | relURL }}"

@@ -378,6 +378,123 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
+		var widgets = document.querySelectorAll('[data-repo-stats]');
+		if (!widgets.length) return;
+
+		var cacheKey = 'repo-stats-live-cache-v1';
+		var cacheTtlMs = 10 * 60 * 1000;
+
+		function toInt(value, fallback) {
+			var parsed = parseInt(value, 10);
+			return Number.isFinite(parsed) ? parsed : fallback;
+		}
+
+		function parseCommitCountFromLinkHeader(linkHeader) {
+			if (!linkHeader) return null;
+			var match = linkHeader.match(/[?&]page=(\d+)>;\s*rel="last"/i);
+			if (!match) return null;
+			return toInt(match[1], null);
+		}
+
+		function applyStatsToWidget(widget, stars, commits) {
+			var starsNode = widget.querySelector('[data-repo-stars]');
+			var commitsNode = widget.querySelector('[data-repo-commits]');
+			if (starsNode) starsNode.textContent = String(stars);
+			if (commitsNode) commitsNode.textContent = String(commits);
+		}
+
+		function applyStats(stars, commits) {
+			widgets.forEach(function (widget) {
+				applyStatsToWidget(widget, stars, commits);
+			});
+		}
+
+		function readFallback() {
+			var first = widgets[0];
+			return {
+				stars: toInt(first.getAttribute('data-fallback-stars'), 0),
+				commits: toInt(first.getAttribute('data-fallback-commits'), 0)
+			};
+		}
+
+		function readCache() {
+			try {
+				var raw = localStorage.getItem(cacheKey);
+				if (!raw) return null;
+				var cached = JSON.parse(raw);
+				if (!cached || !cached.updatedAt) return null;
+				if (Date.now() - cached.updatedAt > cacheTtlMs) return null;
+				if (!Number.isFinite(cached.stars) || !Number.isFinite(cached.commits)) return null;
+				return cached;
+			} catch (e) {
+				return null;
+			}
+		}
+
+		function writeCache(stars, commits) {
+			try {
+				localStorage.setItem(cacheKey, JSON.stringify({
+					stars: stars,
+					commits: commits,
+					updatedAt: Date.now()
+				}));
+			} catch (e) {}
+		}
+
+		var fallback = readFallback();
+		applyStats(fallback.stars, fallback.commits);
+
+		var cached = readCache();
+		if (cached) {
+			applyStats(cached.stars, cached.commits);
+		}
+
+		var firstWidget = widgets[0];
+		var owner = firstWidget.getAttribute('data-repo-owner') || 'Nerolithos';
+		var repo = firstWidget.getAttribute('data-repo-name') || 'weblog';
+		var repoApiUrl = 'https://api.github.com/repos/' + owner + '/' + repo;
+		var commitsApiUrl = repoApiUrl + '/commits?per_page=1';
+
+		Promise.all([
+			fetch(repoApiUrl, { cache: 'no-store' }),
+			fetch(commitsApiUrl, { cache: 'no-store' })
+		]).then(function (responses) {
+			var repoResponse = responses[0];
+			var commitsResponse = responses[1];
+
+			if (!repoResponse.ok || !commitsResponse.ok) {
+				throw new Error('GitHub API response not ok');
+			}
+
+			var commitCountFromHeader = parseCommitCountFromLinkHeader(commitsResponse.headers.get('link'));
+			var commitsDataPromise = commitCountFromHeader !== null
+				? Promise.resolve({ count: commitCountFromHeader })
+				: commitsResponse.json().then(function (data) {
+					var count = Array.isArray(data) ? data.length : 0;
+					return { count: count };
+				});
+
+			return Promise.all([repoResponse.json(), commitsDataPromise]);
+		}).then(function (payload) {
+			var repoData = payload[0] || {};
+			var commitMeta = payload[1] || {};
+			var stars = toInt(repoData.stargazers_count, fallback.stars);
+			var commits = toInt(commitMeta.count, fallback.commits);
+
+			if (stars < 0) stars = fallback.stars;
+			if (commits < 0) commits = fallback.commits;
+
+			applyStats(stars, commits);
+			writeCache(stars, commits);
+		}).catch(function () {
+			
+		});
+	});
+</script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
 		var cards = document.querySelectorAll('.home-post-card[data-post-url]');
 		if (!cards || !cards.length) {
 			return;
@@ -912,11 +1029,44 @@
     <div class="bg-black-60" style="position:relative;">
       <nav class="pv2 ph3 ph4-ns site-nav-fixed" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+    <div class="site-nav-brand-row flex items-center">
+      <a href="http://localhost:1313/" class="f3 fw2 hover-white no-underline white-90 dib site-nav-title">
+        
+          Lithos&#39; Blog
+        
+      </a>
       
-        Lithos&#39; Blog
-      
-    </a>
+
+
+
+
+
+
+
+<div
+  class="repo-stats-badge"
+  data-repo-stats
+  data-repo-owner="Nerolithos"
+  data-repo-name="weblog"
+  data-fallback-stars="0"
+  data-fallback-commits="0"
+>
+  <a
+    href="https://github.com/Nerolithos/weblog"
+    class="repo-stats-badge-link no-underline"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="GitHub repository stats"
+    title="GitHub repo stats: 0 stars, 0 commits"
+  >
+    <span class="repo-stats-label">GitHub</span>
+    <span>★ <span data-repo-stars>0</span></span>
+    <span class="repo-stats-sep">|</span>
+    <span>Commits <span data-repo-commits>0</span></span>
+  </a>
+</div>
+
+    </div>
     <div class="flex-l items-center">
       
 
@@ -1243,7 +1393,7 @@
     </a>
     <button type="button" class="liquid-dock-item" data-dock-item data-action="conway" aria-label="Conway 显示控制" aria-pressed="true" data-tooltip="Conway 显示控制" title="Conway 显示控制">
       <span class="liquid-dock-icon">⊞</span>
-      <span class="liquid-dock-tooltip" aria-hidden="true">Conway 显示控制</span>
+      <span class="liquid-dock-tooltip" aria-hidden="true">"Conway's Game of Life"</span>
     </button>
     <button type="button" class="liquid-dock-item" data-dock-item data-action="search" aria-label="站内搜索" data-tooltip="站内搜索" title="站内搜索">
       <span class="liquid-dock-icon">🔍</span>
