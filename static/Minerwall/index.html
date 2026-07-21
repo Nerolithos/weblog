@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minerwall - 矿物展示墙</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand-wrap">
+        <p class="brand-eyebrow">MINERAL COLLECTION</p>
+        <h1 class="brand-title">Minerwall 浮岛展示墙</h1>
+        <p id="wall-stats" class="wall-stats" aria-live="polite"></p>
+      </div>
+    </header>
+
+    <main id="viewport" aria-label="矿物展示墙拖拽区域">
+      <section id="wall" aria-live="polite"></section>
+    </main>
+
+    <section id="detail-modal" class="detail-modal" aria-hidden="true">
+      <div class="detail-backdrop" data-close-modal="true"></div>
+      <article class="detail-shell" role="dialog" aria-modal="true" aria-label="矿物详情">
+        <button id="close-modal" class="close-btn" type="button" aria-label="关闭详情">
+          ×
+        </button>
+
+        <div class="gallery-panel">
+          <div id="gallery-main-wrap" class="gallery-main-wrap">
+            <img id="gallery-main" class="gallery-main" alt="矿物图像" />
+            <div class="gallery-nav">
+              <button id="prev-image" type="button" class="nav-btn" aria-label="上一张">‹</button>
+              <button id="next-image" type="button" class="nav-btn" aria-label="下一张">›</button>
+            </div>
+          </div>
+          <div id="thumb-strip" class="thumb-strip" aria-label="缩略图序列"></div>
+        </div>
+
+        <div class="detail-panel">
+          <p id="mineral-code" class="detail-code"></p>
+          <h2 id="mineral-name" class="detail-title"></h2>
+          <div class="detail-grid">
+            <div class="field">
+              <span class="field-label">化学式</span>
+              <span id="mineral-formula" class="field-value">待填写</span>
+            </div>
+            <div class="field">
+              <span class="field-label">尺寸</span>
+              <span id="mineral-size" class="field-value">待填写</span>
+            </div>
+            <div class="field">
+              <span class="field-label">市场价</span>
+              <span id="mineral-price" class="field-value">待填写</span>
+            </div>
+            <div class="field">
+              <span class="field-label">稀有度</span>
+              <span id="mineral-rarity" class="field-value">待填写</span>
+            </div>
+            <div class="field">
+              <span class="field-label">晶系</span>
+              <span id="mineral-crystal-system" class="field-value">待填写</span>
+            </div>
+            <div class="field">
+              <span class="field-label">矿物族</span>
+              <span id="mineral-group" class="field-value">待填写</span>
+            </div>
+          </div>
+          <div class="summary-wrap">
+            <h3 class="summary-title">简介</h3>
+            <p id="mineral-summary" class="summary-text"></p>
+          </div>
+          <p id="slide-indicator" class="slide-indicator"></p>
+        </div>
+      </article>
+    </section>
+
+    <script src="app.js"></script>
+  </body>
+</html>
