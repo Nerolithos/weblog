@@ -29,14 +29,22 @@
           {{ with .Params.featured_image }}
             {{ if reflect.IsMap . }}
               {{ with .src }}
+              {{ $imgSrc := printf "%v" . }}
+              {{ if not (or (hasPrefix $imgSrc "http://") (hasPrefix $imgSrc "https://") (hasPrefix $imgSrc "/")) }}
+                {{ $imgSrc = printf "/%s" $imgSrc }}
+              {{ end }}
               <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
-                <img src="{{ . | relURL }}" alt="{{ $.Params.featured_image.alt | default $.Title }}"
+                <img src="{{ $imgSrc }}" alt="{{ $.Params.featured_image.alt | default $.Title }}"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
               {{ end }}
             {{ else }}
+              {{ $imgSrc := printf "%v" . }}
+              {{ if not (or (hasPrefix $imgSrc "http://") (hasPrefix $imgSrc "https://") (hasPrefix $imgSrc "/")) }}
+                {{ $imgSrc = printf "/%s" $imgSrc }}
+              {{ end }}
               <a class="dn db-l w-third-l pl3" href="{{ $.RelPermalink }}">
-                <img src="{{ . | relURL }}" alt="{{ $.Title }}"
+                <img src="{{ $imgSrc }}" alt="{{ $.Title }}"
                      style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
               </a>
             {{ end }}

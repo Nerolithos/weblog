@@ -5,7 +5,7 @@ languageCode = 'zh-cn'
 title = "Lithos' Blog" # Blog title
 theme = 'ananke1'
 hasCJKLanguage = true
-canonifyurls = true
+canonifyurls = false
 pagination.pagerSize = 6
 
 [outputs]
