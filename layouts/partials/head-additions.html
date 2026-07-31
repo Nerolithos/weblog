@@ -1,4 +1,8 @@
 <link rel="stylesheet" href="{{ "/css/custom.css" | relURL }}">
+<link rel="dns-prefetch" href="//i.postimg.cc">
+<link rel="dns-prefetch" href="//postimg.cc">
+<link rel="preconnect" href="https://i.postimg.cc" crossorigin>
+<link rel="preconnect" href="https://postimg.cc" crossorigin>
 
 <style>
 	/* 阅读进度条样式：独立于主题 CSS，避免缓存问题 */
@@ -268,6 +272,15 @@
 		// 初始计算一次
 		updateProgress();
 	});
+</script>
+
+{{/* 注册图片缓存 Service Worker：仅增强 postimg 外链图片重复访问速度 */}}
+<script>
+	if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+		navigator.serviceWorker.register('{{ "/sw-image-cache.js" | relURL }}').catch(function () {
+			// 不支持或注册失败时静默回退，不影响页面功能
+		});
+	}
 </script>
 
 {{/* GitHub 仓库统计：页面加载后实时更新（含短时缓存，避免频繁请求） */}}
@@ -612,6 +625,26 @@
 			if (img.dataset.zoomBound === 'true') return;
 			img.dataset.zoomBound = 'true';
 			img.classList.add('post-content-image-zoomable');
+
+			if (!img.hasAttribute('decoding')) {
+				img.setAttribute('decoding', 'async');
+			}
+
+			if (!img.hasAttribute('loading')) {
+				var top = img.getBoundingClientRect().top;
+				var inFirstViewport = top >= 0 && top < (window.innerHeight * 0.9);
+				if (inFirstViewport) {
+					img.setAttribute('loading', 'eager');
+					if (!img.hasAttribute('fetchpriority')) {
+						img.setAttribute('fetchpriority', 'high');
+					}
+				} else {
+					img.setAttribute('loading', 'lazy');
+					if (!img.hasAttribute('fetchpriority')) {
+						img.setAttribute('fetchpriority', 'low');
+					}
+				}
+			}
 
 			if (!img.hasAttribute('tabindex')) {
 				img.setAttribute('tabindex', '0');

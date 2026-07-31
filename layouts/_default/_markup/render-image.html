@@ -1,0 +1,18 @@
+{{- $src := .Destination -}}
+{{- $isPostImg := or (hasPrefix $src "https://i.postimg.cc/") (hasPrefix $src "http://i.postimg.cc/") -}}
+{{- $loading := "lazy" -}}
+{{- $fetchPriority := "low" -}}
+{{- if and (not $isPostImg) (eq .Ordinal 0) -}}
+  {{- $loading = "eager" -}}
+  {{- $fetchPriority = "high" -}}
+{{- end -}}
+{{- $altText := .PlainText | default "" -}}
+<img
+  src="{{ $src | safeURL }}"
+  alt="{{ $altText }}"
+  {{- with .Title }} title="{{ . }}"{{- end }}
+  decoding="async"
+  loading="{{ $loading }}"
+  fetchpriority="{{ $fetchPriority }}"
+  {{- if $isPostImg }} referrerpolicy="no-referrer"{{- end }}
+/>
