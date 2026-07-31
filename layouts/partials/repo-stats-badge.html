@@ -1,10 +1,12 @@
 {{ $repoURL := "https://github.com/Nerolithos/weblog" }}
 {{ $stars := default 0 .Site.Data.github_repo_stats.stars }}
 {{ $commits := default 0 .Site.Data.github_repo_stats.commits }}
+{{ $followers := default 0 .Site.Data.github_repo_stats.followers }}
 {{ $updatedAt := default "" .Site.Data.github_repo_stats.updated_at }}
 {{ $owner := "Nerolithos" }}
 {{ $repoName := "weblog" }}
-{{ $tooltip := printf "GitHub repo stats: %v stars, %v commits" $stars $commits }}
+{{ $profileURL := "https://github.com/Nerolithos" }}
+{{ $tooltip := printf "GitHub repo stats: %v stars, %v commits, %v followers" $stars $commits $followers }}
 {{ if $updatedAt }}
   {{ $tooltip = printf "%s (updated %s UTC)" $tooltip $updatedAt }}
 {{ end }}
@@ -15,6 +17,7 @@
   data-repo-name="{{ $repoName }}"
   data-fallback-stars="{{ $stars }}"
   data-fallback-commits="{{ $commits }}"
+  data-fallback-followers="{{ $followers }}"
 >
   <a
     href="{{ $repoURL }}"
@@ -25,8 +28,19 @@
     title="{{ $tooltip }}"
   >
     <span class="repo-stats-label">GitHub</span>
-    <span>★ <span data-repo-stars>{{ $stars }}</span></span>
+    <span><span class="repo-stats-icon" aria-hidden="true">★</span> <span data-repo-stars>{{ $stars }}</span></span>
     <span class="repo-stats-sep">|</span>
-    <span>Commits <span data-repo-commits>{{ $commits }}</span></span>
+    <span><span class="repo-stats-icon" aria-hidden="true">⬆&#xFE0E;</span> <span data-repo-commits>{{ $commits }}</span></span>
+  </a>
+  <span class="repo-stats-sep" aria-hidden="true">|</span>
+  <a
+    href="{{ $profileURL }}"
+    class="repo-stats-badge-link repo-stats-badge-link--followers no-underline"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="GitHub profile followers"
+    title="GitHub followers"
+  >
+    <span><span class="repo-stats-icon repo-stats-icon--person" aria-hidden="true">👤&#xFE0E;</span> <span data-repo-followers>{{ $followers }}</span></span>
   </a>
 </div>

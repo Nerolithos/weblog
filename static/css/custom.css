@@ -398,6 +398,7 @@ body.dark-mode .home-hero-search form {
   z-index: 2;
   display: inline-flex;
   align-items: center;
+  gap: 0.34rem;
 }
 
 .repo-stats-badge-link {
@@ -434,6 +435,18 @@ body.dark-mode .home-hero-search form {
 
 .repo-stats-sep {
   opacity: 0.62;
+}
+
+.repo-stats-icon {
+  color: inherit;
+  font-variant-emoji: text;
+}
+
+.repo-stats-icon--person {
+  color: #111827 !important;
+  display: inline-block;
+  filter: grayscale(1) brightness(0) contrast(1.1);
+  -webkit-filter: grayscale(1) brightness(0) contrast(1.1);
 }
 
 .site-nav-fixed .repo-stats-badge-link,
