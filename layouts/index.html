@@ -96,7 +96,7 @@
           {{ $imgSrc = printf "/%s" $imgSrc }}
         {{ end }}
         <a class="dn db-l w-third-l pl3" href="{{ with $post.Param "redirect" }}{{ . | relURL }}{{ else }}{{ $post.RelPermalink }}{{ end }}">
-          <img src="{{ $imgSrc }}" alt="{{ $post.Title }}" loading="lazy" decoding="async" fetchpriority="low"
+          <img src="{{ $imgSrc }}" alt="{{ $post.Title }}"
                style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
         </a>
       {{ end }}
@@ -179,7 +179,7 @@
           {{ $imgSrc = printf "/%s" $imgSrc }}
         {{ end }}
         <a class="dn db-l w-third-l pl3" href="{{ with $post.Param "redirect" }}{{ . | relURL }}{{ else }}{{ $post.RelPermalink }}{{ end }}">
-          <img src="{{ $imgSrc }}" alt="{{ $post.Title }}" loading="lazy" decoding="async" fetchpriority="low"
+          <img src="{{ $imgSrc }}" alt="{{ $post.Title }}"
                style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
         </a>
       {{ end }}

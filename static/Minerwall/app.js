@@ -24,6 +24,8 @@ const assetFiles = [
   "rhs3.jpeg",
   "uva1.jpeg",
   "uva2.jpeg",
+  "wul1.jpeg",
+  "wul2.jpeg",
   "xhf1.png",
   "xhf2.jpeg"
 ];
