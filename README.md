@@ -2,6 +2,8 @@
 
 面向香港中文大学(深圳) 为主的大学生群体建立的个人博客站。**整合资源，开源共享，跨界交友**。
 
+[龙大生存指南（新生指引、FAQ、各种坑）](https://blog.nero-lithos.com/posts/lgu/)
+
 想要 CUHKSZ 课程讲解、考卷/作业分析？[点击此处转至我的 CUHKSZ blog 网站主页](https://blog.nero-lithos.com/)
 
 或许玩一玩神人小游戏？[模拟计算机解密游戏（260420: 更新了背景音乐和音效）](https://blog.nero-lithos.com/pet)
