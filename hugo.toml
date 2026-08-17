@@ -8,11 +8,11 @@ hasCJKLanguage = true
 canonifyurls = false
 pagination.pagerSize = 6
 
-[outputs]
-  home = ["HTML", "RSS", "JSON"]
-
 googleAnalytics = ""
 enableRobotsTXT = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
 
 [params]
   custom_css = ["css/custom.css"]
