@@ -1,6 +1,6 @@
 ---
 title: "🐉🧱 龙大生存指南 CUHKSZ Survival Handbook"
-date: 2026-08-14T14:23:58+08:00
+date: 2026-08-23T14:23:58+08:00
 draft: false
 summary: "龙大人自己的生存指南汇总，绝赞创作中"
 categories: 
@@ -246,6 +246,8 @@ OJ (**10.26.200.13/** 或 https://oj.cuhk.edu.cn)是SDS学院(曾用的) Java �
 [选课/选教授 AI](https://blog.nero-lithos.com/courseai/)
 
 [全专业修读计划说明](https://registry.cuhk.edu.cn/page/22)
+
+[非专业(通识课)修读计划说明](https://registry.cuhk.edu.cn/page/19)
 
 抢课与 AD 周：学校在 sis 系统上的抢课系统存在一个显然的漏洞，即，虽然教务处规定不参与预选课的学生将延迟 10 分钟开始抢课作为惩罚，但是并没有规定要按照自己的真实需求预选课，所以很多人会在预选课时只报一两门充数，然后在正式选课时加上大量未预选的科目。这就导致了教务处在使用预选课统计每门课的意向报名人数时数据的巨大偏差。解决这个问题的方案比如将学院必修课（核心课）改为直接安排给学生，只开通选修课（CEC、ENG、CHI 等）的抢课。
 

@@ -1,0 +1,1750 @@
+{{/*
+Usage in Markdown:
+
+{{< badge-maker >}}
+
+功能：
+1. Custom Logo：上传图片并硬编码为 Base64
+2. Built-in Logo：使用 Shields.io / Simple Icons slug
+3. 始终生成一个标准 Shields.io badge
+*/}}
+
+<div class="badge-maker">
+  <div class="bm-grid">
+
+    <div class="bm-field">
+      <label>左侧文字</label>
+      <input class="bm-label" type="text" value="Hackathon">
+    </div>
+
+    <div class="bm-field">
+      <label>右侧文字</label>
+      <input class="bm-message" type="text" value="AdventureX 2026">
+    </div>
+
+    <div class="bm-field">
+      <label>左侧颜色</label>
+
+      <div class="bm-color-row">
+        <input
+          class="bm-label-color-picker"
+          type="color"
+          value="#555555"
+        >
+
+        <input
+          class="bm-label-color"
+          type="text"
+          value="555555"
+        >
+      </div>
+    </div>
+
+    <div class="bm-field">
+      <label>右侧颜色</label>
+
+      <div class="bm-color-row">
+        <input
+          class="bm-message-color-picker"
+          type="color"
+          value="#ff8400"
+        >
+
+        <input
+          class="bm-message-color"
+          type="text"
+          value="ff8400"
+        >
+      </div>
+    </div>
+
+    <div class="bm-field">
+      <label>Badge Style</label>
+
+      <select class="bm-style">
+        <option value="flat">flat</option>
+        <option value="flat-square" selected>flat-square</option>
+        <option value="plastic">plastic</option>
+        <option value="for-the-badge">for-the-badge</option>
+        <option value="social">social</option>
+      </select>
+    </div>
+
+    <div class="bm-field">
+      <label>点击链接（可选）</label>
+
+      <input
+        class="bm-link"
+        type="text"
+        placeholder="https://example.com"
+      >
+    </div>
+
+  </div>
+
+
+  <!-- Logo Mode -->
+
+  <div class="bm-logo-section">
+
+    <label class="bm-section-title">
+      Logo 来源
+    </label>
+
+    <div class="bm-logo-mode">
+
+      <label>
+        <input
+          type="radio"
+          name="bm-logo-mode"
+          value="builtin"
+          checked
+        >
+        Shields 内置 Logo
+      </label>
+
+      <label>
+        <input
+          type="radio"
+          name="bm-logo-mode"
+          value="custom"
+        >
+        自定义图片
+      </label>
+
+      <label>
+        <input
+          type="radio"
+          name="bm-logo-mode"
+          value="none"
+        >
+        不使用 Logo
+      </label>
+
+    </div>
+
+  </div>
+
+
+  <!-- Built-in Logo -->
+
+  <div class="bm-builtin-panel">
+
+    <div class="bm-field">
+
+      <label>
+        Logo 名称 / Simple Icons slug
+      </label>
+
+      <div class="bm-logo-search-row">
+
+        <input
+          class="bm-logo-slug"
+          type="text"
+          value="github"
+          placeholder="例如 github / python / apple"
+        >
+
+        <button
+          class="bm-check-logo"
+          type="button"
+        >
+          检查
+        </button>
+
+      </div>
+
+      <div class="bm-logo-status"></div>
+
+    </div>
+
+
+    <div class="bm-field">
+
+      <label>Logo 颜色</label>
+
+      <div class="bm-color-row">
+
+        <input
+          class="bm-logo-color-picker"
+          type="color"
+          value="#ffffff"
+        >
+
+        <input
+          class="bm-logo-color"
+          type="text"
+          value="ffffff"
+        >
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Custom Logo -->
+
+  <div class="bm-custom-panel" hidden>
+
+    <label class="bm-drop-zone">
+
+      <strong>
+        点击或拖入自定义 Logo
+      </strong>
+
+      <span>
+        SVG / PNG / JPG / WEBP
+      </span>
+
+      <input
+        class="bm-file-input"
+        type="file"
+        accept="image/svg+xml,image/png,image/jpeg,image/webp"
+      >
+
+      <img
+        class="bm-logo-preview"
+        alt="Custom Logo Preview"
+      >
+
+    </label>
+
+
+    <div class="bm-custom-warning">
+      自定义图片会直接转换为 Base64 并硬编码进 Shields URL。
+      图片越大，最终 URL 越长。
+    </div>
+
+  </div>
+
+
+  <!-- Preview -->
+
+  <div class="bm-preview-area">
+
+    <div class="bm-preview-title">
+      Preview
+    </div>
+
+    <img
+      class="bm-badge-preview"
+      alt="Badge Preview"
+    >
+
+    <div
+      class="bm-preview-error"
+      hidden
+    ></div>
+
+  </div>
+
+
+  <!-- Markdown -->
+
+  <div class="bm-output">
+
+    <label>
+      Markdown
+    </label>
+
+    <div class="bm-output-row">
+
+      <textarea
+        class="bm-markdown"
+        readonly
+      ></textarea>
+
+      <button
+        type="button"
+        data-copy="markdown"
+      >
+        复制
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- URL -->
+
+  <div class="bm-output">
+
+    <label>
+      Shields.io URL
+    </label>
+
+    <div class="bm-output-row">
+
+      <textarea
+        class="bm-url"
+        readonly
+      ></textarea>
+
+      <button
+        type="button"
+        data-copy="url"
+      >
+        复制
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- HTML -->
+
+  <div class="bm-output">
+
+    <label>
+      HTML
+    </label>
+
+    <div class="bm-output-row">
+
+      <textarea
+        class="bm-html"
+        readonly
+      ></textarea>
+
+      <button
+        type="button"
+        data-copy="html"
+      >
+        复制
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- Base64 -->
+
+  <div
+    class="bm-output bm-base64-box"
+    hidden
+  >
+
+    <label>
+      Custom Logo Base64
+    </label>
+
+    <div class="bm-output-row">
+
+      <textarea
+        class="bm-base64"
+        readonly
+      ></textarea>
+
+      <button
+        type="button"
+        data-copy="base64"
+      >
+        复制
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<style>
+
+.badge-maker {
+  margin: 2rem 0;
+  padding: 24px;
+
+  border: 1px solid #d0d7de;
+  border-radius: 14px;
+
+  background: var(--entry, #fff);
+}
+
+.badge-maker * {
+  box-sizing: border-box;
+}
+
+
+.bm-grid,
+.bm-builtin-panel {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 18px;
+}
+
+
+.bm-field label,
+.bm-output > label,
+.bm-section-title {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+
+.badge-maker
+input[type="text"],
+.badge-maker
+select {
+  width: 100%;
+
+  min-height: 42px;
+
+  padding: 0 12px;
+
+  border:
+    1px solid
+    #d0d7de;
+
+  border-radius: 7px;
+
+  font: inherit;
+
+  background:
+    var(--theme, #fff);
+
+  color:
+    var(--primary, #24292f);
+}
+
+
+.bm-color-row {
+  display: flex;
+
+  gap: 8px;
+}
+
+
+.badge-maker
+input[type="color"] {
+  width: 54px;
+
+  min-width: 54px;
+
+  height: 42px;
+
+  padding: 2px;
+
+  border:
+    1px solid
+    #d0d7de;
+
+  border-radius: 7px;
+
+  background: transparent;
+}
+
+
+.bm-logo-section {
+  margin-top: 24px;
+}
+
+
+.bm-logo-mode {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 20px;
+}
+
+
+.bm-logo-mode label {
+  cursor: pointer;
+}
+
+
+.bm-builtin-panel {
+  margin-top: 18px;
+}
+
+
+.bm-logo-search-row {
+  display: flex;
+
+  gap: 8px;
+}
+
+
+.bm-logo-search-row input {
+  flex: 1;
+}
+
+
+.badge-maker button {
+  padding: 8px 15px;
+
+  border: 0;
+
+  border-radius: 7px;
+
+  background: #24292f;
+
+  color: white;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.badge-maker button:hover {
+  opacity: .85;
+}
+
+
+.bm-logo-status {
+  min-height: 20px;
+
+  margin-top: 7px;
+
+  font-size: 13px;
+}
+
+
+.bm-logo-status.ok {
+  color: #1a7f37;
+}
+
+
+.bm-logo-status.error {
+  color: #cf222e;
+}
+
+
+.bm-custom-panel {
+  margin-top: 18px;
+}
+
+
+.bm-drop-zone {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 25px;
+
+  border:
+    2px dashed
+    #afb8c1;
+
+  border-radius: 12px;
+
+  text-align: center;
+
+  cursor: pointer;
+}
+
+
+.bm-drop-zone span {
+  margin-top: 5px;
+
+  color: #6e7781;
+
+  font-size: 13px;
+}
+
+
+.bm-file-input {
+  display: none;
+}
+
+
+.bm-logo-preview {
+  display: none;
+
+  max-width: 100px;
+
+  max-height: 65px;
+
+  margin-top: 14px;
+
+  object-fit: contain;
+}
+
+
+.bm-custom-warning {
+  margin-top: 10px;
+
+  font-size: 13px;
+
+  color: #6e7781;
+}
+
+
+.bm-preview-area {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 130px;
+
+  margin-top: 24px;
+
+  padding: 24px;
+
+  overflow-x: auto;
+
+  border-radius: 12px;
+
+  background:
+    #f6f8fa;
+}
+
+
+.bm-preview-title {
+  margin-bottom: 16px;
+
+  color: #6e7781;
+
+  font-size: 13px;
+}
+
+
+.bm-badge-preview {
+  max-width: 100%;
+}
+
+
+.bm-preview-error {
+  color: #cf222e;
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+
+.bm-output {
+  margin-top: 18px;
+}
+
+
+.bm-output-row {
+  display: flex;
+
+  gap: 8px;
+}
+
+
+.badge-maker textarea {
+  flex: 1;
+
+  min-height: 82px;
+
+  padding: 10px;
+
+  resize: vertical;
+
+  border:
+    1px solid
+    #d0d7de;
+
+  border-radius: 7px;
+
+  background:
+    var(--theme, #fff);
+
+  color:
+    var(--primary, #24292f);
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+
+  font-size: 12px;
+}
+
+
+@media (
+  max-width: 700px
+) {
+
+  .bm-grid,
+  .bm-builtin-panel {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .bm-output-row {
+    flex-direction:
+      column;
+  }
+
+
+  .bm-logo-mode {
+    flex-direction:
+      column;
+
+    gap: 9px;
+  }
+
+}
+
+</style>
+
+
+<script>
+
+(() => {
+
+  const script =
+    document.currentScript;
+
+
+  /*
+   * 当前 shortcode 对应的 app
+   */
+
+  let app =
+    script.previousElementSibling;
+
+
+  while (
+    app &&
+    !app.classList.contains(
+      "badge-maker"
+    )
+  ) {
+
+    app =
+      app.previousElementSibling;
+
+  }
+
+
+  if (!app) {
+
+    return;
+
+  }
+
+
+  const $ =
+    selector =>
+      app.querySelector(
+        selector
+      );
+
+
+  const $$ =
+    selector =>
+      app.querySelectorAll(
+        selector
+      );
+
+
+  /*
+   * Fields
+   */
+
+  const label =
+    $(".bm-label");
+
+
+  const message =
+    $(".bm-message");
+
+
+  const labelColor =
+    $(".bm-label-color");
+
+
+  const labelColorPicker =
+    $(".bm-label-color-picker");
+
+
+  const messageColor =
+    $(".bm-message-color");
+
+
+  const messageColorPicker =
+    $(".bm-message-color-picker");
+
+
+  const style =
+    $(".bm-style");
+
+
+  const link =
+    $(".bm-link");
+
+
+  /*
+   * Logo
+   */
+
+  const logoSlug =
+    $(".bm-logo-slug");
+
+
+  const logoColor =
+    $(".bm-logo-color");
+
+
+  const logoColorPicker =
+    $(".bm-logo-color-picker");
+
+
+  const logoStatus =
+    $(".bm-logo-status");
+
+
+  const checkLogoButton =
+    $(".bm-check-logo");
+
+
+  const builtinPanel =
+    $(".bm-builtin-panel");
+
+
+  const customPanel =
+    $(".bm-custom-panel");
+
+
+  const base64Box =
+    $(".bm-base64-box");
+
+
+  const fileInput =
+    $(".bm-file-input");
+
+
+  const dropZone =
+    $(".bm-drop-zone");
+
+
+  const logoPreview =
+    $(".bm-logo-preview");
+
+
+  /*
+   * Output
+   */
+
+  const badgePreview =
+    $(".bm-badge-preview");
+
+
+  const previewError =
+    $(".bm-preview-error");
+
+
+  const markdownOutput =
+    $(".bm-markdown");
+
+
+  const urlOutput =
+    $(".bm-url");
+
+
+  const htmlOutput =
+    $(".bm-html");
+
+
+  const base64Output =
+    $(".bm-base64");
+
+
+  /*
+   * State
+   */
+
+  let customLogoData =
+    "";
+
+
+  let logoCheckTimer =
+    null;
+
+
+  let logoIsValid =
+    true;
+
+
+  /*
+   * Helpers
+   */
+
+  function currentLogoMode() {
+
+    return $(
+      'input[name="bm-logo-mode"]:checked'
+    ).value;
+
+  }
+
+
+  function normalizeColor(
+    value
+  ) {
+
+    return value
+      .trim()
+      .replace(
+        /^#/,
+        ""
+      );
+
+  }
+
+
+  /*
+   * Shields static badge path
+   *
+   * - => --
+   * _ => __
+   */
+
+  function shieldsText(
+    value
+  ) {
+
+    return encodeURIComponent(
+      value
+    )
+      .replaceAll(
+        "-",
+        "--"
+      )
+      .replaceAll(
+        "_",
+        "__"
+      );
+
+  }
+
+
+  function escapeHTML(
+    value
+  ) {
+
+    return String(
+      value
+    )
+      .replaceAll(
+        "&",
+        "&amp;"
+      )
+      .replaceAll(
+        '"',
+        "&quot;"
+      )
+      .replaceAll(
+        "<",
+        "&lt;"
+      )
+      .replaceAll(
+        ">",
+        "&gt;"
+      );
+
+  }
+
+
+  /*
+   * Build Shields URL
+   */
+
+  function buildURL() {
+
+    const badgeLabel =
+      shieldsText(
+        label.value || ""
+      );
+
+
+    const badgeMessage =
+      shieldsText(
+        message.value || ""
+      );
+
+
+    const badgeColor =
+      encodeURIComponent(
+        normalizeColor(
+          messageColor.value
+        ) ||
+        "blue"
+      );
+
+
+    let url =
+      `https://img.shields.io/badge/${badgeLabel}-${badgeMessage}-${badgeColor}`;
+
+
+    const params =
+      new URLSearchParams();
+
+
+    params.set(
+      "style",
+      style.value
+    );
+
+
+    params.set(
+      "labelColor",
+      normalizeColor(
+        labelColor.value
+      ) ||
+      "555555"
+    );
+
+
+    const mode =
+      currentLogoMode();
+
+
+    /*
+     * Simple Icons
+     */
+
+    if (
+      mode ===
+      "builtin"
+    ) {
+
+      const slug =
+        logoSlug.value
+          .trim();
+
+
+      if (slug) {
+
+        params.set(
+          "logo",
+          slug
+        );
+
+
+        const lc =
+          normalizeColor(
+            logoColor.value
+          );
+
+
+        if (lc) {
+
+          params.set(
+            "logoColor",
+            lc
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /*
+     * Custom image
+     */
+
+    if (
+      mode ===
+      "custom" &&
+      customLogoData
+    ) {
+
+      params.set(
+        "logo",
+        customLogoData
+      );
+
+    }
+
+
+    return (
+      url +
+      "?" +
+      params.toString()
+    );
+
+  }
+
+
+  /*
+   * Update Outputs
+   */
+
+  function updateOutputs() {
+
+    const badgeURL =
+      buildURL();
+
+
+    urlOutput.value =
+      badgeURL;
+
+
+    const alt =
+      (
+        label.value +
+        " " +
+        message.value
+      )
+      .trim() ||
+      "badge";
+
+
+    const target =
+      link.value.trim();
+
+
+    if (target) {
+
+      markdownOutput.value =
+        `[![${alt}](${badgeURL})](${target})`;
+
+
+      htmlOutput.value =
+        `<a href="${escapeHTML(target)}">` +
+        `<img src="${escapeHTML(badgeURL)}" alt="${escapeHTML(alt)}">` +
+        `</a>`;
+
+    }
+
+    else {
+
+      markdownOutput.value =
+        `![${alt}](${badgeURL})`;
+
+
+      htmlOutput.value =
+        `<img src="${escapeHTML(badgeURL)}" alt="${escapeHTML(alt)}">`;
+
+    }
+
+
+    /*
+     * Built-in Logo 不存在时，
+     * 不显示坏掉的 badge。
+     */
+
+    if (
+      currentLogoMode() ===
+      "builtin" &&
+      !logoIsValid
+    ) {
+
+      badgePreview.hidden =
+        true;
+
+
+      previewError.hidden =
+        false;
+
+
+      previewError.textContent =
+        "未找到这个 Shields / Simple Icons Logo。";
+
+      return;
+
+    }
+
+
+    previewError.hidden =
+      true;
+
+
+    badgePreview.hidden =
+      false;
+
+
+    badgePreview.src =
+      badgeURL;
+
+  }
+
+
+  /*
+   * Logo mode
+   */
+
+  $$(
+    'input[name="bm-logo-mode"]'
+  )
+  .forEach(
+    radio => {
+
+      radio.addEventListener(
+        "change",
+        () => {
+
+          const mode =
+            currentLogoMode();
+
+
+          builtinPanel.hidden =
+            mode !==
+            "builtin";
+
+
+          customPanel.hidden =
+            mode !==
+            "custom";
+
+
+          base64Box.hidden =
+            mode !==
+            "custom";
+
+
+          if (
+            mode ===
+            "builtin"
+          ) {
+
+            checkBuiltinLogo();
+
+          }
+
+          else {
+
+            logoIsValid =
+              true;
+
+
+            updateOutputs();
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+  /*
+   * 检查 Simple Icons Logo
+   *
+   * 原理：
+   * 请求一个最小测试 badge。
+   *
+   * 如果 Shields 能正常返回，
+   * 说明这个 slug 可用。
+   *
+   * 注意：
+   * img.onload 只能确认图片返回，
+   * 所以下面同时检查 naturalWidth。
+   */
+
+  function checkBuiltinLogo() {
+
+    const slug =
+      logoSlug.value
+        .trim()
+        .toLowerCase();
+
+
+    if (!slug) {
+
+      logoIsValid =
+        false;
+
+
+      logoStatus.textContent =
+        "请输入 Logo 名称。";
+
+
+      logoStatus.className =
+        "bm-logo-status error";
+
+
+      updateOutputs();
+
+
+      return;
+
+    }
+
+
+    logoStatus.textContent =
+      "正在检查…";
+
+
+    logoStatus.className =
+      "bm-logo-status";
+
+
+    const image =
+      new Image();
+
+
+    /*
+     * 用 slug 直接建立测试 Badge。
+     */
+
+    const testURL =
+      "https://img.shields.io/badge/test-test-555" +
+      "?logo=" +
+      encodeURIComponent(
+        slug
+      ) +
+      "&logoColor=white" +
+      "&cacheSeconds=300";
+
+
+    image.onload =
+      () => {
+
+        /*
+         * Shields 对不存在的 logo
+         * 某些情况下仍可能返回 badge。
+         *
+         * 所以这里不能把 HTTP 成功
+         * 当成百分百严格的 Simple Icons
+         * 数据库校验。
+         *
+         * 正常预览仍然继续。
+         */
+
+        logoIsValid =
+          true;
+
+
+        logoStatus.textContent =
+          "✓ Shields 已接受该 Logo slug";
+
+
+        logoStatus.className =
+          "bm-logo-status ok";
+
+
+        updateOutputs();
+
+      };
+
+
+    image.onerror =
+      () => {
+
+        logoIsValid =
+          false;
+
+
+        logoStatus.textContent =
+          "✗ 找不到该 Logo，请检查 Simple Icons slug";
+
+
+        logoStatus.className =
+          "bm-logo-status error";
+
+
+        updateOutputs();
+
+      };
+
+
+    image.src =
+      testURL;
+
+  }
+
+
+  checkLogoButton
+    .addEventListener(
+      "click",
+      checkBuiltinLogo
+    );
+
+
+  /*
+   * 输入 logo 时延迟检查
+   */
+
+  logoSlug.addEventListener(
+    "input",
+    () => {
+
+      clearTimeout(
+        logoCheckTimer
+      );
+
+
+      logoCheckTimer =
+        setTimeout(
+          checkBuiltinLogo,
+          600
+        );
+
+    }
+  );
+
+
+  /*
+   * Custom Logo
+   */
+
+  function loadCustomLogo(
+    file
+  ) {
+
+    if (!file) {
+
+      return;
+
+    }
+
+
+    if (
+      !file.type.startsWith(
+        "image/"
+      )
+    ) {
+
+      alert(
+        "请选择图片文件。"
+      );
+
+
+      return;
+
+    }
+
+
+    /*
+     * 避免生成巨型 badge URL
+     */
+
+    const maxSize =
+      150 * 1024;
+
+
+    if (
+      file.size >
+      maxSize
+    ) {
+
+      const proceed =
+        confirm(
+          "这个图片超过 150 KB，Base64 后的 Shields URL 会非常长。仍然继续吗？"
+        );
+
+
+      if (!proceed) {
+
+        return;
+
+      }
+
+    }
+
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      () => {
+
+        customLogoData =
+          reader.result;
+
+
+        base64Output.value =
+          customLogoData;
+
+
+        logoPreview.src =
+          customLogoData;
+
+
+        logoPreview.style.display =
+          "block";
+
+
+        updateOutputs();
+
+      };
+
+
+    reader.readAsDataURL(
+      file
+    );
+
+  }
+
+
+  fileInput
+    .addEventListener(
+      "change",
+      event => {
+
+        loadCustomLogo(
+          event.target.files[0]
+        );
+
+      }
+    );
+
+
+  /*
+   * Drag & Drop
+   */
+
+  dropZone
+    .addEventListener(
+      "dragover",
+      event => {
+
+        event.preventDefault();
+
+      }
+    );
+
+
+  dropZone
+    .addEventListener(
+      "drop",
+      event => {
+
+        event.preventDefault();
+
+
+        loadCustomLogo(
+          event
+            .dataTransfer
+            .files[0]
+        );
+
+      }
+    );
+
+
+  /*
+   * Color sync
+   */
+
+  function connectColor(
+    picker,
+    text
+  ) {
+
+    picker.addEventListener(
+      "input",
+      () => {
+
+        text.value =
+          picker.value
+            .replace(
+              "#",
+              ""
+            );
+
+
+        updateOutputs();
+
+      }
+    );
+
+
+    text.addEventListener(
+      "input",
+      () => {
+
+        const color =
+          normalizeColor(
+            text.value
+          );
+
+
+        if (
+          /^[0-9a-fA-F]{6}$/
+            .test(
+              color
+            )
+        ) {
+
+          picker.value =
+            "#" +
+            color;
+
+        }
+
+
+        updateOutputs();
+
+      }
+    );
+
+  }
+
+
+  connectColor(
+    labelColorPicker,
+    labelColor
+  );
+
+
+  connectColor(
+    messageColorPicker,
+    messageColor
+  );
+
+
+  connectColor(
+    logoColorPicker,
+    logoColor
+  );
+
+
+  /*
+   * Normal inputs
+   */
+
+  [
+    label,
+    message,
+    style,
+    link
+  ]
+  .forEach(
+    element => {
+
+      element.addEventListener(
+        "input",
+        updateOutputs
+      );
+
+
+      element.addEventListener(
+        "change",
+        updateOutputs
+      );
+
+    }
+  );
+
+
+  /*
+   * Copy
+   */
+
+  $$(
+    "[data-copy]"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        async () => {
+
+          const map = {
+
+            markdown:
+              markdownOutput,
+
+            url:
+              urlOutput,
+
+            html:
+              htmlOutput,
+
+            base64:
+              base64Output
+
+          };
+
+
+          const output =
+            map[
+              button.dataset.copy
+            ];
+
+
+          if (!output) {
+
+            return;
+
+          }
+
+
+          try {
+
+            await navigator
+              .clipboard
+              .writeText(
+                output.value
+              );
+
+          }
+
+          catch {
+
+            output.select();
+
+
+            document.execCommand(
+              "copy"
+            );
+
+          }
+
+
+          const old =
+            button.textContent;
+
+
+          button.textContent =
+            "已复制";
+
+
+          setTimeout(
+            () => {
+
+              button.textContent =
+                old;
+
+            },
+            1000
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+  /*
+   * Initial
+   */
+
+  checkBuiltinLogo();
+
+  updateOutputs();
+
+})();
+
+</script>
