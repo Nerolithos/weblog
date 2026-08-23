@@ -1,25 +1,33 @@
 {{/*
-Usage in Markdown:
+Usage:
 
 {{< badge-maker >}}
 
-功能：
-1. Custom Logo：上传图片并硬编码为 Base64
-2. Built-in Logo：使用 Shields.io / Simple Icons slug
-3. 始终生成一个标准 Shields.io badge
+说明：
+- Built-in Logo: 使用 Shields / Simple Icons slug
+- Custom Logo: 上传图片，自动压缩并硬编码为 Base64
 */}}
 
 <div class="badge-maker">
+
   <div class="bm-grid">
 
     <div class="bm-field">
       <label>左侧文字</label>
-      <input class="bm-label" type="text" value="Hackathon">
+      <input
+        class="bm-label"
+        type="text"
+        value="Hackathon"
+      >
     </div>
 
     <div class="bm-field">
       <label>右侧文字</label>
-      <input class="bm-message" type="text" value="AdventureX 2026">
+      <input
+        class="bm-message"
+        type="text"
+        value="AdventureX 2026"
+      >
     </div>
 
     <div class="bm-field">
@@ -85,11 +93,11 @@ Usage in Markdown:
 
   <!-- Logo Mode -->
 
-  <div class="bm-logo-section">
+  <div class="bm-section">
 
-    <label class="bm-section-title">
+    <div class="bm-section-title">
       Logo 来源
-    </label>
+    </div>
 
     <div class="bm-logo-mode">
 
@@ -126,45 +134,39 @@ Usage in Markdown:
   </div>
 
 
-  <!-- Built-in Logo -->
+  <!-- Built-in -->
 
   <div class="bm-builtin-panel">
 
     <div class="bm-field">
-
       <label>
         Logo 名称 / Simple Icons slug
       </label>
 
-      <div class="bm-logo-search-row">
-
+      <div class="bm-inline-row">
         <input
           class="bm-logo-slug"
           type="text"
           value="github"
-          placeholder="例如 github / python / apple"
+          placeholder="github / python / apple / react"
         >
 
         <button
-          class="bm-check-logo"
           type="button"
+          class="bm-check-logo"
         >
           检查
         </button>
-
       </div>
 
       <div class="bm-logo-status"></div>
-
     </div>
 
 
     <div class="bm-field">
-
       <label>Logo 颜色</label>
 
       <div class="bm-color-row">
-
         <input
           class="bm-logo-color-picker"
           type="color"
@@ -176,17 +178,18 @@ Usage in Markdown:
           type="text"
           value="ffffff"
         >
-
       </div>
-
     </div>
 
   </div>
 
 
-  <!-- Custom Logo -->
+  <!-- Custom -->
 
-  <div class="bm-custom-panel" hidden>
+  <div
+    class="bm-custom-panel"
+    hidden
+  >
 
     <label class="bm-drop-zone">
 
@@ -195,7 +198,7 @@ Usage in Markdown:
       </strong>
 
       <span>
-        SVG / PNG / JPG / WEBP
+        支持 SVG / PNG / JPG / WEBP
       </span>
 
       <input
@@ -206,16 +209,46 @@ Usage in Markdown:
 
       <img
         class="bm-logo-preview"
-        alt="Custom Logo Preview"
+        alt="Logo Preview"
       >
 
     </label>
 
 
-    <div class="bm-custom-warning">
-      自定义图片会直接转换为 Base64 并硬编码进 Shields URL。
-      图片越大，最终 URL 越长。
+    <div class="bm-compress-info">
+      位图过大时会自动压缩；默认最长边 64 px，目标大小约 8 KB。
     </div>
+
+
+    <div class="bm-compression-options">
+
+      <div class="bm-field">
+        <label>目标大小</label>
+
+        <select class="bm-target-size">
+          <option value="4">4 KB</option>
+          <option value="8" selected>8 KB</option>
+          <option value="16">16 KB</option>
+          <option value="32">32 KB</option>
+        </select>
+      </div>
+
+
+      <div class="bm-field">
+        <label>最长边</label>
+
+        <select class="bm-max-dimension">
+          <option value="48">48 px</option>
+          <option value="64" selected>64 px</option>
+          <option value="96">96 px</option>
+          <option value="128">128 px</option>
+        </select>
+      </div>
+
+    </div>
+
+
+    <div class="bm-compression-result"></div>
 
   </div>
 
@@ -224,7 +257,7 @@ Usage in Markdown:
 
   <div class="bm-preview-area">
 
-    <div class="bm-preview-title">
+    <div class="bm-preview-label">
       Preview
     </div>
 
@@ -241,16 +274,12 @@ Usage in Markdown:
   </div>
 
 
-  <!-- Markdown -->
+  <!-- Outputs -->
 
   <div class="bm-output">
-
-    <label>
-      Markdown
-    </label>
+    <label>Markdown</label>
 
     <div class="bm-output-row">
-
       <textarea
         class="bm-markdown"
         readonly
@@ -262,49 +291,14 @@ Usage in Markdown:
       >
         复制
       </button>
-
     </div>
-
   </div>
 
 
-  <!-- URL -->
-
   <div class="bm-output">
-
-    <label>
-      Shields.io URL
-    </label>
+    <label>HTML</label>
 
     <div class="bm-output-row">
-
-      <textarea
-        class="bm-url"
-        readonly
-      ></textarea>
-
-      <button
-        type="button"
-        data-copy="url"
-      >
-        复制
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- HTML -->
-
-  <div class="bm-output">
-
-    <label>
-      HTML
-    </label>
-
-    <div class="bm-output-row">
-
       <textarea
         class="bm-html"
         readonly
@@ -316,25 +310,36 @@ Usage in Markdown:
       >
         复制
       </button>
-
     </div>
-
   </div>
 
 
-  <!-- Base64 -->
+  <div class="bm-output">
+    <label>Shields.io URL</label>
+
+    <div class="bm-output-row">
+      <textarea
+        class="bm-url"
+        readonly
+      ></textarea>
+
+      <button
+        type="button"
+        data-copy="url"
+      >
+        复制
+      </button>
+    </div>
+  </div>
+
 
   <div
     class="bm-output bm-base64-box"
     hidden
   >
-
-    <label>
-      Custom Logo Base64
-    </label>
+    <label>Custom Logo Base64</label>
 
     <div class="bm-output-row">
-
       <textarea
         class="bm-base64"
         readonly
@@ -346,9 +351,7 @@ Usage in Markdown:
       >
         复制
       </button>
-
     </div>
-
   </div>
 
 </div>
@@ -370,18 +373,13 @@ Usage in Markdown:
   box-sizing: border-box;
 }
 
-
 .bm-grid,
-.bm-builtin-panel {
+.bm-builtin-panel,
+.bm-compression-options {
   display: grid;
-
-  grid-template-columns:
-    1fr
-    1fr;
-
+  grid-template-columns: 1fr 1fr;
   gap: 18px;
 }
-
 
 .bm-field label,
 .bm-output > label,
@@ -391,263 +389,215 @@ Usage in Markdown:
   margin-bottom: 7px;
 
   font-size: 14px;
-
   font-weight: 600;
 }
 
-
-.badge-maker
-input[type="text"],
-.badge-maker
-select {
+.badge-maker input[type="text"],
+.badge-maker select {
   width: 100%;
-
   min-height: 42px;
 
   padding: 0 12px;
 
-  border:
-    1px solid
-    #d0d7de;
-
+  border: 1px solid #d0d7de;
   border-radius: 7px;
 
   font: inherit;
 
-  background:
-    var(--theme, #fff);
-
-  color:
-    var(--primary, #24292f);
+  background: var(--theme, #fff);
+  color: var(--primary, #24292f);
 }
-
 
 .bm-color-row {
   display: flex;
-
   gap: 8px;
 }
 
-
-.badge-maker
-input[type="color"] {
+.badge-maker input[type="color"] {
   width: 54px;
-
   min-width: 54px;
-
   height: 42px;
 
   padding: 2px;
 
-  border:
-    1px solid
-    #d0d7de;
-
+  border: 1px solid #d0d7de;
   border-radius: 7px;
 
   background: transparent;
 }
 
-
-.bm-logo-section {
+.bm-section {
   margin-top: 24px;
 }
 
-
 .bm-logo-mode {
   display: flex;
-
   flex-wrap: wrap;
-
   gap: 20px;
 }
-
 
 .bm-logo-mode label {
   cursor: pointer;
 }
 
-
 .bm-builtin-panel {
   margin-top: 18px;
 }
 
-
-.bm-logo-search-row {
+.bm-inline-row {
   display: flex;
-
   gap: 8px;
 }
 
-
-.bm-logo-search-row input {
+.bm-inline-row input {
   flex: 1;
 }
-
 
 .badge-maker button {
   padding: 8px 15px;
 
   border: 0;
-
   border-radius: 7px;
 
   background: #24292f;
-
   color: white;
 
   font-weight: 600;
-
   cursor: pointer;
 }
-
 
 .badge-maker button:hover {
   opacity: .85;
 }
 
-
 .bm-logo-status {
   min-height: 20px;
-
   margin-top: 7px;
 
   font-size: 13px;
 }
 
-
 .bm-logo-status.ok {
   color: #1a7f37;
 }
-
 
 .bm-logo-status.error {
   color: #cf222e;
 }
 
-
 .bm-custom-panel {
   margin-top: 18px;
 }
 
-
 .bm-drop-zone {
   display: flex;
-
   flex-direction: column;
 
   align-items: center;
-
   justify-content: center;
 
-  padding: 25px;
+  padding: 26px;
 
-  border:
-    2px dashed
-    #afb8c1;
-
+  border: 2px dashed #afb8c1;
   border-radius: 12px;
 
+  cursor: pointer;
   text-align: center;
 
-  cursor: pointer;
+  transition: .2s ease;
 }
 
+.bm-drop-zone.drag {
+  border-color: #0969da;
+  background: rgba(9, 105, 218, .06);
+}
 
 .bm-drop-zone span {
   margin-top: 5px;
 
   color: #6e7781;
-
   font-size: 13px;
 }
-
 
 .bm-file-input {
   display: none;
 }
 
-
 .bm-logo-preview {
   display: none;
 
-  max-width: 100px;
-
-  max-height: 65px;
+  max-width: 110px;
+  max-height: 70px;
 
   margin-top: 14px;
 
   object-fit: contain;
 }
 
+.bm-compress-info {
+  margin-top: 10px;
 
-.bm-custom-warning {
+  color: #6e7781;
+  font-size: 13px;
+}
+
+.bm-compression-options {
+  margin-top: 14px;
+}
+
+.bm-compression-result {
+  min-height: 20px;
   margin-top: 10px;
 
   font-size: 13px;
-
-  color: #6e7781;
+  color: #57606a;
 }
-
 
 .bm-preview-area {
   display: flex;
-
   flex-direction: column;
 
   align-items: center;
-
   justify-content: center;
 
   min-height: 130px;
 
   margin-top: 24px;
-
   padding: 24px;
 
   overflow-x: auto;
 
   border-radius: 12px;
 
-  background:
-    #f6f8fa;
+  background: #f6f8fa;
 }
 
-
-.bm-preview-title {
+.bm-preview-label {
   margin-bottom: 16px;
 
   color: #6e7781;
-
   font-size: 13px;
 }
-
 
 .bm-badge-preview {
   max-width: 100%;
 }
 
-
 .bm-preview-error {
   color: #cf222e;
 
   font-size: 14px;
-
   text-align: center;
 }
-
 
 .bm-output {
   margin-top: 18px;
 }
 
-
 .bm-output-row {
   display: flex;
-
   gap: 8px;
 }
-
 
 .badge-maker textarea {
   flex: 1;
@@ -658,17 +608,11 @@ input[type="color"] {
 
   resize: vertical;
 
-  border:
-    1px solid
-    #d0d7de;
-
+  border: 1px solid #d0d7de;
   border-radius: 7px;
 
-  background:
-    var(--theme, #fff);
-
-  color:
-    var(--primary, #24292f);
+  background: var(--theme, #fff);
+  color: var(--primary, #24292f);
 
   font-family:
     ui-monospace,
@@ -680,193 +624,161 @@ input[type="color"] {
   font-size: 12px;
 }
 
-
-@media (
-  max-width: 700px
-) {
+@media (max-width: 700px) {
 
   .bm-grid,
-  .bm-builtin-panel {
-    grid-template-columns:
-      1fr;
+  .bm-builtin-panel,
+  .bm-compression-options {
+    grid-template-columns: 1fr;
   }
-
-
-  .bm-output-row {
-    flex-direction:
-      column;
-  }
-
 
   .bm-logo-mode {
-    flex-direction:
-      column;
-
+    flex-direction: column;
     gap: 9px;
   }
 
-}
+  .bm-output-row {
+    flex-direction: column;
+  }
 
+}
 </style>
 
 
 <script>
-
 (() => {
+
+  /*
+   * Locate current shortcode
+   */
 
   const script =
     document.currentScript;
 
-
-  /*
-   * 当前 shortcode 对应的 app
-   */
-
   let app =
     script.previousElementSibling;
 
-
   while (
     app &&
-    !app.classList.contains(
-      "badge-maker"
-    )
+    !app.classList.contains("badge-maker")
   ) {
-
     app =
       app.previousElementSibling;
-
   }
 
-
   if (!app) {
-
     return;
-
   }
 
 
   const $ =
     selector =>
-      app.querySelector(
-        selector
-      );
-
+      app.querySelector(selector);
 
   const $$ =
     selector =>
-      app.querySelectorAll(
-        selector
-      );
+      app.querySelectorAll(selector);
 
 
   /*
-   * Fields
+   * Inputs
    */
 
   const label =
     $(".bm-label");
 
-
   const message =
     $(".bm-message");
-
 
   const labelColor =
     $(".bm-label-color");
 
-
   const labelColorPicker =
     $(".bm-label-color-picker");
-
 
   const messageColor =
     $(".bm-message-color");
 
-
   const messageColorPicker =
     $(".bm-message-color-picker");
 
-
   const style =
     $(".bm-style");
-
 
   const link =
     $(".bm-link");
 
 
   /*
-   * Logo
+   * Built-in Logo
    */
 
   const logoSlug =
     $(".bm-logo-slug");
 
-
   const logoColor =
     $(".bm-logo-color");
-
 
   const logoColorPicker =
     $(".bm-logo-color-picker");
 
-
   const logoStatus =
     $(".bm-logo-status");
 
-
   const checkLogoButton =
     $(".bm-check-logo");
-
 
   const builtinPanel =
     $(".bm-builtin-panel");
 
 
+  /*
+   * Custom
+   */
+
   const customPanel =
     $(".bm-custom-panel");
 
+  const fileInput =
+    $(".bm-file-input");
+
+  const dropZone =
+    $(".bm-drop-zone");
+
+  const logoPreview =
+    $(".bm-logo-preview");
+
+  const targetSize =
+    $(".bm-target-size");
+
+  const maxDimension =
+    $(".bm-max-dimension");
+
+  const compressionResult =
+    $(".bm-compression-result");
 
   const base64Box =
     $(".bm-base64-box");
 
 
-  const fileInput =
-    $(".bm-file-input");
-
-
-  const dropZone =
-    $(".bm-drop-zone");
-
-
-  const logoPreview =
-    $(".bm-logo-preview");
-
-
   /*
-   * Output
+   * Outputs
    */
 
   const badgePreview =
     $(".bm-badge-preview");
 
-
   const previewError =
     $(".bm-preview-error");
-
 
   const markdownOutput =
     $(".bm-markdown");
 
-
-  const urlOutput =
-    $(".bm-url");
-
-
   const htmlOutput =
     $(".bm-html");
 
+  const urlOutput =
+    $(".bm-url");
 
   const base64Output =
     $(".bm-base64");
@@ -879,13 +791,14 @@ input[type="color"] {
   let customLogoData =
     "";
 
-
-  let logoCheckTimer =
+  let currentCustomFile =
     null;
-
 
   let logoIsValid =
     true;
+
+  let logoCheckTimer =
+    null;
 
 
   /*
@@ -901,69 +814,548 @@ input[type="color"] {
   }
 
 
-  function normalizeColor(
-    value
-  ) {
+  function normalizeColor(value) {
 
-    return value
+    return String(value)
       .trim()
-      .replace(
-        /^#/,
-        ""
-      );
+      .replace(/^#/, "");
+
+  }
+
+
+  function shieldsText(value) {
+
+    return encodeURIComponent(value)
+      .replaceAll("-", "--")
+      .replaceAll("_", "__");
+
+  }
+
+
+  function escapeHTML(value) {
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+
+  }
+
+
+  function formatBytes(bytes) {
+
+    if (bytes < 1024) {
+      return `${bytes} B`;
+    }
+
+    return `${(bytes / 1024).toFixed(1)} KB`;
+
+  }
+
+
+  function estimateDataURLBytes(dataURL) {
+
+    const comma =
+      dataURL.indexOf(",");
+
+    if (comma === -1) {
+      return 0;
+    }
+
+    const base64 =
+      dataURL.slice(comma + 1);
+
+    return Math.round(
+      base64.length * 0.75
+    );
 
   }
 
 
   /*
-   * Shields static badge path
-   *
-   * - => --
-   * _ => __
+   * File → Data URL
    */
 
-  function shieldsText(
-    value
-  ) {
+  function fileToDataURL(file) {
 
-    return encodeURIComponent(
-      value
-    )
-      .replaceAll(
-        "-",
-        "--"
-      )
-      .replaceAll(
-        "_",
-        "__"
-      );
+    return new Promise(
+      (
+        resolve,
+        reject
+      ) => {
+
+        const reader =
+          new FileReader();
+
+        reader.onload =
+          () =>
+            resolve(
+              reader.result
+            );
+
+        reader.onerror =
+          reject;
+
+        reader.readAsDataURL(
+          file
+        );
+
+      }
+    );
 
   }
 
 
-  function escapeHTML(
-    value
+  /*
+   * Blob → Data URL
+   */
+
+  function blobToDataURL(blob) {
+
+    return new Promise(
+      (
+        resolve,
+        reject
+      ) => {
+
+        const reader =
+          new FileReader();
+
+        reader.onload =
+          () =>
+            resolve(
+              reader.result
+            );
+
+        reader.onerror =
+          reject;
+
+        reader.readAsDataURL(
+          blob
+        );
+
+      }
+    );
+
+  }
+
+
+  /*
+   * File → Image
+   */
+
+  function fileToImage(file) {
+
+    return new Promise(
+      (
+        resolve,
+        reject
+      ) => {
+
+        const image =
+          new Image();
+
+        const objectURL =
+          URL.createObjectURL(
+            file
+          );
+
+        image.onload =
+          () => {
+
+            URL.revokeObjectURL(
+              objectURL
+            );
+
+            resolve(image);
+
+          };
+
+        image.onerror =
+          () => {
+
+            URL.revokeObjectURL(
+              objectURL
+            );
+
+            reject(
+              new Error(
+                "无法读取图片"
+              )
+            );
+
+          };
+
+        image.src =
+          objectURL;
+
+      }
+    );
+
+  }
+
+
+  /*
+   * Canvas → Blob
+   */
+
+  function canvasToBlob(
+    canvas,
+    type,
+    quality
   ) {
 
-    return String(
-      value
-    )
-      .replaceAll(
-        "&",
-        "&amp;"
-      )
-      .replaceAll(
-        '"',
-        "&quot;"
-      )
-      .replaceAll(
-        "<",
-        "&lt;"
-      )
-      .replaceAll(
-        ">",
-        "&gt;"
+    return new Promise(
+      resolve => {
+
+        canvas.toBlob(
+          resolve,
+          type,
+          quality
+        );
+
+      }
+    );
+
+  }
+
+
+  /*
+   * 自动压缩
+   */
+
+  async function compressImageFile(
+    file,
+    targetBytes,
+    dimension
+  ) {
+
+    /*
+     * SVG 保持原样
+     */
+
+    if (
+      file.type ===
+      "image/svg+xml"
+    ) {
+
+      return {
+        dataURL:
+          await fileToDataURL(file),
+
+        originalBytes:
+          file.size,
+
+        finalBytes:
+          file.size,
+
+        resized:
+          false,
+
+        format:
+          "SVG"
+      };
+
+    }
+
+
+    /*
+     * 图片本身已经非常小
+     */
+
+    if (
+      file.size <=
+      targetBytes
+    ) {
+
+      const dataURL =
+        await fileToDataURL(file);
+
+      return {
+
+        dataURL,
+
+        originalBytes:
+          file.size,
+
+        finalBytes:
+          estimateDataURLBytes(
+            dataURL
+          ),
+
+        resized:
+          false,
+
+        format:
+          file.type ||
+          "image"
+
+      };
+
+    }
+
+
+    const image =
+      await fileToImage(file);
+
+
+    let width =
+      image.naturalWidth;
+
+    let height =
+      image.naturalHeight;
+
+
+    /*
+     * 初始缩放到最大 dimension
+     */
+
+    if (
+      width > dimension ||
+      height > dimension
+    ) {
+
+      const scale =
+        Math.min(
+          dimension / width,
+          dimension / height
+        );
+
+      width =
+        Math.max(
+          1,
+          Math.round(
+            width * scale
+          )
+        );
+
+      height =
+        Math.max(
+          1,
+          Math.round(
+            height * scale
+          )
+        );
+
+    }
+
+
+    const canvas =
+      document.createElement(
+        "canvas"
       );
+
+
+    const ctx =
+      canvas.getContext(
+        "2d",
+        {
+          alpha: true
+        }
+      );
+
+
+    /*
+     * Render helper
+     */
+
+    function draw(
+      newWidth,
+      newHeight
+    ) {
+
+      canvas.width =
+        newWidth;
+
+      canvas.height =
+        newHeight;
+
+      ctx.clearRect(
+        0,
+        0,
+        newWidth,
+        newHeight
+      );
+
+      ctx.imageSmoothingEnabled =
+        true;
+
+      ctx.imageSmoothingQuality =
+        "high";
+
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        newWidth,
+        newHeight
+      );
+
+    }
+
+
+    draw(
+      width,
+      height
+    );
+
+
+    /*
+     * 优先 WebP
+     */
+
+    let quality =
+      0.92;
+
+    let blob =
+      await canvasToBlob(
+        canvas,
+        "image/webp",
+        quality
+      );
+
+
+    /*
+     * 某些浏览器 WebP 失败
+     */
+
+    if (!blob) {
+
+      blob =
+        await canvasToBlob(
+          canvas,
+          "image/png"
+        );
+
+    }
+
+
+    /*
+     * 先降质量
+     */
+
+    while (
+      blob &&
+      blob.size >
+        targetBytes &&
+      quality >
+        0.35
+    ) {
+
+      quality -=
+        0.08;
+
+      blob =
+        await canvasToBlob(
+          canvas,
+          "image/webp",
+          quality
+        );
+
+    }
+
+
+    /*
+     * 再逐步缩尺寸
+     */
+
+    let currentWidth =
+      width;
+
+    let currentHeight =
+      height;
+
+
+    while (
+      blob &&
+      blob.size >
+        targetBytes &&
+      currentWidth >
+        24 &&
+      currentHeight >
+        24
+    ) {
+
+      currentWidth =
+        Math.max(
+          24,
+          Math.round(
+            currentWidth *
+            0.82
+          )
+        );
+
+      currentHeight =
+        Math.max(
+          24,
+          Math.round(
+            currentHeight *
+            0.82
+          )
+        );
+
+
+      draw(
+        currentWidth,
+        currentHeight
+      );
+
+
+      blob =
+        await canvasToBlob(
+          canvas,
+          "image/webp",
+          0.70
+        );
+
+    }
+
+
+    if (!blob) {
+
+      throw new Error(
+        "图片压缩失败"
+      );
+
+    }
+
+
+    const dataURL =
+      await blobToDataURL(
+        blob
+      );
+
+
+    return {
+
+      dataURL,
+
+      originalBytes:
+        file.size,
+
+      finalBytes:
+        blob.size,
+
+      resized:
+        (
+          currentWidth !==
+            image.naturalWidth ||
+          currentHeight !==
+            image.naturalHeight
+        ),
+
+      width:
+        currentWidth,
+
+      height:
+        currentHeight,
+
+      format:
+        blob.type ||
+        "image/webp"
+
+    };
 
   }
 
@@ -979,12 +1371,10 @@ input[type="color"] {
         label.value || ""
       );
 
-
     const badgeMessage =
       shieldsText(
         message.value || ""
       );
-
 
     const badgeColor =
       encodeURIComponent(
@@ -1023,7 +1413,7 @@ input[type="color"] {
 
 
     /*
-     * Simple Icons
+     * Built-in
      */
 
     if (
@@ -1032,9 +1422,7 @@ input[type="color"] {
     ) {
 
       const slug =
-        logoSlug.value
-          .trim();
-
+        logoSlug.value.trim();
 
       if (slug) {
 
@@ -1048,7 +1436,6 @@ input[type="color"] {
           normalizeColor(
             logoColor.value
           );
-
 
         if (lc) {
 
@@ -1065,7 +1452,7 @@ input[type="color"] {
 
 
     /*
-     * Custom image
+     * Custom
      */
 
     if (
@@ -1092,7 +1479,7 @@ input[type="color"] {
 
 
   /*
-   * Update Outputs
+   * Output
    */
 
   function updateOutputs() {
@@ -1110,8 +1497,7 @@ input[type="color"] {
         label.value +
         " " +
         message.value
-      )
-      .trim() ||
+      ).trim() ||
       "badge";
 
 
@@ -1144,27 +1530,20 @@ input[type="color"] {
     }
 
 
-    /*
-     * Built-in Logo 不存在时，
-     * 不显示坏掉的 badge。
-     */
-
     if (
       currentLogoMode() ===
-      "builtin" &&
+        "builtin" &&
       !logoIsValid
     ) {
 
       badgePreview.hidden =
         true;
 
-
       previewError.hidden =
         false;
 
-
       previewError.textContent =
-        "未找到这个 Shields / Simple Icons Logo。";
+        "当前 Logo 名称无法确认，请检查 Simple Icons slug。";
 
       return;
 
@@ -1174,10 +1553,8 @@ input[type="color"] {
     previewError.hidden =
       true;
 
-
     badgePreview.hidden =
       false;
-
 
     badgePreview.src =
       badgeURL;
@@ -1186,7 +1563,250 @@ input[type="color"] {
 
 
   /*
-   * Logo mode
+   * Built-in Logo Check
+   */
+
+  function checkBuiltinLogo() {
+
+    const slug =
+      logoSlug.value
+        .trim()
+        .toLowerCase();
+
+
+    if (!slug) {
+
+      logoIsValid =
+        false;
+
+      logoStatus.textContent =
+        "请输入 Logo 名称。";
+
+      logoStatus.className =
+        "bm-logo-status error";
+
+      updateOutputs();
+
+      return;
+
+    }
+
+
+    logoStatus.textContent =
+      "正在检查…";
+
+    logoStatus.className =
+      "bm-logo-status";
+
+
+    const image =
+      new Image();
+
+
+    const testURL =
+      "https://img.shields.io/badge/test-test-555" +
+      "?logo=" +
+      encodeURIComponent(slug) +
+      "&logoColor=white";
+
+
+    image.onload =
+      () => {
+
+        logoIsValid =
+          true;
+
+        logoStatus.textContent =
+          "✓ Shields 已接受该 Logo slug";
+
+        logoStatus.className =
+          "bm-logo-status ok";
+
+        updateOutputs();
+
+      };
+
+
+    image.onerror =
+      () => {
+
+        logoIsValid =
+          false;
+
+        logoStatus.textContent =
+          "✗ 无法加载该 Logo，请检查名称";
+
+        logoStatus.className =
+          "bm-logo-status error";
+
+        updateOutputs();
+
+      };
+
+
+    image.src =
+      testURL;
+
+  }
+
+
+  /*
+   * Custom File
+   */
+
+  async function loadCustomLogo(
+    file
+  ) {
+
+    if (!file) {
+      return;
+    }
+
+
+    if (
+      !file.type.startsWith(
+        "image/"
+      )
+    ) {
+
+      alert(
+        "请选择 SVG、PNG、JPG 或 WEBP 图片。"
+      );
+
+      return;
+
+    }
+
+
+    currentCustomFile =
+      file;
+
+
+    compressionResult.textContent =
+      "正在处理图片…";
+
+
+    logoPreview.style.display =
+      "none";
+
+
+    try {
+
+      const targetBytes =
+        Number(
+          targetSize.value
+        ) *
+        1024;
+
+
+      const dimension =
+        Number(
+          maxDimension.value
+        );
+
+
+      const result =
+        await compressImageFile(
+          file,
+          targetBytes,
+          dimension
+        );
+
+
+      customLogoData =
+        result.dataURL;
+
+
+      base64Output.value =
+        customLogoData;
+
+
+      logoPreview.src =
+        customLogoData;
+
+
+      logoPreview.style.display =
+        "block";
+
+
+      const ratio =
+        result.originalBytes > 0
+          ?
+          (
+            (
+              1 -
+              result.finalBytes /
+              result.originalBytes
+            ) *
+            100
+          ).toFixed(0)
+          :
+          0;
+
+
+      if (
+        file.type ===
+        "image/svg+xml"
+      ) {
+
+        compressionResult.textContent =
+          `SVG 保持原格式，大小 ${formatBytes(result.finalBytes)}。`;
+
+      }
+
+      else {
+
+        compressionResult.textContent =
+          `原始 ${formatBytes(result.originalBytes)} → ` +
+          `${formatBytes(result.finalBytes)}` +
+          (
+            result.width &&
+            result.height
+              ?
+              `，${result.width}×${result.height}px`
+              :
+              ""
+          ) +
+          (
+            Number(ratio) > 0
+              ?
+              `，减少约 ${ratio}%`
+              :
+              ""
+          ) +
+          `。`;
+
+      }
+
+
+      updateOutputs();
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      customLogoData =
+        "";
+
+      base64Output.value =
+        "";
+
+      compressionResult.textContent =
+        "图片处理失败。";
+
+      alert(
+        "图片压缩失败，请尝试另一张图片或使用 SVG。"
+      );
+
+    }
+
+  }
+
+
+  /*
+   * Mode
    */
 
   $$(
@@ -1232,7 +1852,6 @@ input[type="color"] {
             logoIsValid =
               true;
 
-
             updateOutputs();
 
           }
@@ -1245,142 +1864,115 @@ input[type="color"] {
 
 
   /*
-   * 检查 Simple Icons Logo
-   *
-   * 原理：
-   * 请求一个最小测试 badge。
-   *
-   * 如果 Shields 能正常返回，
-   * 说明这个 slug 可用。
-   *
-   * 注意：
-   * img.onload 只能确认图片返回，
-   * 所以下面同时检查 naturalWidth。
+   * File Input
    */
 
-  function checkBuiltinLogo() {
+  fileInput.addEventListener(
+    "change",
+    event => {
 
-    const slug =
-      logoSlug.value
-        .trim()
-        .toLowerCase();
-
-
-    if (!slug) {
-
-      logoIsValid =
-        false;
-
-
-      logoStatus.textContent =
-        "请输入 Logo 名称。";
-
-
-      logoStatus.className =
-        "bm-logo-status error";
-
-
-      updateOutputs();
-
-
-      return;
+      loadCustomLogo(
+        event.target.files[0]
+      );
 
     }
-
-
-    logoStatus.textContent =
-      "正在检查…";
-
-
-    logoStatus.className =
-      "bm-logo-status";
-
-
-    const image =
-      new Image();
-
-
-    /*
-     * 用 slug 直接建立测试 Badge。
-     */
-
-    const testURL =
-      "https://img.shields.io/badge/test-test-555" +
-      "?logo=" +
-      encodeURIComponent(
-        slug
-      ) +
-      "&logoColor=white" +
-      "&cacheSeconds=300";
-
-
-    image.onload =
-      () => {
-
-        /*
-         * Shields 对不存在的 logo
-         * 某些情况下仍可能返回 badge。
-         *
-         * 所以这里不能把 HTTP 成功
-         * 当成百分百严格的 Simple Icons
-         * 数据库校验。
-         *
-         * 正常预览仍然继续。
-         */
-
-        logoIsValid =
-          true;
-
-
-        logoStatus.textContent =
-          "✓ Shields 已接受该 Logo slug";
-
-
-        logoStatus.className =
-          "bm-logo-status ok";
-
-
-        updateOutputs();
-
-      };
-
-
-    image.onerror =
-      () => {
-
-        logoIsValid =
-          false;
-
-
-        logoStatus.textContent =
-          "✗ 找不到该 Logo，请检查 Simple Icons slug";
-
-
-        logoStatus.className =
-          "bm-logo-status error";
-
-
-        updateOutputs();
-
-      };
-
-
-    image.src =
-      testURL;
-
-  }
-
-
-  checkLogoButton
-    .addEventListener(
-      "click",
-      checkBuiltinLogo
-    );
+  );
 
 
   /*
-   * 输入 logo 时延迟检查
+   * Drag & Drop
    */
+
+  dropZone.addEventListener(
+    "dragover",
+    event => {
+
+      event.preventDefault();
+
+      dropZone.classList.add(
+        "drag"
+      );
+
+    }
+  );
+
+
+  dropZone.addEventListener(
+    "dragleave",
+    () => {
+
+      dropZone.classList.remove(
+        "drag"
+      );
+
+    }
+  );
+
+
+  dropZone.addEventListener(
+    "drop",
+    event => {
+
+      event.preventDefault();
+
+      dropZone.classList.remove(
+        "drag"
+      );
+
+
+      loadCustomLogo(
+        event.dataTransfer.files[0]
+      );
+
+    }
+  );
+
+
+  /*
+   * Re-compress on option change
+   */
+
+  targetSize.addEventListener(
+    "change",
+    () => {
+
+      if (currentCustomFile) {
+
+        loadCustomLogo(
+          currentCustomFile
+        );
+
+      }
+
+    }
+  );
+
+
+  maxDimension.addEventListener(
+    "change",
+    () => {
+
+      if (currentCustomFile) {
+
+        loadCustomLogo(
+          currentCustomFile
+        );
+
+      }
+
+    }
+  );
+
+
+  /*
+   * Logo Check
+   */
+
+  checkLogoButton.addEventListener(
+    "click",
+    checkBuiltinLogo
+  );
+
 
   logoSlug.addEventListener(
     "input",
@@ -1402,146 +1994,6 @@ input[type="color"] {
 
 
   /*
-   * Custom Logo
-   */
-
-  function loadCustomLogo(
-    file
-  ) {
-
-    if (!file) {
-
-      return;
-
-    }
-
-
-    if (
-      !file.type.startsWith(
-        "image/"
-      )
-    ) {
-
-      alert(
-        "请选择图片文件。"
-      );
-
-
-      return;
-
-    }
-
-
-    /*
-     * 避免生成巨型 badge URL
-     */
-
-    const maxSize =
-      150 * 1024;
-
-
-    if (
-      file.size >
-      maxSize
-    ) {
-
-      const proceed =
-        confirm(
-          "这个图片超过 150 KB，Base64 后的 Shields URL 会非常长。仍然继续吗？"
-        );
-
-
-      if (!proceed) {
-
-        return;
-
-      }
-
-    }
-
-
-    const reader =
-      new FileReader();
-
-
-    reader.onload =
-      () => {
-
-        customLogoData =
-          reader.result;
-
-
-        base64Output.value =
-          customLogoData;
-
-
-        logoPreview.src =
-          customLogoData;
-
-
-        logoPreview.style.display =
-          "block";
-
-
-        updateOutputs();
-
-      };
-
-
-    reader.readAsDataURL(
-      file
-    );
-
-  }
-
-
-  fileInput
-    .addEventListener(
-      "change",
-      event => {
-
-        loadCustomLogo(
-          event.target.files[0]
-        );
-
-      }
-    );
-
-
-  /*
-   * Drag & Drop
-   */
-
-  dropZone
-    .addEventListener(
-      "dragover",
-      event => {
-
-        event.preventDefault();
-
-      }
-    );
-
-
-  dropZone
-    .addEventListener(
-      "drop",
-      event => {
-
-        event.preventDefault();
-
-
-        loadCustomLogo(
-          event
-            .dataTransfer
-            .files[0]
-        );
-
-      }
-    );
-
-
-  /*
    * Color sync
    */
 
@@ -1555,12 +2007,10 @@ input[type="color"] {
       () => {
 
         text.value =
-          picker.value
-            .replace(
-              "#",
-              ""
-            );
-
+          picker.value.replace(
+            "#",
+            ""
+          );
 
         updateOutputs();
 
@@ -1572,7 +2022,7 @@ input[type="color"] {
       "input",
       () => {
 
-        const color =
+        const value =
           normalizeColor(
             text.value
           );
@@ -1580,14 +2030,12 @@ input[type="color"] {
 
         if (
           /^[0-9a-fA-F]{6}$/
-            .test(
-              color
-            )
+            .test(value)
         ) {
 
           picker.value =
             "#" +
-            color;
+            value;
 
         }
 
@@ -1636,7 +2084,6 @@ input[type="color"] {
         updateOutputs
       );
 
-
       element.addEventListener(
         "change",
         updateOutputs
@@ -1665,11 +2112,11 @@ input[type="color"] {
             markdown:
               markdownOutput,
 
-            url:
-              urlOutput,
-
             html:
               htmlOutput,
+
+            url:
+              urlOutput,
 
             base64:
               base64Output
@@ -1684,9 +2131,7 @@ input[type="color"] {
 
 
           if (!output) {
-
             return;
-
           }
 
 
@@ -1704,7 +2149,6 @@ input[type="color"] {
 
             output.select();
 
-
             document.execCommand(
               "copy"
             );
@@ -1712,7 +2156,7 @@ input[type="color"] {
           }
 
 
-          const old =
+          const oldText =
             button.textContent;
 
 
@@ -1724,7 +2168,7 @@ input[type="color"] {
             () => {
 
               button.textContent =
-                old;
+                oldText;
 
             },
             1000
@@ -1746,5 +2190,4 @@ input[type="color"] {
   updateOutputs();
 
 })();
-
 </script>

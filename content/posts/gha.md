@@ -2,7 +2,7 @@
 title: "关于 GitHub 个人首页建设和功能介绍"
 date: 2026-08-20T11:45:14+08:00
 draft: false
-summary: "关于 GitHub 个人首页的一些介绍，包括 Shields.io 的 Badges 如何创建和单人能最容易完成的五个 GitHub Achievements 指南。"
+summary: "关于 GitHub 个人首页的一些介绍，包括GitHub 个人介绍的Shields.io-Badges生成器和单人能最容易完成的五个 GitHub Achievements 指南。"
 categories: 
 - 帮助
 tags: 
