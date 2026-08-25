@@ -199,7 +199,7 @@ OJ (**10.26.200.13/** 或 https://oj.cuhk.edu.cn)是SDS学院(曾用的) Java �
 
 ### 下园
 
-![map]({{< relURL "images/campus.jpg" >}})
+![map](/images/campus.jpg)
 
 我校的教学楼共有TA、TB、TC、TD、TX和 ABI，其中ABE(行政楼东翼)的1～2楼是教学区，1楼从教学楼A正对面靠近逸夫会议中心那里进入，2楼除了那里还可以从行政楼中间（新南门正对面的一堆楼梯上面是亭子那里右手边有个小门进去），其他教学楼都很正常……
 
