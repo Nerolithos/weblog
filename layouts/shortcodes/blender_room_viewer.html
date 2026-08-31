@@ -1,0 +1,26 @@
+{{ $id := .Get "id" | default "blender-room-viewer" }}
+{{ $height := .Get "height" | default "72vh" }}
+{{ $model := .Get "model" | default "/models/room.glb" }}
+{{ $config := .Get "config" | default "/models/room-viewer.config.json" }}
+
+<div
+  id="{{ $id }}"
+  class="blender-room-viewer-shell"
+  style="--viewer-height: {{ $height }};"
+  data-model-url="{{ $model }}"
+  data-config-url="{{ $config }}"
+>
+  <div class="blender-room-viewer-canvas-wrap">
+    <canvas class="blender-room-viewer-canvas" aria-label="Blender room viewer"></canvas>
+    <div class="blender-room-viewer-status" data-viewer-status>Loading 3D scene...</div>
+  </div>
+
+  <div class="blender-room-viewer-hints">
+    <p>Mouse drag: rotate, wheel: zoom, right button or Shift + drag: pan.</p>
+  </div>
+</div>
+
+<script type="module">
+  import { bootBlenderRoomViewer } from "/js/blender-room-viewer.js";
+  bootBlenderRoomViewer({{ $id | jsonify }});
+</script>
