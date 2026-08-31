@@ -15,11 +15,11 @@ const CAMERA_SWIVEL_LIMIT_DEGREES = 25;
 const CAMERA_SWIVEL_LIMIT_RADIANS = THREE.MathUtils.degToRad(CAMERA_SWIVEL_LIMIT_DEGREES);
 const CAMERA_ZOOM_FACTOR = 1.75;
 const LOOK_PRESET = {
-  exposure: 0.74,
-  environmentIntensity: 0.14,
-  ambientIntensity: 0.055,
-  keyLightIntensity: 1.35,
-  materialEnvMapIntensity: 0.24
+  exposure: 0.7,
+  environmentIntensity: 0.11,
+  ambientIntensity: 0.035,
+  keyLightIntensity: 1.28,
+  materialEnvMapIntensity: 0.2
 };
 
 function setStatus(el, text, isError = false) {
@@ -97,8 +97,8 @@ function applyFixedBlenderCameraPose(camera, pose) {
 
 function bindLimitedLookController(canvas, camera, basePose) {
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-  const sensitivity = 0.0032;
-  const followRate = 0.22;
+  const sensitivity = 0.0017;
+  const followRate = 0.12;
   const originalTouchAction = canvas.style.touchAction;
 
   let yaw = 0;
@@ -247,12 +247,12 @@ async function bootRoomFrontViewer() {
 
     const keyDir = new THREE.DirectionalLight("#fff2db", LOOK_PRESET.keyLightIntensity);
     // Move key light farther on horizontal axis while keeping it high.
-    keyDir.position.set(4.8, 8.9, 6.3);
+    keyDir.position.set(6.6, 6.8, 8.0);
     keyDir.castShadow = true;
     keyDir.shadow.mapSize.set(2048, 2048);
     keyDir.shadow.bias = -0.0001;
-    keyDir.shadow.normalBias = 0.06;
-    keyDir.shadow.radius = 3.4;
+    keyDir.shadow.normalBias = 0.065;
+    keyDir.shadow.radius = 3.8;
     keyDir.shadow.camera.near = 0.5;
     keyDir.shadow.camera.far = 28;
     keyDir.shadow.camera.left = -7;
@@ -302,6 +302,13 @@ async function bootRoomFrontViewer() {
       const center = bounds.getCenter(new THREE.Vector3());
       const size = bounds.getSize(new THREE.Vector3());
       const faceTarget = center.clone().setY(center.y + size.y * 0.2);
+
+      const sideOffset = baseCameraPose.right.clone().multiplyScalar(6.4);
+      const upOffset = new THREE.Vector3(0, 1, 0).multiplyScalar(4.0);
+      // Push key light opposite to camera-facing side so the front face stays softer.
+      const backOffset = baseCameraPose.forward.clone().multiplyScalar(5.6);
+      keyDir.position.copy(faceTarget.clone().add(sideOffset).add(upOffset).add(backOffset));
+
       keyDir.target.position.copy(faceTarget);
       keyDir.target.updateMatrixWorld();
     }
