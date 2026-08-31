@@ -15,11 +15,11 @@ const CAMERA_SWIVEL_LIMIT_DEGREES = 25;
 const CAMERA_SWIVEL_LIMIT_RADIANS = THREE.MathUtils.degToRad(CAMERA_SWIVEL_LIMIT_DEGREES);
 const CAMERA_ZOOM_FACTOR = 1.75;
 const LOOK_PRESET = {
-  exposure: 0.8,
-  environmentIntensity: 0.2,
-  ambientIntensity: 0.06,
-  keyLightIntensity: 1.45,
-  materialEnvMapIntensity: 0.32
+  exposure: 0.74,
+  environmentIntensity: 0.14,
+  ambientIntensity: 0.045,
+  keyLightIntensity: 1.55,
+  materialEnvMapIntensity: 0.24
 };
 
 function setStatus(el, text, isError = false) {
@@ -203,7 +203,7 @@ async function bootRoomFrontViewer() {
 
   try {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#d0d6df");
+    scene.background = new THREE.Color("#c9d0d9");
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -237,11 +237,13 @@ async function bootRoomFrontViewer() {
     scene.add(ambient);
 
     const keyDir = new THREE.DirectionalLight("#fff2db", LOOK_PRESET.keyLightIntensity);
-    keyDir.position.set(3.6, 7.3, 2.5);
+    // High top-front key light gives a flatter, cleaner face illumination.
+    keyDir.position.set(0.25, 9.0, 3.4);
     keyDir.castShadow = true;
     keyDir.shadow.mapSize.set(3072, 3072);
     keyDir.shadow.bias = -0.0001;
-    keyDir.shadow.normalBias = 0.04;
+    keyDir.shadow.normalBias = 0.05;
+    keyDir.shadow.radius = 2.4;
     keyDir.shadow.camera.near = 0.5;
     keyDir.shadow.camera.far = 28;
     keyDir.shadow.camera.left = -7;
@@ -250,6 +252,7 @@ async function bootRoomFrontViewer() {
     keyDir.shadow.camera.bottom = -7;
     keyDir.shadow.camera.updateProjectionMatrix();
     scene.add(keyDir);
+    scene.add(keyDir.target);
 
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
@@ -284,6 +287,15 @@ async function bootRoomFrontViewer() {
     });
 
     scene.add(model);
+
+    const bounds = new THREE.Box3().setFromObject(model);
+    if (!bounds.isEmpty()) {
+      const center = bounds.getCenter(new THREE.Vector3());
+      const size = bounds.getSize(new THREE.Vector3());
+      const faceTarget = center.clone().setY(center.y + size.y * 0.2);
+      keyDir.target.position.copy(faceTarget);
+      keyDir.target.updateMatrixWorld();
+    }
 
     function resize() {
       const width = Math.max(320, mount.clientWidth);
