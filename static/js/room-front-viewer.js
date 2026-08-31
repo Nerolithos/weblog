@@ -14,7 +14,7 @@ const CAMERA_SWIVEL_LIMIT_DEGREES = 25;
 const CAMERA_SWIVEL_LIMIT_RADIANS = THREE.MathUtils.degToRad(CAMERA_SWIVEL_LIMIT_DEGREES);
 
 function setStatus(el, text, isError = false) {
-  if (\!el) {
+  if (!el) {
     return;
   }
   el.textContent = text;
@@ -79,7 +79,7 @@ function bindLimitedLookController(canvas, camera, basePose) {
   };
 
   const onPointerDown = (event) => {
-    if (event.button \!== 0) {
+    if (event.button !== 0) {
       return;
     }
 
@@ -92,7 +92,7 @@ function bindLimitedLookController(canvas, camera, basePose) {
   };
 
   const onPointerMove = (event) => {
-    if (\!dragging || event.pointerId \!== activePointerId) {
+    if (!dragging || event.pointerId !== activePointerId) {
       return;
     }
 
@@ -109,12 +109,12 @@ function bindLimitedLookController(canvas, camera, basePose) {
   };
 
   const stopDragging = (event) => {
-    if (activePointerId \!== null && event.pointerId \!== activePointerId) {
+    if (activePointerId !== null && event.pointerId !== activePointerId) {
       return;
     }
 
     dragging = false;
-    if (activePointerId \!== null) {
+    if (activePointerId !== null) {
       canvas.releasePointerCapture?.(activePointerId);
     }
     activePointerId = null;
@@ -148,13 +148,13 @@ function bindLimitedLookController(canvas, camera, basePose) {
 
 async function bootRoomFrontViewer() {
   const mount = document.getElementById("room-front-viewer");
-  if (\!mount || mount.dataset.viewerReady === "1") {
+  if (!mount || mount.dataset.viewerReady === "1") {
     return;
   }
 
   const canvas = mount.querySelector(".blender-room-viewer-canvas");
   const statusEl = mount.querySelector("[data-viewer-status]");
-  if (\!canvas) {
+  if (!canvas) {
     return;
   }
 
@@ -200,12 +200,12 @@ async function bootRoomFrontViewer() {
     const modelUrl = mount.dataset.modelUrl || "/models/room.glb";
     const gltf = await loader.loadAsync(modelUrl);
     const model = gltf.scene || gltf.scenes?.[0];
-    if (\!model) {
+    if (!model) {
       throw new Error("Model payload is empty.");
     }
 
     model.traverse((node) => {
-      if (\!node.isMesh) {
+      if (!node.isMesh) {
         return;
       }
       node.castShadow = true;
@@ -225,7 +225,7 @@ async function bootRoomFrontViewer() {
     resize();
 
     let resizeObserver;
-    if (typeof ResizeObserver \!== "undefined") {
+    if (typeof ResizeObserver !== "undefined") {
       resizeObserver = new ResizeObserver(resize);
       resizeObserver.observe(mount);
     } else {
