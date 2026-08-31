@@ -1,0 +1,91 @@
+{
+  "modelUrl": "/models/room.glb",
+  "renderer": {
+    "antialias": true,
+    "alpha": false,
+    "clearColor": "#e9edf3",
+    "toneMapping": "ACESFilmicToneMapping",
+    "toneMappingExposure": 1.1,
+    "shadowMapEnabled": true,
+    "shadowMapType": "PCFSoftShadowMap"
+  },
+  "scene": {
+    "background": "#e9edf3"
+  },
+  "camera": {
+    "fov": 48,
+    "near": 0.01,
+    "far": 300,
+    "position": [3.2, 2.2, 4.8],
+    "target": [0.0, 1.1, 0.0],
+    "fitToModel": false,
+    "fitOffset": 1.2
+  },
+  "controls": {
+    "enablePan": true,
+    "enableRotate": true,
+    "enableZoom": true,
+    "enableDamping": true,
+    "dampingFactor": 0.08,
+    "minDistance": 0.8,
+    "maxDistance": 20,
+    "minPolarAngle": 0.2,
+    "maxPolarAngle": 1.55,
+    "autoRotate": false,
+    "autoRotateSpeed": 1
+  },
+  "modelTransform": {
+    "scale": [1, 1, 1],
+    "position": [0, 0, 0],
+    "rotationDegrees": [0, 0, 0]
+  },
+  "modelShadows": {
+    "castShadow": true,
+    "receiveShadow": true,
+    "forceDoubleSide": false
+  },
+  "lights": [
+    {
+      "name": "ambient-base",
+      "type": "AmbientLight",
+      "color": "#ffffff",
+      "intensity": 0.34
+    },
+    {
+      "name": "sky-hemi",
+      "type": "HemisphereLight",
+      "skyColor": "#c8dcff",
+      "groundColor": "#8d7e71",
+      "intensity": 0.58,
+      "position": [0, 6, 0]
+    },
+    {
+      "name": "key-dir",
+      "type": "DirectionalLight",
+      "color": "#fff3d9",
+      "intensity": 2.1,
+      "position": [4.2, 6.2, 3.5],
+      "castShadow": true,
+      "shadowMapSize": 2048,
+      "shadowBias": -0.00015,
+      "shadowNormalBias": 0.02
+    },
+    {
+      "name": "fill-point",
+      "type": "PointLight",
+      "color": "#d6ebff",
+      "intensity": 0.7,
+      "distance": 24,
+      "decay": 2,
+      "position": [-3, 2.5, -3],
+      "castShadow": false
+    }
+  ],
+  "helpers": {
+    "grid": false,
+    "gridSize": 12,
+    "gridDivisions": 12,
+    "axes": false,
+    "axesSize": 1.5
+  }
+}
