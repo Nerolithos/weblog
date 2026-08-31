@@ -1,6 +1,8 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.168.0/+esm";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/GLTFLoader.js/+esm";
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/OrbitControls.js/+esm";
+import { DRACOLoader } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/DRACOLoader.js/+esm";
+import { MeshoptDecoder } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/libs/meshopt_decoder.module.js/+esm";
 
 function setStatus(el, text, isError = false) {
   if (!el) {
@@ -104,6 +106,14 @@ async function bootRoomFrontViewer() {
     });
 
     const loader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/libs/draco/");
+    loader.setDRACOLoader(dracoLoader);
+    loader.setMeshoptDecoder(MeshoptDecoder);
+    if (MeshoptDecoder && MeshoptDecoder.ready) {
+      await MeshoptDecoder.ready;
+    }
+
     const modelUrl = mount.dataset.modelUrl || "/models/room.glb";
     const gltf = await loader.loadAsync(modelUrl);
     const model = gltf.scene || gltf.scenes?.[0];
@@ -169,6 +179,7 @@ async function bootRoomFrontViewer() {
       dispose() {
         window.cancelAnimationFrame(rafId);
         controls.dispose();
+          dracoLoader.dispose();
         renderer.dispose();
         if (resizeObserver) {
           resizeObserver.disconnect();

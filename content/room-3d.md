@@ -23,4 +23,4 @@ This is a standalone page for rendering /models/room.glb directly in the fronten
   </div>
 </div>
 
-<script type="module" src="/js/room-front-viewer.js?v=20260831b"></script>
+<script type="module" src="/js/room-front-viewer.js?v=20260831d"></script>
