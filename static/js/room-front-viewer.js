@@ -13,7 +13,7 @@ const FIXED_BLENDER_CAMERA = {
 
 const CAMERA_SWIVEL_LIMIT_DEGREES = 25;
 const CAMERA_SWIVEL_LIMIT_RADIANS = THREE.MathUtils.degToRad(CAMERA_SWIVEL_LIMIT_DEGREES);
-const CAMERA_ZOOM_FACTOR = 1.4;
+const CAMERA_ZOOM_FACTOR = 1.75;
 
 function setStatus(el, text, isError = false) {
   if (!el) {
@@ -170,7 +170,7 @@ async function bootRoomFrontViewer() {
 
   try {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#e9edf3");
+    scene.background = new THREE.Color("#d7dde5");
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -181,13 +181,14 @@ async function bootRoomFrontViewer() {
     renderer.physicallyCorrectLights = true;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 0.88;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const envRT = pmremGenerator.fromScene(new RoomEnvironment(), 0.04);
     scene.environment = envRT.texture;
+    scene.environmentIntensity = 0.32;
     pmremGenerator.dispose();
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 300);
@@ -196,10 +197,10 @@ async function bootRoomFrontViewer() {
     const baseCameraPose = applyFixedBlenderCameraPose(camera, FIXED_BLENDER_CAMERA);
     const lookController = bindLimitedLookController(canvas, camera, baseCameraPose);
 
-    const ambient = new THREE.AmbientLight("#ffffff", 0.2);
+    const ambient = new THREE.AmbientLight("#ffffff", 0.1);
     scene.add(ambient);
 
-    const keyDir = new THREE.DirectionalLight("#fff2db", 2.4);
+    const keyDir = new THREE.DirectionalLight("#fff2db", 1.7);
     keyDir.position.set(3.6, 7.3, 2.5);
     keyDir.castShadow = true;
     keyDir.shadow.mapSize.set(2048, 2048);
@@ -229,6 +230,10 @@ async function bootRoomFrontViewer() {
       }
       node.castShadow = true;
       node.receiveShadow = true;
+
+      if (node.material && "envMapIntensity" in node.material) {
+        node.material.envMapIntensity = 0.42;
+      }
     });
 
     scene.add(model);
