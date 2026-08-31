@@ -17,8 +17,8 @@ const CAMERA_ZOOM_FACTOR = 1.75;
 const LOOK_PRESET = {
   exposure: 0.74,
   environmentIntensity: 0.14,
-  ambientIntensity: 0.045,
-  keyLightIntensity: 1.55,
+  ambientIntensity: 0.055,
+  keyLightIntensity: 1.35,
   materialEnvMapIntensity: 0.24
 };
 
@@ -98,19 +98,22 @@ function applyFixedBlenderCameraPose(camera, pose) {
 function bindLimitedLookController(canvas, camera, basePose) {
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const sensitivity = 0.0032;
+  const followRate = 0.22;
   const originalTouchAction = canvas.style.touchAction;
 
   let yaw = 0;
   let pitch = 0;
+  let targetYaw = 0;
+  let targetPitch = 0;
   let dragging = false;
   let activePointerId = null;
   let lastX = 0;
   let lastY = 0;
 
-  const applyLook = () => {
-    const yawQ = new THREE.Quaternion().setFromAxisAngle(basePose.up, yaw);
+  const applyLook = (yawValue, pitchValue) => {
+    const yawQ = new THREE.Quaternion().setFromAxisAngle(basePose.up, yawValue);
     const rightAxis = basePose.right.clone().applyQuaternion(yawQ).normalize();
-    const pitchQ = new THREE.Quaternion().setFromAxisAngle(rightAxis, pitch);
+    const pitchQ = new THREE.Quaternion().setFromAxisAngle(rightAxis, pitchValue);
 
     const forward = basePose.forward.clone().applyQuaternion(yawQ).applyQuaternion(pitchQ).normalize();
     const up = basePose.up.clone().applyQuaternion(yawQ).applyQuaternion(pitchQ).normalize();
@@ -142,10 +145,9 @@ function bindLimitedLookController(canvas, camera, basePose) {
     lastX = event.clientX;
     lastY = event.clientY;
 
-    yaw = clamp(yaw - dx * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
-    pitch = clamp(pitch - dy * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
+    targetYaw = clamp(targetYaw - dx * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
+    targetPitch = clamp(targetPitch - dy * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
 
-    applyLook();
     event.preventDefault();
   };
 
@@ -168,13 +170,20 @@ function bindLimitedLookController(canvas, camera, basePose) {
   canvas.addEventListener("pointercancel", stopDragging);
   canvas.addEventListener("pointerleave", stopDragging);
 
-  applyLook();
+  applyLook(yaw, pitch);
 
   return {
+    update() {
+      yaw += (targetYaw - yaw) * followRate;
+      pitch += (targetPitch - pitch) * followRate;
+      applyLook(yaw, pitch);
+    },
     reset() {
       yaw = 0;
       pitch = 0;
-      applyLook();
+      targetYaw = 0;
+      targetPitch = 0;
+      applyLook(yaw, pitch);
     },
     dispose() {
       canvas.removeEventListener("pointerdown", onPointerDown);
@@ -211,7 +220,7 @@ async function bootRoomFrontViewer() {
       alpha: false,
       powerPreference: "high-performance"
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.physicallyCorrectLights = true;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -237,13 +246,13 @@ async function bootRoomFrontViewer() {
     scene.add(ambient);
 
     const keyDir = new THREE.DirectionalLight("#fff2db", LOOK_PRESET.keyLightIntensity);
-    // High top-front key light gives a flatter, cleaner face illumination.
-    keyDir.position.set(0.25, 9.0, 3.4);
+    // Move key light farther on horizontal axis while keeping it high.
+    keyDir.position.set(4.8, 8.9, 6.3);
     keyDir.castShadow = true;
-    keyDir.shadow.mapSize.set(3072, 3072);
+    keyDir.shadow.mapSize.set(2048, 2048);
     keyDir.shadow.bias = -0.0001;
-    keyDir.shadow.normalBias = 0.05;
-    keyDir.shadow.radius = 2.4;
+    keyDir.shadow.normalBias = 0.06;
+    keyDir.shadow.radius = 3.4;
     keyDir.shadow.camera.near = 0.5;
     keyDir.shadow.camera.far = 28;
     keyDir.shadow.camera.left = -7;
@@ -317,6 +326,7 @@ async function bootRoomFrontViewer() {
 
     let rafId = 0;
     const renderLoop = () => {
+      lookController.update();
       renderer.render(scene, camera);
       rafId = window.requestAnimationFrame(renderLoop);
     };
