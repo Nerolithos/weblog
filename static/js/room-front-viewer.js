@@ -14,6 +14,13 @@ const FIXED_BLENDER_CAMERA = {
 const CAMERA_SWIVEL_LIMIT_DEGREES = 25;
 const CAMERA_SWIVEL_LIMIT_RADIANS = THREE.MathUtils.degToRad(CAMERA_SWIVEL_LIMIT_DEGREES);
 const CAMERA_ZOOM_FACTOR = 1.75;
+const LOOK_PRESET = {
+  exposure: 0.8,
+  environmentIntensity: 0.2,
+  ambientIntensity: 0.06,
+  keyLightIntensity: 1.45,
+  materialEnvMapIntensity: 0.32
+};
 
 function setStatus(el, text, isError = false) {
   if (!el) {
@@ -29,6 +36,32 @@ function blenderVectorToThree(vector) {
 
 function blenderPositionToThree(position) {
   return new THREE.Vector3(position[0], position[2], -position[1]);
+}
+
+function tuneTextureAnisotropy(texture, anisotropy) {
+  if (!texture) {
+    return;
+  }
+  texture.anisotropy = anisotropy;
+}
+
+function tunePbrMaterial(material, anisotropy) {
+  if (!material) {
+    return;
+  }
+
+  tuneTextureAnisotropy(material.map, anisotropy);
+  tuneTextureAnisotropy(material.normalMap, anisotropy);
+  tuneTextureAnisotropy(material.roughnessMap, anisotropy);
+  tuneTextureAnisotropy(material.metalnessMap, anisotropy);
+  tuneTextureAnisotropy(material.emissiveMap, anisotropy);
+  tuneTextureAnisotropy(material.alphaMap, anisotropy);
+
+  if ("envMapIntensity" in material) {
+    material.envMapIntensity = LOOK_PRESET.materialEnvMapIntensity;
+  }
+
+  material.needsUpdate = true;
 }
 
 function applyFixedBlenderCameraPose(camera, pose) {
@@ -170,7 +203,7 @@ async function bootRoomFrontViewer() {
 
   try {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#d7dde5");
+    scene.background = new THREE.Color("#d0d6df");
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -178,17 +211,20 @@ async function bootRoomFrontViewer() {
       alpha: false,
       powerPreference: "high-performance"
     });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.physicallyCorrectLights = true;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.88;
+    renderer.toneMappingExposure = LOOK_PRESET.exposure;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    const maxAnisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
 
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const envRT = pmremGenerator.fromScene(new RoomEnvironment(), 0.04);
     scene.environment = envRT.texture;
-    scene.environmentIntensity = 0.32;
+    scene.environmentIntensity = LOOK_PRESET.environmentIntensity;
     pmremGenerator.dispose();
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 300);
@@ -197,15 +233,22 @@ async function bootRoomFrontViewer() {
     const baseCameraPose = applyFixedBlenderCameraPose(camera, FIXED_BLENDER_CAMERA);
     const lookController = bindLimitedLookController(canvas, camera, baseCameraPose);
 
-    const ambient = new THREE.AmbientLight("#ffffff", 0.1);
+    const ambient = new THREE.AmbientLight("#ffffff", LOOK_PRESET.ambientIntensity);
     scene.add(ambient);
 
-    const keyDir = new THREE.DirectionalLight("#fff2db", 1.7);
+    const keyDir = new THREE.DirectionalLight("#fff2db", LOOK_PRESET.keyLightIntensity);
     keyDir.position.set(3.6, 7.3, 2.5);
     keyDir.castShadow = true;
-    keyDir.shadow.mapSize.set(2048, 2048);
-    keyDir.shadow.bias = -0.00008;
-    keyDir.shadow.normalBias = 0.03;
+    keyDir.shadow.mapSize.set(3072, 3072);
+    keyDir.shadow.bias = -0.0001;
+    keyDir.shadow.normalBias = 0.04;
+    keyDir.shadow.camera.near = 0.5;
+    keyDir.shadow.camera.far = 28;
+    keyDir.shadow.camera.left = -7;
+    keyDir.shadow.camera.right = 7;
+    keyDir.shadow.camera.top = 7;
+    keyDir.shadow.camera.bottom = -7;
+    keyDir.shadow.camera.updateProjectionMatrix();
     scene.add(keyDir);
 
     const loader = new GLTFLoader();
@@ -231,8 +274,12 @@ async function bootRoomFrontViewer() {
       node.castShadow = true;
       node.receiveShadow = true;
 
-      if (node.material && "envMapIntensity" in node.material) {
-        node.material.envMapIntensity = 0.42;
+      if (Array.isArray(node.material)) {
+        for (const material of node.material) {
+          tunePbrMaterial(material, maxAnisotropy);
+        }
+      } else {
+        tunePbrMaterial(node.material, maxAnisotropy);
       }
     });
 
