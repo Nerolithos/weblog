@@ -1,6 +1,6 @@
 ---
 title: "Blender Room GLB Lab"
-date: 2026-08-31T20:00:00+08:00
+date: 2026-08-31T17:00:00+08:00
 draft: false
 summary: "A configurable room.glb sandbox for camera, light, and control tuning."
 categories:

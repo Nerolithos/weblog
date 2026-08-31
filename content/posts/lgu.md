@@ -2,7 +2,7 @@
 title: "龙大生存指南 CUHKSZ Survival Handbook"
 date: 2026-08-28T08:10:58+08:00
 draft: false
-summary: "龙大人自己的生存指南汇总，绝赞创作中"
+summary: "港中深生存指南，2026万字拆解详尽版，专为新同学们撰写"
 categories: 
   - 帮助
 featured_image: "/images/lgu.jpg"
@@ -308,7 +308,18 @@ CEC1010“形势与政策”需非国际生在大一至大三期间打卡五场�
 
 2、大型实践活动（14学时），比如支教、新生领航者
 
+
+
+#### · 实习
+
 MGT4188/DDA4100/ERG4100（三者互斥）都是实习 PF 课，分别适用于SME/FE-FT(Y2~4)、SDS/FE-QF(Y2~4)、SSE和FE(Y2~4)。三者都是3学分。
+
+学生须在选课期间通过SIS系统向学院办公室提交课程注册申请及支持文件：  
+a. 实习岗位的详细信息，包括实习职位公告或招聘启事（工作职责说明）的复印件；  
+b. 公司内指导老师或直属主管的姓名及职务；  
+c. 你与公司签署并加盖公司公章的合同或协议复印件，以供核实；  
+d. 加盖公司公章的实习证明；  
+e. 工作时数证明（累计工作时间至少为360小时，相当于45个工作日，最长不超过12个月）。若在多家公司实习，累计工时亦可合并计算用于注册。工作时数证明文件需由公司主管签字确认，**并明确注明具体工作时长（仅提供日期不予接受）**。例如：“兹证明XXX于（年/月/日）至（年/月/日）期间在我公司担任（实习职位）一职，完成实习工作。”实习期间，他/她共计工作了XXX小时（xxx天）。（需加盖公司公章或公司主管签字）。中文版本亦可接受。
 
 ---
 
@@ -535,19 +546,21 @@ A：4.0，A-：3.7，B+：3.3，B：3.0，B-：2.7，C+：2.3，C：2.0，C-：1
 
 ## 附件
 
-SDS 新生常问问题：
+- [点击访问公众号版本](https://mp.weixin.qq.com/s/s8yylIZG_6-t4n18ezfjeg)
+
+- SDS 新生常问问题：
 
 <embed src="/pdf/FAQ.pdf" type="application/pdf" width="100%" height="600px" />
 
-2026逸夫书院新生校园生活指南：
+- 2026逸夫书院新生校园生活指南：
 
 <embed src="/pdf/lgu.pdf" type="application/pdf" width="100%" height="600px" />
 
-2024新生手册：
+- 2024新生手册：
 
 <embed src="/pdf/handbook.pdf" type="application/pdf" width="100%" height="600px" />
 
-2024Orientation (入学迎新活动) 手册：
+- 2024Orientation (入学迎新活动) 手册：
 
 <embed src="/pdf/os.pdf" type="application/pdf" width="100%" height="600px" />
 
