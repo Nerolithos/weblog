@@ -179,7 +179,7 @@ async function bootRoomFrontViewer() {
       dispose() {
         window.cancelAnimationFrame(rafId);
         controls.dispose();
-          dracoLoader.dispose();
+        dracoLoader.dispose();
         renderer.dispose();
         if (resizeObserver) {
           resizeObserver.disconnect();

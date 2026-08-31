@@ -1655,28 +1655,3 @@ body.dark-mode .blender-room-viewer-hints {
   }
 }
 
-.room-3d-page {
-  min-height: calc(100vh - 7.2rem);
-}
-
-.room-3d-frame-panel {
-  width: 100%;
-}
-
-.room-3d-viewer-shell {
-  margin: 0;
-  border-radius: 16px;
-  box-shadow: 0 20px 44px rgba(15, 23, 42, 0.12);
-}
-
-.room-3d-canvas-wrap {
-  height: clamp(360px, calc(100vh - 290px), 760px);
-  min-height: 360px;
-}
-
-@media (max-width: 800px) {
-  .room-3d-canvas-wrap {
-    height: clamp(300px, calc(100vh - 245px), 560px);
-    min-height: 300px;
-  }
-}

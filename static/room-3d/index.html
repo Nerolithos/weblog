@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Room 3D Viewer</title>
+    <meta name="description" content="Standalone room.glb viewer" />
+    <link rel="stylesheet" href="/room-3d/room-3d.css?v=20260831a" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="head">
+        <h1>Room 3D Viewer</h1>
+        <p>Standalone HTML + CSS + JS page for room.glb.</p>
+      </header>
+
+      <section class="frame" aria-label="3D Scene">
+        <div
+          id="room-front-viewer"
+          class="blender-room-viewer-shell"
+          data-model-url="/models/room.glb"
+        >
+          <div class="blender-room-viewer-canvas-wrap">
+            <canvas class="blender-room-viewer-canvas" aria-label="Room GLB Viewer"></canvas>
+            <div class="blender-room-viewer-status" data-viewer-status>Loading 3D scene...</div>
+          </div>
+
+          <div class="blender-room-viewer-hints">
+            <p>Mouse move: light source, drag: rotate, wheel: zoom, right button or Shift + drag: pan.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/js/room-front-viewer.js?v=20260831f"></script>
+  </body>
+</html>
