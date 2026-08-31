@@ -1,0 +1,33 @@
+{{ define "header" }}
+  {{ partial "site-header.html" . }}
+{{ end }}
+
+{{ define "main" }}
+  <article class="mw8 center ph3 pt4 pb6 room-3d-page">
+    <header class="mt3 mb4">
+      <h1 class="f1 athelas mt0 mb3">{{ .Title }}</h1>
+      {{ with .Params.summary }}
+        <p class="f3 mid-gray lh-copy mv0">{{ . }}</p>
+      {{ end }}
+    </header>
+
+    <section class="room-3d-frame-panel" aria-label="Room 3D Scene">
+      <div
+        id="room-front-viewer"
+        class="blender-room-viewer-shell room-3d-viewer-shell"
+        data-model-url="{{ .Params.modelUrl | default "/models/room.glb" }}"
+      >
+        <div class="blender-room-viewer-canvas-wrap room-3d-canvas-wrap">
+          <canvas class="blender-room-viewer-canvas" aria-label="Standalone room viewer"></canvas>
+          <div class="blender-room-viewer-status" data-viewer-status>Loading 3D scene...</div>
+        </div>
+
+        <div class="blender-room-viewer-hints">
+          <p>Mouse move: light source, drag: rotate, wheel: zoom, right button or Shift + drag: pan.</p>
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <script type="module" src="{{ "js/room-front-viewer.js?v=20260831e" | relURL }}"></script>
+{{ end }}
