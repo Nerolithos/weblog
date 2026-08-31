@@ -89,6 +89,46 @@ body {
   font-size: 0.88rem;
 }
 
+.viewer-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
+  gap: 0.6rem 0.9rem;
+  padding: 0.68rem 0.8rem 0.72rem;
+  background: rgba(232, 240, 248, 0.84);
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.viewer-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.34rem;
+  font-size: 0.84rem;
+  color: #334155;
+}
+
+.viewer-control-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.viewer-control input[type="range"] {
+  width: 100%;
+}
+
+.viewer-control output {
+  min-width: 4.1rem;
+  text-align: right;
+  padding: 0.16rem 0.36rem;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.77rem;
+  color: #0f172a;
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+}
+
 @media (max-width: 800px) {
   .page {
     width: min(98vw, 980px);
@@ -102,5 +142,9 @@ body {
   .blender-room-viewer-canvas-wrap {
     height: clamp(280px, 64vh, 560px);
     min-height: 280px;
+  }
+
+  .viewer-controls {
+    grid-template-columns: 1fr;
   }
 }

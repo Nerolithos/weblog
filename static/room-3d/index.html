@@ -25,13 +25,31 @@
             <div class="blender-room-viewer-status" data-viewer-status>Loading 3D scene...</div>
           </div>
 
+          <div class="viewer-controls" aria-label="Light Controls">
+            <label class="viewer-control" for="light-intensity">
+              <span>Light intensity</span>
+              <div class="viewer-control-row">
+                <input id="light-intensity" data-light-intensity type="range" min="0.4" max="2.4" step="0.01" value="1.28" />
+                <output data-light-intensity-value>1.28</output>
+              </div>
+            </label>
+
+            <label class="viewer-control" for="light-angle">
+              <span>Light angle</span>
+              <div class="viewer-control-row">
+                <input id="light-angle" data-light-angle type="range" min="-180" max="180" step="1" value="0" />
+                <output data-light-angle-value>0 deg</output>
+              </div>
+            </label>
+          </div>
+
           <div class="blender-room-viewer-hints">
-            <p>Left-drag slowly to rotate within +/-25 deg. Camera position is fixed, with one off-axis key light and soft low-fill environment.</p>
+            <p>Left-drag to rotate within +/-25 deg. Camera position is fixed. Use sliders to tune key-light intensity and horizontal angle.</p>
           </div>
         </div>
       </section>
     </main>
 
-    <script type="module" src="/js/room-front-viewer.js?v=20260831q"></script>
+    <script type="module" src="/js/room-front-viewer.js?v=20260831r"></script>
   </body>
 </html>

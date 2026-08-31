@@ -97,14 +97,11 @@ function applyFixedBlenderCameraPose(camera, pose) {
 
 function bindLimitedLookController(canvas, camera, basePose) {
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-  const sensitivity = 0.0017;
-  const followRate = 0.12;
+  const sensitivity = 0.00115;
   const originalTouchAction = canvas.style.touchAction;
 
   let yaw = 0;
   let pitch = 0;
-  let targetYaw = 0;
-  let targetPitch = 0;
   let dragging = false;
   let activePointerId = null;
   let lastX = 0;
@@ -145,8 +142,10 @@ function bindLimitedLookController(canvas, camera, basePose) {
     lastX = event.clientX;
     lastY = event.clientY;
 
-    targetYaw = clamp(targetYaw - dx * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
-    targetPitch = clamp(targetPitch - dy * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
+    yaw = clamp(yaw - dx * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
+    pitch = clamp(pitch - dy * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
+
+    applyLook(yaw, pitch);
 
     event.preventDefault();
   };
@@ -173,16 +172,10 @@ function bindLimitedLookController(canvas, camera, basePose) {
   applyLook(yaw, pitch);
 
   return {
-    update() {
-      yaw += (targetYaw - yaw) * followRate;
-      pitch += (targetPitch - pitch) * followRate;
-      applyLook(yaw, pitch);
-    },
+    update() {},
     reset() {
       yaw = 0;
       pitch = 0;
-      targetYaw = 0;
-      targetPitch = 0;
       applyLook(yaw, pitch);
     },
     dispose() {
@@ -297,21 +290,54 @@ async function bootRoomFrontViewer() {
 
     scene.add(model);
 
+    let faceTarget = new THREE.Vector3(0, 1.2, 0);
+
+    const lightIntensityInput = mount.querySelector("[data-light-intensity]");
+    const lightIntensityValueEl = mount.querySelector("[data-light-intensity-value]");
+    const lightAngleInput = mount.querySelector("[data-light-angle]");
+    const lightAngleValueEl = mount.querySelector("[data-light-angle-value]");
+
+    const updateLightPositionFromAngle = () => {
+      const angleDegrees = Number(lightAngleInput?.value ?? 0);
+      const angleRadians = THREE.MathUtils.degToRad(angleDegrees);
+
+      const radial = 8.5;
+      const side = Math.cos(angleRadians) * radial;
+      const back = Math.sin(angleRadians) * radial;
+
+      const sideOffset = baseCameraPose.right.clone().multiplyScalar(side);
+      const upOffset = new THREE.Vector3(0, 1, 0).multiplyScalar(4.0);
+      const backOffset = baseCameraPose.forward.clone().multiplyScalar(back + 5.6);
+
+      keyDir.position.copy(faceTarget.clone().add(sideOffset).add(upOffset).add(backOffset));
+      keyDir.target.position.copy(faceTarget);
+      keyDir.target.updateMatrixWorld();
+
+      if (lightAngleValueEl) {
+        lightAngleValueEl.textContent = `${Math.round(angleDegrees)} deg`;
+      }
+    };
+
+    const onLightIntensityInput = () => {
+      const intensity = Number(lightIntensityInput?.value ?? LOOK_PRESET.keyLightIntensity);
+      keyDir.intensity = intensity;
+      if (lightIntensityValueEl) {
+        lightIntensityValueEl.textContent = intensity.toFixed(2);
+      }
+    };
+
+    lightIntensityInput?.addEventListener("input", onLightIntensityInput);
+    lightAngleInput?.addEventListener("input", updateLightPositionFromAngle);
+
     const bounds = new THREE.Box3().setFromObject(model);
     if (!bounds.isEmpty()) {
       const center = bounds.getCenter(new THREE.Vector3());
       const size = bounds.getSize(new THREE.Vector3());
-      const faceTarget = center.clone().setY(center.y + size.y * 0.2);
-
-      const sideOffset = baseCameraPose.right.clone().multiplyScalar(6.4);
-      const upOffset = new THREE.Vector3(0, 1, 0).multiplyScalar(4.0);
-      // Push key light opposite to camera-facing side so the front face stays softer.
-      const backOffset = baseCameraPose.forward.clone().multiplyScalar(5.6);
-      keyDir.position.copy(faceTarget.clone().add(sideOffset).add(upOffset).add(backOffset));
-
-      keyDir.target.position.copy(faceTarget);
-      keyDir.target.updateMatrixWorld();
+      faceTarget = center.clone().setY(center.y + size.y * 0.2);
     }
+
+    onLightIntensityInput();
+    updateLightPositionFromAngle();
 
     function resize() {
       const width = Math.max(320, mount.clientWidth);
@@ -351,11 +377,27 @@ async function bootRoomFrontViewer() {
         lookController.reset();
       },
       setLightIntensity(value) {
-        keyDir.intensity = Number(value);
+        const intensity = Number(value);
+        keyDir.intensity = intensity;
+        if (lightIntensityInput) {
+          lightIntensityInput.value = intensity.toFixed(2);
+        }
+        if (lightIntensityValueEl) {
+          lightIntensityValueEl.textContent = intensity.toFixed(2);
+        }
+      },
+      setLightAngle(value) {
+        if (!lightAngleInput) {
+          return;
+        }
+        lightAngleInput.value = String(Number(value));
+        updateLightPositionFromAngle();
       },
       dispose() {
         window.cancelAnimationFrame(rafId);
         lookController.dispose();
+        lightIntensityInput?.removeEventListener("input", onLightIntensityInput);
+        lightAngleInput?.removeEventListener("input", updateLightPositionFromAngle);
         dracoLoader.dispose();
         renderer.dispose();
         if (resizeObserver) {
