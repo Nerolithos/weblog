@@ -1,39 +1,160 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.168.0/+esm";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/GLTFLoader.js/+esm";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/OrbitControls.js/+esm";
 import { DRACOLoader } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/DRACOLoader.js/+esm";
 import { MeshoptDecoder } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/libs/meshopt_decoder.module.js/+esm";
 
+const FIXED_BLENDER_CAMERA = {
+  // Blender transform (XYZ Euler, meters) provided by user.
+  position: [-0.682, -3.6217, 0.97217],
+  rotationDegrees: [78.359, -0.082029, -6.18],
+  eulerOrder: "XYZ"
+};
+
+const CAMERA_SWIVEL_LIMIT_DEGREES = 25;
+const CAMERA_SWIVEL_LIMIT_RADIANS = THREE.MathUtils.degToRad(CAMERA_SWIVEL_LIMIT_DEGREES);
+
 function setStatus(el, text, isError = false) {
-  if (!el) {
+  if (\!el) {
     return;
   }
   el.textContent = text;
   el.dataset.error = isError ? "1" : "0";
 }
 
-function frameLightTarget(camera, controls, nx, ny) {
-  const lookDistance = Math.max(camera.position.distanceTo(controls.target) * 0.65, 1.2);
-  const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
-  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
-  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+function blenderVectorToThree(vector) {
+  return new THREE.Vector3(vector.x, vector.z, -vector.y);
+}
 
-  return controls.target
-    .clone()
-    .add(forward.multiplyScalar(lookDistance))
-    .add(right.multiplyScalar(nx * lookDistance * 1.05))
-    .add(up.multiplyScalar(ny * lookDistance * 0.72));
+function blenderPositionToThree(position) {
+  return new THREE.Vector3(position[0], position[2], -position[1]);
+}
+
+function applyFixedBlenderCameraPose(camera, pose) {
+  const euler = new THREE.Euler(
+    THREE.MathUtils.degToRad(pose.rotationDegrees[0]),
+    THREE.MathUtils.degToRad(pose.rotationDegrees[1]),
+    THREE.MathUtils.degToRad(pose.rotationDegrees[2]),
+    pose.eulerOrder ?? "XYZ"
+  );
+
+  const forwardBlender = new THREE.Vector3(0, 0, -1).applyEuler(euler).normalize();
+  const upBlender = new THREE.Vector3(0, 1, 0).applyEuler(euler).normalize();
+  const forwardThree = blenderVectorToThree(forwardBlender).normalize();
+  const upThree = blenderVectorToThree(upBlender).normalize();
+  const rightThree = new THREE.Vector3().crossVectors(forwardThree, upThree).normalize();
+
+  camera.position.copy(blenderPositionToThree(pose.position));
+  camera.up.copy(upThree);
+  camera.lookAt(camera.position.clone().add(forwardThree));
+
+  return {
+    forward: forwardThree.clone(),
+    up: upThree.clone(),
+    right: rightThree.clone()
+  };
+}
+
+function bindLimitedLookController(canvas, camera, basePose) {
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const sensitivity = 0.0032;
+  const originalTouchAction = canvas.style.touchAction;
+
+  let yaw = 0;
+  let pitch = 0;
+  let dragging = false;
+  let activePointerId = null;
+  let lastX = 0;
+  let lastY = 0;
+
+  const applyLook = () => {
+    const yawQ = new THREE.Quaternion().setFromAxisAngle(basePose.up, yaw);
+    const rightAxis = basePose.right.clone().applyQuaternion(yawQ).normalize();
+    const pitchQ = new THREE.Quaternion().setFromAxisAngle(rightAxis, pitch);
+
+    const forward = basePose.forward.clone().applyQuaternion(yawQ).applyQuaternion(pitchQ).normalize();
+    const up = basePose.up.clone().applyQuaternion(yawQ).applyQuaternion(pitchQ).normalize();
+
+    camera.up.copy(up);
+    camera.lookAt(camera.position.clone().add(forward));
+  };
+
+  const onPointerDown = (event) => {
+    if (event.button \!== 0) {
+      return;
+    }
+
+    dragging = true;
+    activePointerId = event.pointerId;
+    lastX = event.clientX;
+    lastY = event.clientY;
+    canvas.setPointerCapture?.(event.pointerId);
+    event.preventDefault();
+  };
+
+  const onPointerMove = (event) => {
+    if (\!dragging || event.pointerId \!== activePointerId) {
+      return;
+    }
+
+    const dx = event.clientX - lastX;
+    const dy = event.clientY - lastY;
+    lastX = event.clientX;
+    lastY = event.clientY;
+
+    yaw = clamp(yaw - dx * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
+    pitch = clamp(pitch - dy * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
+
+    applyLook();
+    event.preventDefault();
+  };
+
+  const stopDragging = (event) => {
+    if (activePointerId \!== null && event.pointerId \!== activePointerId) {
+      return;
+    }
+
+    dragging = false;
+    if (activePointerId \!== null) {
+      canvas.releasePointerCapture?.(activePointerId);
+    }
+    activePointerId = null;
+  };
+
+  canvas.style.touchAction = "none";
+  canvas.addEventListener("pointerdown", onPointerDown);
+  canvas.addEventListener("pointermove", onPointerMove);
+  canvas.addEventListener("pointerup", stopDragging);
+  canvas.addEventListener("pointercancel", stopDragging);
+  canvas.addEventListener("pointerleave", stopDragging);
+
+  applyLook();
+
+  return {
+    reset() {
+      yaw = 0;
+      pitch = 0;
+      applyLook();
+    },
+    dispose() {
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerup", stopDragging);
+      canvas.removeEventListener("pointercancel", stopDragging);
+      canvas.removeEventListener("pointerleave", stopDragging);
+      canvas.style.touchAction = originalTouchAction;
+    }
+  };
 }
 
 async function bootRoomFrontViewer() {
   const mount = document.getElementById("room-front-viewer");
-  if (!mount || mount.dataset.viewerReady === "1") {
+  if (\!mount || mount.dataset.viewerReady === "1") {
     return;
   }
 
   const canvas = mount.querySelector(".blender-room-viewer-canvas");
   const statusEl = mount.querySelector("[data-viewer-status]");
-  if (!canvas) {
+  if (\!canvas) {
     return;
   }
 
@@ -51,59 +172,21 @@ async function bootRoomFrontViewer() {
     });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 1.2;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 300);
-    camera.position.set(3.3, 2.2, 4.8);
+    const baseCameraPose = applyFixedBlenderCameraPose(camera, FIXED_BLENDER_CAMERA);
+    const lookController = bindLimitedLookController(canvas, camera, baseCameraPose);
 
-    const controls = new OrbitControls(camera, canvas);
-    controls.target.set(0, 1.1, 0);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.minDistance = 0.8;
-    controls.maxDistance = 20;
-    controls.minPolarAngle = 0.2;
-    controls.maxPolarAngle = 1.55;
-
-    const ambient = new THREE.AmbientLight("#ffffff", 0.32);
-    scene.add(ambient);
-
-    const hemi = new THREE.HemisphereLight("#c8dcff", "#8d7e71", 0.55);
-    hemi.position.set(0, 6, 0);
-    scene.add(hemi);
-
-    const keyDir = new THREE.DirectionalLight("#fff3d9", 1.6);
-    keyDir.position.set(4.2, 6.2, 3.5);
+    const keyDir = new THREE.DirectionalLight("#fff2db", 3.2);
+    keyDir.position.set(3.6, 7.3, 2.5);
     keyDir.castShadow = true;
     keyDir.shadow.mapSize.set(2048, 2048);
-    keyDir.shadow.bias = -0.00015;
-    keyDir.shadow.normalBias = 0.02;
+    keyDir.shadow.bias = -0.00008;
+    keyDir.shadow.normalBias = 0.03;
     scene.add(keyDir);
-
-    const cursorLight = new THREE.PointLight("#f5f3ff", 1.9, 18, 2);
-    cursorLight.castShadow = true;
-    cursorLight.shadow.mapSize.set(1024, 1024);
-    scene.add(cursorLight);
-
-    const pointerTarget = new THREE.Vector3(0, 2.2, 1.8);
-    cursorLight.position.copy(pointerTarget);
-
-    const setPointerTargetFromEvent = (event) => {
-      const rect = canvas.getBoundingClientRect();
-      if (!rect.width || !rect.height) {
-        return;
-      }
-      const nx = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      const ny = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
-      pointerTarget.copy(frameLightTarget(camera, controls, nx, ny));
-    };
-
-    canvas.addEventListener("pointermove", setPointerTargetFromEvent, { passive: true });
-    canvas.addEventListener("pointerleave", () => {
-      pointerTarget.copy(frameLightTarget(camera, controls, 0, 0));
-    });
 
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
@@ -117,12 +200,12 @@ async function bootRoomFrontViewer() {
     const modelUrl = mount.dataset.modelUrl || "/models/room.glb";
     const gltf = await loader.loadAsync(modelUrl);
     const model = gltf.scene || gltf.scenes?.[0];
-    if (!model) {
+    if (\!model) {
       throw new Error("Model payload is empty.");
     }
 
     model.traverse((node) => {
-      if (!node.isMesh) {
+      if (\!node.isMesh) {
         return;
       }
       node.castShadow = true;
@@ -130,15 +213,6 @@ async function bootRoomFrontViewer() {
     });
 
     scene.add(model);
-
-    const bounds = new THREE.Box3().setFromObject(model);
-    if (!bounds.isEmpty()) {
-      const center = bounds.getCenter(new THREE.Vector3());
-      controls.target.copy(center);
-      camera.lookAt(center);
-      pointerTarget.copy(frameLightTarget(camera, controls, 0, 0));
-      cursorLight.position.copy(pointerTarget);
-    }
 
     function resize() {
       const width = Math.max(320, mount.clientWidth);
@@ -151,7 +225,7 @@ async function bootRoomFrontViewer() {
     resize();
 
     let resizeObserver;
-    if (typeof ResizeObserver !== "undefined") {
+    if (typeof ResizeObserver \!== "undefined") {
       resizeObserver = new ResizeObserver(resize);
       resizeObserver.observe(mount);
     } else {
@@ -160,25 +234,28 @@ async function bootRoomFrontViewer() {
 
     let rafId = 0;
     const renderLoop = () => {
-      controls.update();
-      cursorLight.position.lerp(pointerTarget, 0.14);
       renderer.render(scene, camera);
       rafId = window.requestAnimationFrame(renderLoop);
     };
     renderLoop();
 
     mount.dataset.viewerReady = "1";
-    setStatus(statusEl, "Scene ready. Move mouse to paint light.");
+    setStatus(statusEl, "Scene ready. Drag to rotate within +/-25 deg. Camera position is fixed.");
 
     window.roomFrontViewer = {
       scene,
       camera,
-      controls,
       renderer,
-      cursorLight,
+      keyDir,
+      resetView() {
+        lookController.reset();
+      },
+      setLightIntensity(value) {
+        keyDir.intensity = Number(value);
+      },
       dispose() {
         window.cancelAnimationFrame(rafId);
-        controls.dispose();
+        lookController.dispose();
         dracoLoader.dispose();
         renderer.dispose();
         if (resizeObserver) {
