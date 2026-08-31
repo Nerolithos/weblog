@@ -2,6 +2,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.168.0/+esm";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/GLTFLoader.js/+esm";
 import { DRACOLoader } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/DRACOLoader.js/+esm";
 import { MeshoptDecoder } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/libs/meshopt_decoder.module.js/+esm";
+import { RoomEnvironment } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/environments/RoomEnvironment.js/+esm";
 
 const FIXED_BLENDER_CAMERA = {
   // Blender transform (XYZ Euler, meters) provided by user.
@@ -12,6 +13,7 @@ const FIXED_BLENDER_CAMERA = {
 
 const CAMERA_SWIVEL_LIMIT_DEGREES = 25;
 const CAMERA_SWIVEL_LIMIT_RADIANS = THREE.MathUtils.degToRad(CAMERA_SWIVEL_LIMIT_DEGREES);
+const CAMERA_ZOOM_FACTOR = 1.4;
 
 function setStatus(el, text, isError = false) {
   if (!el) {
@@ -38,10 +40,16 @@ function applyFixedBlenderCameraPose(camera, pose) {
   );
 
   const forwardBlender = new THREE.Vector3(0, 0, -1).applyEuler(euler).normalize();
-  const upBlender = new THREE.Vector3(0, 1, 0).applyEuler(euler).normalize();
   const forwardThree = blenderVectorToThree(forwardBlender).normalize();
-  const upThree = blenderVectorToThree(upBlender).normalize();
-  const rightThree = new THREE.Vector3().crossVectors(forwardThree, upThree).normalize();
+
+  // Keep horizon level by rebuilding up/right from world-up instead of Blender roll.
+  const worldUp = new THREE.Vector3(0, 1, 0);
+  let rightThree = new THREE.Vector3().crossVectors(forwardThree, worldUp);
+  if (rightThree.lengthSq() < 1e-6) {
+    rightThree = new THREE.Vector3(1, 0, 0);
+  }
+  rightThree.normalize();
+  const upThree = new THREE.Vector3().crossVectors(rightThree, forwardThree).normalize();
 
   camera.position.copy(blenderPositionToThree(pose.position));
   camera.up.copy(upThree);
@@ -170,17 +178,28 @@ async function bootRoomFrontViewer() {
       alpha: false,
       powerPreference: "high-performance"
     });
+    renderer.physicallyCorrectLights = true;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.08;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    const envRT = pmremGenerator.fromScene(new RoomEnvironment(), 0.04);
+    scene.environment = envRT.texture;
+    pmremGenerator.dispose();
+
     const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 300);
+    camera.zoom = CAMERA_ZOOM_FACTOR;
+    camera.updateProjectionMatrix();
     const baseCameraPose = applyFixedBlenderCameraPose(camera, FIXED_BLENDER_CAMERA);
     const lookController = bindLimitedLookController(canvas, camera, baseCameraPose);
 
-    const keyDir = new THREE.DirectionalLight("#fff2db", 3.2);
+    const ambient = new THREE.AmbientLight("#ffffff", 0.2);
+    scene.add(ambient);
+
+    const keyDir = new THREE.DirectionalLight("#fff2db", 2.4);
     keyDir.position.set(3.6, 7.3, 2.5);
     keyDir.castShadow = true;
     keyDir.shadow.mapSize.set(2048, 2048);
