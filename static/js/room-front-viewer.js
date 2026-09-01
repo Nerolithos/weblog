@@ -18,7 +18,9 @@ const LOOK_PRESET = {
   exposure: 0.7,
   environmentIntensity: 0.11,
   ambientIntensity: 0.035,
-  keyLightIntensity: 1.28,
+  keyLightIntensity: 0.49,
+  keyLightDefaultAngle: -74,
+  frontalFillIntensity: 0.26,
   materialEnvMapIntensity: 0.2
 };
 
@@ -256,6 +258,11 @@ async function bootRoomFrontViewer() {
     scene.add(keyDir);
     scene.add(keyDir.target);
 
+    const frontalFill = new THREE.DirectionalLight("#f6f8ff", LOOK_PRESET.frontalFillIntensity);
+    frontalFill.position.copy(camera.position.clone().add(baseCameraPose.forward.clone().multiplyScalar(-3.4)).add(new THREE.Vector3(0, 1.0, 0)));
+    scene.add(frontalFill);
+    scene.add(frontalFill.target);
+
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/libs/draco/");
@@ -296,9 +303,10 @@ async function bootRoomFrontViewer() {
     const lightIntensityValueEl = mount.querySelector("[data-light-intensity-value]");
     const lightAngleInput = mount.querySelector("[data-light-angle]");
     const lightAngleValueEl = mount.querySelector("[data-light-angle-value]");
+    const lightResetBtn = mount.querySelector("[data-light-reset]");
 
     const updateLightPositionFromAngle = () => {
-      const angleDegrees = Number(lightAngleInput?.value ?? 0);
+      const angleDegrees = Number(lightAngleInput?.value ?? LOOK_PRESET.keyLightDefaultAngle);
       const angleRadians = THREE.MathUtils.degToRad(angleDegrees);
 
       const radial = 8.5;
@@ -313,6 +321,9 @@ async function bootRoomFrontViewer() {
       keyDir.target.position.copy(faceTarget);
       keyDir.target.updateMatrixWorld();
 
+      frontalFill.target.position.copy(faceTarget);
+      frontalFill.target.updateMatrixWorld();
+
       if (lightAngleValueEl) {
         lightAngleValueEl.textContent = `${Math.round(angleDegrees)} deg`;
       }
@@ -326,8 +337,20 @@ async function bootRoomFrontViewer() {
       }
     };
 
+    const resetLightDefaults = () => {
+      if (lightIntensityInput) {
+        lightIntensityInput.value = LOOK_PRESET.keyLightIntensity.toFixed(2);
+      }
+      if (lightAngleInput) {
+        lightAngleInput.value = String(LOOK_PRESET.keyLightDefaultAngle);
+      }
+      onLightIntensityInput();
+      updateLightPositionFromAngle();
+    };
+
     lightIntensityInput?.addEventListener("input", onLightIntensityInput);
     lightAngleInput?.addEventListener("input", updateLightPositionFromAngle);
+    lightResetBtn?.addEventListener("click", resetLightDefaults);
 
     const bounds = new THREE.Box3().setFromObject(model);
     if (!bounds.isEmpty()) {
@@ -336,8 +359,7 @@ async function bootRoomFrontViewer() {
       faceTarget = center.clone().setY(center.y + size.y * 0.2);
     }
 
-    onLightIntensityInput();
-    updateLightPositionFromAngle();
+    resetLightDefaults();
 
     function resize() {
       const width = Math.max(320, mount.clientWidth);
@@ -393,11 +415,13 @@ async function bootRoomFrontViewer() {
         lightAngleInput.value = String(Number(value));
         updateLightPositionFromAngle();
       },
+      resetLightDefaults,
       dispose() {
         window.cancelAnimationFrame(rafId);
         lookController.dispose();
         lightIntensityInput?.removeEventListener("input", onLightIntensityInput);
         lightAngleInput?.removeEventListener("input", updateLightPositionFromAngle);
+        lightResetBtn?.removeEventListener("click", resetLightDefaults);
         dracoLoader.dispose();
         renderer.dispose();
         if (resizeObserver) {
