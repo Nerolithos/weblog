@@ -97,100 +97,6 @@ function applyFixedBlenderCameraPose(camera, pose) {
   };
 }
 
-function bindLimitedLookController(canvas, camera, basePose) {
-  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-  const sensitivity = 0.00115;
-  const originalTouchAction = canvas.style.touchAction;
-
-  let yaw = 0;
-  let pitch = 0;
-  let dragging = false;
-  let activePointerId = null;
-  let lastX = 0;
-  let lastY = 0;
-
-  const applyLook = (yawValue, pitchValue) => {
-    const yawQ = new THREE.Quaternion().setFromAxisAngle(basePose.up, yawValue);
-    const rightAxis = basePose.right.clone().applyQuaternion(yawQ).normalize();
-    const pitchQ = new THREE.Quaternion().setFromAxisAngle(rightAxis, pitchValue);
-
-    const forward = basePose.forward.clone().applyQuaternion(yawQ).applyQuaternion(pitchQ).normalize();
-    const up = basePose.up.clone().applyQuaternion(yawQ).applyQuaternion(pitchQ).normalize();
-
-    camera.up.copy(up);
-    camera.lookAt(camera.position.clone().add(forward));
-  };
-
-  const onPointerDown = (event) => {
-    if (event.button !== 0) {
-      return;
-    }
-
-    dragging = true;
-    activePointerId = event.pointerId;
-    lastX = event.clientX;
-    lastY = event.clientY;
-    canvas.setPointerCapture?.(event.pointerId);
-    event.preventDefault();
-  };
-
-  const onPointerMove = (event) => {
-    if (!dragging || event.pointerId !== activePointerId) {
-      return;
-    }
-
-    const dx = event.clientX - lastX;
-    const dy = event.clientY - lastY;
-    lastX = event.clientX;
-    lastY = event.clientY;
-
-    yaw = clamp(yaw - dx * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
-    pitch = clamp(pitch - dy * sensitivity, -CAMERA_SWIVEL_LIMIT_RADIANS, CAMERA_SWIVEL_LIMIT_RADIANS);
-
-    applyLook(yaw, pitch);
-
-    event.preventDefault();
-  };
-
-  const stopDragging = (event) => {
-    if (activePointerId !== null && event.pointerId !== activePointerId) {
-      return;
-    }
-
-    dragging = false;
-    if (activePointerId !== null) {
-      canvas.releasePointerCapture?.(activePointerId);
-    }
-    activePointerId = null;
-  };
-
-  canvas.style.touchAction = "none";
-  canvas.addEventListener("pointerdown", onPointerDown);
-  canvas.addEventListener("pointermove", onPointerMove);
-  canvas.addEventListener("pointerup", stopDragging);
-  canvas.addEventListener("pointercancel", stopDragging);
-  canvas.addEventListener("pointerleave", stopDragging);
-
-  applyLook(yaw, pitch);
-
-  return {
-    update() {},
-    reset() {
-      yaw = 0;
-      pitch = 0;
-      applyLook(yaw, pitch);
-    },
-    dispose() {
-      canvas.removeEventListener("pointerdown", onPointerDown);
-      canvas.removeEventListener("pointermove", onPointerMove);
-      canvas.removeEventListener("pointerup", stopDragging);
-      canvas.removeEventListener("pointercancel", stopDragging);
-      canvas.removeEventListener("pointerleave", stopDragging);
-      canvas.style.touchAction = originalTouchAction;
-    }
-  };
-}
-
 async function bootRoomFrontViewer() {
   const mount = document.getElementById("room-front-viewer");
   if (!mount || mount.dataset.viewerReady === "1") {
@@ -235,7 +141,6 @@ async function bootRoomFrontViewer() {
     camera.zoom = CAMERA_ZOOM_FACTOR;
     camera.updateProjectionMatrix();
     const baseCameraPose = applyFixedBlenderCameraPose(camera, FIXED_BLENDER_CAMERA);
-    const lookController = bindLimitedLookController(canvas, camera, baseCameraPose);
 
     const ambient = new THREE.AmbientLight("#ffffff", LOOK_PRESET.ambientIntensity);
     scene.add(ambient);
@@ -303,7 +208,33 @@ async function bootRoomFrontViewer() {
     const lightIntensityValueEl = mount.querySelector("[data-light-intensity-value]");
     const lightAngleInput = mount.querySelector("[data-light-angle]");
     const lightAngleValueEl = mount.querySelector("[data-light-angle-value]");
+    const cameraYawInput = mount.querySelector("[data-camera-yaw]");
+    const cameraYawValueEl = mount.querySelector("[data-camera-yaw-value]");
     const lightResetBtn = mount.querySelector("[data-light-reset]");
+
+    const worldUp = new THREE.Vector3(0, 1, 0);
+    let orbitCenter = faceTarget.clone();
+    let baseOrbitOffset = camera.position.clone().sub(orbitCenter);
+
+    const updateCameraYawFromSlider = () => {
+      const rawDegrees = Number(cameraYawInput?.value ?? 0);
+      const yawDegrees = THREE.MathUtils.clamp(rawDegrees, -CAMERA_SWIVEL_LIMIT_DEGREES, CAMERA_SWIVEL_LIMIT_DEGREES);
+      const yawRadians = THREE.MathUtils.degToRad(yawDegrees);
+      const yawRotation = new THREE.Quaternion().setFromAxisAngle(worldUp, yawRadians);
+
+      const orbitOffset = baseOrbitOffset.clone().applyQuaternion(yawRotation);
+      camera.position.copy(orbitCenter.clone().add(orbitOffset));
+      camera.up.copy(worldUp);
+      camera.lookAt(orbitCenter);
+
+      if (cameraYawInput && Number(cameraYawInput.value) !== yawDegrees) {
+        cameraYawInput.value = String(yawDegrees);
+      }
+
+      if (cameraYawValueEl) {
+        cameraYawValueEl.textContent = `${Math.round(yawDegrees)} deg`;
+      }
+    };
 
     const updateLightPositionFromAngle = () => {
       const angleDegrees = Number(lightAngleInput?.value ?? LOOK_PRESET.keyLightDefaultAngle);
@@ -350,6 +281,7 @@ async function bootRoomFrontViewer() {
 
     lightIntensityInput?.addEventListener("input", onLightIntensityInput);
     lightAngleInput?.addEventListener("input", updateLightPositionFromAngle);
+    cameraYawInput?.addEventListener("input", updateCameraYawFromSlider);
     lightResetBtn?.addEventListener("click", resetLightDefaults);
 
     const bounds = new THREE.Box3().setFromObject(model);
@@ -359,7 +291,11 @@ async function bootRoomFrontViewer() {
       faceTarget = center.clone().setY(center.y + size.y * 0.2);
     }
 
+    orbitCenter = faceTarget.clone();
+    baseOrbitOffset = camera.position.clone().sub(orbitCenter);
+
     resetLightDefaults();
+    updateCameraYawFromSlider();
 
     function resize() {
       // Use the actual canvas viewport size; mount includes controls/hints and skews aspect.
@@ -386,14 +322,13 @@ async function bootRoomFrontViewer() {
 
     let rafId = 0;
     const renderLoop = () => {
-      lookController.update();
       renderer.render(scene, camera);
       rafId = window.requestAnimationFrame(renderLoop);
     };
     renderLoop();
 
     mount.dataset.viewerReady = "1";
-    setStatus(statusEl, "Scene ready. Drag to rotate within +/-25 deg. Camera position is fixed.");
+    setStatus(statusEl, "Scene ready.");
 
     window.roomFrontViewer = {
       scene,
@@ -401,7 +336,10 @@ async function bootRoomFrontViewer() {
       renderer,
       keyDir,
       resetView() {
-        lookController.reset();
+        if (cameraYawInput) {
+          cameraYawInput.value = "0";
+        }
+        updateCameraYawFromSlider();
       },
       setLightIntensity(value) {
         const intensity = Number(value);
@@ -423,9 +361,9 @@ async function bootRoomFrontViewer() {
       resetLightDefaults,
       dispose() {
         window.cancelAnimationFrame(rafId);
-        lookController.dispose();
         lightIntensityInput?.removeEventListener("input", onLightIntensityInput);
         lightAngleInput?.removeEventListener("input", updateLightPositionFromAngle);
+        cameraYawInput?.removeEventListener("input", updateCameraYawFromSlider);
         lightResetBtn?.removeEventListener("click", resetLightDefaults);
         dracoLoader.dispose();
         renderer.dispose();

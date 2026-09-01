@@ -42,18 +42,23 @@
               </div>
             </label>
 
+            <label class="viewer-control viewer-control--full" for="camera-yaw">
+              <span>Camera yaw</span>
+              <div class="viewer-control-row">
+                <input id="camera-yaw" data-camera-yaw type="range" min="-25" max="25" step="1" value="0" />
+                <output data-camera-yaw-value>0 deg</output>
+              </div>
+            </label>
+
             <div class="viewer-controls-actions">
               <button type="button" class="viewer-reset-btn" data-light-reset>Reset default light</button>
             </div>
           </div>
 
-          <div class="blender-room-viewer-hints">
-            <p>Left-drag to rotate within +/-25 deg. Camera position is fixed. Use sliders to tune key-light intensity and horizontal angle.</p>
-          </div>
         </div>
       </section>
     </main>
 
-    <script type="module" src="/js/room-front-viewer.js?v=20260901a"></script>
+    <script type="module" src="/js/room-front-viewer.js?v=20260901b"></script>
   </body>
 </html>
