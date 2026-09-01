@@ -17,9 +17,12 @@ const LOOK_PRESET = {
   exposure: 0.7,
   environmentIntensity: 0.11,
   ambientIntensity: 0.035,
+  ambientColor: "#f0e8da",
   keyLightIntensity: 0.49,
+  keyLightColor: "#e7d7b9",
   keyLightDefaultAngle: -74,
-  frontalFillIntensity: 0.26,
+  frontalFillIntensity: 0.18,
+  frontalFillColor: "#dcccad",
   materialEnvMapIntensity: 0.2
 };
 
@@ -141,10 +144,10 @@ async function bootRoomFrontViewer() {
     camera.updateProjectionMatrix();
     const baseCameraPose = applyFixedBlenderCameraPose(camera, FIXED_BLENDER_CAMERA);
 
-    const ambient = new THREE.AmbientLight("#ffffff", LOOK_PRESET.ambientIntensity);
+    const ambient = new THREE.AmbientLight(LOOK_PRESET.ambientColor, LOOK_PRESET.ambientIntensity);
     scene.add(ambient);
 
-    const keyDir = new THREE.DirectionalLight("#fff2db", LOOK_PRESET.keyLightIntensity);
+    const keyDir = new THREE.DirectionalLight(LOOK_PRESET.keyLightColor, LOOK_PRESET.keyLightIntensity);
     // Move key light farther on horizontal axis while keeping it high.
     keyDir.position.set(6.6, 6.8, 8.0);
     keyDir.castShadow = true;
@@ -162,7 +165,7 @@ async function bootRoomFrontViewer() {
     scene.add(keyDir);
     scene.add(keyDir.target);
 
-    const frontalFill = new THREE.DirectionalLight("#f6f8ff", LOOK_PRESET.frontalFillIntensity);
+    const frontalFill = new THREE.DirectionalLight(LOOK_PRESET.frontalFillColor, LOOK_PRESET.frontalFillIntensity);
     frontalFill.position.copy(camera.position.clone().add(baseCameraPose.forward.clone().multiplyScalar(-3.4)).add(new THREE.Vector3(0, 1.0, 0)));
     scene.add(frontalFill);
     scene.add(frontalFill.target);
@@ -217,34 +220,44 @@ async function bootRoomFrontViewer() {
     const yawDragSensitivity = 0.12;
     const originalTouchAction = canvas.style.touchAction;
 
-    let currentYawDegrees = 0;
+    let orbitYawDegrees = 0;
+    let lookYawDegrees = 0;
     let dragging = false;
     let activePointerId = null;
     let lastPointerX = 0;
 
-    const applyCameraYaw = (rawDegrees) => {
-      const yawDegrees = THREE.MathUtils.clamp(rawDegrees, -CAMERA_SWIVEL_LIMIT_DEGREES, CAMERA_SWIVEL_LIMIT_DEGREES);
-      const yawRadians = THREE.MathUtils.degToRad(yawDegrees);
-      const yawRotation = new THREE.Quaternion().setFromAxisAngle(worldUp, yawRadians);
+    const applyCameraPose = (rawOrbitYawDegrees = orbitYawDegrees, rawLookYawDegrees = lookYawDegrees) => {
+      const clampedOrbitYawDegrees = THREE.MathUtils.clamp(rawOrbitYawDegrees, -CAMERA_SWIVEL_LIMIT_DEGREES, CAMERA_SWIVEL_LIMIT_DEGREES);
+      const clampedLookYawDegrees = THREE.MathUtils.clamp(rawLookYawDegrees, -CAMERA_SWIVEL_LIMIT_DEGREES, CAMERA_SWIVEL_LIMIT_DEGREES);
 
-      const orbitOffset = baseOrbitOffset.clone().applyQuaternion(yawRotation);
+      const orbitYawRadians = THREE.MathUtils.degToRad(clampedOrbitYawDegrees);
+      const orbitRotation = new THREE.Quaternion().setFromAxisAngle(worldUp, orbitYawRadians);
+
+      const orbitOffset = baseOrbitOffset.clone().applyQuaternion(orbitRotation);
       camera.position.copy(orbitCenter.clone().add(orbitOffset));
+
+      const baseForward = orbitCenter.clone().sub(camera.position).normalize();
+      const lookYawRadians = THREE.MathUtils.degToRad(clampedLookYawDegrees);
+      const lookRotation = new THREE.Quaternion().setFromAxisAngle(worldUp, lookYawRadians);
+      const lookForward = baseForward.clone().applyQuaternion(lookRotation).normalize();
+
       camera.up.copy(worldUp);
-      camera.lookAt(orbitCenter);
+      camera.lookAt(camera.position.clone().add(lookForward));
 
-      currentYawDegrees = yawDegrees;
+      orbitYawDegrees = clampedOrbitYawDegrees;
+      lookYawDegrees = clampedLookYawDegrees;
 
-      if (cameraYawInput && Number(cameraYawInput.value) !== yawDegrees) {
-        cameraYawInput.value = String(yawDegrees);
+      if (cameraYawInput && Number(cameraYawInput.value) !== orbitYawDegrees) {
+        cameraYawInput.value = String(orbitYawDegrees);
       }
 
       if (cameraYawValueEl) {
-        cameraYawValueEl.textContent = `${Math.round(yawDegrees)} deg`;
+        cameraYawValueEl.textContent = `${Math.round(orbitYawDegrees)} deg`;
       }
     };
 
     const updateCameraYawFromSlider = () => {
-      applyCameraYaw(Number(cameraYawInput?.value ?? currentYawDegrees));
+      applyCameraPose(Number(cameraYawInput?.value ?? orbitYawDegrees), lookYawDegrees);
     };
 
     const onPointerDown = (event) => {
@@ -267,7 +280,7 @@ async function bootRoomFrontViewer() {
       const dx = event.clientX - lastPointerX;
       lastPointerX = event.clientX;
 
-      applyCameraYaw(currentYawDegrees - dx * yawDragSensitivity);
+      applyCameraPose(orbitYawDegrees, lookYawDegrees - dx * yawDragSensitivity);
       event.preventDefault();
     };
 
@@ -348,7 +361,7 @@ async function bootRoomFrontViewer() {
     baseOrbitOffset = camera.position.clone().sub(orbitCenter);
 
     resetLightDefaults();
-    updateCameraYawFromSlider();
+    applyCameraPose(orbitYawDegrees, lookYawDegrees);
 
     function resize() {
       // Use the actual canvas viewport size; mount includes controls/hints and skews aspect.
@@ -389,7 +402,7 @@ async function bootRoomFrontViewer() {
       renderer,
       keyDir,
       resetView() {
-        applyCameraYaw(0);
+        applyCameraPose(0, 0);
       },
       setLightIntensity(value) {
         const intensity = Number(value);
