@@ -362,8 +362,13 @@ async function bootRoomFrontViewer() {
     resetLightDefaults();
 
     function resize() {
-      const width = Math.max(320, mount.clientWidth);
-      const height = Math.max(280, mount.clientHeight);
+      // Use the actual canvas viewport size; mount includes controls/hints and skews aspect.
+      const viewportWidth = canvas.clientWidth || canvas.parentElement?.clientWidth || mount.clientWidth;
+      const viewportHeight = canvas.clientHeight || canvas.parentElement?.clientHeight || mount.clientHeight;
+
+      const width = Math.max(320, viewportWidth);
+      const height = Math.max(280, viewportHeight);
+
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
