@@ -12,7 +12,6 @@ const FIXED_BLENDER_CAMERA = {
 };
 
 const CAMERA_SWIVEL_LIMIT_DEGREES = 25;
-const CAMERA_SWIVEL_LIMIT_RADIANS = THREE.MathUtils.degToRad(CAMERA_SWIVEL_LIMIT_DEGREES);
 const CAMERA_ZOOM_FACTOR = 1.75;
 const LOOK_PRESET = {
   exposure: 0.7,
@@ -215,9 +214,15 @@ async function bootRoomFrontViewer() {
     const worldUp = new THREE.Vector3(0, 1, 0);
     let orbitCenter = faceTarget.clone();
     let baseOrbitOffset = camera.position.clone().sub(orbitCenter);
+    const yawDragSensitivity = 0.12;
+    const originalTouchAction = canvas.style.touchAction;
 
-    const updateCameraYawFromSlider = () => {
-      const rawDegrees = Number(cameraYawInput?.value ?? 0);
+    let currentYawDegrees = 0;
+    let dragging = false;
+    let activePointerId = null;
+    let lastPointerX = 0;
+
+    const applyCameraYaw = (rawDegrees) => {
       const yawDegrees = THREE.MathUtils.clamp(rawDegrees, -CAMERA_SWIVEL_LIMIT_DEGREES, CAMERA_SWIVEL_LIMIT_DEGREES);
       const yawRadians = THREE.MathUtils.degToRad(yawDegrees);
       const yawRotation = new THREE.Quaternion().setFromAxisAngle(worldUp, yawRadians);
@@ -227,6 +232,8 @@ async function bootRoomFrontViewer() {
       camera.up.copy(worldUp);
       camera.lookAt(orbitCenter);
 
+      currentYawDegrees = yawDegrees;
+
       if (cameraYawInput && Number(cameraYawInput.value) !== yawDegrees) {
         cameraYawInput.value = String(yawDegrees);
       }
@@ -234,6 +241,46 @@ async function bootRoomFrontViewer() {
       if (cameraYawValueEl) {
         cameraYawValueEl.textContent = `${Math.round(yawDegrees)} deg`;
       }
+    };
+
+    const updateCameraYawFromSlider = () => {
+      applyCameraYaw(Number(cameraYawInput?.value ?? currentYawDegrees));
+    };
+
+    const onPointerDown = (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+
+      dragging = true;
+      activePointerId = event.pointerId;
+      lastPointerX = event.clientX;
+      canvas.setPointerCapture?.(event.pointerId);
+      event.preventDefault();
+    };
+
+    const onPointerMove = (event) => {
+      if (!dragging || event.pointerId !== activePointerId) {
+        return;
+      }
+
+      const dx = event.clientX - lastPointerX;
+      lastPointerX = event.clientX;
+
+      applyCameraYaw(currentYawDegrees - dx * yawDragSensitivity);
+      event.preventDefault();
+    };
+
+    const stopPointerDrag = (event) => {
+      if (activePointerId !== null && event.pointerId !== activePointerId) {
+        return;
+      }
+
+      dragging = false;
+      if (activePointerId !== null) {
+        canvas.releasePointerCapture?.(activePointerId);
+      }
+      activePointerId = null;
     };
 
     const updateLightPositionFromAngle = () => {
@@ -283,6 +330,12 @@ async function bootRoomFrontViewer() {
     lightAngleInput?.addEventListener("input", updateLightPositionFromAngle);
     cameraYawInput?.addEventListener("input", updateCameraYawFromSlider);
     lightResetBtn?.addEventListener("click", resetLightDefaults);
+    canvas.style.touchAction = "none";
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerup", stopPointerDrag);
+    canvas.addEventListener("pointercancel", stopPointerDrag);
+    canvas.addEventListener("pointerleave", stopPointerDrag);
 
     const bounds = new THREE.Box3().setFromObject(model);
     if (!bounds.isEmpty()) {
@@ -336,10 +389,7 @@ async function bootRoomFrontViewer() {
       renderer,
       keyDir,
       resetView() {
-        if (cameraYawInput) {
-          cameraYawInput.value = "0";
-        }
-        updateCameraYawFromSlider();
+        applyCameraYaw(0);
       },
       setLightIntensity(value) {
         const intensity = Number(value);
@@ -365,6 +415,12 @@ async function bootRoomFrontViewer() {
         lightAngleInput?.removeEventListener("input", updateLightPositionFromAngle);
         cameraYawInput?.removeEventListener("input", updateCameraYawFromSlider);
         lightResetBtn?.removeEventListener("click", resetLightDefaults);
+        canvas.removeEventListener("pointerdown", onPointerDown);
+        canvas.removeEventListener("pointermove", onPointerMove);
+        canvas.removeEventListener("pointerup", stopPointerDrag);
+        canvas.removeEventListener("pointercancel", stopPointerDrag);
+        canvas.removeEventListener("pointerleave", stopPointerDrag);
+        canvas.style.touchAction = originalTouchAction;
         dracoLoader.dispose();
         renderer.dispose();
         if (resizeObserver) {
