@@ -95,8 +95,9 @@
         {{ if not (or (hasPrefix $imgSrc "http://") (hasPrefix $imgSrc "https://") (hasPrefix $imgSrc "/")) }}
           {{ $imgSrc = printf "/%s" $imgSrc }}
         {{ end }}
+        {{ $thumbSrc := printf "/images/thumbs/%s.webp" (path.BaseName $imgSrc) }}
         <a class="dn db-l w-third-l pl3" href="{{ with $post.Param "redirect" }}{{ . | relURL }}{{ else }}{{ $post.RelPermalink }}{{ end }}">
-          <img src="{{ $imgSrc }}" alt="{{ $post.Title }}" loading="lazy" decoding="async" fetchpriority="low"
+          <img src="{{ $thumbSrc | relURL }}" alt="{{ $post.Title }}" loading="lazy" decoding="async" fetchpriority="low"
                style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
         </a>
       {{ end }}
@@ -178,8 +179,9 @@
         {{ if not (or (hasPrefix $imgSrc "http://") (hasPrefix $imgSrc "https://") (hasPrefix $imgSrc "/")) }}
           {{ $imgSrc = printf "/%s" $imgSrc }}
         {{ end }}
+        {{ $thumbSrc := printf "/images/thumbs/%s.webp" (path.BaseName $imgSrc) }}
         <a class="dn db-l w-third-l pl3" href="{{ with $post.Param "redirect" }}{{ . | relURL }}{{ else }}{{ $post.RelPermalink }}{{ end }}">
-          <img src="{{ $imgSrc }}" alt="{{ $post.Title }}" loading="lazy" decoding="async" fetchpriority="low"
+          <img src="{{ $thumbSrc | relURL }}" alt="{{ $post.Title }}" loading="lazy" decoding="async" fetchpriority="low"
                style="width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);" />
         </a>
       {{ end }}
@@ -306,13 +308,13 @@
       var context = canvas.getContext('2d', { alpha: true });
       if (!context) return;
 
-      var dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+      var dpr = Math.min(window.devicePixelRatio || 1, 1);
       var cols = 0;
       var rows = 0;
       var cellSize = 10;
       var total = 0;
-      var maxCells = 32000;
-      var tickInterval = 168;
+      var maxCells = 18000;
+      var tickInterval = 220;
       var current = new Uint8Array(0);
       var next = new Uint8Array(0);
       var fade = new Uint8Array(0);
@@ -662,12 +664,20 @@
         if (!gridEnabled) {
           pointerActive = false;
           stopAnimation();
-          context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+          current = new Uint8Array(0);
+          next = new Uint8Array(0);
+          fade = new Uint8Array(0);
+          total = 0;
+          canvas.width = 1;
+          canvas.height = 1;
+          baseCanvas.width = 1;
+          baseCanvas.height = 1;
           return;
         }
 
         if (!pageVisible) return;
 
+        if (!total) resizeGrid();
         updateGridClip();
         drawFrame();
         startAnimation();

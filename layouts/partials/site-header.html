@@ -1,7 +1,11 @@
 {{ $featured_image := partial "func/GetFeaturedImage.html" . }}
 {{ if $featured_image }}
+  {{ $hero_image := $featured_image }}
+  {{ if in $featured_image "/images/" }}
+    {{ $hero_image = printf "/images/heroes/%s.webp" (path.BaseName $featured_image) }}
+  {{ end }}
   {{/* 首页和文章页：有封面图时的头图区域 */}}
-  <header class="cover bg-top" style="background-image: url('{{ $featured_image }}'); position:relative;">
+  <header class="cover bg-top" style="background-image: url('{{ $hero_image }}'); position:relative;">
     <div class="{{ .Site.Params.cover_dimming_class | default "bg-black-60" }}" style="position:relative;">
       {{ partial "site-navigation.html" .}}
       {{ if .IsHome }}
@@ -39,6 +43,17 @@
             <span class="hero-curtain-chalk hero-curtain-chalk--white"></span>
             <span class="hero-curtain-chalk hero-curtain-chalk--red"></span>
             <span class="hero-curtain-eraser"></span>
+          </div>
+          <div
+            id="hero-orbit-viewer"
+            class="hero-orbit-viewer"
+            data-orbit-viewer
+            aria-hidden="true"
+          >
+            <canvas class="hero-orbit-canvas" data-orbit-canvas aria-label="网站功能 3D 行星导航"></canvas>
+            <div class="hero-orbit-status" data-orbit-status role="status">正在载入 3D 导航…</div>
+            <div class="hero-orbit-tooltip" data-orbit-tooltip role="tooltip" hidden></div>
+            <p class="hero-orbit-hint">悬浮查看 · 点击访问</p>
           </div>
         </div>
       </div>
@@ -84,9 +99,9 @@
       {{ if .IsHome }}
       <!-- Pixel ragdoll cat - bottom right of hero -->
       <div id="pixel-cat-wrap" style="position:absolute;bottom:-79px;right:24px;z-index:10;pointer-events:none;">
-        <img id="pixel-cat" src="{{ "images/pixel-cat.png" | relURL }}"
-          data-light-src="{{ "images/pixel-cat.png" | relURL }}"
-          data-dark-src="{{ "images/cat_sleep.png" | relURL }}"
+        <img id="pixel-cat" src="{{ "images/optimized/pixel-cat.webp" | relURL }}"
+          data-light-src="{{ "images/optimized/pixel-cat.webp" | relURL }}"
+          data-dark-src="{{ "images/optimized/cat-sleep.webp" | relURL }}"
           style="display:block;image-rendering:pixelated;opacity:0.92;width:auto;height:200px;transition:transform 0.1s ease-out;pointer-events:none;user-select:none;-webkit-user-drag:none;"
           alt="pixel ragdoll cat" />
         <div id="pixel-cat-meow" style="position:absolute;right:6px;bottom:168px;background:#fff;color:#000;border:1px solid #111;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:600;line-height:1;opacity:0;transform:translateY(6px);transition:opacity 0.14s ease,transform 0.14s ease;pointer-events:none;white-space:nowrap;">
@@ -211,11 +226,14 @@
       (function(){
         var rope = document.getElementById('hero-curtain-rope');
         var panel = document.getElementById('hero-curtain-panel');
+        var orbitViewer = document.getElementById('hero-orbit-viewer');
         if (!rope || !panel) return;
 
-        var isOpen = false;
+        var state = 0;
 
         function applyState() {
+          var isOpen = state !== 0;
+          var isOrbit = state === 1;
           if (isOpen) {
             panel.classList.add('is-open');
             panel.setAttribute('aria-hidden', 'false');
@@ -225,6 +243,10 @@
             panel.setAttribute('aria-hidden', 'true');
             rope.setAttribute('aria-expanded', 'false');
           }
+          panel.classList.toggle('is-orbit', isOrbit);
+          rope.setAttribute('aria-label', state === 0 ? '拉出 3D 导航' : (state === 1 ? '切换到个人介绍' : '收起个人介绍'));
+          if (orbitViewer) orbitViewer.setAttribute('aria-hidden', isOrbit ? 'false' : 'true');
+          document.dispatchEvent(new CustomEvent('hero-orbit-state', { detail: { active: isOrbit } }));
         }
 
         rope.addEventListener('click', function (event) {
@@ -236,7 +258,7 @@
           void rope.offsetWidth;
           rope.classList.add('is-pulling');
 
-          isOpen = !isOpen;
+          state = (state + 1) % 3;
           applyState();
         });
 
@@ -247,6 +269,7 @@
         applyState();
       })();
       </script>
+      <script type="module" src="{{ "js/hero-orbit-viewer.js" | relURL }}?v=20260907e"></script>
       {{ end }}
     </div>
   </header>

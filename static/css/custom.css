@@ -96,6 +96,8 @@
 /* 首页文章卡片悬浮特效 */
 .home-post-card {
   position: relative;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 310px;
   margin-bottom: 0.9rem;
   background: rgba(255, 255, 255, 0.34);
   border: 1px solid rgba(255, 255, 255, 0.26);
@@ -509,6 +511,25 @@ body.dark-mode .home-hero-search form {
   transform: translateY(0);
 }
 
+.hero-curtain-panel.is-orbit {
+  overflow: hidden;
+  backdrop-filter: blur(8px) brightness(0.68) saturate(0.82) !important;
+  -webkit-backdrop-filter: blur(8px) brightness(0.68) saturate(0.82) !important;
+}
+
+.hero-curtain-panel.is-orbit .hero-curtain-board {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) scale(0.985);
+}
+
+.hero-curtain-panel.is-orbit .hero-orbit-viewer {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
 .hero-curtain-board {
   position: absolute;
   left: 50%;
@@ -530,6 +551,86 @@ body.dark-mode .home-hero-search form {
     inset 0 0 0 2px rgba(36, 85, 62, 0.62),
     inset 0 0 22px rgba(0, 0, 0, 0.24),
     0 18px 42px rgba(15, 23, 42, 0.5);
+  transition: opacity 0.32s ease, transform 0.42s ease, visibility 0.32s;
+}
+
+.hero-orbit-viewer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.985);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transition: opacity 0.38s ease, transform 0.48s ease, visibility 0.38s;
+}
+
+.hero-orbit-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+  touch-action: manipulation;
+}
+
+.hero-orbit-canvas.is-link-hovered {
+  cursor: pointer;
+}
+
+.hero-orbit-status,
+.hero-orbit-tooltip,
+.hero-orbit-hint {
+  position: absolute;
+  z-index: 2;
+  color: #334155;
+  border: 1px solid rgba(148, 163, 184, 0.42);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.hero-orbit-status {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.86rem;
+}
+
+.hero-orbit-status[hidden] {
+  display: none;
+}
+
+.hero-orbit-tooltip {
+  left: 0;
+  top: 0;
+  max-width: min(280px, 72vw);
+  padding: 0.48rem 0.7rem;
+  border-radius: 10px;
+  font-size: 0.83rem;
+  font-weight: 700;
+  line-height: 1.25;
+  pointer-events: none;
+  transform: translate(13px, calc(-100% - 12px));
+}
+
+.hero-orbit-hint {
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.38rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  pointer-events: none;
 }
 
 .hero-curtain-board::before {
@@ -747,6 +848,18 @@ body.dark-mode .home-hero-search form {
 }
 
 @media (max-width: 640px) {
+  .hero-orbit-viewer {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    border-radius: 0;
+  }
+
+  .hero-orbit-hint {
+    bottom: 9px;
+  }
+
   .hero-curtain-board {
     width: min(94vw, 560px);
     height: auto;
@@ -1654,4 +1767,3 @@ body.dark-mode .blender-room-viewer-hints {
     font-size: 0.75rem;
   }
 }
-

@@ -1,4 +1,6 @@
 /public/
+/.venv/
+/static/.venv/
 /.history-today-build-stamp
 /static/pet/.API/
 .DS_Store

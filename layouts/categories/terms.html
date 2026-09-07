@@ -143,10 +143,18 @@
     filterBar.addEventListener('click', function (event) {
       var btn = event.target.closest('.category-filter-btn');
       if (!btn) return;
-      activate(btn.getAttribute('data-cat'));
+      var cat = btn.getAttribute('data-cat');
+      activate(cat);
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', '#' + cat);
+      }
     });
 
-    activate('csc1003');
+    var initialCategory = window.location.hash.replace(/^#/, '').toLowerCase();
+    var validCategory = buttons.some(function (btn) {
+      return btn.getAttribute('data-cat') === initialCategory;
+    });
+    activate(validCategory ? initialCategory : 'csc1003');
   })();
 </script>
 {{ end }}
