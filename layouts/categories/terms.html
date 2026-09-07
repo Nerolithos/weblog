@@ -18,17 +18,31 @@
   {{ $scratch.Set "g_phy1001" (slice) }}
   {{ $scratch.Set "g_csc3060" (slice) }}
   {{ $scratch.Set "g_dda3003" (slice) }}
+  {{ $scratch.Set "g_games" (slice) }}
   {{ $scratch.Set "g_projects" (slice) }}
   {{ $scratch.Set "g_tutorials" (slice) }}
 
   {{ range $posts }}
     {{ $title := upper .Title }}
+    {{ $titleLower := lower .Title }}
     {{ $tags := .Params.tags | default (slice) }}
     {{ $tagText := upper (delimit $tags " ") }}
     {{ $base := upper .File.BaseFileName }}
     {{ $isRedirect := .Param "redirect" }}
+    {{ $isGameProject := and $isRedirect (or
+      (in $titleLower "game")
+      (in $titleLower "游戏")
+      (in $titleLower "跑酷")
+      (in $titleLower "puzzle")
+      (eq $base "PET")
+      (eq $base "EMOJI")
+      (eq $base "OTTO-3D-PARKOUR")
+      (eq $base "NEUROTRIP")
+    ) }}
 
-    {{ if or $isRedirect (eq $base "HISTORY-TODAY") (in $title "历史上的今天") }}
+    {{ if $isGameProject }}
+      {{ $scratch.Add "g_games" (slice .) }}
+    {{ else if or $isRedirect (eq $base "HISTORY-TODAY") (in $title "历史上的今天") }}
       {{ $scratch.Add "g_projects" (slice .) }}
     {{ else if or (in $tagText "CSC1003") (in $title "CSC1003") (eq $base "OOP") }}
       {{ $scratch.Add "g_csc1003" (slice .) }}
@@ -66,6 +80,7 @@
     <button class="category-filter-btn" data-cat="phy1001">PHY1001 ({{ len ($scratch.Get "g_phy1001") }})</button>
     <button class="category-filter-btn" data-cat="csc3060">CSC3060 ({{ len ($scratch.Get "g_csc3060") }})</button>
     <button class="category-filter-btn" data-cat="dda3003">DDA3003 ({{ len ($scratch.Get "g_dda3003") }})</button>
+    <button class="category-filter-btn" data-cat="games">games ({{ len ($scratch.Get "g_games") }})</button>
     <button class="category-filter-btn" data-cat="projects">projects ({{ len ($scratch.Get "g_projects") }})</button>
     <button class="category-filter-btn" data-cat="tutorials">Tutorials&others ({{ len ($scratch.Get "g_tutorials") }})</button>
   </div>
@@ -79,6 +94,7 @@
       (dict "key" "phy1001" "title" "PHY1001" "items" ($scratch.Get "g_phy1001"))
       (dict "key" "csc3060" "title" "CSC3060" "items" ($scratch.Get "g_csc3060"))
       (dict "key" "dda3003" "title" "DDA3003" "items" ($scratch.Get "g_dda3003"))
+      (dict "key" "games" "title" "games" "items" ($scratch.Get "g_games"))
       (dict "key" "projects" "title" "projects" "items" ($scratch.Get "g_projects"))
       (dict "key" "tutorials" "title" "Tutorials&others" "items" ($scratch.Get "g_tutorials"))
     }}
