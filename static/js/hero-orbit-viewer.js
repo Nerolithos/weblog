@@ -130,7 +130,7 @@ if (mount && canvas && statusEl && tooltipEl) {
         if (!root) throw new Error(`${item.id}.glb is empty`);
         const holder = new THREE.Group();
         holder.userData.orbitItem = item;
-        normalizeModel(root, item.center ? 7.0 : 4.2);
+        normalizeModel(root, item.center ? 5.6 : 3.36);
         markInteractive(root, item);
         holder.add(root);
         scene.add(holder);
