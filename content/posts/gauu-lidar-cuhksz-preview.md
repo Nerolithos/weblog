@@ -2,7 +2,7 @@
 title: "GAUU-LIDAR CUHKSZ 3D 光学信息数据预览"
 date: 2026-09-06T21:00:00+08:00
 draft: false
-summary: "港中深下园的 LIDAR 卫星测绘地理信息，由于源数据敏感性，仅展示 4% 即三百万个数据点。"
+summary: "港中深下园的 LIDAR 卫星测绘地理信息，由于源数据敏感性，仅展示 4% 即三百万个数据点。https://saliteta.github.io/CUHKSZ_SMBU/"
 redirect: "https://cuhk.nero-lithos.com/"
 categories:
 - 3D
