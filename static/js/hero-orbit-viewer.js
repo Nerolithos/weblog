@@ -10,6 +10,7 @@ const ITEMS = [
   { id: "markdown", label: "mdAnything", url: "https://md.nero-lithos.com/" },
   { id: "game", label: "games", url: "/categories/#games" },
   { id: "courseai", label: "LGU 选课 AI 助手", url: "/courseai" },
+  { id: "chem", label: "Interactive Periodic Table", url: "/chem" },
   { id: "history-today", label: "历史上的今天", url: "/posts/history-today/" }
 ];
 
@@ -130,7 +131,7 @@ if (mount && canvas && statusEl && tooltipEl) {
         if (!root) throw new Error(`${item.id}.glb is empty`);
         const holder = new THREE.Group();
         holder.userData.orbitItem = item;
-        normalizeModel(root, item.center ? 5.6 : 3.36);
+        normalizeModel(root, item.center ? 3.92 : 2.352);
         markInteractive(root, item);
         holder.add(root);
         scene.add(holder);
