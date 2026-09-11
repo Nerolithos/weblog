@@ -28,7 +28,7 @@
 
     {{ partial "site-style.html" . }}
     <!-- 自定义样式：使用 relURL，兼容子路径/多语言部署 -->
-    <link rel="stylesheet" href="{{ "css/custom.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "css/custom.css" | relURL }}?v=20260911c">
     {{ partial "site-scripts.html" . }}
 
     {{ block "favicon" . }}
