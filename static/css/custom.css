@@ -435,6 +435,17 @@ body.dark-mode .home-hero-search form {
   opacity: 0.9;
 }
 
+.repo-stats-amuv {
+  cursor: help;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.repo-stats-star-link:hover .repo-stats-icon,
+.repo-stats-star-link:focus-visible .repo-stats-icon {
+  color: #d69e00;
+}
+
 .repo-stats-sep {
   opacity: 0.62;
 }
@@ -996,6 +1007,20 @@ body.dark-mode .home-hero-search form {
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
+}
+
+.site-nav-fixed .site-nav-actions {
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.site-nav-fixed .site-nav-icons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.9rem;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .site-nav-fixed .site-nav-icon-plain {

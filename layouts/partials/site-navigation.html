@@ -10,7 +10,7 @@
       </a>
       {{ partial "repo-stats-badge.html" . }}
     </div>
-    <div class="flex-l items-center">
+    <div class="flex-l items-center site-nav-actions">
       {{ partial "i18nlist.html" . }}
       {{ if .Site.Menus.main }}
         {{ $mdaIcon := resources.Get "icons/mda.png" }}
@@ -18,8 +18,9 @@
         {{ $lguideIconSrc := "/lguide.png" | relURL }}
         {{ $linkedinIconSrc := "/li.png" | relURL }}
         {{ $bonjourIconSrc := "/bonjour.png" | relURL }}
+        {{ $lguaiIconSrc := "/lguai.png" | relURL }}
         {{ with $mdaIcon }}{{ $mdaIconSrc = printf "data:image/png;base64,%s" (.Content | base64Encode) }}{{ end }}
-        <ul class="{{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0 mr3" }}">
+        <ul class="site-nav-icons {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0" }}">
           {{ $githubURL := "" }}
           {{ $pixivURL := "" }}
           {{ $linkedinURL := "" }}
@@ -38,7 +39,7 @@
           {{ end }}
 
           {{ if $githubURL }}
-          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+          <li class="list f5 f4-ns fw4 dib v-mid site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="{{ $githubURL }}" title="GitHub" aria-label="GitHub">
               <span class="site-nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="24" height="24" role="img" focusable="false" aria-hidden="true">
@@ -50,7 +51,7 @@
           {{ end }}
 
           {{ if $mdAnythingURL }}
-          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+          <li class="list f5 f4-ns fw4 dib v-mid site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="{{ $mdAnythingURL }}" title="mdAnything" aria-label="mdAnything">
               <img src="{{ $mdaIconSrc | safeURL }}" alt="" class="site-nav-icon-img" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
@@ -58,7 +59,7 @@
           {{ end }}
 
           {{ if $pixivURL }}
-          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+          <li class="list f5 f4-ns fw4 dib v-mid site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="{{ $pixivURL }}" title="LGuide" aria-label="LGuide">
               <img src="{{ $lguideIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--lguide" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
@@ -66,16 +67,22 @@
           {{ end }}
 
           {{ if $linkedinURL }}
-          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+          <li class="list f5 f4-ns fw4 dib v-mid site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="{{ $linkedinURL }}" title="LinkedIn" aria-label="LinkedIn">
               <img src="{{ $linkedinIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--linkedin" aria-hidden="true" style="width:26px;height:26px;max-width:26px;max-height:26px;display:block;" />
             </a>
           </li>
           {{ end }}
 
-          <li class="list f5 f4-ns fw4 dib v-mid {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }} site-nav-icon-item">
+          <li class="list f5 f4-ns fw4 dib v-mid site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://bonjour.bio/dh5568" title="Bonjour" aria-label="Bonjour">
-              <img src="{{ $bonjourIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--bonjour" aria-hidden="true" style="width:38px;height:38px;max-width:38px;max-height:38px;display:block;" />
+              <img src="{{ $bonjourIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--bonjour" aria-hidden="true" />
+            </a>
+          </li>
+
+          <li class="list f5 f4-ns fw4 dib v-mid site-nav-icon-item">
+            <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://blog.nero-lithos.com/courseai/" title="LGU CourseAI" aria-label="LGU CourseAI">
+              <img src="{{ $lguaiIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--lguai" aria-hidden="true" />
             </a>
           </li>
 
