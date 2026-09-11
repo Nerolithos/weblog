@@ -4,5 +4,6 @@
 /.history-today-build-stamp
 /static/pet/.API/
 .DS_Store
-**/.DS_Storepublic_local_test/
+**/.DS_Store
+public_local_test/
 public_local_test2/

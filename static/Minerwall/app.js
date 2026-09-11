@@ -1,3 +1,5 @@
+// Logical asset keys only. Runtime images are served from the WebP
+// `assets/optimized` and `assets/thumbs` directories below.
 const assetFiles = [
   "ada1.jpeg",
   "ada2.jpeg",
@@ -126,13 +128,15 @@ function parseAssets(files, metaMap = {}) {
 
     const id = match[1].toLowerCase();
     const index = Number.parseInt(match[2], 10);
-    const src = `assets/${fileName}`;
+    const webpName = fileName.replace(/\.[^.]+$/, ".webp");
+    const src = `assets/optimized/${webpName}`;
+    const thumbSrc = `assets/thumbs/${webpName}`;
 
     if (!groups.has(id)) {
       groups.set(id, []);
     }
 
-    groups.get(id).push({ id, index, fileName, src });
+    groups.get(id).push({ id, index, fileName, src, thumbSrc });
   });
 
   return [...groups.entries()]
@@ -179,7 +183,7 @@ function loadImageDimension(src) {
 }
 
 async function enrichMinerals(minerals) {
-  const dimensions = await Promise.all(minerals.map((item) => loadImageDimension(item.cover.src)));
+  const dimensions = await Promise.all(minerals.map((item) => loadImageDimension(item.cover.thumbSrc)));
 
   return minerals.map((item, index) => ({
     ...item,
@@ -429,7 +433,7 @@ function renderIslands(minerals) {
       <div class="polaroid-card">
         <span class="pin-dot" aria-hidden="true"></span>
         <div class="photo-window">
-          <img class="island-cover" src="${mineral.cover.src}" alt="${mineral.code} 主图" loading="lazy" />
+          <img class="island-cover" src="${mineral.cover.thumbSrc}" alt="${mineral.code} 主图" loading="lazy" decoding="async" />
         </div>
       </div>
     `;
@@ -483,7 +487,7 @@ function renderThumbs() {
     const thumb = document.createElement("button");
     thumb.className = `thumb-btn ${index === modalState.imageIndex ? "active" : ""}`;
     thumb.type = "button";
-    thumb.innerHTML = `<img src="${image.src}" alt="${mineral.code} 图像 ${index + 1}" loading="lazy" />`;
+    thumb.innerHTML = `<img src="${image.thumbSrc}" alt="${mineral.code} 图像 ${index + 1}" loading="lazy" decoding="async" />`;
 
     thumb.addEventListener("click", () => {
       modalState.imageIndex = index;
