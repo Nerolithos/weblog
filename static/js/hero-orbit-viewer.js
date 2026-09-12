@@ -11,7 +11,16 @@ const ITEMS = [
   { id: "game", label: "games", url: "/categories/#games" },
   { id: "courseai", label: "LGU 选课 AI 助手", url: "/courseai" },
   { id: "chem", label: "Interactive Periodic Table", url: "/chem" },
-  { id: "history-today", label: "历史上的今天", url: "/posts/history-today/" }
+  { id: "history-today", label: "历史上的今天", url: "/posts/history-today/" },
+  {
+    id: "illustration",
+    label: "My Pixiv Illustration Portfolio｜笔刷 + 画板",
+    url: "https://p.nero-lithos.com/",
+    models: [
+      { id: "palette", size: 1.35, position: [-0.28, 0, 0] },
+      { id: "brush", size: 1.15, position: [0.5, -0.05, 0.08], rotation: [0, 0, -0.38] }
+    ]
+  }
 ];
 
 const mount = document.querySelector("[data-orbit-viewer]");
@@ -126,14 +135,33 @@ if (mount && canvas && statusEl && tooltipEl) {
       await MeshoptDecoder.ready;
 
       const results = await Promise.allSettled(ITEMS.map(async (item, index) => {
-        const gltf = await loader.loadAsync(`/models/${item.id}.glb`);
-        const root = gltf.scene || gltf.scenes?.[0];
-        if (!root) throw new Error(`${item.id}.glb is empty`);
         const holder = new THREE.Group();
         holder.userData.orbitItem = item;
-        normalizeModel(root, item.center ? 3.92 : 2.352);
-        markInteractive(root, item);
-        holder.add(root);
+
+        if (item.models) {
+          const assembly = new THREE.Group();
+          const parts = await Promise.all(item.models.map(async (part) => {
+            const gltf = await loader.loadAsync(`/models/${part.id}.glb`);
+            const root = gltf.scene || gltf.scenes?.[0];
+            if (!root) throw new Error(`${part.id}.glb is empty`);
+            normalizeModel(root, part.size || 1);
+            root.position.add(new THREE.Vector3(...(part.position || [0, 0, 0])));
+            root.rotation.set(...(part.rotation || [0, 0, 0]));
+            return root;
+          }));
+          parts.forEach((part) => assembly.add(part));
+          normalizeModel(assembly, 2.352);
+          markInteractive(assembly, item);
+          holder.add(assembly);
+        } else {
+          const gltf = await loader.loadAsync(`/models/${item.id}.glb`);
+          const root = gltf.scene || gltf.scenes?.[0];
+          if (!root) throw new Error(`${item.id}.glb is empty`);
+          normalizeModel(root, item.center ? 3.92 : 2.352);
+          markInteractive(root, item);
+          holder.add(root);
+        }
+
         scene.add(holder);
         if (item.center) {
           centerItem = { item, holder };

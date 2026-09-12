@@ -25,11 +25,11 @@ enableRobotsTXT = true
   # 仍然保留页脚链接
   footer_links = [
     { name = "💻 GitHub", url = "https://github.com/Nerolithos" },
-    { name = "🎨 Pixiv", url = "/pixiv/" },
-    { name = "📊 EnergyVis", url = "https://blog.nero-lithos.com/DDA/" },
     { name = "🖋️ mdAnything", url = "https://md.nero-lithos.com" },
-    { name = "🤖 LGU CourseAI", url = "https://blog.nero-lithos.com/courseai/" },
-    { name = "🐈 ArkPet", url = "https://blog.nero-lithos.com/pet" }
+    { name = "🍅 LGuide", url = "https://lguide.net/" },
+    { name = "💼 LinkedIn", url = "https://www.linkedin.com/in/zhu-ji-an/" },
+    { name = "👋 Bonjour", url = "https://bonjour.bio/dh5568" },
+    { name = "🎓 LGU CourseAI", url = "https://blog.nero-lithos.com/courseai/" }
   ]
 
 # 顶部导航菜单（Ananke 会在 header 渲染 .Site.Menus.main）
