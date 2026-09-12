@@ -14,7 +14,7 @@ const ITEMS = [
   { id: "history-today", label: "历史上的今天", url: "/posts/history-today/" },
   {
     id: "illustration",
-    label: "My Pixiv Illustration Portfolio｜笔刷 + 画板",
+    label: "My Pixiv Illustration Portfolio",
     url: "https://p.nero-lithos.com/",
     models: [
       { id: "palette", size: 1.35, position: [-0.28, 0, 0] },
