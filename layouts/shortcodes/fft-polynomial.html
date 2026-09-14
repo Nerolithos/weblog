@@ -1,0 +1,344 @@
+{{- $id := printf "fft-polynomial-%d" .Ordinal -}}
+<section id="{{ $id }}" class="fft-poly-demo" aria-labelledby="{{ $id }}-title">
+  <style>
+    #{{ $id }} {
+      --fft-accent: #2563eb;
+      --fft-accent-2: #f97316;
+      --fft-panel: rgba(255, 255, 255, 0.78);
+      --fft-border: rgba(71, 85, 105, 0.22);
+      margin: 2rem 0;
+      padding: clamp(1rem, 2.4vw, 1.6rem);
+      border: 1px solid var(--fft-border);
+      border-radius: 18px;
+      background: var(--fft-panel);
+      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.1);
+      overflow: hidden;
+    }
+    #{{ $id }} * { box-sizing: border-box; }
+    #{{ $id }} .fft-title { margin: 0 0 .35rem; font-size: clamp(1.25rem, 2vw, 1.65rem); }
+    #{{ $id }} .fft-subtitle { margin: 0 0 1.2rem; color: #64748b; }
+    #{{ $id }} .fft-inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    #{{ $id }} .fft-poly-box { padding: .9rem; border: 1px solid var(--fft-border); border-radius: 14px; background: rgba(248, 250, 252, .82); }
+    #{{ $id }} .fft-poly-label { display: block; margin-bottom: .7rem; font-weight: 700; }
+    #{{ $id }} .fft-coeff-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; }
+    #{{ $id }} label.fft-coeff { display: grid; gap: .25rem; color: #475569; font-size: .82rem; }
+    #{{ $id }} input[type="number"] { width: 100%; padding: .55rem .5rem; border: 1px solid #cbd5e1; border-radius: 9px; background: white; color: #0f172a; font: inherit; }
+    #{{ $id }} .fft-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; margin: 1rem 0; }
+    #{{ $id }} button { border: 0; border-radius: 999px; padding: .58rem .9rem; background: #e2e8f0; color: #0f172a; font-weight: 700; cursor: pointer; }
+    #{{ $id }} button.fft-primary { background: var(--fft-accent); color: white; }
+    #{{ $id }} button:disabled { opacity: .45; cursor: not-allowed; }
+    #{{ $id }} .fft-speed { display: inline-flex; align-items: center; gap: .45rem; margin-left: auto; color: #475569; font-size: .88rem; }
+    #{{ $id }} .fft-speed input { width: 110px; }
+    #{{ $id }} .fft-stage { min-height: 315px; padding: 1rem; border: 1px solid var(--fft-border); border-radius: 15px; background: rgba(248, 250, 252, .9); }
+    #{{ $id }} .fft-stage-head { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+    #{{ $id }} .fft-stage-name { margin: 0; font-size: 1.08rem; }
+    #{{ $id }} .fft-stage-count { color: #64748b; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    #{{ $id }} .fft-explanation { min-height: 2.8em; margin: .45rem 0 .9rem; color: #475569; }
+    #{{ $id }} .fft-vector { display: grid; grid-template-columns: repeat(8, minmax(72px, 1fr)); gap: .55rem; overflow-x: auto; padding: .15rem .05rem .65rem; }
+    #{{ $id }} .fft-cell { position: relative; min-width: 72px; min-height: 112px; padding: .5rem .35rem .35rem; border: 2px solid var(--fft-cell-color, #94a3b8); border-radius: 11px; background: white; text-align: center; transition: transform .28s ease, border-color .28s ease, opacity .28s ease; }
+    #{{ $id }} .fft-cell.is-active { transform: translateY(-5px); box-shadow: 0 8px 16px color-mix(in srgb, var(--fft-cell-color) 24%, transparent); }
+    #{{ $id }} .fft-index { display: block; color: #64748b; font-size: .72rem; }
+    #{{ $id }} .fft-value { display: block; margin-top: .3rem; font: 700 .78rem/1.25 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+    #{{ $id }} .fft-bar-wrap { position: absolute; left: .35rem; right: .35rem; bottom: .35rem; height: 37px; display: flex; align-items: end; }
+    #{{ $id }} .fft-bar { width: 100%; min-height: 2px; height: var(--fft-bar-height); border-radius: 5px 5px 2px 2px; background: var(--fft-cell-color); opacity: .72; transition: height .35s ease; }
+    #{{ $id }} .fft-formula { margin-top: .8rem; padding: .65rem .8rem; border-radius: 10px; background: #eef2ff; color: #3730a3; font: .82rem/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-x: auto; }
+    #{{ $id }} .fft-progress { display: flex; gap: .32rem; justify-content: center; margin-top: .85rem; }
+    #{{ $id }} .fft-dot { width: 7px; height: 7px; border-radius: 50%; background: #cbd5e1; }
+    #{{ $id }} .fft-dot.is-current { width: 22px; border-radius: 999px; background: var(--fft-accent); }
+    #{{ $id }} .fft-result { margin-top: 1rem; padding: .85rem 1rem; border-left: 4px solid #16a34a; border-radius: 8px; background: #f0fdf4; color: #166534; font-weight: 700; }
+    body.dark-mode #{{ $id }} { --fft-panel: rgba(15, 23, 42, .82); --fft-border: rgba(148, 163, 184, .25); color: #e2e8f0; }
+    body.dark-mode #{{ $id }} .fft-poly-box,
+    body.dark-mode #{{ $id }} .fft-stage { background: rgba(30, 41, 59, .82); }
+    body.dark-mode #{{ $id }} input[type="number"],
+    body.dark-mode #{{ $id }} .fft-cell { background: #0f172a; color: #e2e8f0; border-color: var(--fft-cell-color); }
+    body.dark-mode #{{ $id }} .fft-subtitle,
+    body.dark-mode #{{ $id }} .fft-explanation,
+    body.dark-mode #{{ $id }} .fft-stage-count,
+    body.dark-mode #{{ $id }} .fft-speed,
+    body.dark-mode #{{ $id }} label.fft-coeff { color: #cbd5e1; }
+    body.dark-mode #{{ $id }} .fft-formula { background: #1e1b4b; color: #c7d2fe; }
+    @media (max-width: 680px) {
+      #{{ $id }} .fft-inputs { grid-template-columns: 1fr; }
+      #{{ $id }} .fft-speed { width: 100%; margin-left: 0; }
+      #{{ $id }} .fft-stage { min-height: 290px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #{{ $id }} .fft-cell, #{{ $id }} .fft-bar { transition: none; }
+    }
+  </style>
+
+  <h3 id="{{ $id }}-title" class="fft-title">FFT 多项式乘法慢放实验</h3>
+  <p class="fft-subtitle">输入两个最高二次多项式的系数，观察补零、FFT、逐点相乘和逆 FFT。</p>
+
+  <div class="fft-inputs">
+    <div class="fft-poly-box">
+      <span class="fft-poly-label">A(x) = a₀ + a₁x + a₂x²</span>
+      <div class="fft-coeff-row">
+        <label class="fft-coeff">a₀<input data-poly="a" data-index="0" type="number" step="any" value="1"></label>
+        <label class="fft-coeff">a₁<input data-poly="a" data-index="1" type="number" step="any" value="2"></label>
+        <label class="fft-coeff">a₂<input data-poly="a" data-index="2" type="number" step="any" value="1"></label>
+      </div>
+    </div>
+    <div class="fft-poly-box">
+      <span class="fft-poly-label">B(x) = b₀ + b₁x + b₂x²</span>
+      <div class="fft-coeff-row">
+        <label class="fft-coeff">b₀<input data-poly="b" data-index="0" type="number" step="any" value="1"></label>
+        <label class="fft-coeff">b₁<input data-poly="b" data-index="1" type="number" step="any" value="-1"></label>
+        <label class="fft-coeff">b₂<input data-poly="b" data-index="2" type="number" step="any" value="2"></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="fft-controls">
+    <button type="button" data-action="reset">重新计算</button>
+    <button type="button" data-action="prev" aria-label="上一步">← 上一步</button>
+    <button type="button" class="fft-primary" data-action="play">▶ 慢放</button>
+    <button type="button" data-action="next" aria-label="下一步">下一步 →</button>
+    <label class="fft-speed">速度
+      <input data-speed type="range" min="450" max="2200" step="50" value="1200">
+      <span data-speed-label>1.2 秒/步</span>
+    </label>
+  </div>
+
+  <div class="fft-stage" aria-live="polite">
+    <div class="fft-stage-head">
+      <h4 class="fft-stage-name" data-stage-name></h4>
+      <span class="fft-stage-count" data-stage-count></span>
+    </div>
+    <p class="fft-explanation" data-explanation></p>
+    <div class="fft-vector" data-vector></div>
+    <div class="fft-formula" data-formula></div>
+    <div class="fft-progress" data-progress aria-hidden="true"></div>
+  </div>
+  <div class="fft-result" data-result></div>
+
+  <script>
+  (function () {
+    'use strict';
+    var root = document.getElementById('{{ $id }}');
+    if (!root) return;
+
+    var colors = ['#2563eb', '#f97316', '#16a34a', '#a855f7'];
+    var inputs = root.querySelectorAll('input[data-poly]');
+    var nameEl = root.querySelector('[data-stage-name]');
+    var countEl = root.querySelector('[data-stage-count]');
+    var explanationEl = root.querySelector('[data-explanation]');
+    var vectorEl = root.querySelector('[data-vector]');
+    var formulaEl = root.querySelector('[data-formula]');
+    var progressEl = root.querySelector('[data-progress]');
+    var resultEl = root.querySelector('[data-result]');
+    var playBtn = root.querySelector('[data-action="play"]');
+    var prevBtn = root.querySelector('[data-action="prev"]');
+    var nextBtn = root.querySelector('[data-action="next"]');
+    var resetBtn = root.querySelector('[data-action="reset"]');
+    var speedInput = root.querySelector('[data-speed]');
+    var speedLabel = root.querySelector('[data-speed-label]');
+    var frames = [];
+    var frameIndex = 0;
+    var timer = 0;
+
+    function complex(re, im) { return { re: re, im: im || 0 }; }
+    function add(a, b) { return complex(a.re + b.re, a.im + b.im); }
+    function sub(a, b) { return complex(a.re - b.re, a.im - b.im); }
+    function mul(a, b) { return complex(a.re * b.re - a.im * b.im, a.re * b.im + a.im * b.re); }
+    function cloneVector(values) { return values.map(function (v) { return complex(v.re, v.im); }); }
+    function magnitude(v) { return Math.sqrt(v.re * v.re + v.im * v.im); }
+    function clean(n) { return Math.abs(n) < 1e-9 ? 0 : n; }
+    function numberText(n) {
+      n = clean(n);
+      return Math.abs(n - Math.round(n)) < 1e-8 ? String(Math.round(n)) : n.toFixed(2).replace(/\.00$/, '');
+    }
+    function complexText(v) {
+      var re = clean(v.re), im = clean(v.im);
+      if (!im) return numberText(re);
+      if (!re) return numberText(im) + 'i';
+      return numberText(re) + (im >= 0 ? '+' : '') + numberText(im) + 'i';
+    }
+    function bitReverse(value, bits) {
+      var result = 0;
+      for (var i = 0; i < bits; i += 1) {
+        result = (result << 1) | ((value >> i) & 1);
+      }
+      return result;
+    }
+    function fftTrace(source, inverse) {
+      var n = source.length;
+      var bits = Math.log2(n);
+      var values = new Array(n);
+      for (var i = 0; i < n; i += 1) values[bitReverse(i, bits)] = complex(source[i], 0);
+      var trace = [{ values: cloneVector(values), length: 1, label: '位反转重排' }];
+      for (var len = 2; len <= n; len *= 2) {
+        var angle = (inverse ? 2 : -2) * Math.PI / len;
+        var rootOfUnity = complex(Math.cos(angle), Math.sin(angle));
+        for (var start = 0; start < n; start += len) {
+          var w = complex(1, 0);
+          for (var j = 0; j < len / 2; j += 1) {
+            var even = values[start + j];
+            var odd = mul(values[start + j + len / 2], w);
+            values[start + j] = add(even, odd);
+            values[start + j + len / 2] = sub(even, odd);
+            w = mul(w, rootOfUnity);
+          }
+        }
+        trace.push({ values: cloneVector(values), length: len, label: '蝶形长度 ' + len });
+      }
+      if (inverse) {
+        values = values.map(function (v) { return complex(v.re / n, v.im / n); });
+        trace.push({ values: cloneVector(values), length: n, label: '除以 N = ' + n });
+      }
+      return trace;
+    }
+    function coefficients(poly) {
+      return Array.prototype.map.call(root.querySelectorAll('input[data-poly="' + poly + '"]'), function (input) {
+        var value = Number(input.value);
+        return Number.isFinite(value) ? value : 0;
+      });
+    }
+    function polynomialText(values) {
+      var terms = [];
+      values.forEach(function (value, index) {
+        value = clean(value);
+        if (Math.abs(value - Math.round(value)) < 1e-8) value = Math.round(value);
+        if (!value) return;
+        var abs = Math.abs(value);
+        var body = index === 0 ? numberText(abs) : (abs === 1 ? '' : numberText(abs)) + 'x' + (index > 1 ? '^' + index : '');
+        terms.push({ negative: value < 0, body: body });
+      });
+      if (!terms.length) return '0';
+      return terms.map(function (term, index) {
+        if (!index) return (term.negative ? '-' : '') + term.body;
+        return (term.negative ? ' − ' : ' + ') + term.body;
+      }).join('');
+    }
+    function buildFrames() {
+      stop();
+      var a = coefficients('a');
+      var b = coefficients('b');
+      var paddedA = a.concat([0, 0, 0, 0, 0]);
+      var paddedB = b.concat([0, 0, 0, 0, 0]);
+      var traceA = fftTrace(paddedA, false);
+      var traceB = fftTrace(paddedB, false);
+      var spectrumA = traceA[traceA.length - 1].values;
+      var spectrumB = traceB[traceB.length - 1].values;
+      var productSpectrum = spectrumA.map(function (v, i) { return mul(v, spectrumB[i]); });
+      var inverseSource = productSpectrum.map(function (v) { return v.re; });
+      var inverseTrace = (function () {
+        var n = productSpectrum.length;
+        var bits = Math.log2(n);
+        var values = new Array(n);
+        for (var i = 0; i < n; i += 1) values[bitReverse(i, bits)] = complex(productSpectrum[i].re, productSpectrum[i].im);
+        var trace = [{ values: cloneVector(values), length: 1, label: '位反转重排' }];
+        for (var len = 2; len <= n; len *= 2) {
+          var angle = 2 * Math.PI / len;
+          var rootOfUnity = complex(Math.cos(angle), Math.sin(angle));
+          for (var start = 0; start < n; start += len) {
+            var w = complex(1, 0);
+            for (var j = 0; j < len / 2; j += 1) {
+              var even = values[start + j];
+              var odd = mul(values[start + j + len / 2], w);
+              values[start + j] = add(even, odd);
+              values[start + j + len / 2] = sub(even, odd);
+              w = mul(w, rootOfUnity);
+            }
+          }
+          trace.push({ values: cloneVector(values), length: len, label: '逆蝶形长度 ' + len });
+        }
+        values = values.map(function (v) { return complex(v.re / n, v.im / n); });
+        trace.push({ values: cloneVector(values), length: n, label: '除以 N = ' + n });
+        return trace;
+      })();
+      var result = inverseTrace[inverseTrace.length - 1].values.slice(0, 5).map(function (v) { return clean(v.re); });
+
+      frames = [{
+        name: '① 系数向量补零', values: paddedA.map(function (v) { return complex(v, 0); }), length: 1,
+        explanation: '二次多项式相乘最高为四次，需要至少 5 个采样点；FFT 取不小于 5 的最小 2 次幂 N=8。当前显示 A。',
+        formula: 'A = [' + paddedA.join(', ') + ']；B = [' + paddedB.join(', ') + ']'
+      }];
+      traceA.forEach(function (stage, i) {
+        frames.push({ name: '② FFT(A) · ' + stage.label, values: stage.values, length: stage.length,
+          explanation: i === 0 ? '先按二进制下标倒序重排，让后续蝶形运算可以原地完成。' : '每两个半区通过单位根旋转后做加减，合并为更长的 DFT。',
+          formula: 'u = even，v = ωᵏ × odd；输出 u+v 与 u−v' });
+      });
+      traceB.forEach(function (stage, i) {
+        frames.push({ name: '③ FFT(B) · ' + stage.label, values: stage.values, length: stage.length,
+          explanation: i === 0 ? '对 B 做同样的位反转重排。' : 'B 经过相同层级的蝶形合并，转换到频域。',
+          formula: 'ωₘ = exp(−2πi/m)，m = ' + Math.max(2, stage.length) });
+      });
+      frames.push({ name: '④ 频域逐点相乘', values: productSpectrum, length: 1,
+        explanation: '卷积定理：系数卷积等于频域逐点乘法。这一步只需要 N 次复数乘法。',
+        formula: 'Ĉ[k] = Â[k] × B̂[k]，k = 0…7' });
+      inverseTrace.forEach(function (stage, i) {
+        frames.push({ name: '⑤ IFFT(Ĉ) · ' + stage.label, values: stage.values, length: stage.length,
+          explanation: i === inverseTrace.length - 1 ? '最后除以 N，回到多项式系数域。' : '使用共轭方向的单位根执行逆蝶形运算。',
+          formula: i === inverseTrace.length - 1 ? 'c[j] = IFFT(Ĉ)[j] / N' : 'ωₘ = exp(+2πi/m)' });
+      });
+      frames.push({ name: '⑥ 得到乘积多项式', values: result.concat([0, 0, 0]).map(function (v) { return complex(v, 0); }), length: 1,
+        explanation: '舍去补零产生的高阶零项和浮点误差，前 5 项就是最终卷积系数。',
+        formula: '(' + polynomialText(a) + ')(' + polynomialText(b) + ') = ' + polynomialText(result), result: result });
+      frameIndex = 0;
+      render();
+    }
+    function render() {
+      var frame = frames[frameIndex];
+      if (!frame) return;
+      nameEl.textContent = frame.name;
+      countEl.textContent = (frameIndex + 1) + ' / ' + frames.length;
+      explanationEl.textContent = frame.explanation;
+      formulaEl.textContent = frame.formula;
+      var max = Math.max.apply(null, frame.values.map(magnitude).concat([1]));
+      vectorEl.innerHTML = '';
+      frame.values.forEach(function (value, index) {
+        var group = frame.length > 1 ? Math.floor(index / Math.max(1, frame.length / 2)) % colors.length : index % colors.length;
+        var cell = document.createElement('div');
+        cell.className = 'fft-cell' + (frame.length > 1 ? ' is-active' : '');
+        cell.style.setProperty('--fft-cell-color', colors[group]);
+        cell.innerHTML = '<span class="fft-index">k=' + index + '</span><span class="fft-value"></span><span class="fft-bar-wrap"><span class="fft-bar"></span></span>';
+        cell.querySelector('.fft-value').textContent = complexText(value);
+        cell.querySelector('.fft-bar').style.setProperty('--fft-bar-height', Math.max(2, magnitude(value) / max * 37) + 'px');
+        vectorEl.appendChild(cell);
+      });
+      progressEl.innerHTML = '';
+      frames.forEach(function (_, index) {
+        var dot = document.createElement('span');
+        dot.className = 'fft-dot' + (index === frameIndex ? ' is-current' : '');
+        progressEl.appendChild(dot);
+      });
+      var finalResult = frames[frames.length - 1].result;
+      resultEl.textContent = finalResult && frameIndex === frames.length - 1 ? '结果：C(x) = ' + polynomialText(finalResult) : '完成全部步骤后，这里会显示最终乘积。';
+      prevBtn.disabled = frameIndex === 0;
+      nextBtn.disabled = frameIndex === frames.length - 1;
+    }
+    function stop() {
+      if (timer) window.clearTimeout(timer);
+      timer = 0;
+      playBtn.textContent = '▶ 慢放';
+    }
+    function schedule() {
+      if (!timer) return;
+      timer = window.setTimeout(function () {
+        if (frameIndex >= frames.length - 1) {
+          stop();
+          return;
+        }
+        frameIndex += 1;
+        render();
+        schedule();
+      }, Number(speedInput.value));
+    }
+    playBtn.addEventListener('click', function () {
+      if (timer) { stop(); return; }
+      if (frameIndex >= frames.length - 1) frameIndex = 0;
+      playBtn.textContent = '⏸ 暂停';
+      timer = -1;
+      render();
+      schedule();
+    });
+    prevBtn.addEventListener('click', function () { stop(); frameIndex = Math.max(0, frameIndex - 1); render(); });
+    nextBtn.addEventListener('click', function () { stop(); frameIndex = Math.min(frames.length - 1, frameIndex + 1); render(); });
+    resetBtn.addEventListener('click', buildFrames);
+    speedInput.addEventListener('input', function () { speedLabel.textContent = (Number(speedInput.value) / 1000).toFixed(2).replace(/0$/, '') + ' 秒/步'; });
+    Array.prototype.forEach.call(inputs, function (input) { input.addEventListener('change', buildFrames); });
+    buildFrames();
+  })();
+  </script>
+</section>
