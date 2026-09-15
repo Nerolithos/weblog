@@ -87,6 +87,58 @@
     .answer.empty {
       color: #999;
     }
+    .course-links {
+      margin-top: 1rem;
+      border: 1px solid #b8d8ff;
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      background: #f0f7ff;
+    }
+    .course-links[hidden] {
+      display: none;
+    }
+    .course-links h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
+      color: #0756a3;
+    }
+    .course-links-note {
+      margin: 0 0 0.75rem;
+      color: #52606d;
+      font-size: 0.82rem;
+    }
+    .course-link-group + .course-link-group {
+      margin-top: 0.9rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #cfe3fa;
+    }
+    .course-link-code {
+      margin: 0 0 0.4rem;
+      font-weight: 700;
+    }
+    .course-link-list {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+    .course-link-list li + li {
+      margin-top: 0.45rem;
+    }
+    .course-link-list a {
+      color: #0969da;
+      overflow-wrap: anywhere;
+    }
+    .course-link-id {
+      display: inline-block;
+      margin-left: 0.4rem;
+      color: #57606a;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+    }
+    .course-link-empty,
+    .course-link-error {
+      margin: 0.4rem 0 0;
+      color: #57606a;
+    }
     .footer-note {
       margin-top: 1.25rem;
       font-size: 0.8rem;
@@ -121,6 +173,12 @@
 
     <div id="answer" class="answer empty">等待你的提问……</div>
 
+    <section id="course-links" class="course-links" aria-live="polite" hidden>
+      <h2>🔎 课程编号直达结果</h2>
+      <p class="course-links-note">AI 回答结束后，由本地 Go/WASM 倒排索引独立查询 course_code.txt；不使用 AI。</p>
+      <div id="course-links-results"></div>
+    </section>
+
     <div class="footer-note">
       提示：本助手调用 OpenRouter 上的免费模型 Qwen，回答仅供参考，请结合最新教学计划与官方信息综合判断。
     </div>
@@ -131,9 +189,162 @@
     const questionInput = document.getElementById('question');
     const answerEl = document.getElementById('answer');
     const statusEl = document.getElementById('status');
+    const courseLinksEl = document.getElementById('course-links');
+    const courseLinksResultsEl = document.getElementById('course-links-results');
     const apiBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
       ? 'https://blog.nero-lithos.com'
       : '';
+    let courseSearchRuntimePromise = null;
+
+    function extractCourseCodes(text) {
+      const matches = text.match(/\b[A-Za-z]{3}\s*\d{4}\b/g) || [];
+      return [...new Set(matches.map((code) => code.replace(/\s+/g, '').toUpperCase()))];
+    }
+
+    function loadScriptOnce(src) {
+      return new Promise((resolve, reject) => {
+        const existing = document.querySelector(`script[data-course-search-runtime="${src}"]`);
+        if (existing) {
+          if (existing.dataset.loaded === '1') resolve();
+          else {
+            existing.addEventListener('load', resolve, { once: true });
+            existing.addEventListener('error', reject, { once: true });
+          }
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.dataset.courseSearchRuntime = src;
+        script.addEventListener('load', () => {
+          script.dataset.loaded = '1';
+          resolve();
+        }, { once: true });
+        script.addEventListener('error', reject, { once: true });
+        document.head.appendChild(script);
+      });
+    }
+
+    async function instantiateCourseSearchWasm(url, importObject) {
+      if (WebAssembly.instantiateStreaming) {
+        try {
+          return await WebAssembly.instantiateStreaming(fetch(url), importObject);
+        } catch (error) {
+          console.warn('WASM 流式加载失败，改用 ArrayBuffer。', error);
+        }
+      }
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`course-search.wasm HTTP ${response.status}`);
+      return WebAssembly.instantiate(await response.arrayBuffer(), importObject);
+    }
+
+    async function ensureCourseSearchRuntime() {
+      if (courseSearchRuntimePromise) return courseSearchRuntimePromise;
+      courseSearchRuntimePromise = (async () => {
+        const pageBase = new URL('./', window.location.href);
+        await loadScriptOnce(new URL('wasm_exec.js', pageBase).toString());
+        if (typeof Go !== 'function') throw new Error('Go WASM runtime 未加载');
+
+        const go = new Go();
+        const instantiated = await instantiateCourseSearchWasm(
+          new URL('course-search.wasm', pageBase).toString(),
+          go.importObject,
+        );
+        go.run(instantiated.instance).catch((error) => console.error('Go/WASM 已停止', error));
+
+        const deadline = Date.now() + 5000;
+        while (!window.courseCodeSearchReady) {
+          if (Date.now() > deadline) throw new Error('Go/WASM 初始化超时');
+          await new Promise((resolve) => setTimeout(resolve, 20));
+        }
+
+        const response = await fetch('/course_code.txt', { cache: 'force-cache' });
+        if (!response.ok) throw new Error(`course_code.txt HTTP ${response.status}`);
+        window.courseCodeBuildIndex(await response.text());
+        return true;
+      })();
+      return courseSearchRuntimePromise;
+    }
+
+    function appendCourseMatch(list, match) {
+      let url;
+      try {
+        url = new URL(match.url);
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+      } catch (error) {
+        return;
+      }
+
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = url.toString();
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = match.title || url.toString();
+      item.appendChild(link);
+      if (match.courseId) {
+        const id = document.createElement('span');
+        id.className = 'course-link-id';
+        id.textContent = `course_id=${match.courseId}`;
+        item.appendChild(id);
+      }
+      list.appendChild(item);
+    }
+
+    async function renderCourseLinks(question) {
+      const codes = extractCourseCodes(question);
+      courseLinksResultsEl.replaceChildren();
+      if (!codes.length) {
+        courseLinksEl.hidden = true;
+        return;
+      }
+
+      courseLinksEl.hidden = false;
+      const loading = document.createElement('p');
+      loading.className = 'course-link-empty';
+      loading.textContent = `正在本地检索 ${codes.join('、')}……`;
+      courseLinksResultsEl.appendChild(loading);
+
+      try {
+        await ensureCourseSearchRuntime();
+        const groups = JSON.parse(window.courseCodeSearch(JSON.stringify(codes)));
+        courseLinksResultsEl.replaceChildren();
+        groups.forEach((group) => {
+          const block = document.createElement('div');
+          block.className = 'course-link-group';
+          const title = document.createElement('p');
+          title.className = 'course-link-code';
+          title.textContent = `${group.code}（${group.matches.length} 个网址）`;
+          block.appendChild(title);
+          if (group.matches.length) {
+            const guidance = document.createElement('p');
+            guidance.className = 'course-link-empty';
+            const courseIds = [...new Set(group.matches
+              .map((match) => match.courseId)
+              .filter(Boolean))];
+            guidance.textContent = `Blackboard 系统的课程编号为：${courseIds.join('、')}。您可以通过现有网址替换 course_id 的方法尝试访问（有些课程有权限控制可能无法访问）。`;
+            block.appendChild(guidance);
+            const list = document.createElement('ol');
+            list.className = 'course-link-list';
+            group.matches.forEach((match) => appendCourseMatch(list, match));
+            block.appendChild(list);
+          } else {
+            const empty = document.createElement('p');
+            empty.className = 'course-link-empty';
+            empty.textContent = 'course_code.txt 中没有精确匹配。';
+            block.appendChild(empty);
+          }
+          courseLinksResultsEl.appendChild(block);
+        });
+      } catch (error) {
+        console.error('课程编号本地检索失败', error);
+        courseLinksResultsEl.replaceChildren();
+        const message = document.createElement('p');
+        message.className = 'course-link-error';
+        message.textContent = '课程编号本地检索暂时不可用；上方 AI 回答不受影响。';
+        courseLinksResultsEl.appendChild(message);
+      }
+    }
 
     async function loadCoursesText() {
       const base = window.location.href;
@@ -175,6 +386,8 @@
       statusEl.textContent = '正在加载 courses.txt 与调用模型，请稍候……';
       answerEl.textContent = '';
       answerEl.classList.remove('empty');
+      courseLinksEl.hidden = true;
+      courseLinksResultsEl.replaceChildren();
 
       let coursesText = '';
       try {
@@ -256,6 +469,7 @@
         }
 
         statusEl.textContent = '回答已生成完成。';
+        void renderCourseLinks(question);
       } catch (err) {
         console.error(err);
         statusEl.textContent = '调用 LGU 选课 AI 失败，请稍后重试。';
