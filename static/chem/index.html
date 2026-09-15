@@ -74,6 +74,88 @@
       color: var(--muted);
     }
 
+    .header-links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.85rem;
+      margin-left: auto;
+    }
+
+    .header-link {
+      width: 1.7rem;
+      height: 1.7rem;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: #fff;
+      border-radius: 0.35rem;
+      opacity: 0.9;
+      transition: opacity var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .header-link:hover,
+    .header-link:focus-visible {
+      opacity: 1;
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+    }
+
+    .header-link svg,
+    .header-link img {
+      width: 1.45rem;
+      height: 1.45rem;
+      display: block;
+      object-fit: contain;
+    }
+
+    .header-link img {
+      filter: grayscale(1) brightness(0) invert(1);
+    }
+
+    .header-link img.header-icon-bonjour {
+      width: 1.9rem;
+      height: 1.9rem;
+    }
+
+    .header-link img.header-icon-courseai {
+      width: 2.15rem;
+      height: 2.15rem;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 0.4rem;
+      }
+
+      .app-shell {
+        padding: 0.75rem 0.55rem;
+        border-radius: 14px;
+      }
+
+      header.app-header {
+        align-items: flex-start;
+      }
+
+      .header-links {
+        gap: 0.35rem;
+        flex-wrap: wrap;
+      }
+
+      .header-link {
+        width: 1.45rem;
+        height: 1.45rem;
+      }
+
+      .header-link svg,
+      .header-link img {
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+
+    }
+
     .meta-badge {
       font-size: 0.7rem;
       text-transform: uppercase;
@@ -221,6 +303,22 @@
       .panel-notes,
       .panel-extra {
         grid-column: 1 / 2;
+      }
+
+      .panel-ptable {
+        grid-row: 1;
+      }
+
+      .panel-notes {
+        grid-row: 2;
+      }
+
+      .panel-bohr {
+        grid-row: 3;
+      }
+
+      .panel-extra {
+        grid-row: 4;
       }
     }
 
@@ -836,6 +934,49 @@
       line-height: 1.4;
       display: none;
     }
+
+    /* 必须放在基础周期表样式之后，避免窄屏规则被桌面规则覆盖。 */
+    @media (max-width: 640px) {
+      .panel-ptable {
+        padding: 0.45rem 0.25rem 0.6rem;
+        overflow: hidden;
+      }
+
+      .ptable-wrapper {
+        width: 100%;
+        overflow-x: hidden;
+        padding-inline: 0;
+      }
+
+      .ptable-grid {
+        width: 100%;
+        min-width: 0;
+        grid-template-columns: repeat(19, minmax(0, 1fr));
+        grid-auto-rows: clamp(1rem, 4.7vw, 2rem);
+        gap: 1px;
+        justify-content: stretch;
+      }
+
+      .el-tile {
+        min-width: 0;
+        border-radius: 0.2rem;
+        padding: 0.04rem;
+      }
+
+      .el-atomic {
+        font-size: clamp(0.3rem, 1.4vw, 0.5rem);
+      }
+
+      .el-symbol {
+        font-size: clamp(0.52rem, 2.6vw, 0.95rem);
+        letter-spacing: 0;
+      }
+
+      .row-label {
+        font-size: clamp(0.3rem, 1.4vw, 0.5rem);
+        padding-right: 1px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -844,6 +985,28 @@
       <div class="title-block">
         <h1>Periodic Visualization of Elements</h1>
       </div>
+      <nav class="header-links" aria-label="网站快捷链接">
+        <a class="header-link" href="https://github.com/Nerolithos" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.2 1.9 1.2 1.1 1.9 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.4 1.2a11.8 11.8 0 0 1 6 0c2.4-1.6 3.4-1.2 3.4-1.2.7 1.7.3 2.9.1 3.1.8.9 1.2 2 1.2 3.3 0 4.6-2.8 5.7-5.5 6 .4.4.8 1 .8 2.1v3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/>
+          </svg>
+        </a>
+        <a class="header-link" href="https://md.nero-lithos.com" target="_blank" rel="noopener noreferrer" title="mdAnything" aria-label="mdAnything">
+          <img src="/mda.png" alt="" aria-hidden="true" />
+        </a>
+        <a class="header-link" href="https://lguide.net/" target="_blank" rel="noopener noreferrer" title="LGuide" aria-label="LGuide">
+          <img src="/lguide.png" alt="" aria-hidden="true" />
+        </a>
+        <a class="header-link" href="https://www.linkedin.com/in/zhu-ji-an/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
+          <img src="/li.png" alt="" aria-hidden="true" />
+        </a>
+        <a class="header-link" href="https://bonjour.bio/dh5568" target="_blank" rel="noopener noreferrer" title="Bonjour" aria-label="Bonjour">
+          <img class="header-icon-bonjour" src="/bonjour.png" alt="" aria-hidden="true" />
+        </a>
+        <a class="header-link" href="https://blog.nero-lithos.com/courseai/" target="_blank" rel="noopener noreferrer" title="LGU CourseAI" aria-label="LGU CourseAI">
+          <img class="header-icon-courseai" src="/lguai.png" alt="" aria-hidden="true" />
+        </a>
+      </nav>
     </header>
 
     <main class="layout">
@@ -1220,55 +1383,56 @@
 
     const VALENCE_DATA = new Map();
     const ELEMENT_NOTES = new Map();
+    let elementNotesLoadFailed = false;
     // 本地元素图片清单：仅使用 static/chem/pic 下已存在文件
     const LOCAL_ELEMENT_IMAGE_MAP = new Map([
-      [2, "pic/2.jpeg"],
-      [3, "pic/3.JPG"],
-      [4, "pic/4.jpeg"],
-      [5, "pic/5.JPG"],
-      [6, "pic/6.JPG"],
-      [7, "pic/7.jpg"],
-      [9, "pic/9.jpeg"],
-      [11, "pic/11.jpeg"],
-      [12, "pic/12.JPG"],
-      [14, "pic/14.JPG"],
-      [15, "pic/15.JPG"],
-      [16, "pic/16.JPG"],
-      [17, "pic/17.JPG"],
-      [18, "pic/18.jpeg"],
-      [19, "pic/19.jpeg"],
-      [20, "pic/20.JPG"],
-      [21, "pic/21.JPG"],
-      [23, "pic/23.jpeg"],
-      [24, "pic/24.jpeg"],
-      [25, "pic/25.jpeg"],
-      [27, "pic/27.jpeg"],
-      [29, "pic/29.JPG"],
-      [33, "pic/33.jpeg"],
-      [34, "pic/34.JPG"],
-      [35, "pic/35.JPG"],
-      [36, "pic/35.JPG"],
-      [38, "pic/38.jpeg"],
-      [40, "pic/40.JPG"],
-      [41, "pic/41.jpeg"],
-      [42, "pic/42.jpeg"],
-      [47, "pic/47.jpeg"],
-      [48, "pic/48.jpeg"],
-      [49, "pic/49.jpeg"],
-      [52, "pic/52.jpeg"],
-      [53, "pic/53.JPG"],
-      [55, "pic/55.JPG"],
-      [56, "pic/56.jpeg"],
-      [57, "pic/57.jpeg"],
-      [59, "pic/59.JPG"],
-      [63, "pic/63.JPG"],
-      [67, "pic/67.JPG"],
-      [73, "pic/73.jpeg"],
-      [75, "pic/75.jpeg"],
-      [79, "pic/79.JPG"],
-      [80, "pic/80.jpeg"],
-      [82, "pic/82.jpeg"],
-      [83, "pic/83.JPG"]
+      [2, "pic/2.webp"],
+      [3, "pic/3.webp"],
+      [4, "pic/4.webp"],
+      [5, "pic/5.webp"],
+      [6, "pic/6.webp"],
+      [7, "pic/7.webp"],
+      [9, "pic/9.webp"],
+      [11, "pic/11.webp"],
+      [12, "pic/12.webp"],
+      [14, "pic/14.webp"],
+      [15, "pic/15.webp"],
+      [16, "pic/16.webp"],
+      [17, "pic/17.webp"],
+      [18, "pic/18.webp"],
+      [19, "pic/19.webp"],
+      [20, "pic/20.webp"],
+      [21, "pic/21.webp"],
+      [23, "pic/23.webp"],
+      [24, "pic/24.webp"],
+      [25, "pic/25.webp"],
+      [27, "pic/27.webp"],
+      [29, "pic/29.webp"],
+      [33, "pic/33.webp"],
+      [34, "pic/34.webp"],
+      [35, "pic/35.webp"],
+      [36, "pic/35.webp"],
+      [38, "pic/38.webp"],
+      [40, "pic/40.webp"],
+      [41, "pic/41.webp"],
+      [42, "pic/42.webp"],
+      [47, "pic/47.webp"],
+      [48, "pic/48.webp"],
+      [49, "pic/49.webp"],
+      [52, "pic/52.webp"],
+      [53, "pic/53.webp"],
+      [55, "pic/55.webp"],
+      [56, "pic/56.webp"],
+      [57, "pic/57.webp"],
+      [59, "pic/59.webp"],
+      [63, "pic/63.webp"],
+      [67, "pic/67.webp"],
+      [73, "pic/73.webp"],
+      [75, "pic/75.webp"],
+      [79, "pic/79.webp"],
+      [80, "pic/80.webp"],
+      [82, "pic/82.webp"],
+      [83, "pic/83.webp"]
     ]);
 
     // Pauling electronegativity (approx., H=2.20). null for undefined values.
@@ -1604,7 +1768,7 @@
 
     async function loadValenceData() {
       try {
-        const res = await fetch("valences.json");
+        const res = await fetch("/chem/valences.json");
         if (!res.ok) return;
         const arr = await res.json();
         if (!Array.isArray(arr)) return;
@@ -1620,8 +1784,8 @@
 
     async function loadElementNotes() {
       try {
-        const res = await fetch("element_notes.json");
-        if (!res.ok) return;
+        const res = await fetch("/chem/element_notes.json");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const arr = await res.json();
         if (!Array.isArray(arr)) return;
         arr.forEach(entry => {
@@ -1635,6 +1799,7 @@
           }
         });
       } catch (err) {
+        elementNotesLoadFailed = true;
         console.warn("Failed to load element_notes.json", err);
       }
     }
@@ -2440,13 +2605,6 @@
       svg.appendChild(nucleusText);
     }
 
-    function preloadLocalElementImages() {
-      LOCAL_ELEMENT_IMAGE_MAP.forEach((path) => {
-        const img = new Image();
-        img.src = path;
-      });
-    }
-
     function updateElementImage(el) {
       const titleEl = document.getElementById("extra-photo-title");
       const imgEl = document.getElementById("extra-element-photo");
@@ -2458,7 +2616,8 @@
       titleEl.textContent = `${el.name} image`;
       captionEl.textContent = "Source: local /chem/pic";
 
-      const localImage = LOCAL_ELEMENT_IMAGE_MAP.get(el.z) || null;
+      const localImagePath = LOCAL_ELEMENT_IMAGE_MAP.get(el.z) || null;
+      const localImage = localImagePath ? `/chem/${localImagePath}` : null;
       if (localImage) {
         if (imgEl.getAttribute("src") !== localImage) {
           imgEl.src = localImage;
@@ -2542,8 +2701,10 @@
         const noteHtml = ELEMENT_NOTES.get(el.symbol);
         if (noteHtml && noteHtml.trim().length > 0) {
           notesDiv.innerHTML = noteHtml;
+        } else if (elementNotesLoadFailed) {
+          notesDiv.textContent = "Element notes 加载失败，请刷新页面后重试。";
         } else {
-          notesDiv.innerHTML = "";
+          notesDiv.textContent = "No element notes available for this element.";
         }
       }
 
@@ -2628,8 +2789,6 @@
 
       // 先从 CSS 变量载入 Hue 颜色，保证你在 element_hues.css 里调的颜色立即生效
       loadHueFromCSSVars();
-      // 预加载本地元素图片，避免悬浮切换时卡顿
-      preloadLocalElementImages();
 
       Promise.allSettled([
         loadValenceData(),
