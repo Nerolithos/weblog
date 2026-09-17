@@ -30,6 +30,8 @@
     {{ $titleLower := lower .Title }}
     {{ $tags := .Params.tags | default (slice) }}
     {{ $tagText := upper (delimit $tags " ") }}
+    {{ $categories := .Params.categories | default (slice) }}
+    {{ $categoryText := upper (delimit $categories " ") }}
     {{ $base := upper .File.BaseFileName }}
     {{ $isRedirect := .Param "redirect" }}
     {{ $isGameProject := and $isRedirect (or
@@ -37,6 +39,8 @@
       (in $titleLower "游戏")
       (in $titleLower "跑酷")
       (in $titleLower "puzzle")
+      (in $tagText "GAME")
+      (in $categoryText "GAME")
       (eq $base "PET")
       (eq $base "EMOJI")
       (eq $base "OTTO-3D-PARKOUR")
