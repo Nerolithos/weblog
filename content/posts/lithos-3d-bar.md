@@ -1,8 +1,8 @@
 ---
-title: "Lithos' 3D Bar"
+title: "Nightmares at Lithos' bar"
 date: 2026-09-16T11:00:00+08:00
 draft: false
-summary: "许愿式 Game Development with Astra-6 建模 + 5.6-Sol 逻辑"
+summary: "许愿式 Game Development with Astra-6 建模 + 5.6-Sol 逻辑。第一人称 3D 微恐氛围解密游戏。"
 redirect: "https://bar.nero-lithos.com/"
 categories:
   - Game
