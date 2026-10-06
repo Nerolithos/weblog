@@ -148,7 +148,7 @@
   <div class="container">
     <h1>LGU 选课 AI 助手</h1>
     <p class="subtitle">
-      利用 courses.txt 中的课程评价与信息，帮助你解答香港中文大学（深圳）相关的选课问题。
+      利用 courses.md 中的课程评价与信息，帮助你解答香港中文大学（深圳）相关的选课问题。
     </p>
 
     <div class="controls">
@@ -343,12 +343,8 @@
     async function loadCoursesText() {
       const base = window.location.href;
       const candidates = [
-        '/courses.txt',
-        '/static/courses.txt',
-        'courses.txt',
-        '../courses.txt',
-        './courses.txt',
-        'https://blog.nero-lithos.com/courses.txt',
+        '/courses.md',
+        'https://blog.nero-lithos.com/courses.md',
       ];
 
       const attempted = [];
@@ -366,7 +362,7 @@
         }
       }
 
-      throw new Error('无法加载 courses.txt，已尝试：' + attempted.join(', '));
+      throw new Error('无法加载 courses.md，已尝试：' + attempted.join(', '));
     }
 
     async function ask() {
@@ -377,7 +373,7 @@
       }
 
       askBtn.disabled = true;
-      statusEl.textContent = '正在加载 courses.txt 与调用模型，请稍候……';
+      statusEl.textContent = '正在加载 courses.md 与调用模型，请稍候……';
       answerEl.textContent = '';
       answerEl.classList.remove('empty');
       courseLinksEl.hidden = true;
@@ -388,7 +384,7 @@
         coursesText = await loadCoursesText();
       } catch (err) {
         console.error(err);
-        statusEl.textContent = '加载 courses.txt 失败，请稍后重试。';
+        statusEl.textContent = '加载 courses.md 失败，请稍后重试。';
         askBtn.disabled = false;
         return;
       }
