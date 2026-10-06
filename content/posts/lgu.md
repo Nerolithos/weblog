@@ -23,7 +23,7 @@ featured_image: "/images/lgu.jpg"
 
 # 龙大生存指南
 
-![](https://i.postimg.cc/ryJmLT5r/wu-bei-jing-shui-yin-pic.png)
+![](https://img.nero-lithos.com/posts/4c0890eaef22-wu-bei-jing-shui-yin-pic.png)
 
 ## 入学与迎新
 
@@ -31,7 +31,7 @@ featured_image: "/images/lgu.jpg"
 
 第一位入住寝室的人需要认领钥匙（每个寝室就一把），并负责检查寝室固有资产情况，否则可能会为上一代学长损坏的东西买单，**若有损坏/划痕/污痕注意拍照留证**。
 
-![](https://i.postimg.cc/8kysHS2P/jie-ping2026-08-14-20-47-01.png)
+![](https://img.nero-lithos.com/posts/29db45cbde3b-jie-ping2026-08-14-20-47-01.png)
 
 （以上为我 2024 年入学时的入学报道流程，仅供参考）
 
@@ -187,7 +187,7 @@ OJ (**10.26.200.13/** 或 https://oj.cuhk.edu.cn)是SDS学院(曾用的) Java �
 
 电费查缴与电子学生证：香港中文大学（深圳）**企业微信**-工作台-电费查缴/校园卡（右下二维码）
 
-![](https://i.postimg.cc/DwrrRNzp/a5a313c7eeb574467a90094609956da2.jpg)
+![](https://img.nero-lithos.com/posts/f44deba49015-a5a313c7eeb574467a90094609956da2.jpg)
 
 校内外卖：**饭否点餐**（校内麦当劳无法使用麦金卡，其余档口外卖与线下无异）
 
@@ -215,7 +215,7 @@ OJ (**10.26.200.13/** 或 https://oj.cuhk.edu.cn)是SDS学院(曾用的) Java �
 
 我们学校花草确实很丰富啊……
 
-![](https://i.postimg.cc/PxX2XmPj/IMG-0483.png)
+![](https://img.nero-lithos.com/posts/73dfe439d6a5-IMG-0483.png)
 
 
 
@@ -225,15 +225,15 @@ OJ (**10.26.200.13/** 或 https://oj.cuhk.edu.cn)是SDS学院(曾用的) Java �
 
 思廷食堂和逸夫食堂有夜宵，分别提供烧烤和面食。晚上在饭否点餐里面可以看到当天夜宵开没开。
 
-![](https://i.postimg.cc/DwBQcNyg/IMG-7931.jpg)
+![](https://img.nero-lithos.com/posts/21727f0f0751-IMG-7931.jpg)
 
 （逸夫食堂的虾仁馄饨-位于 A 栋 C 栋之间的连廊处）
 
-![](https://i.postimg.cc/ZYprQn5C/IMG-7598.jpg)
+![](https://img.nero-lithos.com/posts/57dcf54f9b14-IMG-7598.jpg)
 
 （会议楼食堂的西餐，现在多加了意面。蛋白质有鱼、猪、鸡、牛几种选择）
 
-![](https://i.postimg.cc/mDMFKpRp/IMG-9030.jpg)
+![](https://img.nero-lithos.com/posts/2aa92d050e00-IMG-9030.jpg)
 
 （会议楼的小碗菜）
 
@@ -243,7 +243,7 @@ OJ (**10.26.200.13/** 或 https://oj.cuhk.edu.cn)是SDS学院(曾用的) Java �
 
 大件快件（比如书包、行李箱）一般普快会送到下沉广场（全家边上）的收发室“教学楼 D 下园快递服务中心”晚上七点关门，快递可以放过夜，尽量别超出一周即可。如果小型包裹送到收发室，“驿收发”给你发短信通知，如若没有出现“请 19:00 前来取”这句话，就可以等一等，大概率会转送到丰巢。
 
-逸夫丰巢快递柜：逸夫 A 边上有两个个丰巢快递柜（101、102），逸夫 D 边上有十个（1～10 号）。![](https://i.postimg.cc/5ypR81kD/424.jpg)
+逸夫丰巢快递柜：逸夫 A 边上有两个个丰巢快递柜（101、102），逸夫 D 边上有十个（1～10 号）。![](https://img.nero-lithos.com/posts/e926c3a94a19-424.jpg)
 
 退货：一般放在每栋宿舍楼门口的绿色外卖柜上，并拍照给快递员确认位置。
 
@@ -253,7 +253,7 @@ OJ (**10.26.200.13/** 或 https://oj.cuhk.edu.cn)是SDS学院(曾用的) Java �
 
 #### · 新图
 
-![](https://i.postimg.cc/9QZ5RGmw/IMG-9738.jpg)
+![](https://img.nero-lithos.com/posts/621b1c583717-IMG-9738.jpg)
 
 新图书馆位于学术中心与行政楼间，一楼和二楼都有手机锁柜。一楼从学术中心向东走下坡进入，正厅是木质隔板长排桌组成的非封闭隔间（有灯和充电口）以及会议室，左手边有电梯。右手边是工学椅+显示屏的大片自习空间，属于新图公开区域工作环境最好的地方。注意如果你在（尤其是期末周）一楼放东西时间久或过夜会被统一收集移除放在一楼的公共置物架上。二楼从学术中心向东走上台阶或者从行政楼侧上台阶进入，环境一般（经过的人太多）。三楼以环形共享桌、电脑桌、木质带灯开放四人桌为主，四楼类似。
 
@@ -371,7 +371,7 @@ A：4.0，A-：3.7，B+：3.3，B：3.0，B-：2.7，C+：2.3，C：2.0，C-：1
 
 我校每学期三个月内（10～11 月）统一于下园体检，持续两个周末，具体通知将由 peu@cuhk.edu.cn 邮箱发出。前年体测时间是10月19、20、26、27 日，去年是11月15、16、22、23日。位置为**综合运动馆架空层及田径场**，测试项目共**8项**：身高体重、肺活量、坐位体前屈、立定跳远、1分钟仰卧起坐（女）、引体向上（男）、50米、800米（女）、1000米（男）。
 
-![](https://i.postimg.cc/1Xk7sjNM/IMG-0567.jpg)
+![](https://img.nero-lithos.com/posts/e873aaf0eb0f-IMG-0567.jpg)
 
 每次体测都会发布精确到人的时间安排（每天两个时间段），但实际上**完全无需遵守**。体检只要带上**身份证和学生证**（注意两证都要）**随时随便哪天去都行**，但不能太靠近中午，因为体检相关人员会午休，总之建议尽早去，人少。体测未按要求时间到的情况下，只要在**“迟到检录处”**报上原本体测时间，一样可以参加，无论早测还是晚测。~~亲测没问题，我前两年都没按要求到。~~
 
@@ -396,7 +396,7 @@ A：4.0，A-：3.7，B+：3.3，B：3.0，B-：2.7，C+：2.3，C：2.0，C-：1
 
 [点击查询您的宿舍安排](https://apply.cuhk.edu.cn/matrix-base/apply/dorm_check)。逸夫书院的本科生寝室为上床下铺为主，床的尺寸为0.85 米宽 ×1.95 米长(C 栋 3 楼至 5 楼床的尺寸为 0.78 米宽 ×1.9 米长)。寝室中每个人平均 2 个置物柜，（通过移除置物箱中的隔板）其中可摆放不超过 22 寸的行李箱。但置物顶上可以放置（每寝室）最多两个大型行李箱。书院可以提供一种较薄（静置 5～6 厘米）的床垫，如果您习惯席梦思之类的厚质床垫，可能需要再垫一层。
 
-![](https://i.postimg.cc/MGvqT3Hs/b59c0abc45908341b770210ef91afd4f.jpg)
+![](https://img.nero-lithos.com/posts/9a702653a874-b59c0abc45908341b770210ef91afd4f.jpg)
 
 我校没有查寝，没有严格意义上的熄灯，静音楼层靠自觉保持 11 点熄灯。如果对声音敏感，强烈建议购置耳塞或无线（静音）耳机，并建议您的舍友使用静音键盘+鼠标垫。耳塞可以在新图二楼前台领取。
 
@@ -406,7 +406,7 @@ A：4.0，A-：3.7，B+：3.3，B：3.0，B-：2.7，C+：2.3，C：2.0，C-：1
 
 **寝室突然断电**欠费的概率比跳闸高，先检查企微-电费查缴，如果**欠费超过 10 元会自动断电**，缴费后 10 秒内即可恢复。**寝室电器限制功率约 1200W**。
 
-寝室桌上方(床铺下方)的悬浮置物架尺寸如下：![](https://i.postimg.cc/kXf0bN0B/1309.jpg)
+寝室桌上方(床铺下方)的悬浮置物架尺寸如下：![](https://img.nero-lithos.com/posts/60ad10fd307d-1309.jpg)
 
 ---
 
@@ -422,23 +422,23 @@ A：4.0，A-：3.7，B+：3.3，B：3.0，B-：2.7，C+：2.3，C：2.0，C-：1
 
 学校东门出去对街是大运中心，请同学/聚餐推荐：GE Bake (标准西餐)、御牛纪 (岩烤牛排)、MUJINY (韩餐)；请教授推荐：唐合兴 (粤港)、PINTXOS (西班牙)、吴庄 (江浙沪)。附近还有 COCO Park，其中山姆的入口在一楼 (一楼家电生活用品二楼食品生鲜)，可以送货进学校到宿舍楼底外卖架。
 
-![](https://i.postimg.cc/XYJBnY49/IMG-4051.jpg)
+![](https://img.nero-lithos.com/posts/b78a200f7451-IMG-4051.jpg)
 
 (大运天地-御牛纪)
 
-![](https://i.postimg.cc/nL9sQSsL/IMG-5378.jpg)
+![](https://img.nero-lithos.com/posts/4febc91ba460-IMG-5378.jpg)
 
 （大运天地-唐和兴）
 
-![](https://i.postimg.cc/Y0MjZpdR/tu-xiang.png)
+![](https://img.nero-lithos.com/posts/0fcf0b999452-tu-xiang.png)
 
 （大运天地-MUJINY）
 
-![](https://i.postimg.cc/1tZzVmhB/tu-xiang-2.png)
+![](https://img.nero-lithos.com/posts/676933911ae4-tu-xiang-2.png)
 
 （大运天地-GE Bake）
 
-![](https://i.postimg.cc/02r9QMKG/IMG-6658.jpg)
+![](https://img.nero-lithos.com/posts/26b78c2edf09-IMG-6658.jpg)
 
 （大运天地-PINTOX）
 

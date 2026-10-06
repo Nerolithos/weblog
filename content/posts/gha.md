@@ -14,7 +14,7 @@ featured_image: "/images/gha.jpg"
 
 # GitHub Profile & Badge Maker
 
-![](https://i.postimg.cc/J035rcyt/jie-ping2026-08-23-15-35-03.png)
+![](https://img.nero-lithos.com/posts/dd204a729a00-jie-ping2026-08-23-15-35-03.png)
 
 GitHub 主页上可以通过编辑同名仓库(比如我叫 Nerolithos，就在“Nerolithos”仓库)的 README.md 来给主页右边自定义内容，比如我做了profile，以下工具可以上传你自己的 Logo，自动生成 Shields.io Badge，就是我图中那些五颜六色的标志：
 
@@ -30,7 +30,7 @@ GitHub 主页上可以通过编辑同名仓库(比如我叫 Nerolithos，就在�
 
 GitHub 除了 Contribution Graph 那一片看着令人上瘾的小绿格之外，在 Profile 页面还藏着一套  [Achievements](https://github.com/drknzz/GitHub-Achievements) (成就) 系统。
 
-![](https://i.postimg.cc/fb6cYgmq/jie-ping2026-08-23-15-35-18.png)
+![](https://img.nero-lithos.com/posts/185eb88efa4c-jie-ping2026-08-23-15-35-18.png)
 
 有些成就相当困难，比如 **Starstruck** 最基础等级就要求自己的 Repository 获得 16 个 Star；但另外一些成就其实并不要求你成为知名开源项目的 Contributor。只要有一个自己的公开 Repository（部分情况下再准备一个自己实际控制的 GitHub 小号）就可以独立完成。
 

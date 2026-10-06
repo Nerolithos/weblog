@@ -75,7 +75,7 @@ featured_image: "/images/luminol.jpg"
 
 
 
-![](https://i.postimg.cc/65fxXVCP/IMG-2137.jpg)
+![](https://img.nero-lithos.com/posts/02f078f46a03-IMG-2137.jpg)
 
 **图一  产物鲁米诺的化学发光现象**
 
@@ -109,7 +109,7 @@ featured_image: "/images/luminol.jpg"
 
 ### 2.3 实验仪器及试剂
 
-![](https://i.postimg.cc/sxz5CRrM/image.png)
+![](https://img.nero-lithos.com/posts/2c5cc610d24a-image.png)
 
 ### 2.4 实验过程和结果分析
 
@@ -135,7 +135,7 @@ featured_image: "/images/luminol.jpg"
 
 ### 3.1 实验仪器及试剂
 
- ![](https://i.postimg.cc/jqh7nmTy/image.png)
+ ![](https://img.nero-lithos.com/posts/ff19bd5c4142-image.png)
 
 
 
@@ -149,7 +149,7 @@ featured_image: "/images/luminol.jpg"
 
 量取浓硫酸98%150毫升加入四颈烧瓶，另取浓硝酸68%125毫升加入分液漏斗中备用，称取已充分脱水的邻苯二甲酸酐76克加入上述烧瓶中。称取适量氢氧化钠配成尾气处理溶液并置于洗气瓶中。按图一所示组装仪器。在检漏、配置标口夹之后，将油浴锅设置恒温110度，打开磁搅，逐滴加入硝酸，反应1.5h至不再有气体生成。
 
-![](https://i.postimg.cc/CKDZh6Jq/image.png)
+![](https://img.nero-lithos.com/posts/53f944371b72-image.png)
 
 **图二  硝化邻苯二甲酸酐的反应仪器**
 
@@ -163,15 +163,15 @@ featured_image: "/images/luminol.jpg"
 
  将上步中间产物转移至大烧杯防止反应时溢出，加入10%氢氧化钠溶液并置于集热式磁搅上直到固体完全溶解。逐次加入少量连二亚硫酸钠，反应生成硫酸钠和甲咪类，直到溶液由深红色（图二）褪至黄色（图三）时再少加入5克连二亚硫酸钠。结束后保持溶液沸腾5-10分钟。等溶液冷却至室温之后分多次滴加入0 °C左右的无水乙酸。将pH调至4-6后用冰的乙酸稀溶液洗涤并抽滤3次，烘干、研碎后得淡黄色固体产物（图四）。在无水或95酒精中重结晶，得最终产物 14.7克，产率 19.34%。
 
-![](https://i.postimg.cc/59pX2z5S/image.png)
+![](https://img.nero-lithos.com/posts/2f382c85b0ee-image.png)
 
 **图三  还原3-硝基邻苯二甲酰肼（还原过程中）**
 
- ![](https://i.postimg.cc/MKFXy8Fy/image.png)
+ ![](https://img.nero-lithos.com/posts/d8f7c3e45c74-image.png)
 
 **图四  还原3-硝基邻苯二甲酰肼（还原结束时）**
 
- ![](https://i.postimg.cc/63cpTsZ2/image.png)
+ ![](https://img.nero-lithos.com/posts/981908be6fc0-image.png)
 
 **图五  重结晶前含杂质的 3-氨基邻苯二甲酰肼**
 
@@ -203,7 +203,7 @@ featured_image: "/images/luminol.jpg"
 
 随着医药、荧光示踪、流动液相分析、精细化学合成和军用等领域对高效冷光源的需求在不断提升，例如荧光检测新冠病毒，对新型的化学荧光药品的研究也呼之欲出。笔者将目光投向N，N-二烷基异鲁米诺这一系列的鲁米诺衍生物，提出了一种新型的合成N，N-二丁基异鲁米诺的路径。相较于以 ILITC、ABEI、DPEH 等为代表的新型类鲁米诺化学发光试剂，N，N-二烷基异鲁米诺发光强度平均为鲁米诺的3-5倍，具有用量小、发光效率高和发光时间长等优良性能，在新型化学发光试剂领域有很大的应用前景。
 
- ![](https://i.postimg.cc/bY2qK2CN/image.png)
+ ![](https://img.nero-lithos.com/posts/dc88d96c3916-image.png)
 
 **图六  以DBP为起点 N, N-二丁基异鲁米诺的合成路径**
 
