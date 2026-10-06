@@ -1,8 +1,7 @@
 {{- $src := .Destination -}}
-{{- $isPostImg := or (hasPrefix $src "https://i.postimg.cc/") (hasPrefix $src "http://i.postimg.cc/") -}}
 {{- $loading := "lazy" -}}
 {{- $fetchPriority := "low" -}}
-{{- $altText := .PlainText | default "" -}}
+{{- $altText := .PlainText | default (printf "%s 相关图片" .Page.Title) -}}
 <img
   src="{{ $src | safeURL }}"
   alt="{{ $altText }}"
@@ -10,5 +9,4 @@
   decoding="async"
   loading="{{ $loading }}"
   fetchpriority="{{ $fetchPriority }}"
-  {{- if $isPostImg }} referrerpolicy="no-referrer"{{- end }}
 />

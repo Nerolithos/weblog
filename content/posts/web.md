@@ -2,6 +2,7 @@
 title = ' 🌐 IP地址与子网掩码'
 date = 2024-09-11T09:26:58+08:00
 draft = false
+description = '从 CUHKSZ 校园网场景理解私有 IP、MAC 地址、子网掩码与局域网路由。'
 
 featured_image = '/images/subnet.jpg'
 

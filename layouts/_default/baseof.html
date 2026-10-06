@@ -3,28 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    {{/* NOTE: the Site's title, and if there is a page title, that is set too */}}
-    <title>{{ block "title" . }}{{ with .Params.Title }}{{ . }} | {{ end }}{{ .Site.Title }}{{ end }}</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
+    {{ partial "seo.html" . }}
     {{ hugo.Generator }}
-    {{/* NOTE: For Production make sure you add `HUGO_ENV="production"` before your build command */}}
-    {{ $production := eq (getenv "HUGO_ENV") "production" | or (eq site.Params.env "production") }}
-    {{ $public := not .Params.private }}
-    {{ if and $production $public }}
-      <meta name="robots" content="index, follow">
-    {{ else }}
-      <meta name="robots" content="noindex, nofollow">
-    {{ end }}
-    {{ with .Params.author | default .Site.Params.author }}
-      <meta name="author" content = "
-        {{- if reflect.IsSlice . -}}
-          {{ delimit . ", " | plainify }}
-        {{- else -}}
-          {{ . | plainify }}
-        {{- end -}}
-      ">
-    {{ end }}
 
     {{ partial "site-style.html" . }}
     <!-- 自定义样式：使用 relURL，兼容子路径/多语言部署 -->
@@ -41,16 +22,6 @@
       <link href="{{ .RelPermalink }}" rel="feed" type="application/rss+xml" title="{{ $.Site.Title }}" />
       {{ end }}
     {{ end }}
-
-    {{ if .Params.canonicalUrl }}
-      <link rel="canonical" href="{{ .Params.canonicalUrl }}">
-    {{ else }}
-      <link rel="canonical" href="{{ .Permalink }}">
-    {{ end }}
-
-    {{- template "_internal/opengraph.html" . -}}
-    {{- template "_internal/schema.html" . -}}
-    {{- template "_internal/twitter_cards.html" . -}}
 
     {{ if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production")  }}
       {{ template "_internal/google_analytics.html" . }}

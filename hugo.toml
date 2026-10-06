@@ -15,9 +15,12 @@ enableRobotsTXT = true
   home = ["HTML", "RSS", "JSON"]
 
 [params]
-  custom_css = ["css/custom.css"]
   text_color = ""
-  author = ""
+  author = "Lithos"
+  author_url = "https://github.com/Nerolithos"
+  description = "Lithos 的个人博客：CUHKSZ 课程笔记、生存指南、软件开发、数据可视化、3D、游戏与插画项目。"
+  default_social_image = "/images/heroes/Head.webp"
+  locale = "zh_CN"
   favicon = "/favicon.ico"
   site_logo = ""
   background_color_class = "bg-black"
