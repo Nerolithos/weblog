@@ -1083,6 +1083,13 @@ body.dark-mode .home-hero-search form {
   max-height: 38px;
 }
 
+.site-nav-fixed .site-nav-icon-plain .site-nav-icon-img--sunnyseeds {
+  width: 26px;
+  height: 26px;
+  max-width: 26px;
+  max-height: 26px;
+}
+
 .site-nav-fixed .site-nav-icon-plain .site-nav-icon-img--pixiv {
   width: 26px;
   height: 26px;

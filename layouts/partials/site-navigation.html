@@ -19,6 +19,7 @@
         {{ $linkedinIconSrc := "/li.png" | relURL }}
         {{ $bonjourIconSrc := "/bonjour.png" | relURL }}
         {{ $lguaiIconSrc := "/lguai.png" | relURL }}
+        {{ $sunnyseedsIconSrc := "/sunnyseeds.png" | relURL }}
         {{ with $mdaIcon }}{{ $mdaIconSrc = printf "data:image/png;base64,%s" (.Content | base64Encode) }}{{ end }}
         <ul class="site-nav-icons {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0" }}">
           {{ $githubURL := "" }}
@@ -83,6 +84,12 @@
           <li class="list f5 f4-ns fw4 dib v-mid site-nav-icon-item">
             <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://blog.nero-lithos.com/courseai/" title="LGU CourseAI" aria-label="LGU CourseAI">
               <img src="{{ $lguaiIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--lguai" aria-hidden="true" />
+            </a>
+          </li>
+
+          <li class="list f5 f4-ns fw4 dib v-mid site-nav-icon-item">
+            <a class="hover-white no-underline white-90 site-nav-icon-plain" href="https://www.sunnyseeds.org/" title="SunnySeeds" aria-label="SunnySeeds">
+              <img src="{{ $sunnyseedsIconSrc | safeURL }}" alt="" class="site-nav-icon-img site-nav-icon-img--sunnyseeds" aria-hidden="true" />
             </a>
           </li>
 
