@@ -1,0 +1,22 @@
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+<div class="home-view-heading">
+  <p class="home-view-eyebrow">CHRONOLOGICAL ARCHIVE</p>
+  <h1 class="f2 ma0">Timeline</h1>
+  <p class="home-view-description">按发布日期浏览全部文章。</p>
+</div>
+
+<div class="home-timeline" aria-label="文章时间线">
+  {{ range ($posts.GroupByDate "2006") }}
+  <section class="home-timeline-year" aria-labelledby="timeline-year-{{ .Key }}">
+    <h2 id="timeline-year-{{ .Key }}" class="home-timeline-year-title">{{ .Key }}</h2>
+    <ol class="home-timeline-list">
+      {{ range .Pages.ByDate.Reverse }}
+      <li class="home-timeline-item">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
+        <a href="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">{{ .Title }}</a>
+      </li>
+      {{ end }}
+    </ol>
+  </section>
+  {{ end }}
+</div>

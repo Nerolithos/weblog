@@ -1,0 +1,109 @@
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ $scratch := newScratch }}
+{{ range (slice "csc1003" "bio1008" "csc3001" "csc3200" "phy1001" "csc3060" "dda3003" "csc3150" "mat3007" "csc4120" "games" "projects" "tutorials") }}
+  {{ $scratch.Set (printf "g_%s" .) (slice) }}
+{{ end }}
+
+{{ range $posts }}
+  {{ $title := upper .Title }}
+  {{ $titleLower := lower .Title }}
+  {{ $tags := .Params.tags | default (slice) }}
+  {{ $tagText := upper (delimit $tags " ") }}
+  {{ $categories := .Params.categories | default (slice) }}
+  {{ $categoryText := upper (delimit $categories " ") }}
+  {{ $base := upper .File.BaseFileName }}
+  {{ $isRedirect := .Param "redirect" }}
+  {{ $isGameProject := and $isRedirect (or
+    (in $titleLower "game")
+    (in $titleLower "游戏")
+    (in $titleLower "跑酷")
+    (in $titleLower "puzzle")
+    (in $tagText "GAME")
+    (in $categoryText "GAME")
+    (eq $base "PET")
+    (eq $base "EMOJI")
+    (eq $base "OTTO-3D-PARKOUR")
+    (eq $base "NEUROTRIP")
+  ) }}
+
+  {{ if in $base "3150" }}
+    {{ $scratch.Add "g_csc3150" (slice .) }}
+  {{ else if in $base "3007" }}
+    {{ $scratch.Add "g_mat3007" (slice .) }}
+  {{ else if in $base "4120" }}
+    {{ $scratch.Add "g_csc4120" (slice .) }}
+  {{ else if $isGameProject }}
+    {{ $scratch.Add "g_games" (slice .) }}
+  {{ else if or $isRedirect (eq $base "HISTORY-TODAY") (in $title "历史上的今天") }}
+    {{ $scratch.Add "g_projects" (slice .) }}
+  {{ else if or (in $tagText "CSC1003") (in $title "CSC1003") (eq $base "OOP") }}
+    {{ $scratch.Add "g_csc1003" (slice .) }}
+  {{ else if or (in $tagText "BIO1008") (in $title "BIO1008") }}
+    {{ $scratch.Add "g_bio1008" (slice .) }}
+  {{ else if or (in $tagText "CSC3001") (in $title "CSC3001") }}
+    {{ $scratch.Add "g_csc3001" (slice .) }}
+  {{ else if or (in $tagText "CSC3200") (in $title "CSC3200") }}
+    {{ $scratch.Add "g_csc3200" (slice .) }}
+  {{ else if or (in $tagText "PHY1001") (in $title "PHY1001") }}
+    {{ $scratch.Add "g_phy1001" (slice .) }}
+  {{ else if or (in $tagText "CSC3060") (in $title "CSC3060") }}
+    {{ $scratch.Add "g_csc3060" (slice .) }}
+  {{ else if or (in $tagText "DDA3003") (in $title "DDA3003") }}
+    {{ $scratch.Add "g_dda3003" (slice .) }}
+  {{ else }}
+    {{ $scratch.Add "g_tutorials" (slice .) }}
+  {{ end }}
+{{ end }}
+
+{{ $groups := slice
+  (dict "key" "csc1003" "title" "CSC1003" "items" ($scratch.Get "g_csc1003"))
+  (dict "key" "bio1008" "title" "BIO1008" "items" ($scratch.Get "g_bio1008"))
+  (dict "key" "csc3001" "title" "CSC3001" "items" ($scratch.Get "g_csc3001"))
+  (dict "key" "csc3200" "title" "CSC3200" "items" ($scratch.Get "g_csc3200"))
+  (dict "key" "phy1001" "title" "PHY1001" "items" ($scratch.Get "g_phy1001"))
+  (dict "key" "csc3060" "title" "CSC3060" "items" ($scratch.Get "g_csc3060"))
+  (dict "key" "dda3003" "title" "DDA3003" "items" ($scratch.Get "g_dda3003"))
+  (dict "key" "csc3150" "title" "CSC3150" "items" ($scratch.Get "g_csc3150"))
+  (dict "key" "mat3007" "title" "MAT3007" "items" ($scratch.Get "g_mat3007"))
+  (dict "key" "csc4120" "title" "CSC4120" "items" ($scratch.Get "g_csc4120"))
+  (dict "key" "games" "title" "games" "items" ($scratch.Get "g_games"))
+  (dict "key" "projects" "title" "projects" "items" ($scratch.Get "g_projects"))
+  (dict "key" "tutorials" "title" "Tutorials & others" "items" ($scratch.Get "g_tutorials"))
+}}
+
+<div class="home-view-heading">
+  <p class="home-view-eyebrow">TOPIC GROUPS</p>
+  <h1 class="f2 ma0">Categories</h1>
+  <p class="home-view-description">沿用原“分类显示”的课程与项目分组规则。</p>
+</div>
+
+<div class="category-filter-bar home-category-filter" data-home-category-filter role="tablist" aria-label="文章分类">
+  {{ range $idx, $group := $groups }}
+    <button type="button" class="category-filter-btn {{ if eq $idx 0 }}is-active{{ end }}" data-cat="{{ $group.key }}" role="tab">
+      {{ $group.title }} ({{ len $group.items }})
+    </button>
+  {{ end }}
+</div>
+
+<div class="category-panels home-category-panels" data-home-category-panels>
+  {{ range $idx, $group := $groups }}
+  <section class="category-panel {{ if eq $idx 0 }}is-active{{ end }}" data-cat="{{ $group.key }}" {{ if ne $idx 0 }}hidden{{ end }}>
+    <h2 class="f3 mt2 mb3">{{ $group.title }}</h2>
+    {{ if gt (len $group.items) 0 }}
+      {{ range sort $group.items "Date" "desc" }}
+      <article class="home-category-item">
+        <div>
+          <h3 class="f4 fw6 ma0">
+            <a class="link dark-gray dim" href="{{ with .Param "redirect" }}{{ . | relURL }}{{ else }}{{ .RelPermalink }}{{ end }}">{{ .Title }}</a>
+          </h3>
+          <div class="mid-gray lh-copy mt2">{{ with .Summary }}{{ . }}{{ else }}{{ .Plain | truncate 170 }}{{ end }}</div>
+        </div>
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+      </article>
+      {{ end }}
+    {{ else }}
+      <p class="mid-gray">该分类暂时没有文章。</p>
+    {{ end }}
+  </section>
+  {{ end }}
+</div>

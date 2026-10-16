@@ -1,19 +1,24 @@
 {{ define "main" }}
 
-<div class="pa4 home-main-shell">
+<nav class="home-view-switcher" data-home-view-bar aria-label="主页文章显示方式">
+  <div class="home-view-switcher__glass" role="tablist">
+    <button type="button" class="home-view-switcher__button is-active" data-home-view="default" role="tab" aria-selected="true" aria-controls="home-view-default">default</button>
+    <button type="button" class="home-view-switcher__button" data-home-view="timeline" role="tab" aria-selected="false" aria-controls="home-view-timeline" tabindex="-1">timeline</button>
+    <button type="button" class="home-view-switcher__button" data-home-view="categories" role="tab" aria-selected="false" aria-controls="home-view-categories" tabindex="-1">categories</button>
+    <button type="button" class="home-view-switcher__button" data-home-view="cloud" role="tab" aria-selected="false" aria-controls="home-view-cloud" tabindex="-1">cloud</button>
+  </div>
+</nav>
+
+<div class="pa4 home-main-shell" data-home-view-root>
   <div class="home-life-grid" data-home-life-grid aria-hidden="true">
     <canvas class="home-life-grid-canvas" data-home-life-grid-canvas></canvas>
   </div>
   <div class="home-main-content">
   {{ $all := .Site.RegularPages }}
   {{ $count := len $all }}
+  <section id="home-view-default" class="home-view-panel is-active" data-home-view-panel="default" role="tabpanel">
   <div class="home-subtitle-row flex items-center justify-between flex-wrap" style="gap: 12px; margin-bottom: 12px;">
     <h1 class="f2 ma0">📚 Recent Blogs ({{ $count }})</h1>
-    <a
-      class="home-category-btn no-underline"
-      href="{{ "categories/" | relURL }}"
-      style="display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;font-size:1.02rem;font-weight:700;border-radius:999px;border:1px solid rgba(148,163,184,.65);background:rgba(15,23,42,.78);color:#f8fafc;"
-    >分类显示</a>
   </div>
 
   {{ with .Content }}
@@ -189,8 +194,25 @@
   </article>
   {{ end }}
 
+  </section>
+
+  <section id="home-view-timeline" class="home-view-panel" data-home-view-panel="timeline" role="tabpanel" hidden>
+    {{ partial "home-timeline.html" . }}
+  </section>
+
+  <section id="home-view-categories" class="home-view-panel" data-home-view-panel="categories" role="tabpanel" hidden>
+    {{ partial "home-category-view.html" . }}
+  </section>
+
+  <section id="home-view-cloud" class="home-view-panel" data-home-view-panel="cloud" role="tabpanel" hidden>
+    {{ partial "home-word-cloud.html" . }}
+  </section>
+
   </div>
 </div>
+
+<script src="{{ "js/home-views.js" | relURL }}?v=20261016a" defer></script>
+<script src="{{ "js/live-search.js" | relURL }}?v=20261016a" defer></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {

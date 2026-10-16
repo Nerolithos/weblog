@@ -1,0 +1,113 @@
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ $terms := slice
+  (dict "label" "CUHKSZ" "term" "CUHKSZ" "latin" true)
+  (dict "label" "AI" "term" "AI" "latin" true)
+  (dict "label" "算法" "term" "算法")
+  (dict "label" "数据" "term" "数据")
+  (dict "label" "数据结构" "term" "数据结构")
+  (dict "label" "数据可视化" "term" "可视化")
+  (dict "label" "并发" "term" "并发")
+  (dict "label" "操作系统" "term" "操作系统")
+  (dict "label" "矩阵" "term" "矩阵")
+  (dict "label" "Java" "term" "Java" "latin" true)
+  (dict "label" "Python" "term" "Python" "latin" true)
+  (dict "label" "Git" "term" "Git" "latin" true)
+  (dict "label" "Hugo" "term" "Hugo" "latin" true)
+  (dict "label" "Cloudflare" "term" "Cloudflare" "latin" true)
+  (dict "label" "3D" "term" "3D" "latin" true)
+  (dict "label" "游戏" "term" "游戏")
+  (dict "label" "化学" "term" "化学")
+  (dict "label" "矿物" "term" "矿物")
+  (dict "label" "机器学习" "term" "机器学习")
+  (dict "label" "数据库" "term" "数据库")
+  (dict "label" "计算机" "term" "计算机")
+  (dict "label" "程序" "term" "程序")
+  (dict "label" "编程" "term" "编程")
+  (dict "label" "系统" "term" "系统")
+  (dict "label" "网络" "term" "网络")
+  (dict "label" "线程" "term" "线程")
+  (dict "label" "进程" "term" "进程")
+  (dict "label" "同步" "term" "同步")
+  (dict "label" "内存" "term" "内存")
+  (dict "label" "文件" "term" "文件")
+  (dict "label" "排序" "term" "排序")
+  (dict "label" "搜索" "term" "搜索")
+  (dict "label" "图论" "term" "图论")
+  (dict "label" "树" "term" "树")
+  (dict "label" "哈希" "term" "哈希")
+  (dict "label" "密码学" "term" "密码")
+  (dict "label" "概率" "term" "概率")
+  (dict "label" "统计" "term" "统计")
+  (dict "label" "优化" "term" "优化")
+  (dict "label" "多项式" "term" "多项式")
+  (dict "label" "线性代数" "term" "线性代数")
+  (dict "label" "物理" "term" "物理")
+  (dict "label" "电路" "term" "电路")
+  (dict "label" "实验" "term" "实验")
+  (dict "label" "模型" "term" "模型")
+  (dict "label" "渲染" "term" "渲染")
+  (dict "label" "Markdown" "term" "Markdown" "latin" true)
+  (dict "label" "HTML" "term" "HTML" "latin" true)
+  (dict "label" "CSS" "term" "CSS" "latin" true)
+  (dict "label" "JavaScript" "term" "JavaScript" "latin" true)
+  (dict "label" "Linux" "term" "Linux" "latin" true)
+  (dict "label" "GitHub" "term" "GitHub" "latin" true)
+  (dict "label" "OpenAI" "term" "OpenAI" "latin" true)
+  (dict "label" "ChatGPT" "term" "ChatGPT" "latin" true)
+  (dict "label" "LLM" "term" "LLM" "latin" true)
+  (dict "label" "API" "term" "API" "latin" true)
+  (dict "label" "R2" "term" "R2" "latin" true)
+  (dict "label" "网站" "term" "网站")
+  (dict "label" "博客" "term" "博客")
+  (dict "label" "部署" "term" "部署")
+  (dict "label" "项目" "term" "项目")
+  (dict "label" "课程" "term" "课程")
+  (dict "label" "3D 打印" "term" "打印")
+  (dict "label" "旅行" "term" "旅行")
+  (dict "label" "动态规划" "term" "动态规划")
+  (dict "label" "递归" "term" "递归")
+  (dict "label" "复杂度" "term" "复杂度")
+  (dict "label" "CSC1003" "term" "CSC1003" "latin" true)
+  (dict "label" "CSC3001" "term" "CSC3001" "latin" true)
+  (dict "label" "CSC3060" "term" "CSC3060" "latin" true)
+  (dict "label" "CSC3150" "term" "CSC3150" "latin" true)
+  (dict "label" "CSC3200" "term" "CSC3200" "latin" true)
+  (dict "label" "CSC4120" "term" "CSC4120" "latin" true)
+  (dict "label" "DDA3003" "term" "DDA3003" "latin" true)
+}}
+
+<div class="home-view-heading">
+  <p class="home-view-eyebrow">REPEATED TOPICS</p>
+  <h1 class="f2 ma0">Word Cloud</h1>
+  <p class="home-view-description">从正文、标题、摘要和标签中提炼；字号表示包含该关键词的文章数量。点击词语进行精确搜索。</p>
+</div>
+
+<div class="home-word-cloud" aria-label="博客关键词词云">
+  {{- range $terms }}
+    {{- $term := .term }}
+    {{- $termLower := lower $term }}
+    {{- $isLatin := .latin | default false }}
+    {{- $count := 0 }}
+    {{- range $posts }}
+      {{- $tags := delimit (.Params.tags | default (slice)) " " }}
+      {{- $haystack := lower (printf "%s %s %s %s" .Title (.Summary | plainify) (.Plain | plainify) $tags) }}
+      {{- $matched := in $haystack $termLower }}
+      {{- if $isLatin }}
+        {{- $pattern := printf `(^|[^a-z0-9])%s([^a-z0-9]|$)` $termLower }}
+        {{- $matched = gt (len (findRE $pattern $haystack 1)) 0 }}
+      {{- end }}
+      {{- if $matched }}{{ $count = add $count 1 }}{{ end }}
+    {{- end }}
+    {{- if ge $count 2 }}
+      {{- $size := "sm" }}
+      {{- if ge $count 30 }}{{ $size = "xxl" }}
+      {{- else if ge $count 18 }}{{ $size = "xl" }}
+      {{- else if ge $count 10 }}{{ $size = "lg" }}
+      {{- else if ge $count 5 }}{{ $size = "md" }}
+      {{- end }}
+      <a class="home-word home-word--{{ $size }}" href="{{ printf "search/?q=%s" ($term | urlquery) | relURL }}" title="精确搜索「{{ $term }}」：{{ $count }} 篇文章">
+        <span>{{ .label }}</span><small>{{ $count }}</small>
+      </a>
+    {{- end }}
+  {{- end }}
+</div>

@@ -80,19 +80,29 @@
           </h2>
         {{ end }}
         {{ if .IsHome }}
-        <div class="mt4 home-hero-search">
-          <form class="mw7 center flex items-center justify-center" role="search" method="get" action="{{ "search/" | relURL }}">
+        <div class="mt4 home-hero-search" data-live-search>
+          <form class="mw7 center flex items-center justify-center" role="search" method="get" action="{{ "search/" | relURL }}" data-live-search-form>
             <input
               type="search"
               name="q"
               placeholder="Explore site with keywords ..."
               class="pa2 br2 ba b--black-20 w-80 mr2"
               style="max-width: 480px;"
+              autocomplete="off"
+              aria-autocomplete="list"
+              aria-controls="home-live-search-results"
+              aria-expanded="false"
+              data-live-search-input
             />
             <button type="submit" class="pa2 ph3 br2 bn white bg-black-80 hover-bg-black">
               Search
             </button>
           </form>
+          <div class="home-live-search" id="home-live-search-results" role="listbox" aria-label="搜索预览" data-live-search-results hidden>
+            <p class="home-live-search-status" data-live-search-status aria-live="polite"></p>
+            <div class="home-live-search-items" data-live-search-items></div>
+            <a class="home-live-search-all" href="{{ "search/" | relURL }}" data-live-search-all>查看全部搜索结果 <span aria-hidden="true">→</span></a>
+          </div>
         </div>
         {{ end }}
       </div>
@@ -288,19 +298,29 @@
           </h2>
         {{ end }}
         {{ if .IsHome }}
-        <div class="mt4 home-hero-search">
-          <form class="mw7 center flex items-center justify-center" role="search" method="get" action="{{ "search/" | relURL }}">
+        <div class="mt4 home-hero-search" data-live-search>
+          <form class="mw7 center flex items-center justify-center" role="search" method="get" action="{{ "search/" | relURL }}" data-live-search-form>
             <input
               type="search"
               name="q"
               placeholder="Explore site with keywords ..."
               class="pa2 br2 ba b--black-20 w-80 mr2"
               style="max-width: 480px;"
+              autocomplete="off"
+              aria-autocomplete="list"
+              aria-controls="home-live-search-results"
+              aria-expanded="false"
+              data-live-search-input
             />
             <button type="submit" class="pa2 ph3 br2 bn white bg-black-80 hover-bg-black">
               Search
             </button>
           </form>
+          <div class="home-live-search" id="home-live-search-results" role="listbox" aria-label="搜索预览" data-live-search-results hidden>
+            <p class="home-live-search-status" data-live-search-status aria-live="polite"></p>
+            <div class="home-live-search-items" data-live-search-items></div>
+            <a class="home-live-search-all" href="{{ "search/" | relURL }}" data-live-search-all>查看全部搜索结果 <span aria-hidden="true">→</span></a>
+          </div>
         </div>
         {{ end }}
       </div>
