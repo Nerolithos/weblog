@@ -1,0 +1,15 @@
+{{- $label := .Get "label" | default "本题" -}}
+{{- $content := .Page.RenderString (dict "display" "block") .Inner -}}
+<div
+  class="exam-answer"
+  tabindex="0"
+  role="button"
+  aria-expanded="false"
+  aria-label="{{ $label }}答案，悬停、聚焦或点击显示"
+  data-exam-answer
+  data-answer-label="{{ $label }}"
+>
+  <div class="exam-answer-content">
+    {{- $content -}}
+  </div>
+</div>

@@ -834,6 +834,95 @@ body.dark-mode .home-hero-search form {
   }
 }
 
+/* 试卷答案：桌面悬停/聚焦显示，触屏点击后保持显示。 */
+.exam-answer {
+  position: relative;
+  min-height: 3.75rem;
+  margin: 0.65rem 0 1.35rem;
+  border: 1px solid rgba(15, 23, 42, 0.5);
+  border-radius: 0.6rem;
+  background: rgba(248, 250, 252, 0.7);
+  cursor: help;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.exam-answer-content {
+  padding: 0.85rem 1rem;
+  opacity: 1;
+  transition: opacity 150ms ease;
+}
+
+.exam-answer-content > :first-child {
+  margin-top: 0;
+}
+
+.exam-answer-content > :last-child {
+  margin-bottom: 0;
+}
+
+.exam-answer:not(:hover):not(:focus):not(.is-revealed) .exam-answer-content {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.exam-answer::after {
+  content: attr(data-answer-label) "答案已隐藏 · 悬停或点击查看";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  background:
+    linear-gradient(105deg, rgba(255, 255, 255, 0.055), transparent 30%, rgba(255, 255, 255, 0.045) 68%, transparent),
+    #111827;
+  color: rgba(255, 255, 255, 0.76);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 150ms ease, visibility 150ms ease;
+}
+
+.exam-answer:hover::after,
+.exam-answer:focus::after,
+.exam-answer.is-revealed::after {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.exam-answer:hover,
+.exam-answer:focus,
+.exam-answer.is-revealed {
+  border-color: rgba(59, 130, 246, 0.4);
+  cursor: default;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+body.dark-mode .exam-answer {
+  border-color: rgba(148, 163, 184, 0.32);
+  background: rgba(15, 23, 42, 0.55);
+}
+
+body.dark-mode .exam-answer::after {
+  background:
+    linear-gradient(105deg, rgba(255, 255, 255, 0.06), transparent 30%, rgba(255, 255, 255, 0.04) 68%, transparent),
+    #020617;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exam-answer,
+  .exam-answer::after,
+  .exam-answer-content {
+    transition: none;
+  }
+}
+
 .site-nav-brand-row {
   display: inline-flex;
   align-items: center;
