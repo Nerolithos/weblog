@@ -6,7 +6,8 @@ summary: "上海高中的综评大课题，鲁米诺的有机化学全合成研�
 categories: 
   - Report
 featured_image: "/images/luminol.jpg"
-
+tags: 
+  - Chemistry
 ---
 
  
