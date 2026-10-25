@@ -1,0 +1,16 @@
+{{- $posts := .posts -}}
+{{- $term := lower .term -}}
+{{- $isLatin := .latin | default false -}}
+{{- $count := 0 -}}
+{{- range $posts -}}
+  {{- $tags := delimit (.Params.tags | default (slice)) " " -}}
+  {{- $categories := delimit (.Params.categories | default (slice)) " " -}}
+  {{- $haystack := lower (printf "%s %s %s %s %s" .Title (.Summary | plainify) (.Plain | plainify) $tags $categories) -}}
+  {{- $matched := in $haystack $term -}}
+  {{- if $isLatin -}}
+    {{- $pattern := printf `(^|[^a-z0-9])%s([^a-z0-9]|$)` $term -}}
+    {{- $matched = gt (len (findRE $pattern $haystack 1)) 0 -}}
+  {{- end -}}
+  {{- if $matched }}{{ $count = add $count 1 }}{{ end -}}
+{{- end -}}
+{{- return $count -}}

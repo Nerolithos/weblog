@@ -1,113 +1,232 @@
-{{ $posts := where .Site.RegularPages "Section" "posts" }}
-{{ $terms := slice
-  (dict "label" "CUHKSZ" "term" "CUHKSZ" "latin" true)
-  (dict "label" "AI" "term" "AI" "latin" true)
-  (dict "label" "算法" "term" "算法")
-  (dict "label" "数据" "term" "数据")
-  (dict "label" "数据结构" "term" "数据结构")
-  (dict "label" "数据可视化" "term" "可视化")
-  (dict "label" "并发" "term" "并发")
-  (dict "label" "操作系统" "term" "操作系统")
-  (dict "label" "矩阵" "term" "矩阵")
-  (dict "label" "Java" "term" "Java" "latin" true)
-  (dict "label" "Python" "term" "Python" "latin" true)
-  (dict "label" "Git" "term" "Git" "latin" true)
-  (dict "label" "Hugo" "term" "Hugo" "latin" true)
-  (dict "label" "Cloudflare" "term" "Cloudflare" "latin" true)
-  (dict "label" "3D" "term" "3D" "latin" true)
-  (dict "label" "游戏" "term" "游戏")
-  (dict "label" "化学" "term" "化学")
-  (dict "label" "矿物" "term" "矿物")
-  (dict "label" "机器学习" "term" "机器学习")
-  (dict "label" "数据库" "term" "数据库")
-  (dict "label" "计算机" "term" "计算机")
-  (dict "label" "程序" "term" "程序")
-  (dict "label" "编程" "term" "编程")
-  (dict "label" "系统" "term" "系统")
-  (dict "label" "网络" "term" "网络")
-  (dict "label" "线程" "term" "线程")
-  (dict "label" "进程" "term" "进程")
-  (dict "label" "同步" "term" "同步")
-  (dict "label" "内存" "term" "内存")
-  (dict "label" "文件" "term" "文件")
-  (dict "label" "排序" "term" "排序")
-  (dict "label" "搜索" "term" "搜索")
-  (dict "label" "图论" "term" "图论")
-  (dict "label" "树" "term" "树")
-  (dict "label" "哈希" "term" "哈希")
-  (dict "label" "密码学" "term" "密码")
-  (dict "label" "概率" "term" "概率")
-  (dict "label" "统计" "term" "统计")
-  (dict "label" "优化" "term" "优化")
-  (dict "label" "多项式" "term" "多项式")
-  (dict "label" "线性代数" "term" "线性代数")
-  (dict "label" "物理" "term" "物理")
-  (dict "label" "电路" "term" "电路")
-  (dict "label" "实验" "term" "实验")
-  (dict "label" "模型" "term" "模型")
-  (dict "label" "渲染" "term" "渲染")
-  (dict "label" "Markdown" "term" "Markdown" "latin" true)
-  (dict "label" "HTML" "term" "HTML" "latin" true)
-  (dict "label" "CSS" "term" "CSS" "latin" true)
-  (dict "label" "JavaScript" "term" "JavaScript" "latin" true)
-  (dict "label" "Linux" "term" "Linux" "latin" true)
-  (dict "label" "GitHub" "term" "GitHub" "latin" true)
-  (dict "label" "OpenAI" "term" "OpenAI" "latin" true)
-  (dict "label" "ChatGPT" "term" "ChatGPT" "latin" true)
-  (dict "label" "LLM" "term" "LLM" "latin" true)
-  (dict "label" "API" "term" "API" "latin" true)
-  (dict "label" "R2" "term" "R2" "latin" true)
-  (dict "label" "网站" "term" "网站")
-  (dict "label" "博客" "term" "博客")
-  (dict "label" "部署" "term" "部署")
-  (dict "label" "项目" "term" "项目")
-  (dict "label" "课程" "term" "课程")
-  (dict "label" "3D 打印" "term" "打印")
-  (dict "label" "旅行" "term" "旅行")
-  (dict "label" "动态规划" "term" "动态规划")
-  (dict "label" "递归" "term" "递归")
-  (dict "label" "复杂度" "term" "复杂度")
-  (dict "label" "CSC1003" "term" "CSC1003" "latin" true)
-  (dict "label" "CSC3001" "term" "CSC3001" "latin" true)
-  (dict "label" "CSC3060" "term" "CSC3060" "latin" true)
-  (dict "label" "CSC3150" "term" "CSC3150" "latin" true)
-  (dict "label" "CSC3200" "term" "CSC3200" "latin" true)
-  (dict "label" "CSC4120" "term" "CSC4120" "latin" true)
-  (dict "label" "DDA3003" "term" "DDA3003" "latin" true)
-}}
+{{- $posts := where .Site.RegularPages "Section" "posts" -}}
+{{- $clusters := slice
+  (dict
+    "tone" "os"
+    "label" "OS"
+    "term" "OS"
+    "latin" true
+    "description" "操作系统 · CSC3150"
+    "children" (slice
+      (dict "label" "操作系统" "term" "操作系统")
+      (dict "label" "线程" "term" "线程")
+      (dict "label" "进程" "term" "进程")
+      (dict "label" "Concurrency" "term" "Concurrency" "latin" true)
+      (dict "label" "Synchronization" "term" "Synchronization" "latin" true)
+      (dict "label" "Monitors" "term" "Monitors" "latin" true)
+      (dict "label" "Scheduling" "term" "Scheduling" "latin" true)
+      (dict "label" "Files" "term" "Files" "latin" true)
+      (dict "label" "Sockets" "term" "Sockets" "latin" true)
+      (dict "label" "内存" "term" "内存")
+    )
+  )
+  (dict
+    "tone" "algorithms"
+    "label" "算法"
+    "term" "算法"
+    "description" "设计、分析与求解策略"
+    "children" (slice
+      (dict "label" "复杂度" "term" "复杂度")
+      (dict "label" "分治" "term" "分治")
+      (dict "label" "递归" "term" "递归")
+      (dict "label" "排序" "term" "排序")
+      (dict "label" "树" "term" "树")
+      (dict "label" "堆" "term" "堆")
+      (dict "label" "哈希" "term" "哈希")
+      (dict "label" "密码学" "term" "密码学")
+      (dict "label" "随机算法" "term" "随机算法")
+      (dict "label" "FFT" "term" "FFT" "latin" true)
+      (dict "label" "动态规划" "term" "动态规划")
+      (dict "label" "布隆过滤" "term" "布隆过滤")
+    )
+  )
+  (dict
+    "tone" "systems"
+    "label" "计算机系统"
+    "term" "计算机系统"
+    "description" "体系结构 · CSC3060"
+    "children" (slice
+      (dict "label" "处理器" "term" "处理器")
+      (dict "label" "Pipeline" "term" "Pipeline" "latin" true)
+      (dict "label" "Memory Hierarchy" "term" "Memory Hierarchy" "latin" true)
+      (dict "label" "Cache" "term" "Cache" "latin" true)
+      (dict "label" "Assembly" "term" "Assembly" "latin" true)
+      (dict "label" "RISC-V" "term" "RISC-V" "latin" true)
+      (dict "label" "Linking" "term" "Linking" "latin" true)
+      (dict "label" "性能优化" "term" "性能优化")
+      (dict "label" "机器级编程" "term" "机器级编程")
+    )
+  )
+  (dict
+    "tone" "programming"
+    "label" "编程"
+    "term" "编程"
+    "description" "语言、范式与数据结构"
+    "children" (slice
+      (dict "label" "C++" "term" "C++")
+      (dict "label" "Java" "term" "Java" "latin" true)
+      (dict "label" "Python" "term" "Python" "latin" true)
+      (dict "label" "OOP" "term" "OOP" "latin" true)
+      (dict "label" "数据结构" "term" "数据结构")
+      (dict "label" "数组" "term" "数组")
+      (dict "label" "函数" "term" "函数")
+      (dict "label" "Git" "term" "Git" "latin" true)
+      (dict "label" "CLI" "term" "CLI" "latin" true)
+      (dict "label" "Shell" "term" "Shell" "latin" true)
+    )
+  )
+  (dict
+    "tone" "math"
+    "label" "数学"
+    "term" "数学"
+    "description" "离散数学、代数与优化"
+    "children" (slice
+      (dict "label" "离散数学" "term" "离散数学")
+      (dict "label" "集合论" "term" "集合论")
+      (dict "label" "数学归纳法" "term" "数学归纳法")
+      (dict "label" "图论" "term" "图论")
+      (dict "label" "组合数学" "term" "组合数学")
+      (dict "label" "概率" "term" "概率")
+      (dict "label" "模运算" "term" "模运算")
+      (dict "label" "矩阵" "term" "矩阵")
+      (dict "label" "多项式" "term" "多项式")
+      (dict "label" "Optimization" "term" "Optimization" "latin" true)
+    )
+  )
+  (dict
+    "tone" "data"
+    "label" "AI"
+    "term" "AI"
+    "latin" true
+    "description" "数据、模型与智能工具"
+    "children" (slice
+      (dict "label" "数据" "term" "数据")
+      (dict "label" "可视化" "term" "可视化")
+      (dict "label" "D3" "term" "D3" "latin" true)
+      (dict "label" "机器学习" "term" "机器学习")
+      (dict "label" "LLM" "term" "LLM" "latin" true)
+      (dict "label" "ChatGPT" "term" "ChatGPT" "latin" true)
+      (dict "label" "OpenAI" "term" "OpenAI" "latin" true)
+      (dict "label" "CourseAI" "term" "CourseAI" "latin" true)
+      (dict "label" "Whisper" "term" "Whisper" "latin" true)
+      (dict "label" "数据库" "term" "数据库")
+      (dict "label" "API" "term" "API" "latin" true)
+      (dict "label" "能源" "term" "能源")
+    )
+  )
+  (dict
+    "tone" "web"
+    "label" "Web"
+    "term" "Web"
+    "latin" true
+    "description" "网站、网络与自动化部署"
+    "children" (slice
+      (dict "label" "Hugo" "term" "Hugo" "latin" true)
+      (dict "label" "Cloudflare" "term" "Cloudflare" "latin" true)
+      (dict "label" "GitHub" "term" "GitHub" "latin" true)
+      (dict "label" "GitHub Actions" "term" "GitHub Actions" "latin" true)
+      (dict "label" "部署" "term" "部署")
+      (dict "label" "自动化" "term" "自动化")
+      (dict "label" "网络" "term" "网络")
+      (dict "label" "IP 地址" "term" "IP 地址")
+      (dict "label" "子网掩码" "term" "子网掩码")
+      (dict "label" "Streamlit" "term" "Streamlit" "latin" true)
+      (dict "label" "Markdown" "term" "Markdown" "latin" true)
+      (dict "label" "HTML" "term" "HTML" "latin" true)
+      (dict "label" "CSS" "term" "CSS" "latin" true)
+    )
+  )
+  (dict
+    "tone" "creative"
+    "label" "3D"
+    "term" "3D"
+    "latin" true
+    "description" "建模、交互作品与游戏"
+    "children" (slice
+      (dict "label" "Blender" "term" "Blender" "latin" true)
+      (dict "label" "LIDAR" "term" "LIDAR" "latin" true)
+      (dict "label" "GLB" "term" "GLB" "latin" true)
+      (dict "label" "建模" "term" "建模")
+      (dict "label" "渲染" "term" "渲染")
+      (dict "label" "游戏" "term" "游戏")
+      (dict "label" "拉密牌" "term" "拉密牌")
+      (dict "label" "Rummikub" "term" "Rummikub" "latin" true)
+      (dict "label" "NeuroTrip" "term" "NeuroTrip" "latin" true)
+      (dict "label" "ArkPets" "term" "ArkPets" "latin" true)
+      (dict "label" "Emojio" "term" "Emojio" "latin" true)
+      (dict "label" "解密" "term" "解密")
+      (dict "label" "Illustration" "term" "Illustration" "latin" true)
+      (dict "label" "Pixiv" "term" "Pixiv" "latin" true)
+    )
+  )
+  (dict
+    "tone" "science"
+    "label" "科学"
+    "term" "科学"
+    "description" "物理、化学、材料与生命"
+    "children" (slice
+      (dict "label" "物理" "term" "物理")
+      (dict "label" "运动学" "term" "运动学")
+      (dict "label" "牛顿力学" "term" "牛顿力学")
+      (dict "label" "化学" "term" "化学")
+      (dict "label" "元素周期表" "term" "元素周期表")
+      (dict "label" "材料" "term" "材料")
+      (dict "label" "矿物" "term" "矿物")
+      (dict "label" "鲁米诺" "term" "鲁米诺")
+      (dict "label" "生物" "term" "生物")
+    )
+  )
+  (dict
+    "tone" "life"
+    "label" "CUHKSZ"
+    "term" "CUHKSZ"
+    "latin" true
+    "description" "校园、项目与生活记录"
+    "children" (slice
+      (dict "label" "课程" "term" "课程")
+      (dict "label" "选课" "term" "选课")
+      (dict "label" "学院" "term" "学院")
+      (dict "label" "生存指南" "term" "生存指南")
+      (dict "label" "实习" "term" "实习")
+      (dict "label" "开源" "term" "开源")
+      (dict "label" "项目" "term" "项目")
+      (dict "label" "旅行" "term" "旅行")
+      (dict "label" "關西" "term" "關西")
+      (dict "label" "历史" "term" "历史")
+      (dict "label" "版权" "term" "版权")
+    )
+  )
+-}}
 
 <div class="home-view-heading">
-  <p class="home-view-eyebrow">REPEATED TOPICS</p>
-  <h1 class="f2 ma0">Word Cloud</h1>
-  <p class="home-view-description">从正文、标题、摘要和标签中提炼；字号表示包含该关键词的文章数量。点击词语进行精确搜索。</p>
+  <p class="home-view-eyebrow">BLOG KNOWLEDGE MAP</p>
+  <h1 class="f2 ma0">Topic Map</h1>
+  <p class="home-view-description">按内容关系组织全部博客主题；连线表示从领域到具体概念。数字是确实包含该词的文章数，点击节点进入精确搜索。</p>
 </div>
 
-<div class="home-word-cloud" aria-label="博客关键词词云">
-  {{- range $terms }}
-    {{- $term := .term }}
-    {{- $termLower := lower $term }}
-    {{- $isLatin := .latin | default false }}
-    {{- $count := 0 }}
-    {{- range $posts }}
-      {{- $tags := delimit (.Params.tags | default (slice)) " " }}
-      {{- $haystack := lower (printf "%s %s %s %s" .Title (.Summary | plainify) (.Plain | plainify) $tags) }}
-      {{- $matched := in $haystack $termLower }}
-      {{- if $isLatin }}
-        {{- $pattern := printf `(^|[^a-z0-9])%s([^a-z0-9]|$)` $termLower }}
-        {{- $matched = gt (len (findRE $pattern $haystack 1)) 0 }}
-      {{- end }}
-      {{- if $matched }}{{ $count = add $count 1 }}{{ end }}
-    {{- end }}
-    {{- if ge $count 2 }}
-      {{- $size := "sm" }}
-      {{- if ge $count 30 }}{{ $size = "xxl" }}
-      {{- else if ge $count 18 }}{{ $size = "xl" }}
-      {{- else if ge $count 10 }}{{ $size = "lg" }}
-      {{- else if ge $count 5 }}{{ $size = "md" }}
-      {{- end }}
-      <a class="home-word home-word--{{ $size }}" href="{{ printf "search/?q=%s" ($term | urlquery) | relURL }}" title="精确搜索「{{ $term }}」：{{ $count }} 篇文章">
-        <span>{{ .label }}</span><small>{{ $count }}</small>
-      </a>
-    {{- end }}
+<div class="home-topic-map" aria-label="博客主题知识图谱">
+  {{- range $clusters }}
+    {{- $rootCount := partial "topic-page-count.html" (dict "posts" $posts "term" .term "latin" (.latin | default false)) -}}
+    <article class="home-topic-cluster" data-topic-tone="{{ .tone }}">
+      <header class="home-topic-cluster__header">
+        <span>{{ .description }}</span>
+      </header>
+      <div class="home-topic-cluster__map">
+        <a class="home-topic-root" href="{{ printf "search/?q=%s" (.term | urlquery) | relURL }}" title="精确搜索「{{ .term }}」：{{ $rootCount }} 篇文章">
+          <strong>{{ .label }}</strong>
+          {{- if gt $rootCount 0 }}<small>{{ $rootCount }} 篇</small>{{ end -}}
+        </a>
+        <span class="home-topic-stem" aria-hidden="true"></span>
+        <div class="home-topic-branches">
+          {{- range .children }}
+            {{- $count := partial "topic-page-count.html" (dict "posts" $posts "term" .term "latin" (.latin | default false)) -}}
+            {{- if gt $count 0 }}
+              <a class="home-topic-node" href="{{ printf "search/?q=%s" (.term | urlquery) | relURL }}" title="精确搜索「{{ .term }}」：{{ $count }} 篇文章">
+                <span>{{ .label }}</span><small>{{ $count }}</small>
+              </a>
+            {{- end }}
+          {{- end }}
+        </div>
+      </div>
+    </article>
   {{- end }}
 </div>
