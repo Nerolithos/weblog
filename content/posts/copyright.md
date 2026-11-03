@@ -10,7 +10,7 @@ summary: "从SOPA/PIPA、Megaupload、Aaron Swartz的互联网历史，到中国
 
 
 
-> 写给所有在卡园上举报我开源知识的，恬不知耻的啃食他人学术的水蛭蛆虫们，你们枉活四年枉费资源愧对教授愧见自己。向你们致敬！
+> 写给所有在卡园上举报我开源知识的，恬不知耻的啃食他人学术蛆虫们，你们枉活四年枉费资源愧对教授愧见自己。向你们致敬！
 
 </br>
 
@@ -19,6 +19,16 @@ summary: "从SOPA/PIPA、Megaupload、Aaron Swartz的互联网历史，到中国
 *从 SOPA/PIPA、Megaupload、Aaron Swartz，到中国数字音乐版权垄断与学术出版产业*
 
 > 创造知识的人未必拥有知识，拥有知识的人未必创造了知识。而在现代版权制度下，**最擅长向知识收取过路费的人，往往还最热衷于教训别人应该如何尊重创作者**。
+
+</br>
+
+## 序
+
+“2026 年 10 月，CUHKSZ 发生了两起超量下载图书馆电子资源的违规行为。两次违规下载行为均涉及数据库网站[https://www.sciencedirect.com](https://apc01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.sciencedirect.com%2F&data=05|02|jianzhu@link.cuhk.edu.cn|73056124cffd4ba5c06108df394f26f2|e5898b7a9c874a4bb22a2df3f355e01e|0|0|639292684498871319|Unknown|TWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D|0|||&sdata=K%2F2OZMcwqFjJulxy5Jog38FMVPReB5%2B6zaFPzUZu7%2BQ%3D&reserved=0) ，违规下载时间为北京时间2026-10-05 08:28:14 - 2026-10-06 01:02:54 和 2026-10-20 16:17:23 - 2026-10-20 20:53:00。违规行为导致我校违规下载的IP访问该数据库网站的权限被临时封禁。图书馆已联系了违规用户并依照版权声明与合理使用图书馆资源的规定进行了处理。详情可查阅[https://library.cuhk.edu.cn/zh-hans/copyright-guidelines](https://apc01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flibrary.cuhk.edu.cn%2Fzh-hans%2Fcopyright-guidelines&data=05|02|jianzhu@link.cuhk.edu.cn|73056124cffd4ba5c06108df394f26f2|e5898b7a9c874a4bb22a2df3f355e01e|0|0|639292684498905404|Unknown|TWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D|0|||&sdata=3w9swyHhEFg%2FjoKvwoAjBgJ5CAw4BtF1n52QPHaJTh4%3D&reserved=0) 。经图书馆努力协调，封禁IP已解封，数据库访问已恢复。图书馆希望提起广大用户注意，违规使用图书馆资源会产生诸多不良后果，可能导致违规用户访问校园网和使用图书馆资源权限的永久关停，严重者还要承担法律责任。请广大用户遵守图书馆的管理规定，合理使用图书馆资源。”
+
+**当大学已经为知识访问支付费用时，研究者究竟获得了多大程度的知识使用自由**？
+
+研究者创作了资源，但又无权访问资源。这套制度运行得如此成熟，以至于人们往往已经习惯了其中的矛盾。
 
 </br>
 
