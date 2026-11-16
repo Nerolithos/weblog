@@ -174,7 +174,7 @@
     </section>
 
     <div class="footer-note">
-      提示：本助手调用 OpenRouter 上的免费模型 Qwen，回答仅供参考，请结合最新教学计划与官方信息综合判断。
+      提示：本助手调用 OpenRouter 免费模型路由，回答仅供参考，请结合最新教学计划与官方信息综合判断。
     </div>
   </div>
 
@@ -398,8 +398,8 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            // 使用 OpenRouter 免费 Qwen 模型
-            model: 'qwen/qwen-2.5-7b-instruct',
+            // 后端只允许 OpenRouter 免费模型路由，避免客户端选择付费模型。
+            model: 'openrouter/free',
             temperature: 0.4,
             messages: [
               {

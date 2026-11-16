@@ -141,8 +141,8 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.6);
       border-radius: 12px;
       overflow: hidden;
-      /* 使用 Resources/background.png 作为当前画布的背景 */
-      background: url('Resources/background.png') center center / cover no-repeat;
+      /* 使用压缩后的 WebP，保持原有构图并显著减少首屏传输量。 */
+      background: url('Resources/background.webp') center center / cover no-repeat;
     }
     .pet-window-titlebar {
       height: 26px;
@@ -1169,11 +1169,9 @@
       letter-spacing: 0.03em;
       text-align: center;
     }
-    /* 垂直 range 滑块，Win7 蓝色风格 */
+    /* 使用标准 writing-mode 构造垂直滑块，避免已废弃的 slider-vertical appearance。 */
     #volume-slider,
     #sfx-slider {
-      -webkit-appearance: slider-vertical;
-      appearance: slider-vertical;
       writing-mode: vertical-lr;
       direction: rtl;
       width: 18px;
@@ -1510,7 +1508,7 @@
             </div>
           </div>
           <div class="line-contact" data-contact="elias" style="padding:8px 10px;display:flex;align-items:center;cursor:pointer;opacity:0.6;">
-            <img src="Resources/Elias.jpg" alt="Elias" class="line-avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
+            <img src="Resources/Elias.webp" alt="Elias" class="line-avatar" width="32" height="32" loading="lazy" decoding="async" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
             <div style="display:flex;flex-direction:column;">
               <span class="line-name" style="font-size:13px;color:#111111;">Elias Hoffmann</span>
               <span class="line-subtitle" style="font-size:11px;color:#999999;">No messages</span>
@@ -1688,11 +1686,11 @@ You did not answered the call of the trapped souls, soon, some security officers
     <div id="volume-slider-wrap">
       <div class="volume-slider-col">
         <div class="volume-slider-title">BGM</div>
-        <input type="range" id="volume-slider" min="0" max="100" value="30" orient="vertical">
+        <input type="range" id="volume-slider" min="0" max="100" value="30" aria-label="背景音乐音量">
       </div>
       <div class="volume-slider-col">
         <div class="volume-slider-title">SFX</div>
-        <input type="range" id="sfx-slider" min="0" max="100" value="30" orient="vertical">
+        <input type="range" id="sfx-slider" min="0" max="100" value="30" aria-label="音效音量">
       </div>
     </div>
     <div id="volume-popup-pct">BGM 30% | SFX 30%</div>
@@ -1829,14 +1827,9 @@ You did not answered the call of the trapped souls, soon, some security officers
   <!-- Spine webgl runtime built locally from Spine 3.8 runtimes (spine-ts/build/spine-webgl.js) -->
   <script src="spine-webgl-3.8.js"></script>
 
-  <!-- D3 for concentric ring puzzle -->
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-
-  <!-- OpenCV.js：用于浏览器端人脸 / 上半身检测（本地同源加载，避免跨域策略拦截） -->
-  <script src="opencv.js"></script>
-
+  <!-- OpenCV.js 由 dual-pets.js 在真正启用摄像头时按需加载，避免首屏下载和编译 10 MB runtime。 -->
   <!-- Dual pets logic (already in this folder) -->
-  <script src="dual-pets.js?v=20260308"></script>
+  <script src="dual-pets.js?v=20261116"></script>
   <script>
     (function () {
       function start() {
