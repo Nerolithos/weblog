@@ -84,7 +84,6 @@ export async function onRequest(context) {
   respHeaders.set("Cache-Control", "no-store");
   respHeaders.set("X-ChatAP-Key-Source", "CHATAP");
   // 同域 Pages 默认不需要 CORS，但为了本地 wrangler 开发方便加上
-  const origin = request.headers.get("Origin");
   if (origin) {
     respHeaders.set("Access-Control-Allow-Origin", origin);
   }
