@@ -109,6 +109,14 @@ export async function onRequest(context) {
     return new Response("Payload Too Large", { status: 413, headers: responseHeaders(origin) });
   }
 
+  // 校验调用方来源，避免任意第三方站点/脚本直接调用本接口消耗运营者的 OpenRouter 额度。
+  const allowedOrigins = [env.OPENROUTER_SITE_URL, "https://lithos.pages.dev"].filter(Boolean);
+  const origin = request.headers.get("Origin");
+  const isLocalDev = !!origin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+  if (!origin || !(allowedOrigins.includes(origin) || isLocalDev)) {
+    return new Response("Forbidden", { status: 403 });
+  }
+
   let payload;
   try {
     const rawBody = await request.text();
