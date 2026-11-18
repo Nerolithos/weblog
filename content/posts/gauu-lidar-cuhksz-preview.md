@@ -1,9 +1,9 @@
 ---
-title: "GAUU-LIDAR CUHKSZ 3D 光学信息数据预览"
-date: 2026-09-06T21:00:00+08:00
+title: "CUHKSZ 校园3D建模-LIDAR点图平行展示"
+date: 2026-11-18T20:00:00+08:00
 draft: false
-summary: "港中深下园的 LIDAR 卫星测绘地理信息，由于源数据敏感性，仅展示 4% 即三百万个数据点。https://saliteta.github.io/CUHKSZ_SMBU/"
-redirect: "https://cuhk.nero-lithos.com/"
+summary: "结合港中深下园的 LIDAR 卫星点图和 3D 建模（由于源数据敏感性，仅展示 4% 即三百万个数据点：https://saliteta.github.io/CUHKSZ_SMBU/）用于精准定位/模拟/游戏开发/测绘等等"
+redirect: "https://cuhk.nero-lithos.com/mesh/"
 categories:
 - 3D
 tags:
