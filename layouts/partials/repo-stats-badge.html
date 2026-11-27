@@ -19,17 +19,14 @@
   data-fallback-commits="{{ $commits }}"
   data-fallback-followers="{{ $followers }}"
 >
-  <a
-    href="{{ $repoURL }}"
-    class="repo-stats-badge-link no-underline"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="GitHub repository stats"
-    title="{{ $tooltip }}"
-  >
+  <a href="{{ $repoURL }}" class="repo-stats-badge-link no-underline" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository" title="{{ $tooltip }}">
     <span class="repo-stats-label">GitHub</span>
+  </a>
+  <a href="{{ $repoURL }}" class="repo-stats-badge-link repo-stats-star-link no-underline" target="_blank" rel="noopener noreferrer" aria-label="Open the GitHub repository to star it" title="前往 GitHub 为该仓库加星">
     <span><span class="repo-stats-icon" aria-hidden="true">★</span> <span data-repo-stars>{{ $stars }}</span></span>
-    <span class="repo-stats-sep">|</span>
+  </a>
+  <span class="repo-stats-sep" aria-hidden="true">|</span>
+  <a href="{{ $repoURL }}/commits" class="repo-stats-badge-link no-underline" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository commits" title="GitHub commits">
     <span><span class="repo-stats-icon" aria-hidden="true">⬆&#xFE0E;</span> <span data-repo-commits>{{ $commits }}</span></span>
   </a>
   <span class="repo-stats-sep" aria-hidden="true">|</span>
@@ -43,4 +40,6 @@
   >
     <span><span class="repo-stats-icon repo-stats-icon--person" aria-hidden="true">👤&#xFE0E;</span> <span data-repo-followers>{{ $followers }}</span></span>
   </a>
+  <span class="repo-stats-sep" aria-hidden="true">|</span>
+  <span class="repo-stats-amuv" title="Cloudflare Average Monthly Unique Visitor：3220" aria-label="Cloudflare Average Monthly Unique Visitor: 3220">AMUV：3220</span>
 </div>

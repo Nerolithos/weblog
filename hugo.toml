@@ -15,9 +15,12 @@ enableRobotsTXT = true
   home = ["HTML", "RSS", "JSON"]
 
 [params]
-  custom_css = ["css/custom.css"]
   text_color = ""
-  author = ""
+  author = "Lithos"
+  author_url = "https://github.com/Nerolithos"
+  description = "Lithos 的个人博客：CUHKSZ 课程笔记、生存指南、软件开发、数据可视化、3D、游戏与插画项目。"
+  default_social_image = "/images/heroes/Head.webp"
+  locale = "zh_CN"
   favicon = "/favicon.ico"
   site_logo = ""
   background_color_class = "bg-black"
@@ -25,11 +28,11 @@ enableRobotsTXT = true
   # 仍然保留页脚链接
   footer_links = [
     { name = "💻 GitHub", url = "https://github.com/Nerolithos" },
-    { name = "🎨 Pixiv", url = "/pixiv/" },
-    { name = "📊 EnergyVis", url = "https://blog.nero-lithos.com/DDA/" },
     { name = "🖋️ mdAnything", url = "https://md.nero-lithos.com" },
-    { name = "🤖 LGU CourseAI", url = "https://blog.nero-lithos.com/courseai/" },
-    { name = "🐈 ArkPet", url = "https://blog.nero-lithos.com/pet" }
+    { name = "🍅 LGuide", url = "https://lguide.net/" },
+    { name = "💼 LinkedIn", url = "https://www.linkedin.com/in/zhu-ji-an/" },
+    { name = "👋 Bonjour", url = "https://bonjour.bio/dh5568" },
+    { name = "🎓 LGU CourseAI", url = "https://blog.nero-lithos.com/courseai/" }
   ]
 
 # 顶部导航菜单（Ananke 会在 header 渲染 .Site.Menus.main）
@@ -47,21 +50,9 @@ enableRobotsTXT = true
     url  = "https://www.linkedin.com/in/zhu-ji-an/"
     weight = 3
   [[menu.main]]
-    name = "📊 EnergyVis"
-    url  = "https://blog.nero-lithos.com/DDA/"
-    weight = 4
-  [[menu.main]]
     name = "🖋️ mdAnything"
     url  = "https://md.nero-lithos.com"
     weight = 5
-  [[menu.main]]
-    name = "🤖 LGU CourseAI"
-    url  = "https://blog.nero-lithos.com/courseai/"
-    weight = 6
-  [[menu.main]]
-    name = "🐈 ArkPet"
-    url  = "https://blog.nero-lithos.com/pet"
-    weight = 7
 
 [services]
   [services.disqus]
@@ -73,6 +64,12 @@ enableRobotsTXT = true
 
 [markup]
   [markup.goldmark]
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [['\[', '\]'], ['$$', '$$']]
+          inline = [['\(', '\)'], ['$', '$']]
     [markup.goldmark.renderer]
       unsafe = true
   [markup.tableOfContents]

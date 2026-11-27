@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Room 3D Viewer</title>
+    <meta name="description" content="Standalone room.glb viewer" />
+    <link rel="stylesheet" href="/room-3d/room-3d.css?v=20260831a" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="head">
+        <h1>Room 3D Viewer</h1>
+        <p>Standalone HTML + CSS + JS page for room.glb.</p>
+      </header>
+
+      <section class="frame" aria-label="3D Scene">
+        <div
+          id="room-front-viewer"
+          class="blender-room-viewer-shell"
+          data-model-url="/models/room.glb"
+        >
+          <div class="blender-room-viewer-canvas-wrap">
+            <canvas class="blender-room-viewer-canvas" aria-label="Room GLB Viewer"></canvas>
+            <div class="blender-room-viewer-status" data-viewer-status>Loading 3D scene...</div>
+          </div>
+
+          <div class="viewer-controls" aria-label="Light Controls">
+            <label class="viewer-control" for="light-intensity">
+              <span>Light intensity</span>
+              <div class="viewer-control-row">
+                <input id="light-intensity" data-light-intensity type="range" min="0.1" max="2.4" step="0.01" value="0.49" />
+                <output data-light-intensity-value>0.49</output>
+              </div>
+            </label>
+
+            <label class="viewer-control" for="light-angle">
+              <span>Light angle</span>
+              <div class="viewer-control-row">
+                <input id="light-angle" data-light-angle type="range" min="-180" max="180" step="1" value="-74" />
+                <output data-light-angle-value>-74 deg</output>
+              </div>
+            </label>
+
+            <label class="viewer-control viewer-control--full" for="camera-yaw">
+              <span>Camera yaw</span>
+              <div class="viewer-control-row">
+                <input id="camera-yaw" data-camera-yaw type="range" min="-25" max="25" step="1" value="0" />
+                <output data-camera-yaw-value>0 deg</output>
+              </div>
+            </label>
+
+            <div class="viewer-controls-actions">
+              <button type="button" class="viewer-reset-btn" data-light-reset>Reset default light</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/js/room-front-viewer.js?v=20260901f"></script>
+  </body>
+</html>

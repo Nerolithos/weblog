@@ -1,4 +1,4 @@
-const CACHE_NAME = 'postimg-image-cache-v1';
+const CACHE_NAME = 'postimg-image-cache-v2';
 const IMAGE_HOSTS = new Set(['i.postimg.cc']);
 
 self.addEventListener('install', (event) => {
@@ -47,14 +47,11 @@ self.addEventListener('fetch', (event) => {
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
     const cached = await cache.match(request);
-    const networkPromise = cacheNetworkResponse(cache, request);
-
     if (cached) {
-      event.waitUntil(networkPromise);
       return cached;
     }
 
-    const networkResponse = await networkPromise;
+    const networkResponse = await cacheNetworkResponse(cache, request);
     if (networkResponse) return networkResponse;
 
     return cached || Response.error();

@@ -216,7 +216,8 @@
       if (audioState.bgAudioEl) return;
       var bgAudio = new Audio("Resources/ArkPetBGA.m4a");
       bgAudio.loop = true;
-      bgAudio.preload = "auto";
+      // 音频只会在用户交互后播放；首屏不预取 1.5 MB 文件。
+      bgAudio.preload = "none";
       bgAudio.volume = audioState.masterVolume / 100;
       audioState.bgAudioEl = bgAudio;
       // 立即尝试自动播放；若被浏览器拦截则等待用户首次交互
@@ -657,6 +658,9 @@
     var opencvBackend = {
       cvReady: false,
       initializing: false,
+      scriptRequested: false,
+      scriptFailed: false,
+      scriptWaiters: [],
       faceClassifier: null,
       cascadeLoaded: false,
       loadingCascade: false,
@@ -671,11 +675,45 @@
       pollTimer: null
     };
 
+    function loadOpenCvRuntime(callback) {
+      if (global.cv) {
+        callback();
+        return;
+      }
+
+      if (opencvBackend.scriptFailed) return;
+      opencvBackend.scriptWaiters.push(callback);
+      if (opencvBackend.scriptRequested) return;
+
+      opencvBackend.scriptRequested = true;
+      var script = document.createElement("script");
+      script.src = "opencv.js";
+      script.async = true;
+      script.onload = function () {
+        var waiters = opencvBackend.scriptWaiters.splice(0);
+        for (var i = 0; i < waiters.length; i++) waiters[i]();
+      };
+      script.onerror = function () {
+        opencvBackend.scriptFailed = true;
+        opencvBackend.scriptWaiters.length = 0;
+        console.warn("[DualPets] OpenCV runtime failed to load");
+      };
+      document.head.appendChild(script);
+    }
+
     function ensureOpenCvDetectorForVideo(videoEl) {
       if (!videoEl) return;
 
       if (opencvBackend.activeVideos.indexOf(videoEl) === -1) {
         opencvBackend.activeVideos.push(videoEl);
+      }
+
+      // OpenCV 是页面中最大的脚本，只在摄像头流程实际开始后加载。
+      if (!global.cv) {
+        loadOpenCvRuntime(function () {
+          ensureOpenCvDetectorForVideo(videoEl);
+        });
+        return;
       }
 
       function startLoopIfReady() {
@@ -781,6 +819,13 @@
       startLoopIfReady();
     }
 
+    function stopOpenCvDetectorForVideo(videoEl) {
+      var index = opencvBackend.activeVideos.indexOf(videoEl);
+      if (index !== -1) opencvBackend.activeVideos.splice(index, 1);
+      if (videoEl) opencvBackend.latestFacesByVideo.delete(videoEl);
+      if (!opencvBackend.activeVideos.length) opencvBackend.loopRunning = false;
+    }
+
     function runOpenCvLoop() {
       if (!opencvBackend.cvReady || !opencvBackend.faceClassifier || !opencvBackend.offscreenCanvas || !opencvBackend.offscreenCtx) {
         opencvBackend.loopRunning = false;
@@ -790,6 +835,11 @@
       var videos = opencvBackend.activeVideos.slice();
       if (!videos.length) {
         opencvBackend.loopRunning = false;
+        return;
+      }
+
+      if (document.hidden) {
+        setTimeout(runOpenCvLoop, 500);
         return;
       }
 
@@ -2282,6 +2332,7 @@
 
     function stopCameraStream() {
       setCameraSignalEnabled(false);
+      stopOpenCvDetectorForVideo(cameraVideoEl);
       if (cameraStreamObj && cameraStreamObj.getTracks) {
         var tracks = cameraStreamObj.getTracks();
         for (var i = 0; i < tracks.length; i++) {
@@ -3577,7 +3628,7 @@
               var avatar = document.createElement("img");
               avatar.className = "line-avatar";
               if (msg.speaker === "hiro") {
-                avatar.src = "Resources/Hiro.jpg";
+                avatar.src = "Resources/Hiro.webp";
                 avatar.alt = "Hiro";
               } else {
                 if (contactId === "hidayat") {
@@ -3852,11 +3903,9 @@
 请始终按照以上规则回应用户。
 `;
 
-      // 按照优先级列出几个常见的免费模型，仅使用第一个成功可用的模型
+      // 后端只允许免费模型路由，避免浏览器选择任意付费模型。
       var chatApModelCandidates = [
-        "qwen/qwen2.5-7b-instruct",
-        "deepseek/deepseek-chat",
-        "qwen/qwen1.5-7b-chat"
+        "openrouter/free"
       ];
 
       function appendChatApText(text) {
@@ -4860,6 +4909,7 @@
       }
 
       var lastFrame = performance.now();
+      var targetFrameInterval = 1000 / 30;
 
       // 将 HSV (0-1) 转换为 RGB (0-1)，用于彩虹特效
       function hsvToRgb01(h, s, v) {
@@ -5074,10 +5124,19 @@
         renderer.drawSkeleton(p.skeleton, true);
       }
 
-      function frame() {
-        var now = performance.now();
+      function frame(now) {
+        requestAnimationFrame(frame);
+
+        // 后台标签页完全暂停；前台限制为 30 FPS，Spine 外观和交互保持不变，
+        // 同时显著降低持续的 CPU/GPU 占用。
+        if (document.hidden) {
+          lastFrame = now;
+          return;
+        }
         var dt = now - lastFrame;
+        if (dt < targetFrameInterval) return;
         lastFrame = now;
+        dt = Math.min(dt, 100);
 
         updatePet(ros, now, dt);
         updatePet(sus, now, dt);
@@ -5089,7 +5148,6 @@
         renderPet(sus, now);
         renderer.end();
 
-        requestAnimationFrame(frame);
       }
 
       requestAnimationFrame(frame);

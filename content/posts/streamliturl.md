@@ -19,7 +19,7 @@ featured_image: "/images/cf.jpg"
 
 
 ## TAKE 1：直接暴力增加 CNAME 记录
-![最上面那一条就是我新建的 CNAME ](https://i.postimg.cc/QxBYcQtW/25083101.png)
+![最上面那一条就是我新建的 CNAME ](https://img.nero-lithos.com/posts/3387ef13c027-25083101.png)
 
 - 我的域名要求展示“你的域名”的证书；而 Streamlit 只给 \*.streamlit.app 颁证。无效(出现 400/403/404  一类的循环/响应报错)
 
@@ -28,12 +28,12 @@ featured_image: "/images/cf.jpg"
 ## TAKE 2：反向代理？
 
 1、我在 Cloudflare 仪表盘创建了一个新的 workers 应用。
-![](https://i.postimg.cc/tRvm1SXj/25083102.png)
+![](https://img.nero-lithos.com/posts/9fc0716ff076-25083102.png)
 
 
 
 2、用最简洁的默认 fetch() 函数脚本开始，返回 hello world。部署到公网后可以在编辑栏写入所需的反向代理脚本。
-![](https://i.postimg.cc/bvX14bpW/25083102x3.png)
+![](https://img.nero-lithos.com/posts/766483f9c8c1-25083102x3.png)
 
 
 
@@ -42,16 +42,16 @@ featured_image: "/images/cf.jpg"
 3、反向代理中无法直接指明被指向的对象(用户访问的网站，以 ai.nero-lithos.com 为例)，因为没有配置路由的功能。如果强行写固定 URL 进去，只能起到“在 Triggers 触发的路由中，只允许这个写入的 URL 反代” 的功能，如需要，则补充这一行：
 `const ALLOWED_HOST = "ai.nero-lithos.com";`
 **无论如何，都需要在 Workers/Triggers 下配置反代 URL：ai.nero-lithos.com/\***
-![](https://i.postimg.cc/fyPH6LHL/25083103.png)
+![](https://img.nero-lithos.com/posts/82f6a56dc8b8-25083103.png)
 
 
 
 
 
 4、写入脚本后再次部署，随后在左边栏中重新(点击)从 Workers/Workers&Pages 中找到刚才新建的 Workers 应用，选择上方导航栏的 Settings(设置)，然后选择第一项 Domains & Routes，增加一个新的 custom 路由记录(ai.nero-lithos.com)。
-![](https://i.postimg.cc/sxx66S4q/25083104.png)
+![](https://img.nero-lithos.com/posts/0a47deec47f8-25083104.png)
 Cloudflare 会随机生成一个 CNAME 记录，等待一会应该就可以访问被代理对象了。如果你像我一样试图手动配置过 CNAME 记录，请去 DNS 下删除那条记录(否则会冲突)。
-![](https://i.postimg.cc/HxBv93Xb/25083105.png)
+![](https://img.nero-lithos.com/posts/02d5b7e22bee-25083105.png)
 
 
 

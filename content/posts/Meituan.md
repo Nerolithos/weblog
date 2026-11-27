@@ -217,7 +217,7 @@ Fool 编辑脚本的核心不是自由删除重写整个文件，而是受限块
 
 ## 样例展示
 
-使用 qwen-3.7-max (思考强度 xhigh) ，首轮为纯贪心基线出发，对象数据集为仿线上网站的模拟数据集，运行迭代 15 轮的结果。**存在明显学习过程曲线**：![](https://i.postimg.cc/HLW7GpGH/jie-ping2026-06-05-15-48-20.png)
+使用 qwen-3.7-max (思考强度 xhigh) ，首轮为纯贪心基线出发，对象数据集为仿线上网站的模拟数据集，运行迭代 15 轮的结果。**存在明显学习过程曲线**：![](https://img.nero-lithos.com/posts/e4728e783377-jie-ping2026-06-05-15-48-20.png)
 
 ---
 
@@ -338,7 +338,7 @@ python3 run_local.py
 
 ### ⚠️ 建议流程
 
-![](https://i.postimg.cc/Pf7RqSXs/jie-ping2026-06-02-18-22-23.png)
+![](https://img.nero-lithos.com/posts/afb4f1bd997d-jie-ping2026-06-02-18-22-23.png)
 
 1. ⚠️ **请将您提供的正式的数据集放到根目录下的 `/data/sample_10_cases`，替换原本的占位测试集。**
 2. 模型：建议 deepseek-v4-pro (及其他国内厂商，如 Minimax / Qwen 最新代的 pro 或 max 版本) 或 chatgpt-5.3-codex (或 5.5) 或 Claude-opus-4.7。

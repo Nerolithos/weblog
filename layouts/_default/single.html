@@ -55,6 +55,9 @@
 
     <div class="nested-copy-line-height lh-copy {{ $.Param "post_content_classes" | default "serif" }} f4 nested-links {{ $.Param "text_color" | default "mid-gray" }} {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl4-l" "pr4-l" }} w-two-thirds-l">
       {{- .Content -}}
+      {{- if .Params.exam_answers -}}
+        <script src="{{ "js/exam-answers.js" | relURL }}?v=20261017a" defer></script>
+      {{- end -}}
       {{- partial "tags.html" . -}}
       <div class="mt6 instapaper_ignoref">
         {{ with .Site.Config.Services.Disqus.Shortname }}

@@ -2,8 +2,9 @@
 title = ' 🌐 IP地址与子网掩码'
 date = 2024-09-11T09:26:58+08:00
 draft = false
+description = '从 CUHKSZ 校园网场景理解私有 IP、MAC 地址、子网掩码与局域网路由。'
 
-featured_image = '/images/subnet.jpg'
+featured_image = '/images/subnet.webp'
 
 +++
 
@@ -11,7 +12,7 @@ featured_image = '/images/subnet.jpg'
 
 240822，有几位同学在龙大的选课培训直播间提出几个网络问题 (见下图)。这时候大学尚未开学，且10.20.219.31 显然是个私有 IP 地址，不可能从外网直接访问。也就是说，只有当网络状态处于 10.0.0.0(即龙大的子网地址)时才可能访问。
 
-![](https://i.postimg.cc/FsKQ3wzM/截屏2026_01_11_18_05_02.png)
+![](https://img.nero-lithos.com/posts/3e5f7408ab2d-2026_01_11_18_05_02.png)
 
 
 
